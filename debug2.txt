@@ -1,0 +1,5 @@
+- add LFSTTs + index in initialU before import
+
+- GC.isinstindexed
+
+- reindexClauses

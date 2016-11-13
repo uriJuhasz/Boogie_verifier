@@ -1,0 +1,77 @@
+(set-option :print-success false)
+(set-info :smt-lib-version 2.0)
+(set-option :AUTO_CONFIG false)
+(set-option :MODEL.V2 true)
+(set-option :smt.PHASE_SELECTION 0)
+(set-option :smt.RESTART_STRATEGY 0)
+(set-option :smt.RESTART_FACTOR |1.5|)
+(set-option :smt.ARITH.RANDOM_INITIAL_VALUE true)
+(set-option :smt.CASE_SPLIT 3)
+(set-option :smt.DELAY_UNITS true)
+(set-option :NNF.SK_HACK true)
+(set-option :smt.MBQI false)
+(set-option :smt.QI.EAGER_THRESHOLD 100)
+(set-option :smt.QI.COST |(+ weight generation)|)
+(set-option :TYPE_CHECK true)
+(set-option :smt.BV.REFLECT true)
+(set-option :TIMEOUT 0)
+; done setting options
+
+
+(declare-fun tickleBool (Bool) Bool)
+(assert (and (tickleBool true) (tickleBool false)))
+(declare-fun %lbl%+33 () Bool)
+(declare-fun %lbl%@62 () Bool)
+(declare-fun x () Int)
+(declare-fun %lbl%+31 () Bool)
+(declare-fun %lbl%+29 () Bool)
+(declare-fun %lbl%+40 () Bool)
+(push 1)
+(set-info :boogie-vc-id m)
+
+(assert 
+	(not
+		(let 
+			((
+				anon3_correct 
+				(=> 
+					(! (and %lbl%+33 true) :lblpos +33) 
+					(and
+						(! (or %lbl%@62 (> x 2)) :lblneg @62)
+						(=> (> x 2) true))
+				)
+			))
+			(let 
+				((
+					anon4_Else_correct 
+					(=> 
+						(! (and %lbl%+31 true) :lblpos +31) 
+						(=> (> x 5) anon3_correct)
+					)
+				))
+				(let 
+					((
+						anon4_Then_correct 
+						(=> (! (and %lbl%+29 true) :lblpos +29) (=> (> x 3) anon3_correct))
+					))
+					(let 
+						((
+							anon0_correct 
+							(=> 
+								(! (and %lbl%+40 true) :lblpos +40) 
+								(and
+									anon4_Then_correct
+									anon4_Else_correct
+								)
+							)
+						))
+						anon0_correct
+					)
+				)
+			)
+		)
+	)
+)
+(check-sat)
+(pop 1)
+; Valid

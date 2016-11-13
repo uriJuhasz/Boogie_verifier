@@ -1,0 +1,13 @@
+
+***Preprocessing clauses         [0] start  - g/n  30/  70  c/a   781/ 15030
+   CNF Conversion
+   CNF Conversion - expressions: 1686+28
+   **Done - clauses: 3698,atoms: 11233
+***Preprocessing clauses         [0] end    - g/n  30/  70  c/a  3707/ 11251 - proved   0 - time [     2s]/[     3s]
+   [  30]
+   [   2]
+   [  PC]
+
+***Extracting CFG                [0] start  - g/n  28/  68  c/a  3707/ 11251
+Fail: 
+Fail: 

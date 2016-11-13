@@ -1,0 +1,25 @@
+Static slice 
+	For:
+		A program P :
+			vocabulary        : voc_P (Types, Variables, Functions, Relations)
+			background theory : background_P
+			body              : body_P = (V,E) 
+		A condition C(v) :
+			C \in expression over voc_P U V
+			at node v
+	
+	First Definition - a slice is:
+		A program P' :
+			* With vocabulary voc_P' \subseteq voc_P
+				- Where C is over voc_P'
+			* With background theory background_P'
+				- ? Where background_P => background_P'
+			* With body body_P  = (V',E')
+				- where 
+					- V' = V except statements can be replaced by SKIP        //TODO: Later drop irrelevant or unreachable statements
+					- E' = E                                                  //TODO: Later remove/contract edges 
+					- v \in V'
+				
+				- condition:
+					- P |- C(v) iff P' |- C(v)
+

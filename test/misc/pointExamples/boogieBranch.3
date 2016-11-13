@@ -1,0 +1,14 @@
+procedure m(y:int) returns (z:int)
+	ensures z>0;
+{
+	var b : bool;
+	var x: int;
+	x := y * y + 5;
+	if (b)
+	{
+		x := x+1;
+	}else{
+		z := z+1;
+	}
+	z := x+1;
+}

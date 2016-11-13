@@ -1,0 +1,23 @@
+Lemma 1
+	If 
+		C' > D'
+		I_C \not\models D
+	Then
+		I_{D+} \not\models D
+	
+Lemma 2
+	If 
+		C' > D'
+		D = D_0 \lor l=r
+		E_D = l' -> r'
+	Then
+		I_{C} \not\models D_0
+
+	
+	
+
+	
+Es:\\
+Lemma
+	s'=t' => \Exists E \in Es_{s=t} : I^b |= !E
+Special case:

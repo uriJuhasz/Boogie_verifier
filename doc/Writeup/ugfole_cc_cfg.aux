@@ -1,0 +1,81 @@
+\relax 
+\@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces Basic equality verification algorithm - DFS  The method \lstinline |traverseInPreOrder(p, inv, outv)| traverses the CFG in pre-order - it is standard but we detail it in 3.9\hbox {} in order to prevent ambiguities when applying the method to DAGs. The method calls the callback inv(n) when first evaluating a CFG-node and outv(n) before back-tracking from the node.  The \lstinline |entryVisitor| pushes the current EC-graph on the stack, \lstinline |assumes| the axioms from the current CFG-node to the EC-graph, and if the CFG-node is a leaf node, it checks whether any dis-equality does not hold - which implies that the assertion at that leaf node holds (as assertions are negated). \relax }}{45}}
+\newlabel{fig_DPLL_style_verification}{{3.8}{45}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Congruence closure graphs for verification}{45}}
+\citation{BachmairTiwari00}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces Pre-order traversal of the CFG  This method performs standard pre-order traversal of a CFG, calling a visitor \lstinline |inv| on entry to the node. In addition, the algorithm also calls a visitor \lstinline |outv| when back-tracking from the node. We detail it here to make be clear about the behaviour in DAG traversal - namely, that each DAG-node is traversed as many times as there are paths leading to it. \relax }}{46}}
+\newlabel{fig_CFG_traversal}{{3.9}{46}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Complexity}{46}}
+\citation{DowneySethiTarjan}
+\citation{NieuwenhuisOliveras03}
+\citation{Shostak84}
+\citation{NelsonOppen80}
+\citation{BachmairTiwari00}
+\citation{DowneySethiTarjan}
+\citation{DowneySethiTarjan}
+\citation{DPLLJoin}
+\citation{DPLLJoin}
+\citation{DPLLJoin}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.10}{\ignorespaces linear join proof  The program (from \cite  {DPLLJoin}) can be proven in almost linear time using joins, but is exponential for DPLL and CDCL based provers\relax }}{50}}
+\newlabel{linear_join_proof}{{3.10}{50}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Joins}{50}}
+\citation{GulwaniTiwariNecula04}
+\citation{GulwaniNecula07}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.11}{\ignorespaces Non-unit join  No set of equations at \ensuremath  {\mathrm  {n}} implied by all its predecessors is sufficient to prove the assertion.\relax }}{52}}
+\newlabel{snippet3.5}{{3.11}{52}}
+\citation{GulwaniTiwariNecula04}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.12}{\ignorespaces Exponential sized join proof\relax }}{53}}
+\newlabel{snippet3.6}{{3.12}{53}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.13}{\ignorespaces Join indirect congruence closure  Adding \ensuremath  {\mathrm  {f(a),f(b)}} to the EC-graph of \ensuremath  {\mathrm  {p_0}} allows us to prove the program with joins. \relax }}{54}}
+\newlabel{snippet3.7}{{3.13}{54}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.14}{\ignorespaces Join indirect congruence closure DSA  This program includes the variables \ensuremath  {\mathrm  {a,b}} in two DSA versions\relax }}{55}}
+\newlabel{snippet3.8}{{3.14}{55}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.15}{\ignorespaces Join congruence closure DSA chain  The program variables \ensuremath  {\mathrm  {a,b}} have several DSA versions, and each CFG-node only refers to up to two versions of each variable. In order to determine which terms need to occur at the join, we need knowledge of the assertion and the entire DSA chain.\relax }}{55}}
+\newlabel{snippet3.23}{{3.15}{55}}
+\citation{GulwaniTiwariNecula04}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.16}{\ignorespaces congruence closure source quadratic\relax }}{56}}
+\newlabel{snippet3.10}{{3.16}{56}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.17}{\ignorespaces Congruence closure - incremental interpolant  This is a modification of the program in figure 3.16\hbox {}.  We assume the dis-equality on the \lstinline |else| branch is added after the join has been calculated. \relax }}{57}}
+\newlabel{snippet3.10a}{{3.17}{57}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.18}{\ignorespaces Infinite join for two congruences  For each i, \ensuremath  {\mathrm  {g(f^i(a))=g(f^i(b))}} at the join \ensuremath  {\mathrm  {n}} - this congruence is not finitely representable as a set of equalities.  \relax }}{58}}
+\newlabel{snippet3.22}{{3.18}{58}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.19}{\ignorespaces congruence closure source quadratic depth  m,n are co-prime.  The minimal interpolant is of quadratic size.\relax }}{58}}
+\newlabel{snippet3.11}{{3.19}{58}}
+\citation{GulwaniTiwariNecula04}
+\citation{GulwaniNecula07}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.20}{\ignorespaces Join infinite equivalence class (m,n co-prime)\relax }}{59}}
+\newlabel{snippet3.30}{{3.20}{59}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.21}{\ignorespaces join infinite equivalence class\relax }}{60}}
+\newlabel{snippet3.30a}{{3.21}{60}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.22}{\ignorespaces Join infinite equivalence class  The assertion holds iff $\exists k,l \cdot k\ensuremath  {\mathrm  {n}}=l\ensuremath  {\mathrm  {m}}+1$\relax }}{60}}
+\newlabel{snippet3.30b}{{3.22}{60}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.23}{\ignorespaces One join super-quadratic interpolant\relax }}{61}}
+\newlabel{snippet3.30c}{{3.23}{61}}
+\@setckpt{ugfole_cc_cfg}{
+\setcounter{page}{63}
+\setcounter{equation}{0}
+\setcounter{enumi}{0}
+\setcounter{enumii}{0}
+\setcounter{enumiii}{0}
+\setcounter{enumiv}{0}
+\setcounter{footnote}{0}
+\setcounter{mpfootnote}{0}
+\setcounter{part}{0}
+\setcounter{chapter}{3}
+\setcounter{section}{2}
+\setcounter{subsection}{2}
+\setcounter{subsubsection}{0}
+\setcounter{paragraph}{0}
+\setcounter{subparagraph}{0}
+\setcounter{figure}{23}
+\setcounter{table}{0}
+\setcounter{parentequation}{0}
+\setcounter{lstnumber}{1}
+\setcounter{ContinuedFloat}{0}
+\setcounter{float@type}{8}
+\setcounter{subfigure}{0}
+\setcounter{subtable}{0}
+\setcounter{theorem}{0}
+\setcounter{definition}{0}
+\setcounter{lstlisting}{0}
+}

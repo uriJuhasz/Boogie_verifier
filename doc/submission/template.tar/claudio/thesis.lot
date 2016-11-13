@@ -1,0 +1,33 @@
+\select@language {english}
+\select@language {english}
+\select@language {english}
+\select@language {italian}
+\select@language {english}
+\select@language {german}
+\select@language {english}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {5.1}{\ignorespaces Overhead of the Sound-Proof prototype}}{47}{table.caption.40}
+\contentsline {table}{\numberline {5.2}{\ignorespaces False Acceptance Rate when the adversary and the victim devices record the same broadcast media}}{54}{table.caption.49}
+\contentsline {table}{\numberline {5.3}{\ignorespaces Comparison of Sound-Proof against Google 2-Step Verification, PhoneAuth, and FBD-WF-WF, using the framework of Bonneau et al.}}{64}{table.caption.72}
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {6.1}{\ignorespaces Completion time for location verification during payment transactions}}{88}{table.caption.89}
+\contentsline {table}{\numberline {6.2}{\ignorespaces Location accuracy results during the field study}}{91}{table.caption.92}
+\contentsline {table}{\numberline {6.3}{\ignorespaces Location accuracy for public transport and building access tests}}{95}{table.caption.94}
+\contentsline {table}{\numberline {6.4}{\ignorespaces Completion time for location verification for public transport and building access tests}}{96}{table.caption.95}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {9.1}{\ignorespaces Comparison of mechanisms to prevent application phishing attacks in mobile platforms}}{121}{table.caption.120}
+\contentsline {table}{\numberline {9.2}{\ignorespaces Demographic information of the 221 participants that completed all tasks}}{128}{table.caption.131}
+\contentsline {table}{\numberline {9.3}{\ignorespaces Success rate of the phishing attack}}{129}{table.caption.132}
+\contentsline {table}{\numberline {9.4}{\ignorespaces Success rate of the phishing attack in relation to gender, age, familiarity with mobile banking, and smartphone display size}}{130}{table.caption.133}
+\contentsline {table}{\numberline {9.5}{\ignorespaces Evaluation summary for the personalized indicator setup prototype}}{145}{table.caption.154}
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {10.1}{\ignorespaces List of our implemented \emph {overt} channels in the Android OS with corresponding throughputs}}{154}{table.caption.162}
+\contentsline {table}{\numberline {10.2}{\ignorespaces List of implemented \emph {covert} channels in the Android OS with their corresponding throughput}}{158}{table.caption.163}
+\addvspace {10\p@ }
+\addvspace {10\p@ }

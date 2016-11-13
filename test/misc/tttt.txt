@@ -1,0 +1,53 @@
++		[0]	{M10[l,H][R := M13[l,H][R]]}
++		[1]	{M17[l,H]}
++		[2]	{M15[l,H]}
++		[3]	{M13[l,H]}
+
++		[0]	{(M10[l,H][R]+(50*k))}
++		[1]	{M13[l,H][R]}
+
++		[0]	{{!l = t,M10[l,H] = M10[t,H]}}
+
++		[0]	{SecMask[t,H][R := (50*k)][R := (100*k)]}
++		[1]	{SecMask[t,H][R := (100*k)]}
++		[2]	{M10[t,H]}
++		[3]	{M11[t,H]}
+
+		index	32051	int
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!l = t \/ M10[l,H] = M10[t,H]       M10[l,H][R]+(50*k)=M13[l,H][R]
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++SP GCGT
+      !l = t \/ M10[t,H][R]+(50*k)=M13[l,H][R]                          M10[t,H]=SecMask[t,H][R := (100*k)]
+		 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++CC
+		                          !l = t \/ SecMask[t,H][R := (100*k)][R]+(50*k)=M13[l,H][R]             m[g:=V][g]=V
+						     	  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++MROW
+										                    !l=t \/ M13[l,H][R]=100*k+50*k                           n*x+m*x=(n+m)*x
+															++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++LIA
+ii32052 Why cant import?				                            !l=t \/ M13[l,H][R]=150*k                   !IGM(m) \/ IPF(f) \/ m[x,f][R] <100*k  IGM(M13)  !IPF(f)
+																	                ----------------------------------------------------------------------------SP GCFC
+																					                      !l=t \/ 150*k<100*k                          !0<x \/ n<m \/ !n*x<m*x     0<k !150<100
+																										  --------------------------------------------------------------------------------LIA
+																										                          !l=t
+																																  
+																																  
+																																  
+index==26																																  
++		GC.m[37724]	{{!Heap@1[this,AVLTreeNode.left] = this,Mask@10[Heap@1[this,AVLTreeNode.left],AVLTreeNode.height] = Mask@10[this,AVLTreeNode.height]}}	Slicer.Analyzers.FOLConverter.CanonicalForms.GC
++		GT.m[87187]	{Mask@13[Heap@1[this,AVLTreeNode.left],AVLTreeNode.height][perm$R]}	Slicer.Analyzers.FOLConverter.CanonicalForms.GT
+																																  
++		[0]	{!this = Heap@1[this,AVLTreeNode.left],Mask@13[Heap@1[this,AVLTreeNode.left],AVLTreeNode.height] = Mask@13[this,AVLTreeNode.height]}	Slicer.Analyzers.FOLConverter.CanonicalForms.GC
+
+
+
+
+
++		this	{J<12>(10,11)}	Slicer.Analyzers.FOLConverter.CanonicalForms.Universe {Slicer.Analyzers.FOLConverter.CanonicalForms.JU}
++		gt	{Mask@7[r@10,AVLTreeNode.keys]} {1#}	Slicer.Analyzers.FOLConverter.CanonicalForms.GT
++		mgt	{Mask@7[r@10,AVLTreeNode.keys]} {2#}	Slicer.Analyzers.FOLConverter.CanonicalForms.GT
++		sourceMap[i]	'sourceMap[i]' threw an exception of type 'System.Collections.Generic.KeyNotFoundException'	Slicer.Analyzers.FOLConverter.CanonicalForms.JU.JSources<Slicer.Analyzers.FOLConverter.CanonicalForms.GT,Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.KeyNotFoundException}
++		i	{Mask@7[r@10,AVLTreeNode.keys]} {2#}	Slicer.Analyzers.FOLConverter.CanonicalForms.GT
+		gti	0	int
+		mgt.index	591	int
+		gt.index	2009	int

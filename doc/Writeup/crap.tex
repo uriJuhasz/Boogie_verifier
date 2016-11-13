@@ -1,0 +1,1109 @@
+
+
+
+Each node in the graph is labeled with a set of pairwise disjoint \newdef{ground function application equivalence class}- a gfa. Each such \GFA{} is of the form $\fa{f}{n}$ where \m{f} is a function symbol in the signature and \tup{n} is a tuple of nodes in the graph. 
+Essentially each \GFA{} represents an AEC of the equivalence relation defined by the graph.
+Each \GFA{} appears at most once in the graph - this ensures that the graph is a partition of terms.\\
+We treat the graph as a set of nodes, and each node as a non-empty set of gfas.
+The graph includes also undirected edges between nodes that represent inequality, at most one per pair of nodes.\\
+The set of terms represented in the graph and at a node, \GFA{} are defined as the least fixed point of the following: \\
+For a gfa:            \m{\fa{g}{s} \in \terms{\fa{f}{m}} \equivdef f \equiv g \land \tup{s} \in \terms{\tup{m}}}\\
+For a tuple of nodes: \m{\tup{s} \in \terms{\tup{m}} \equivdef \bigwedge\limits_i s_i \in \terms{m_i}}\\
+For a node:  \m{t \in \terms{n} \equivdef \exists \fa{f}{m} \in n \cdot t \in \terms{\fa{f}{m}}}\\
+For a graph: \m{t \in \terms{g} \equivdef \exists n \in g \cdot t \in \terms{n}}
+
+We denote by \m{[t]_g} the node in the graph g that represents the term t , when \m{t \in \terms{g}}:\\
+\m{[t]_g = n} iff \m{t \in \terms{n} \land n \in g}
+\begin{theorem}
+The above definition for \m{[t]_g} is well defined if \m{t \in \terms{g}} - that is\\
+\m{\forall t \in \terms{g} \cdot \forall m,n \in g \cdot t \in \terms{m} \land t \in \terms{n} \Rightarrow m=n )}\\
+\textbf{Proof:}\\
+We show this by induction on the depth of t: for a constant term c, of (depth 1), \\
+\m{c \in \terms{n}} iff \m{c() \in n}, and similarly for m. As nodes are pairwise disjoint sets of \gfas this means \m{m=n}.\\
+For depth \m{k+1} and term \m{t=\fa{f}{s}}, we know from i.h. that \\
+\m{\forall m',n' \in g,i \cdot (s_i \in m' \land s_i \in n' \Rightarrow m'=n')}.
+If \m{t \in \terms{m} \land t \in \terms{n}} then, by definition there are \tup{m'},\tup{n'} s.t. \m{\fa{f}{m'} \in m \land \fa{f}{n'} \in n} and\\
+\m{\bigwedge\limits_i t_i \in \terms{m'_i}} and
+\m{\bigwedge\limits_i t_i \in \terms{n'_i}}.\\
+By the induction hypothesis this implies that \m{\tup{m'} = \tup{n'}} (tuples are equal iff they are of the same length and equal for all indices).\\
+This implies \m{\fa{f}{m'}=\fa{f}{n'}} (\gfas are equal iff the function symbol and tuple are equal).\\
+By the pairwise disjointness of nodes we get \m{m=n}.\\
+\QED
+\end{theorem}
+
+\textbf{Definitions:}\\
+\m{g \models s=t} when \m{s,t \in \terms{g}} and \m{[t]_g=[s]_g}, extended in the standard way for tuples.\\
+\m{g \models s \neq t} iff \m{s,t \in \terms{g}} and there is an edge in g between \m{[t]_g} and \m{[s]_g}.\\
+\m{g \models \emptyClause} iff, for some \m{l,r}, \m{g \models l=r} and \m{g \models l \neq r}.\\
+To represent an EC graph as a minimal set of equations we need a representative \gfa for each node, 
+and then the set of equalities is exactly equalities between the representatives of \gfas at each node.\\
+We choose always the representative of least weight, and among them by an arbitrary order on terms (unrelated to the one for superposition) - formally:\\
+\m{\eqs{g} \triangleq \cup \s{\eqs{n} \mid n \in g}}\\
+\m{\eqs{n} \triangleq \s{s=t \mid s,t \in gfareps(n) \land t = min_{<_{rep}}(gfareps(n) \setminus \s{s})}}\\
+\m{gfareps(n) \triangleq \s{gfarep(\fa{f}{s}) \mid \fa{f}{s} \in n}}\\
+\m{gfarep(\fa{f}{s}) \triangleq f(rep(\tup{s})}\\
+\m{gfarep(\fa{f}{}) \triangleq \fa{f}{}}\\
+\m{rep(n) \triangleq min_{weight,<_{rep}}(gfareps(n))} \\
+\m{rep(\tup{n})_i \triangleq rep(n_i)} \\
+\m{weight(\fa{f}{t}) \triangleq 1+\Sigma_i weight(t_i)}\\
+Where \m{min_{weight,<_{rep}}} is the minimum in lexicographic order, first on weight then on the arbitrary term order\\
+This is well defined as the weight ordering implies that a term is always smaller than super-terms.
+
+\bigskip
+\noindent
+\textbf{Properties:}\\
+\textbf{Consistency:} The graph is called consistent iff \m{g \not\models \emptyClause}.\\
+\textbf{Sub-term closure:} The graph is by definition sub-term closed, as a term is in the graph only if all direct sub-terms are.\\
+\textbf{Congruence closure:} The graph is by definition congruence closed, by the uniqueness of 
+
+\subsection{Operations}
+\textbf{Constructor:} The constructor takes a set of axioms and \lstinline{assumes} them.\\
+\textbf{Assume:} Assuming an axiom \m{s \bowtie t} means \lstinline{add}ing \m{t,s} to \m{g} and then:\\
+For \m{s \neq t} we add an (undirected) edge between \m{g(s)} and \m{g(t)}. \\
+For \m{s = t} we proceed as follows:
+\begin{lstlisting}
+assume( $\m{s=t}$ )
+	ns = add(s)
+	nt = add(t)
+	mergeSet($\s{ns,nt}$)
+	
+mergeSet(S0 : Set[Node])
+	mergeOnce(S0)
+	while not all nodes are pairwise disjoint
+		S = choose all nodes that share a shared gfa
+			mergeOnce(S)
+	
+mergeOnce(S : set of node)
+	n = $\cup$ S 
+	add n to nodes
+	foreach node $\m{m \in g}$
+		replace each $\m{\fa{f}{s} \in m}$
+			with $\m{\fa{f}{s}[S \mapsto n]}$
+	replace each disequality edge $\m{(m,m')}$
+		with $\m{(m,m')[S \mapsto n]}$
+	remove S from nodes
+\end{lstlisting}
+We use the syntax 
+\m{n[m \mapsto l]} 
+for nodes \m{m,n,l} to define substitution similar to term substitution - formally:\\
+\m{n[m \mapsto l] \triangleq \ite{m \equiv n}{l}{n}}\\
+The set extension:\\
+\m{n[S \mapsto l] \triangleq \ite{n \in S}{l}{n}}\\
+And tuples:\\
+\m{\tup{s}[S \mapsto l]_i \triangleq s_i[S \mapsto l]}\\
+\lstinline{mergeOnce} performs essentially congruence closure, as seen by the loop condition.\\
+The method \lstinline|mergeSet($\s{s=t}$)| ensures the following properties, for a pre-state graph \m{g} and a post state graph{g'} where \m{s,t \in \terms{g}}:\\
+\m{\terms{g} \subseteq \terms{g'}} - monotonic in terms\\
+\m{\forall u,v \in \Ts{\sig{}} \cdot \eqs{g'} \models u \bowtie v \Leftrightarrow \eqs{g} \cup \s{s=t} \models u=v} - this essentially means that no information is added to the graph except for \m{s=t}.\\
+It is easy to see that also the operation reduces the number of equivalence classes of \m{\size{\ECs{\eqs{g}}}} by at least one, and can only reduce the number of \GFAs{} - hence the complexity of the graph can only decrease.\\
+Also, no terms are removed, only added. \\
+We will later sometimes want to keep a mapping between a node in \m{g} and the node it was merged to in \m{g'}, in order to communicate a \emph{changeset} in the graph for incremental updates.\\
+\textbf{Add term:} Adding a term \m{t} to the graph is defined recursively as follows:
+\begin{lstlisting}
+add( $\fa{f}{s}$ : Term ) : Node
+	m = add($\tup{s}$) //tuple extension
+	if $\m{\fa{f}{m} \in n}$ for some $\m{n \in g}$
+		return n
+	else
+		n = add new node $\s{\fa{f}{m}}$
+		return n
+\end{lstlisting}
+The above code maintains the invariant that nodes are pairwise disjoint.\\
+By definition also \lstinline{$\fa{f}{s} \in $add($\fa{f}{s}$)} at the post-state.
+
+\subsection{Satisfiability}
+We can use the above graph to check the satisfiability of a set of unit ground (in)equalities (axioms) by \lstinline{assuming} all axioms and checking if the graph is consistent.\\
+However, we want to use only a subset of the axioms that are guaranteed to suffice to show inconsistency iff the axioms are inconsistent.\\
+We know that any set of only positive equalities is consistent, so we start with all inequalities and gradually add equalities on sub-terms until we get an inconsistency, or there are no more axioms to add:
+As we apply the congruence closure and axiom addition until saturation, the set of equalities represented by the graph is saturated with respect to the congruence closure calculus for the axioms in the set \lstinline{s}.
+\begin{theorem}
+Theorem: The graph \m{g} and set \m{s} constructed for the initial set of axioms \m{Ax} satisfies\\ 
+\m{\forall l \in \terms{g} \cdot ((r \in \terms{g} \land g \models l=r) \Leftrightarrow s \models l=r)}
+
+\noindent
+\textbf{Monotonicity lemma:} \\
+At each step of \lstinline|mergeOnce|, where \m{g} is the graph at the pre-state and \m{g'} is the graph at the post-state,
+the following monotonicity property holds:\\
+Except for the last statement that removes the merged nodes, it holds that the set of terms represented by a node in \m{g'} is a superset of the set of terms represented by the same node in \m{g} - by simple induction on the depth of a term.\\
+For the last statement, each term represented by a deleted node is also represented by the merged node.
+Hence, we can immediately deduce that if \m{g \models s=t} then \m{g' \models s=t}.
+
+\noindent
+\textbf{Proof of $\Leftarrow$ (completeness of \lstinline|assume|):} \\
+We will show that the set of equalities implied by the graph is saturated with respect to transitivity and congruence closure and includes all the equalities in \m{S}. \\
+For an equality \m{l=r} s.t. \m{S \models l=r} and \m{l \in \terms{g}} we proceed by strong induction on the depth of the derivation tree in \m{\mathbf{CC_I}} (which is complete for non-tautological consequences), 
+where the induction hypothesis is that for depth k, if \m{S \vdash_{\mathbf{CC_I}} s=t} and \m{s \in \terms{g}} then \m{t \in \terms{g}} and \m{g \models s=t} \\
+\textbf{Axioms:} Each axiom \m{l=r} in \m{s} holds in \m{g} because each such axiom is \lstinline{assume}d in \m{g}, and by the definition of \lstinline{assume}, after the \lstinline{assume} \m{[l]_g=[r]_g}, which is the definition of \m{g \models l=r},
+and \lstinline|assume| is monotonic.\\
+\textbf{Transitivity:} If \m{S \vdash_{\mathbf{CC_I}} l=t,t=r} for some t, by the induction hypothesis \m{t \in \terms{g}} and hence by i.h. \m{t \in \terms{g}} and \m{g \models l=t} and again by i.h. \m{r \in \terms{g}} and \m{g \models t=r} and then \m{[l]_g=[t]_g=[r]_g} hence \m{g \models l=r}\\
+\textbf{Congruence Closure:} If \m{S \vdash_{\mathbf{CC_I}} \fa{f}{s}=\fa{f}{t}} by congruence closure and \\
+\m{\fa{f}{s} \in \terms{g}} then \m{S \vdash_{\mathbf{CC_I}} \tup{s}=\tup{t}} and then by sub-term closure, \m{\tup{s} \in g} and by i.h. 
+\m{\tup{t} \in g} and \m{g \models \tup{s}=\tup{t}}.\\
+\fa{f}{s} is represented (by definition) by some \GFA{} \fa{f}{m}, which also, as \m{g \models \tup{s}=\tup{t}}, represents \fa{f}{t},
+hence \m{g \models s=t}.\\
+\QED
+
+\textbf{Proof of $\Rightarrow$ (soundness of \lstinline|assume|):} \\
+We show that for one application of \lstinline|assume(s=t)|, with the pre-state graph g and set of axioms A and the post-state graph \m{g'} and set of axioms \\
+\m{A' = A \cup \s{s=t}}, if at the pre-state \m{\forall l,r \in \terms{g} \cdot g\models l=r \Rightarrow A \models l=r} then at the post-state \m{\forall l,r \in \terms{g'} \cdot g' \models l=r \Rightarrow A' \models l=r}:\\ 
+If \m{l=r \equiv s=t} or \m{g \models l=r} then we are done, 
+otherwise we look at intermediate states of the graph on a call to \lstinline|mergeOnce| for the \GFA{} \fa{f}{x} and set of nodes \m{S}:\\
+Such an intermediate state graph q does not satisfy our uniqueness property, 
+but we can still define \m{q \models l=r} as \m{\exists n \in q \cdot l,r \in \terms{n}} as this is still well defined.\\
+The operation of \lstinline|mergeOnce| is obviously monotonic with respect to the set of equalities represented by the intermediate graph, 
+and so we inspect the first instance of \lstinline|mergeOnce| where at the pre-state \m{q \not\models l=r} and at the post-state (\m{q'} being the post-state graph), \m{q' \models l=r}.\\
+We denote the intermediate graph after adding \m{n} to the set of nodes but before replacing \GFAs{} as \m{q''}.\\
+If \m{q'' \models l=r}, it means that there are nodes \m{n_l,n_r \in q} s.t. \\
+\m{l \in \terms{n_l}, r \in \terms{n_r}} and \m{n_l \neq n_r} but for some \GFA{} \fa{f}{u}, \m{\fa{f}{u} \in n_l \cap n_r} 
+(hence \m{n_l,n_r \in S}, S the set of nodes being merged).\\
+As the set \terms{\fa{f}{u}} is non-empty there is some term \m{v \in \terms{\fa{f}{u}}} and so,
+\m{q \models l=v,v=r} and hence \m{A' \models l=r} by transitivity.
+
+Otherwise, \m{q'' \not\models l=r} but \m{q' \models l=r}, we look at the state of the graph before and after the replacement operation on each gfa, we now name w the graph before the first \GFA{} replacement that established \m{l=r} and \m{w'} the graph immediately after the replacement, s.t. \m{w \not\models l=r} and \m{w' \models l=r}.\\
+The \m{\mathbf{terms}} function is different between \m{w} and \m{w'} as one node has been relabeled, so we use \m{\terms{n}} for \m{w} and \m{\termsp{n}} for \m{w'}. It is easily seen that \m{\terms{n} \subseteq \termsp{n}}.\\
+We name the replaced \GFA{} \fa{h}{m} replaced by \fa{h}{m'} at the node \m{n_1}.\\
+By definition and w.l.o.g there is a node \m{n_0 \in w} s.t. \m{l,r \in \termsp{n_0}} but \m{r \notin \terms{n_0}}.\\
+We now show by strong induction on the maximal depth of l,r that\\
+ \m{w' \models l=r \Rightarrow A' \models l=r}:\\
+We name r as the term \fa{f}{y}.\\
+We name the \GFA{} that represents r in \termsp{n_0} as \fa{f}{v}.\\
+r cannot be a constant as all \GFAs{} replaced are of at least depth 2, so \terms{n_0} and \termsp{n_0} agree on constants.\\
+Now we look at two cases:
+
+If \m{l \in \terms{n_0}}, we look again at two cases:\\
+If \fa{f}{v}=\fa{f}{m'} - that is, \fa{f}{v} replaced \fa{f}{m}, then \m{\terms{\fa{f}{m} \subseteq \termsp{\fa{f}{v}}}}, 
+and furthermore \m{\forall i \cdot \terms{m_i} \subseteq \termsp{m_i} \subseteq \termsp{v_i}}.\\
+and as \terms{\fa{f}{m}} is not empty, there is some term \m{\fa{f}{z} \in \terms{\fa{f}{m}}} s.t. \m{w \models l=\fa{f}{z}}.\\
+By the induction hypothesis we also know that for each i, \m{A' \models z_i = y_i}, as the depth of \m{x_i} is less than that of r.\\
+Hence, by congruence closure, \m{A' \models \fa{f}{y}=\fa{f}{z}} and by transitivity \m{A' \models l=r}.\\
+If \fa{f}{v} is not a replaced node, a similar argument holds, as \\
+\m{\terms{\fa{f}{v}} \subseteq \termsp{\fa{f}{v}}}.
+
+If \m{l \notin \terms{n_0}}, and \m{l=\fa{g}{x}} and is then represented by the \GFA{} \m{\fa{g}{u}}.\\
+If \m{\fa{g}{x}=\fa{f}{y}} (that is, \m{f\equiv g} and both l,r are represented by the same \GFA{} at \m{n_0} in \m{w'}), then again by the induction hypothesis and congruence closure we get \m{A' \models l=r}.\\
+Otherwise, by monotonicity and non-emptiness of the \terms{} function, there is some \m{l' = \fa{g}{x'}} s.t. \m{\fa{g}{x'} \in \terms{\fa{g}{u}}} and hence \\
+\m{l' \in \terms{n_0} \subseteq \termsp{n_0}}, and similarly \m{r' = \fa{f}{y'}} s.t. \m{\fa{f}{y'} \in \terms{\fa{f}{v}}} and \m{r' \in \terms{n_0} \subseteq \termsp{n_0}}. \\
+Because \m{l',r' \in \terms{n_0}} we get \m{w \models l'=r'} and hence \m{A' \models l'=r'} by monotonicity. \\
+By the induction hypothesis and congruence closure as before, we get \\
+\m{A' \models l=l',r=r'} and hence by transitivity \m{A' \models l=r}.\\
+\QED
+\end{theorem}
+%Note that the theorem does not hold for inequalities - for example, from \\
+%\m{s = \s{f(a) \neq f(b)}} we will not derive \m{g \models a \neq b} - we will return to this point later.
+
+\begin{theorem}
+The graph g constructed for the initial set of axioms \m{Ax} satisfies 
+\m{\forall l \in \terms{g},r \in \Ts{\Sigma} \cdot ((r \in \terms{g} \land g \models l=r) \Leftrightarrow Ax \models l=r)}
+
+\noindent
+\textbf{Proof:} \\
+\textbf{Soundness: ($\Rightarrow$)}\\
+For \m{l,r \in g \land  g \models l=r \Rightarrow Ax \models l=r} :\\
+This stems directly from the soundness above as \m{s \subseteq Ax} and the logic is monotonic.
+%By uniqueness of \gfas the graph is always a partition of the terms represented in it, so it always represents an equivalence relation. 
+%An equality \m{g \models l=r} in the graph be generated by:\\
+%\lstinline{add} Adding a new \gfa \fa{f}{m} for the term \fa{f}{s} to a singleton node \s{\fa{f}{m}} - so, for some \m{\tup{u},\tup{v}} where \m{\tup{u},\tup{v} \in \tup{m}}, the equality \m{l=\fa{f}{u}=\fa{f}{v}=r} was added - this is justified by congruence closure as it means \m{g \models \tup{u}=\tup{v}}.\\
+%\bigskip
+%\lstinline{assume}: The invariant of the loop in \lstinline{mergeSet} is that \\
+%\m{\forall l,r \in g \land \exists n \cdot l,r \in m \Rightarrow Ax \models l=r}\\
+%Initially, this holds as it holds for the input graph.\\
+%After \lstinline{mergeOnce(S0)} it holds because \m{\exists s=t \in Ax \mid S0=\s{g(s),g(t)}}, 
+%so if \m{g \models l=r} is established on a node merge in \lstinline{mergeOnce(S0)} it means that, at the prestate, \m{l \in \terms{g(s)},r \in \terms{g(t)}} and so \m{g \models l=s,r=t}, and hence \m{Ax models l=s,t=r} and by transitivity \m{Ax \models l=r}.
+%If \m{g \models l=r} is established by replacing \gfas after merging \m{g(s),g(t)} to \m{n'}, 
+%at the prestate \m{l=\fa{f}{u} \in \terms{m}, r=\fa{h}{v} \in \terms{n}}, \\
+%and \m{\tup{u} \in \terms{\tup{mm}}, \\\tup{v} \in \terms{\tup{nn}}} so that \m{\fa{f}{mm} \in m,\fa{f}{nn} \in n}, at the post-state 
+%\tup{mm,nn} are replaced by 
+%\m{\tup{mm'}==\tup{mm}[\s{g(s),g(t)} \mapsto n']} and \\
+%\m{\tup{nn'}==\tup{nn}[\s{g(s),g(t)} \mapsto n']} and \\
+%where $\fa{f}{mm'} \equiv \fa{h}{nn}$ implying \m{f = h,mm'=nn'}.
+%As \m{n'} is a new node, we get \\
+%\m{\bigwedge\limits_i (mm_i==nn_i \lor mm_i,nn_i\in\s{g(s),g(t)})} \\
+%Putting it all together we get \m{\bigwedge\limits_i (Ax \models u_i==v_i)} and so \m{Ax \models l=r}.
+%\QED
+
+%\noindent
+%\textbf{Termination:} \\
+%\lstinline{unsat} terminates as the set \m{Axioms \setminus s} is finite and strictly decreasing in each iteration, and the loop terminates when it is empty.\\
+%\lstinline{mergeSet} terminates as the set of nodes of the graph strictly decreases with each iteration and is finite.
+%\QED
+
+\noindent
+\textbf{Completeness:}\\
+The completeness proof proceeds as above, the difference is that for an axiom \m{l=r}, if \m{l \in \terms{g}} then the termination condition of the loop ensures that \m{l=r \in S} and hence we can use the result above.\\
+%For \m{l,r \in g \land Ax \models l=r \Rightarrow g \models l=r}:\\
+%By contradiction, assume that for some \m{l,r \in g}, \m{Ax \models l=r}, but \m{[l]_g \neq [r]_g}.
+%As the calculus \m{CC_I} is complete for (non-tautological) \terms{Ax}, assume that there is a derivation \m{D} in the calculus for \m{l=r}. From the shape of derivations we can immediately see that no disequalities take part in such a derivation.\\
+%We select a conclusion \m{u=v} of a sub-derivation \m{D'} of \m{D} where \m{u \in g} and \m{g \not\models u=v}, and where \m{D'} is minimal in that sense - the conclusions of all sub-derivations of \m{D'} are either implied by \m{g} or both terms are not in \m{g}.\\
+%By case analysis on the derivation at the root of \m{D'}:\\
+%\textbf{Axiom:} If \m{u=v \in Ax} and \m{u \in g} then \m{u=v} was \lstinline{assumed} by the termination condition for \lstinline{unsat} and so \m{u=v \in s} and hence \m{[u]_g=[v]_g)} by the completeness above.\\
+%\textbf{Transitivity:} If \m{u \in g} and \m{D'} includes proper sub-derivations for \m{u=t,t=v} for some \m{t}, then by the minimality of \m{u=v} we know \m{t \in g} and \m{g \models u=t} and similarly \m{v \in g} and \m{g \models t=v} - hence \m{[u]_g=[t]_g=[v]_g} and so \m{g \models u=v}.\\
+%\textbf{Congruence Closure:} If \m{v=\fa{f}{t}} and \m{u=\fa{f}{s} \in g} and \m{D'} includes proper sub-derivations for \m{s_i=t_i} for each i, then by minimality and sub-term closure \m{g \models \tup{s}=\tup{t}} and hence \m{[\tup{s}]_g=[\tup{t}]_g} and so 
+%\m{f([\tup{s}]_g)=f([\tup{t}]_g)} and by the pairwise disjointness of the nodes in the graph we know that \m{[u]_g \ni f([\tup{s}]_g)=f([\tup{t}]_g) \in [v]_g} which implies \m{[u]_g=[v]_g}.
+\QED
+\end{theorem}
+
+\begin{theorem}
+The graph \m{g} constructed for the initial set of axioms \m{Ax} satisfies 
+\m{Ax \vdash_{\mathbf{CC}} l \neq r \Leftrightarrow g \models l \neq r}
+
+Note that \m{Ax \vdash_{\mathbf{CC}} l \neq r} is not equivalent to \m{Ax \models l \neq r}, for example, from \m{f(a) \neq f(b)} we cannot derive \m{a \neq b}, but \m{\mathbf{CC}} is refutationally complete - that is:\\
+\m{Ax \vdash_{\mathbf{CC}} \emptyClause \Leftrightarrow Ax \models \emptyClause }
+
+\noindent
+\textbf{Proof:}
+
+\noindent
+\textbf{Soundness:}\\
+The proof is similar to the proof for equalities except that we do not have congruence closure - the transitivity axiom is the same for both polarities.\\
+\QED
+
+\noindent
+\textbf{Completeness:}\\
+Assuming \m{Ax \vdash_{\mathbf{CC}} l \neq r},  we have a derivation \m{D} for \m{l \neq r} from \m{Ax}.\\
+As the only derivation is by transitivity from one equality and one disequality, and as all disequality axioms are included in \m{S}, 
+we can show by induction on the derivation depth of \m{D} that \m{g \models l \neq r} using the above theorem for equalities to show that all relevant terms are represented in g and all hence all relevant equalities are implied by g.\\
+\QED
+\end{theorem}
+
+\begin{theorem}[Refutational Completeness]
+
+The graph \m{g} constructed for the initial set of axioms \m{Ax} satisfies \\
+\m{Ax \models \emptyClause \Leftrightarrow g \models \emptyClause}
+
+\noindent
+\textbf{Proof:}\\
+The empty clause is generated only by resolution, from the above two theorems we know that the premises for this resolution hold in the graph iff they are derivable from the axioms, and the graph is inconsistent iff such premises hold in the graph - hence by the refutational completeness of the congruence closure calculus the graph is inconsistent iff the \m{Ax} are.\\
+\QED
+\end{theorem}
+
+This process allows us to consider only a subset of the axioms which is guaranteed to be sufficient for showing unsatisfiability -  we would want to apply the same idea for selective propagation of axioms in the program cfg.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%\newpage
+%
+%Before discussing how we tackle this problem, we extend the definition of the \textbf{sources} function to tuples:\\
+%\m{\sources{n}{p}{\tup{s}}_i \triangleq \sources{n}{p}{s_i}} \\
+%sets :\\
+%\m{\sources{n}{p}{S} \triangleq \bigcup\limits_{t \in S} \sources{n}{p}{t}} \\
+%and paths:\\
+%\m{\sourcesB{n}{t} \triangleq \s{t}}\\
+%\m{\sourcesB{p.P.n}{t} \triangleq \sourcesB{p.P}{\sourcesB{n}{t}}}\\
+%Where \m{n} is a singleton path and \m{p.P.n} is a path from \m{p} to \m{n}.\\
+%The last extension is for a (not-essentially direct) predecessor:\\
+%\m{\sources{n}{p}{t} \triangleq \bigcup\limits_{P \in \paths{p}{n}} \sourcesB{P}{t}}\\
+%For direct predecessors this coincides with the previous definition by construction.
+
+\subsubsection{Source completeness}
+As we have seen in ~\ref{snippet3.16b}, if we rely only on EC-graphs for information propagation, we may need to add some terms to some EC-graphs in order to ensure that the necessary equality information can be requested.
+
+As a first attempt at a (non-local) invariant, we might require that all source-chains are complete, by ensuring that on every path between cfg-nodes, for every equality chain along the path, all terms that participate in the equality chain appear in their corresponding cfg-nodes:
+\begin{figure}[H]
+\m{\forall n \in \cfg,p \in \predsto{n},p.P.q.Q.n \in \paths{p}{n},t \in \terms{g_n},s \in \terms{g_p}}\\
+\m{r \in \Ts{\sig{}} \cdot
+\clauseseq{p.P.q} \models s=r \land \clauseseq{q.Q.n} \models r=t \Rightarrow r \in \terms{g_q}}
+\caption{Equality chain source completeness}
+\label{equality_chain_source_completeness}
+\end{figure}
+However, satisfying this requirement may require us to add an infinite set of terms - for example:
+\begin{figure}[H]
+\begin{lstlisting}
+$\node{s}:$
+if ($\m{c_1}$)
+	$\node{p_0}:$
+	assume $\m{a=f(a)}$
+	assume $\m{g(a)=b}$
+else
+	$\node{p_1}:$
+$\node{n}:$
+...
+$\node{n_1}:$
+assume $\m{a=f(a)}$
+assert $\m{g(a)=b}$ //negated $\m{\textcolor{gray}{g(a) \neq b}}$
+\end{lstlisting}
+\caption{equality chain source completeness infinite}
+\label{snippet3.16cx}
+\end{figure}
+Here, for the path \m{p_0.n.n_1}, and the EC-nodes \m{[a]_{n_1}, [a]_{p_0}}, in order to satisfy the above requirement 
+we would need to add to \m{g_n} a node for \m{f^k(a)} for any k - hence we would need an infinite graph at \m{n}.\\
+However, it is evident that in this case adding only \s{a,g(a)} to \m{n} would allow us to determine that we can propagate \m{\lnot c_1 \lor g(a)=b} to \m{n_1}, as there would be at least one source chain between 
+\m{[a]_{p_0}, [a]_{n_1}} and between \\
+\m{[g(a)]_{p_0}, [g(a)]_{n_1}}.
+We formalize this requirement as follows:
+\begin{figure}[H]
+\m{\forall n \in \cfg,p \in \predsto{n},P \in \paths{p}{n},t \in \terms{g_n},s \in \terms{g_p} \cdot}\\
+\m{\clauseseq{P} \models t=s \Rightarrow [s]_{g_p} \in \sourcesB{P}{[t]_{g_n}}}
+\caption{Strong source completeness}
+\label{strong_source_completeness}
+\end{figure}
+This means that if two terms are equivalent on a path, and appear on the graphs on both ends of the path, then each node on the path has a term equivalent to both terms, so that these terms form an equality chain ($\mathbf{sources}$ chain) from \m{[t]_{g_n}} to \m{[s]_{g_p}}.\\
+We call this condition \emph{strong source completeness}.\\
+However, this condition is also too strong - for example:
+\begin{figure}[H]
+\begin{lstlisting}
+$\node{s}:$
+if ($\m{c_1}$)
+	$\node{p_0}:$
+	assume $\m{f^{2m}(a)=f^m(a)}$
+	assume $\m{g(a)=b}$
+else
+	$\node{p_1}:$
+$\node{n}:$
+...
+$\node{n_1}:$
+assume $\m{f^{2n}(a)=f^n(a)}$
+assert $\m{g(a)=b}$ //negated $\m{\textcolor{gray}{g(a) \neq b}}$
+\end{lstlisting}
+\caption{equality chain source completeness quadratic}
+\label{snippet3.16d}
+\end{figure}
+Here, for any k,l, \m{p_0.n.n_1 \models f^k(a)=f^l(a)}, but the minimal witness at \m{n} to \m{[f^m(a)]_{p_0}=[f^n(a)]_{n_1}} is \m{f^{mn}(a)} - that is, it is the minimal (in size, depth and sub-term relation) term \m{t} that when \lstinline{added} to \m{g_n} would satisfy \\
+\m{[t]_n \in \sources{n_1}{n}{[f^n(a)]_{n_1}} \land [f^m(a)]_{p_0} \in \sources{n}{p_0}{[t]_n}}.
+
+However, it is evident from this example that, without additional equations at \m{s,p_1,n}, there is no need for the above complete source chain as there are no further equalities provable at \m{n_1} with an interpolant in the fragment.
+In this section we are only interested in completeness for the ground unit fragment, and so we will weaken our condition in order to get a more efficient formulation that is still sufficient to prove a weaker notion of source completeness.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\bigskip
+\noindent
+We 
+However, as we have seen in example ~\ref{snippet3.5}, these conditions are too strong.
+Instead, we want \emph{interpolation completeness} for the fragment of ground unit equalities:\\
+\m{\forall n \in \cfg, s,t \in \terms{g_n} \cdot (n \models_{u} s = t \Rightarrow g_n \models s = t)}\\
+This definition means that if there is a fragment interpolant \m{I_{u}} s.t. \m{I_n \models s = t} \\
+and \m{s,t \in \terms{g_n}} then \m{g_n \models [s]_{g_n}=[t]_{g_n}}, and similarly for inequalities.
+
+As we represent all information about ground (dis)equalities using \\
+EC-graphs, and as we propagate information only between adjacent nodes, 
+the node EC graphs form a fragment interpolant for the cfg.\\
+We are looking,then, for an interpolant that is sufficient for refuting all assertions, but minimal in the time and space required to construct it incrementally.\\
+As we have discussed regarding propagation criteria, we have chosen to propagate eagerly all equalities on sub-terms, 
+and hence the interpolation completeness above implies the following condition:
+\begin{figure}[H]
+\m{\forall n \in \cfg, s \in \terms{g_n},t \in \Ts{\sig} \cdot}\\
+\m{(n \models_{u} s = t \Rightarrow t \in [s]_{g_n})}
+\caption{strong propagation completeness}
+\label{strong_propagation_completeness}
+\end{figure}
+That is, if the fragment implies that a term in the graph is equal to another term, 
+the other term will also be in the graph in the same EC.
+Remember also that the graphs are by construction sub-term closed, and hence for any node \node{n}, 
+if a term \m{t} is in \m{g_n} then we get essentially the strongest possible interpolant for the sub-term closure of \m{t} (that is, all fragment implied (dis)equalities on the sub-term closure). \\
+As we have seen in ~\ref{snippet3.30}, it is not possible to satisfy the above condition for the strong join.
+
+We will implement a weaker version that approximates the above, which might still seem wasteful, but it has the following advantages:
+\begin{itemize}
+	\item It is predictable for programmers - as opposed to ordering based criteria where it might be harder for users of the tool to predict exactly which equalities should be deduced at each program point (especially with the limitations we will introduce in the next chapter)
+	\item It makes the performance of incremental updates easier to predict, as it is much less sensitive to the order in which equations are introduced
+	\item It makes re-establishing completeness after local changes to nodes easier, as we can derive locally the actions needed to repair completeness after changes (described at the end of the section)
+\end{itemize}
+The \textbf{main point} is that  \emph{the only freedom we have in order to define and establish completeness is in choosing which terms appear in the EC graph of which node} - so the propagation algorithm will deal with determining which terms need to be added at which node.
+
+In this section we will give an invariant for cfg nodes, that is local (only refers to the node and its immediate predecessors) that ensures global interpolation completeness. 
+Our invariant will describe how information flows along the cfg, in both directions.\\
+In terms of the actual performance of verification, we have a second dimension of freedom - the order of evaluation.
+We have seen an example of this before in the algorithm in ~\ref{clause_import_global} - there we can either import the relevant clauses from transitive predecessors once per clause, or per each set of clauses, which reduces dramatically the number of cfg traversals. 
+We will discuss the various possible orders of evaluation in the implementation chapter, 
+and only comment in this chapter how the invariant can limit our choice of order of evaluation.
+
+\subsubsection{Weak source completeness}
+Our weaker condition will ensure interpolation completeness and additionally will be local.
+Interpolation completeness is as follows:
+\begin{figure}[H]
+\m{\forall n \in \cfg,t \in \terms{g_n}, s \in \Ts{\sig} \cdot} \\
+\m{n \models_{w} s=t \Rightarrow s \in \terms{[t]_{g_n}}}
+\caption{Ground unit equality weak completeness}
+\label{ground_unit_equality_weak_completeness}
+\end{figure}
+Meaning that each EC-node in each EC-graph of each cfg-node represents a complete equivalence class of the equivalence relation that contains all equations implied at that cfg-node by any interpolant of the fragment of weak equalities - we will explain the difference in detail in the following.
+
+We will define our invariant locally in two parts, and later show that it implies the above interpolation completeness.
+
+We will require one additional notion in order to define the local weak completeness condition on the \m{\mathbf{sources}} function:\\
+We maintain at each \cfg node \node{n} a list of \emph{rejected \gfa} - \rgfas{n}.\\
+An \rgfa is a \gfa \fa{f}{s} s.t. \m{\tup{s} \in g_n} but \m{\fa{f}{s} \notin g_n}, it is used to mark the fact that there is no provable (in the fragment) equality on any of the terms of \terms{\fa{f}{s}} at \node{n}.
+By definition the sets \gfasA{g_n} and \rgfas{n} are disjoint.
+
+The \emph{weak source invariant} is formally:
+\begin{figure}[H]
+\begin{enumerate}
+	\item \m{\forall n \in \cfg, p \in \preds{n}, \fa{f}{t} \in \gfasA{g_n}, \tup{s} \in \sources{n}{p}{\tup{t}} \cdot }\\
+		\m{\fa{f}{s} \in \gfasA{g_p} \Rightarrow [\fa{f}{s}]_{g_p} \in \sources{n}{p}{[\fa{f}{t}]_{g_n}}}
+	\item \m{\forall n \in \cfg, p \in \preds{n}, \fa{f}{t} \in \gfasA{g_n} \cup \rgfas{n}, \tup{s} \in \sources{n}{p}{\tup{t}} \cdot}\\
+		\m{ \fa{f}{s} \in \gfasA{g_p} \cup \rgfas{p}}
+	\item \m{\forall n \in \cfg,\tup{t} \in g_n,f \in \Fs{\sig} \cdot}\\
+		\m{(\forall p \in \preds{n} \cdot \exists \tup{s} \in \sources{n}{p}{\tup{t}}\cdot \fa{f}{s} \in \gfasA{g_p}) \Rightarrow \fa{f}{t} \notin \rgfas{n})} 
+\end{enumerate}
+\caption{Weak source invariant}
+\label{weak_source_invariant}
+\end{figure}
+This invariant is phrased cfg-locally (it only refers to a node and its direct predecessors), but not EC-graph locally.\\
+We explain the invariant by examples in the next sub-section, and in detail in the following section.\\
+Intuitively this invariant implies that two terms that appear each at the end of a path and are equal on the path will be appear in all nodes on the path \emph{if at every join on the path an equivalent term appears at every joinee}.\\
+An \rgfa at a cfg node means essentially that none of the terms represented by the \rgfa appear on all paths leading to the cfg node.
+This differs from the strong invariant in that we require a term to appear at the join only if it appears in \emph{all} joinees,
+while the strong invariant requires it to appear if it appears in \emph{any} joinee.
+
+\subsubsection{The propagation invariant}
+The \emph{propagation invariant}  ensures that all relevant equality information is propagated locally:
+\begin{figure}[H]
+\m{\forall n \in \cfg,t \in \terms{g_n}, s \in \Ts{\sig} \cdot} \\
+\m{s=t \in \sqcup_F(\eqs{g_n},\s{\eqs{g_p}}_{p \in \preds{n}}) \Rightarrow s \in \terms{[t]_{g_n}}}
+\caption{Term based propagation invariant}
+\label{propagation_invariant_terms}
+\end{figure}
+Intuitively this means that any equality that is implied by a join, where the term on one side of the equality appears at the join node EC-graph, the other term will also appear at the join and be represented by the same EC-node.\\
+Note that this invariant is insufficient without the source invariant, as shown in ~\ref{snippet3.16b}.
+
+Combining the propagation invariant, the weak source invariant and the fact that the empty tuple appears in all EC graphs, we will show that we can ensure \emph{weak source completeness}:
+\begin{figure}[H]
+\m{\forall n \in \cfg,p \in \predsto{n},P \in \paths{p}{n},t \in \terms{g_n},s \in \terms{g_p} \cdot}\\
+\m{n \models_{=} t=s \Rightarrow [s]_{g_p} \in \sourcesB{P}{[t]_{g_n}}}
+\caption{Path based weak source completeness}
+\label{path_based_weak_source_completeness}
+\end{figure}
+
+The propagation invariant above is local in the cfg, but it is not local in the EC-graph of the involved cfg-nodes, 
+and it does not suggest an algorithm to establish it.\\
+In the next section we will phrase an EC-graph-local versions of the above invariant for the weak fragment which will induce a family of incremental algorithms, and also describe an invariant that ensures propagation as in the strong fragment but only locally.
+
+\subsubsection*{Complexity}
+Even for the weakest join variant of our fragment, the worst case space complexity on the number of EC-nodes that need to be added across all EC-graphs of a program is at least exponential, as can be seen at \ref{snippet3.6}, where at \m{j_1} we would need an exponential sized term to connect the source chain \m{[x]_n} to \m{[y]_{j_0}} even under the weak join.
+For this reason we will need to add additional limitations to our fragment, namely restricting term depth, in order to ensure complexity bounds - this we do in the next chapter. 
+These additions will not alter fundamentally the invariants we present here, but ensure a polynomial complexity bound by defining a bounded version of the fragment. \\
+We have encountered some practical cases where the size of the set of rgfas mandated by the invariants above could be significantly larger than the set of \GFAs{} in the corresponding graph (although, by construction, only polynomially so). 
+We will discuss in the implementation section different methods for representing this set efficiently.
+%\\
+%We have not encountered any practical example that exhibits the above-mentioned exponential behaviour, 
+%but we have encountered examples of the following kind:
+%\begin{figure}[H]
+%\begin{lstlisting}
+%$\node{s}:$
+%if ($\m{c_1}$)
+	%$\node{p_0}:$
+	%assume $\m{a=b}$
+	%assume $\m{f(a,a)=c}$
+%else
+	%$\node{p_1}:$	
+%$\node{n}:$
+%if ($\m{c_2}$)
+	%$\node{q_0}:$
+	%assume $\m{a=b}$
+	%assert $\m{f(a,a)=c}$
+%else
+	%$\node{q_1}:$
+%\end{lstlisting}
+%\caption{source polynomial explosion}
+%\label{snippet3.16g}
+%\end{figure}
+%Here, at node \m{n}, our invariants enforce adding 
+
+%
+%\noindent
+%We want to ensure source completeness in a manner which is
+%\begin{itemize}
+	%\item Efficient: does not increase the overall worst case asymptotic complexity (space and time) of the verification algorithm compared to a minimal solution (minimal set of terms at each \cfg node that ensure source completeness)
+	%\item Incremental: the amount of work (time complexity) for repairing completeness after a change should be proportional to the size of the change and the size of the proof of the new equalities (of a Hoare proof of the new equalities from the previously annotated \cfg)
+	%\item Local: each step in establishing completeness, after some incremental changes to some of the node graphs, should include information from no more than a node and its immediate predecessors and successors - this allows us more flexibility to be lazy with these updates
+%\end{itemize}
+%
+%In our setting, once source completeness is established, it can be violated by:
+%\begin{itemize}
+	%\item \lstinline{Adding} a new term to the graph at some node \node{n} which is not connected to an existing term in a transitive predecessor \node{p} (e.g. as a term in a clause learned from another fragment)
+	%\item Merging two term EC nodes at some node \node{n} - e.g. if we have an EC for \m{f(a)} and we \lstinline{assume} \m{a=b}, we might now have a new source that equals \m{f(b)} (e.g. as the result of a unit equality learned from another fragment)
+%\end{itemize}
+
+\subsubsection{Examples}
+We will show now a few examples that demonstrate some of the issues with establishing interpolation completeness, and how our above invariants handle them.
+
+\noindent
+We start with a simple example:
+\begin{figure}[H]
+\begin{lstlisting}
+$\node{n_1}:$
+	assume $\m{f(a)=g(a)}$
+	//rgfas      : $\m{\textcolor{gray}{f(\s{b})_,g(\s{b})}}$ (none with scoping)
+$\node{n_2}:$
+	assume $\m{a=b}$
+	//extra terms: $\m{\textcolor{gray}{f(\s{a,b})_,g(\s{a,b})}}$
+$\node{n_3}:$
+	assert $\m{f(b)=g(b)}$ //negated $\m{\textcolor{gray}{f(b) \neq g(b)}}$
+\end{lstlisting}
+\caption{propagation sources},
+\label{snippet3.16a}
+\end{figure}
+
+In ~\ref{snippet3.16a}, we would need to add \m{f(\s{a,b})_,g(\s{a,b})} to \m{g_{n_2}} in order to ensure completeness.
+
+In the simple case of a sequential node, the propagation invariant means that two nodes should be merged if they share at least one source in the predecessor (although a slightly more involved condition is needed for propagation completeness as we will discuss in the next section).
+
+We show the initial state, with the propagation invariant satisfied but not the source invariant:
+\begin{figure}[H]
+\begin{tikzpicture}
+	\node[gttn] (1)              {$()$};
+	\node[gl]   (1l) [below = 0.2cm of 1] {\m{n_1}};
+
+	\node[gtn,ultra thick]  (2) [above left  = 0.5cm and 0.2cm of 1] {\s{a}};
+	\node[gtn,ultra thick]  (3) [above right = 0.5cm and 0.2cm of 1] {\s{b}};
+
+	\draw[gfa] (2) to node[el]             {\m{a}} (1.90);
+	\draw[gfa] (3) to node[el,anchor=west] {\m{b}} (1.90);
+
+	\node[gttn,ultra thick] (4)  [above = 0.5cm of 2]    {\m{(a)}};
+	\node[gttn,ultra thick] (5)  [above = 0.5cm of 3]    {\m{(b)}};
+
+	\draw[sgtt,ultra thick] (4) to node[el] {\textbf{0}} (2);
+	\draw[sgtt,ultra thick] (5) to node[el] {\textbf{0}} (3);
+
+	\node[gtn]  (6)  [above = 2.5cm of 1] {\svb{f(a)}{g(b)}};
+	\draw[gfa]  (6) to node[el]             {\m{f}} (4);
+	\draw[gfa]  (6) to node[el,anchor=west] {\m{g}} (5);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 3cm of 1] {$()$};
+	\node[gl,anchor=north]   (11l) [below = 0.2cm of 11]   {\m{n_2}};
+
+	\node[gtn,ultra thick]  (12) [above = 0.5cm of 11] {\s{a,b}};
+
+	\draw[gfa] (12) to[out=-110,in=110] node[el]             {\m{a}} (11.90);
+	\draw[gfa] (12) to[out=- 70,in= 70] node[el,anchor=west] {\m{b}} (11.90);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (21)  [right = 4cm of 11] {$()$};
+	\node[gl]   (21l) [below = 0.2cm of 21]   {\m{n_3}};
+
+	\node[gtn,ultra thick]  (22) [above = 0.5cm of 21] {\s{a,b}};
+
+	\draw[gfa] (22) to[out=-110 ,in=110] node[el]             {\m{a}} (21);
+	\draw[gfa] (22) to[out=- 70,in= 70] node[el,anchor=west] {\m{b}} (21);
+
+	\node[gttn,ultra thick] (24)  [above = 0.5cm of 22]    {\m{(\s{a,b})}};
+
+	\draw[sgtt,ultra thick] (24) to node[el] {\textbf{0}} (22);
+
+	\node[gtn]  (26)  [above left  =  0.5cm and 0.2cm of 24] {\faB{f}{a}{b}};
+	\node[gtn]  (27)  [above right =  0.5cm and 0.2cm of 24] {\faB{g}{a}{b}};
+	\draw[gfa]  (26) to node[el]             {\m{f}} (24);
+	\draw[gfa]  (27) to node[el,anchor=west] {\m{g}} (24);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[se] (11) to  ( 1);
+	\draw[se] (21) to  (11);
+
+	\node (12a) [left = 0.3cm of 12] {};
+	\node (12b) [left = 0.3cm of 12a] {};
+	\node (3a) [above = 0.1cm of 3] {};
+
+	\draw[se,ultra thick] (12.180) to (12a.0) to (12b.0) to[out=170,in=0] (3a.0) to[out=180,in=0] (2.0);
+	\draw[se,ultra thick] (12.180) to (12a.0) to (12b.0) to[out=190,in=0] (3.0);
+	\draw[se,ultra thick] (22) to  (12);
+
+	\node (24a) [left = 2.9cm of 24] {\color{red}$\times$};
+	\node (24b) [left = 1cm of 24a] {\color{red}$\times$};
+	\node (24c) [above = 0.2cm of 24b] {\color{red}$\times$};
+	\node (5c) [above = 0.5cm of 5] {};
+	\draw[me] (24) to (24a);
+	\draw[me] (24b) to (5);
+	\draw[me] (24c) to (5c) to (4);
+
+	\node (26a) [above = 0.6cm of 24a] {\color{red}$\times$};
+	\node (26b) [above = 0.0cm of 26a] {\color{red}$\times$};
+	\node (26c) [above = 1cm of 24b] {\color{red}$\times$};
+	\node (26u) [above = 0.0cm of 26] {};
+	\draw[me] (26.180) to (26a.0);
+	\draw[me] (27.180) to (26u) to (26b.0);
+	\draw[me] (26c.180) to (6.0);
+
+	\draw[ie] (26) to node[el,below] {\m{\neq}} (27);
+	
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (2cm,-0.7cm) to (2cm,3.8cm);
+	\draw[separator] (4.5cm,-0.7cm) to (4.5cm,3.8cm);
+\end{pgfinterruptboundingbox}
+\end{tikzpicture}
+
+\caption{
+\scriptsize
+The sources function\\
+missing rgfas\\
+Dashed arrows represent inequalities\\
+\color{blue} Blue dashed arrows represent the $\mathbf{sources}$ function\\
+\color{gray} Gray dashed arrows represent rejected sources\\
+\color{red} Red dashed arrows represent missing or broken sources
+}
+\label{snippet3.16a_graph1}
+\end{figure}
+Here we see (in red) the broken source chains, and the reason is that the second part of the source invariant is broken - the node \m{[f(\s{a,b})]_{n_3}} implies that \m{g_{n_2}} should have \m{f([a]_{n_2}),f([b]_{n_2})} either as a \gfa or as an \rgfa (the equality is mandated by the predecessor, not successor).
+
+We now show one failed attempt to satisfy the source invariant by adding an \rgfa:
+\begin{figure}[H]
+\begin{tikzpicture}
+	\node[gttn] (1)              {$()$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_1}};
+
+	\node[gtn]  (2) [above left  = 0.5cm and 0.2cm of 1] {\s{a}};
+	\node[gtn]  (3) [above right = 0.5cm and 0.2cm of 1] {\s{b}};
+
+	\draw[gfa] (2) to node[el]             {\m{a}} (1.90);
+	\draw[gfa] (3) to node[el,anchor=west] {\m{b}} (1.90);
+
+	\node[gttn] (4)  [above = 0.5cm of 2]    {\m{(a)}};
+	\node[gttn] (5)  [above = 0.5cm of 3]    {\m{(b)}};
+
+	\draw[sgtt] (4) to node[el] {0} (2);
+	\draw[sgtt] (5) to node[el] {0} (3);
+
+	\node[gtn]  (6)  [above = 2.5cm of 1] {\svb{f(a)}{g(b)}};
+	\draw[gfa]  (6) to node[el]             {\m{f}} (4);
+	\draw[gfa]  (6) to node[el,anchor=west] {\m{g}} (5);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 3.8cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_2}};
+
+	\node[gtn]  (12) [above = 0.5cm of 11] {\s{a,b}};
+
+	\draw[gfa] (12)     to[out=-110,in=110] node[el]             {\m{a}} (11.90);
+	\draw[gfa] (12)     to[out=- 70,in= 70] node[el,anchor=west] {\m{b}} (11.90);
+
+	\node[rgttn] (14)  [above = 0.5cm of 12]    {\m{f(\s{a,b})}};
+
+	\draw[rgtt] (14) to node[rl] {0} (12);
+
+	\node[rgtn]  (16) [above left  = 0.5cm and -0cm of 14] {\faB{f}{a}{b}};
+	\node[rgtn]  (17) [above right = 0.5cm and -0cm of 14] {\faB{g}{a}{b}};
+
+	\draw[rgfa]  (16) to node[rl]             {\m{f}} (14);
+	\draw[rgfa]  (17) to node[rl,anchor=west] {\m{g}} (14);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (21)  [right = 4.5cm of 11] {$()$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{n_3}};
+
+	\node[gtn]  (22) [above = 0.5cm of 21] {\s{a,b}};
+
+	\draw[gfa] (22) to[out=-110,in=110] node[el] {\m{a}} (21.90);
+	\draw[gfa] (22) to[out=-70 ,in= 70] node[el,anchor=west] {\m{b}} (21.90);
+
+	\node[gttn] (24)  [above = 0.5cm of 22]    {\m{(\s{a,b})}};
+
+	\draw[sgtt] (24) to node[el] {0} (22);
+
+	\node[gtn]  (26)  [above left  =  0.5cm and -0cm of 24] {\faB{f}{a}{b}};
+	\node[gtn]  (27)  [above right =  0.5cm and -0cm of 24] {\faB{g}{a}{b}};
+	\draw[gfa]  (26) to node[el] {\m{f}} (24);
+	\draw[gfa]  (27) to node[el,anchor=west] {\m{g}} (24);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[se] (11) to  ( 1);
+	\draw[se] (21) to  (11);
+
+	\node (12a) [left = 0.5cm of 12] {};
+	\node (12b) [left = 0.5cm of 12a] {};
+	\node (3c)  [above = 0.1cm of 3] {};
+  \draw[se] (12.180) to[out=180,in=0] ( 12a.0) to[out=180,in=0] (12b.0) to[out=180,in=0] (3c.0) to[out=180,in=0] (2.0);
+  \draw[se] (12.180) to[out=180,in=0] ( 12a.0) to[out=180,in=0] (12b.0) to[out=180,in=0] (3.0);
+	\draw[se] (22) to  (12);
+
+	\node (14a) [left = 0.5cm of 14] {};
+	\node (14b) [left = 0.5cm of 14a] {};
+	\node (5c)  [above = 0.1cm of 5] {};
+  \draw[me] (14.180) to[out=180,in=0] ( 14a.0) to[out=180,in=0] (14b.0) to[out=180,in=0] (5c.0) to[out=180,in=0] (4.0);
+  \draw[me] (14.180) to[out=180,in=0] ( 14a.0) to[out=180,in=0] (14b.0) to[out=180,in=0] (5.0);
+	\draw[re] (24) to  (14);
+
+	\node (6a) [right = 0.cm of 6] {};
+	\node (16c) [above = 0.cm of 16] {};
+  \draw[me] (16.180) to[out=180,in=0] ( 6a.0) to[out=180,in=0] (6.0);
+  \draw[me] (17.180) to[out=180,in=0] ( 16c.0) to[out=180,in=0] ( 6a.0) to[out=180,in=0] (6.0);
+
+	\node (17c) [above = 0cm of 17] {};
+	\node (17d) [below = 0cm of 17] {};
+	\draw[re] (26.180) to[out=180,in=0] (17d.0) to[out=180,in=0] (16.0);
+	\node (26a) [above = 0cm of 26] {};
+	\draw[re] (27.180) to[out=180,in=0] (26a.0) to[out=180,in=0] (17.0);
+
+
+	\draw[ie] (26) to node[el,below] {\m{\neq}} (27);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (2.1cm,-0.7cm) to (2.1cm,3.7cm);
+	\draw[separator] (6.5cm,-0.7cm) to (6.5cm,3.7cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+\tiny
+The sources function\\
+wrong rgfas
+}
+\label{snippet3.16a_graph2}
+\end{figure}
+Here the invariant says that an \rgfa is not allowed if all of its source are \gfas (third part of the weak source invariant) - at \m{n_2} the \rgfa \m{f([\s{a,b}]_{n_2})} has the source \m{[f(\s{f(a),g(b)})]_{n_1}} at \m{n_1}, so we should have a \gfa at \m{n_2} and not an \rgfa.
+%In figure ~\ref{snippet3.16a_graph2} the two upper EC-nodes in \node{n_2} share one transitive source, but are not merged - hence the incompleteness. The highlighted source path shows the tuple EC \m{(\s{a,b})} at \m{n_3} 
+%whose first term EC has a transitive source \m{\s{a}} at \m{n_1} with the same super-tuple, but the tuples are not connected with the source function (same for the source path to \m{\s{b}}).
+
+We show now the part the propagation invariant plays:
+\begin{figure}[H]
+\begin{tikzpicture}
+  \node[gttn] (1)              {$()$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_1}};
+
+  \node[gtn]  (2) [above left  = 0.5cm and 0.2cm of 1] {\s{a}};
+  \node[gtn]  (3) [above right = 0.5cm and 0.2cm of 1] {\s{b}};
+	
+	\draw[gfa] (2) to node[el] {\m{a}} (1.90);
+  \draw[gfa] (3) to node[el,anchor=west] {\m{b}} (1.90);
+  
+	\node[gttn] (4)  [above = 0.5cm of 2]    {\m{(a)}};
+  \node[gttn] (5)  [above = 0.5cm of 3]    {\m{(b)}};
+
+	\draw[sgtt] (4) to node[el] {0} (2);
+	\draw[sgtt] (5) to node[el] {0} (3);
+
+  \node[gtn]  (6)  [above = 2.5cm of 1] {\svb{f(a)}{g(b)}};
+	\draw[gfa]  (6) to node[el] {\m{f}} (4);
+  \draw[gfa]  (6) to node[el,anchor=west] {\m{g}} (5);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 3.8cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_2}};
+
+	\node[gtn]  (12) [above = 0.5cm of 11] {\s{a,b}};
+	
+	\draw[gfa] (12) to[out=-110 ,in=110] node[el] {\m{a}} (11.90);
+	\draw[gfa] (12) to[out=-70,in=70] node[el,anchor=west] {\m{b}} (11.90);
+
+	\node[gttn] (14)  [above = 0.5cm of 12]    {\m{(\s{a,b})}};
+
+	\draw[sgtt] (14) to node[el] {0} (12);
+
+	\node[gtn]  (16) [above left  = 0.5cm and -0cm of 14] {\faB{f}{a}{b}};
+	\draw[gfa]  (16) to node[el] {\m{f}} (14);
+	\node[gtn]  (17) [above right = 0.5cm and -0cm of 14] {\faB{g}{a}{b}};
+	\draw[gfa]  (17) to node[el,anchor=west] {\m{g}} (14);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\node[gttn] (21)  [right = 4.5cm of 11] {$()$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{n_3}};
+
+	\node[gtn]  (22) [above = 0.5cm of 21] {\s{a,b}};
+	
+	\draw[gfa] (22) to[out=-110, in=110] node[el] {\m{a}} (21.90);
+	\draw[gfa] (22) to[out= -70, in= 70] node[el,anchor=west] {\m{b}} (21.90);
+
+	\node[gttn] (24)  [above = 0.5cm of 22]    {\m{(\s{a,b})}};
+
+	\draw[sgtt] (24) to node[el] {0} (22);
+
+	\node[gtn]  (26)  [above left  =  0.5cm and -0cm of 24] {\faB{f}{a}{b}};
+	\node[gtn]  (27)  [above right =  0.5cm and -0cm of 24] {\faB{g}{a}{b}};
+	\draw[gfa]  (26) to node[el] {\m{f}} (24);
+	\draw[gfa]  (27) to node[el,anchor=west] {\m{g}} (24);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[se] (11) to  ( 1);
+	\draw[se] (21) to  (11);
+
+	\node (12a) [left = 0.5cm of 12] {};
+	\node (12b) [left = 0.5cm of 12a] {};
+	\node (3c)  [above = 0.1cm of 3] {};
+	\draw[se] (12.180) to[out=180,in=0] ( 12a.0) to[out=180,in=0] (12b.0) to[out=180,in=0] (3c.0) to[out=180,in=0] (2.0);
+	\draw[se] (12.180) to[out=180,in=0] ( 12a.0) to[out=180,in=0] (12b.0) to[out=180,in=0] (3.0);
+	\draw[se] (22) to  (12);
+
+	\node (14a) [left = 0.5cm of 14] {};
+	\node (14b) [left = 0.5cm of 14a] {};
+	\node (5c)  [above = 0.1cm of 5] {};
+	\draw[se] (14.180) to[out=180,in=0] ( 14a.0) to[out=180,in=0] (14b.0) to[out=180,in=0] (5c.0) to[out=180,in=0] (4.0);
+	\draw[se] (14.180) to[out=180,in=0] ( 14a.0) to[out=180,in=0] (14b.0) to[out=180,in=0] (5.0);
+	\draw[se] (24) to  (14);
+
+	\node (6a) [right = 0.cm of 6] {};
+	\node (16c) [above = 0.cm of 16] {};
+	\draw[me] (16.180) to[out=180,in=0] ( 6a.0) to[out=180,in=0] (6.0);
+	\draw[me] (17.180) to[out=180,in=0] ( 16c.0) to[out=180,in=0] ( 6a.0) to[out=180,in=0] (6.0);
+
+	\node (17c) [above = 0cm of 17] {};
+	\node (17d) [below = 0cm of 17] {};
+	\draw[se] (26.180) to[out=180,in=0] (17d.0) to[out=180,in=0] (16.0);
+	\node (26a) [above = 0cm of 26] {};
+	\draw[se] (27.180) to[out=180,in=0] (26a.0) to[out=180,in=0] (17.0);
+
+	\draw[ie] (26) to node[el,below] {\m{\neq}} (27);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (2.1cm,-0.7cm) to (2.1cm,3.7cm);
+	\draw[separator] (6.5cm,-0.7cm) to (6.5cm,3.7cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+\scriptsize
+The sources function\\
+propagation invariant broken
+}
+\label{snippet3.16a_graph3}
+\end{figure}
+Here the nodes \m{[f(\s{a,b})]_{n_2}} and \m{[g(\s{a,b})]_{n_2}} share a source, and so should be merged.
+
+Here is the desired graph of all EC graphs:
+\begin{figure}[H]
+\begin{tikzpicture}
+  \node[gttn] (1)              {$()$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_1}};
+
+  \node[gtn]  (2) [above left  = 0.6cm and 0.2cm of 1] {\s{a}};
+  \node[gtn]  (3) [above right = 0.6cm and 0.2cm of 1] {\s{b}};
+
+	\draw[gfa] (2) to node[el]             {\m{a}} (1.90);
+	\draw[gfa] (3) to node[el,anchor=west] {\m{b}} (1.90);
+  
+	\node[gttn] (4)  [above = 0.5cm of 2]    {\m{(a)}};
+	\node[gttn] (5)  [above = 0.5cm of 3]    {\m{(b)}};
+
+	\draw[sgtt] (4) to node[el] {0} (2);
+	\draw[sgtt] (5) to node[el] {0} (3);
+
+	\node[gtn]  (6)  [above = 2.5cm of 1] {\tiny$\svb{f(a)}{g(b)}$};
+	\draw[gfa]  (6) to node[el]             {\m{f}} (4);
+	\draw[gfa]  (6) to node[el,anchor=west] {\m{g}} (5);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 3cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_2}};
+
+	\node[gtn]  (12) [above = 0.5cm of 11] {\s{a,b}};
+
+	\draw[gfa] (12) to[out=-110,in=110] node[el]             {\m{a}} (11.90);
+	\draw[gfa] (12) to[out=- 70,in= 70] node[el,anchor=west] {\m{b}} (11.90);
+
+	\node[gttn] (14)  [above = 0.5cm of 12]    {\m{(\s{a,b})}};
+
+	\draw[sgtt] (14) to node[el] {0} (12);
+
+	\node[gtn]  (16)  [above = 2.5cm of 11] {\tiny $\faB{f}{a}{b},\faB{g}{a}{b}$};
+	\draw[gfa]  (16) to[out=-100 , in=100] node[el]             {\m{f}} (14);
+	\draw[gfa]  (16) to[out=- 80 ,in=  80] node[el,anchor=west] {\m{g}} (14);
+				
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\node[gttn] (21)  [right = 3.5cm of 11] {$()$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{n_3}};
+
+	\node[gtn]  (22) [above = 0.5cm of 21] {\s{a,b}};
+
+	\draw[gfa] (22) to[out=-110,in=110] node[el]             {\m{a}} (21.90);
+	\draw[gfa] (22) to[out=- 70,in= 70] node[el,anchor=west] {\m{b}} (21.90);
+
+	\node[gttn] (24)  [above = 0.5cm of 22]    {\m{f(\s{a,b})}};
+
+	\draw[sgtt] (24) to node[el] {0} (22);
+
+	\node[gtn]  (26)  [above = 2.5cm of 21] {\tiny $\faB{f}{a}{b},\faB{g}{a}{b}$};
+	\draw[gfa]  (26) to[out=-100 ,in= 100] node[el]             {\m{f}} (24);
+	\draw[gfa]  (26) to[out=- 80 ,in=  80] node[el,anchor=west] {\m{g}} (24);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[se] (11) to  ( 1);
+	\draw[se] (21) to  (11);
+
+	\node(12a) [left = 0.5cm of 12] {};
+	\node(3c) [above= 0.1cm of 3] {};
+	\draw[se] ( 12.180) to[out=180,in=0] (12a.0) to[out=180,in=0] (3c) to[out=180,in=0] (   2.0);
+	\draw[se] ( 12.180) to[out=180,in=0] (12a.0) to[out=180,in=0] (   3.0);
+
+	\draw[se] (22) to  (12);
+
+	\node(5c)  [above= 0.1cm of 5] {};
+	\node(14a) [left = 0.7cm of 14] {};
+	\draw[se] (14.180) to[out=180,in=0] (14a.0) to[out=180,in=0] (5c) to[out=180,in=0]( 4.0);
+	\draw[se] (14.180) to[out=180,in=0] (14a.0) to[out=180,in=0]( 5.0);
+	\draw[se] (24) to  (14);
+
+	\draw[se] (16) to  ( 6);
+	\draw[se] (26) to  (16);
+
+	\draw[ie] (26) to[loop] node[el,above] {\m{\neq}} (26);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (2.0cm,-0.7cm) to (2.0cm,3.5cm);
+	\draw[separator] (5.5cm,-0.7cm) to (5.5cm,3.5cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+\caption{
+The sources function
+}
+\label{snippet3.16a_graph4}
+\end{figure}
+
+
+In the next example, ensuring the global (non-graph-based) source and propagation invariants can be done in a different way:
+\begin{figure}[H]
+\begin{lstlisting}
+$\node{s}:$
+assume $\m{P(f(a))}$
+if (*)
+	$\node{p_0}:$
+	assume $\m{a=b}$
+	//extra terms { $\m{\textcolor{gray}{f(\s{a,b}),P(f(\s{a,b}))}}$ }
+else
+	$\node{p_1}:$
+	assume $\m{a=c}$
+	//extra terms { $\m{\textcolor{gray}{f(\s{a,c}),P(f(\s{a,c}))}}$ }
+$\node{n}:$
+//our        extra terms: $\m{\textcolor{gray}{\s{f(\s{a}),P(f(\s{a}))}}}$
+//                 rgfas: $\m{\textcolor{gray}{\s{b,c,d}}}$
+//sufficient extra terms: $\m{\textcolor{gray}{\s{f(\s{b}),f(\s{c}),P(f(\s{b})),P(f(\s{c}))}}}$
+$\node{n_a}:$
+assume $\m{a=b=c=d}$
+assert $\m{P(f(d))}$ //negated $\m{\textcolor{gray}{\lnot P(f(\s{a,b,c,d}))}}$
+\end{lstlisting}
+\caption{propagation sources}
+\label{snippet3.16f}
+\end{figure}
+In ~\ref{snippet3.16f}, if we just want to ensure all equalities are propagated, we have two options for extra terms at \node{n}, both of which allow source completeness, but the second option adds more terms. 
+
+The next example shows that we can achieve source completeness globally, without achieving it per path:
+\begin{figure}[H]
+\begin{lstlisting}
+$\node{s}:$
+assume $\m{P(f(a))}$
+if (*)
+	$\node{p_0}:$
+	assume $\m{a=b}$
+	//extra terms { $\m{\textcolor{gray}{f(\s{a,b}),P(f(\s{a,b}))}}$ }
+else
+	$\node{p_1}:$
+	assume $\m{c=b}$
+$\node{n}:$
+assume $\m{a=c}$
+assert $\m{P(f(b))}$ //negated $\m{\textcolor{gray}{\lnot P(f(b))}}$
+\end{lstlisting}
+\caption{propagation sources}
+\label{snippet3.16e}
+\end{figure}
+
+In  ~\ref{snippet3.16e} on the path \m{\sourcesB{s.p_0.n}{[f(\s{a,b,c})]_n}=[\s{f(a)}]_s}, \\
+so sources are complete for every pair of cfg-nodes (with the added terms in the comments) as\\
+\m{\sources{n}{s}{[f(\s{a,b,c})]_n}=\s{[f(a)]_s}},\\
+but not every path is source complete:\\
+\m{\sourcesB{s.p_1.n}{[\s{f(\s{a,b,c})}]_n}=\emptyset}.\\
+We see that this, along with propagation completeness, is not sufficient, and the assertion will not be proven.\\
+This is because the weak source invariant is broken, and cannot be repaired just by adding \rgfas.
+
+
+\subsubsection{Symmetry}
+Consider the following example:
+\begin{figure}[H]
+\begin{lstlisting}
+$\node{s}:$
+assume $\m{f(a,d)=g(a,d)}$
+assume $\m{f(b,c)=g(b,c)}$
+if (*)
+	$\node{p_0}:$
+	assume $\m{a=b}$
+else
+	$\node{p_1}:$
+	assume $\m{c=d}$
+$\node{n}:$
+	//Here {$\textcolor{gray}{\m{f(a,c)=g(a,c),f(a,d)=g(a,d)}}$ 
+	//      $\textcolor{gray}{\m{f(b,c)=g(b,c),f(b,d)=g(b,d)}}$ }
+if (*)
+	$\node{n_0}:$
+	assume $\m{c=d=y}$
+	assume $\m{a=x}$
+	assert $\m{f(x,y)=g(x,y)}$ //negated $\m{\textcolor{gray}{f(x,y)\neq g(x,y)}}$
+else
+	$\node{n_1}:$
+	assume $\m{a=b=x}$
+	assume $\m{c=y}$
+	assert $\m{f(x,y)=g(x,y)}$ //negated $\m{\textcolor{gray}{f(x,y)\neq g(x,y)}}$
+\end{lstlisting}
+\caption{sources symmetry}
+\label{snippet3.16h}
+\end{figure}
+Here, at the join n, there are four equalities that hold , as noted in the comment.\\
+Out of these four equations, either of \s{f(a,c)=g(a,c),f(a,d)=g(a,d)} would suffice to prove the assertion at \m{n_0}, 
+and either of\\
+ \s{f(a,c)=g(a,c),f(b,c)=g(b,c)} would suffice for \m{n_1}.\\
+If we only consider the branch \m{n_0} (e.g. we are at the first pass of verification handling only the unit ground fragment, and the equations at \m{n_1} would be generated only in the next pass using quantifier instantiation), there is no reason to choose either of 
+\s{f(a,c)=g(a,c),f(a,d)=g(a,d)} over the other. If we were to orient the problem in some arbitrary fashion in order to choose one of these,
+we could end up with \m{f(a,d)=g(a,d)} and then on the second pass we would need to add either one of the set for \m{n_1}.\\
+Even in the non-incremental case, where we have only one pass of the unit ground fragment, 
+we suspect that minimizing the set of terms needed at such a join point would be at least NP-hard, 
+because if we have \m{k} leaves that follow the join point and each would be provable by a different sub-set of the possible terms, we have a variant of the set-cover problem (in order to show this we would have to show that for each set of sets we can find a program suffix of size polynomial in \m{k} for which the given set of sets represents the sets needed to prove the leaves of the suffix).\\
+A harder problem would be minimizing the size of the EC-graph \m{g_n}, as each selected communicating term could have a non-constant sized representation, hinting at the minimum-set-cover problem, and yet harder would be a cfg-wide minimization of such terms in all EC-graphs.\\
+%While the potential state explosion in a case as the above is polynomial (with the degree being the arity of the function invovled),
+%we have found that in practice similar cases actually appear in the VC of programs, as opposed to most other lower bound examples we have seen that are more of a theoretic nature.\\
+\textbf{Pragmatics:}\\
+We are less concerned with the absolute minimal number of communicating terms as this set is not monotonic (i.e. adding equalities to the program may imply a minimal set that is not a super-set of the minimal set before the addition), and in actual experiments has not been a major complexity factor, but mostly because our experience has been that in most practical cases the main complexity hurdle is actually the case when there are no provable equalities on a given term:\\
+The issue is that, for incremental performance, a large part of execution time is taken by leaves deep in the cfg requesting for equalities on a set of terms, and answered negatively, as this operation has the potential complexity of the entire cfg depth (a request from the end of the program to the root that returns a negative answer).
+Our invariants allow us to ensure that no cfg-node is requested twice for equations for the same term, and the set of rgfas is used to ensure that - when a node answers a request it always introduces either an rgfa or a \GFA{} for each term requested, so it will never repeat a request. The order of evaluation of nodes and requests, and collecting several requests together have the most significant reducing effect on this complexity, and will be discussed in the implementation chapter.\\
+We now discuss our choice of adding all such equalities rather than selecting only one arbitrarily:\\
+In our example, if we were to evaluate \m{n_0} before any equality is known at \m{n_1}, 
+if we were to choose to add only one of \s{\s{f(a,c),g(a,c)},\s{f(a,d)=g(a,d)}} as an EC-node at n, 
+we would still have to process the other in order to ensure completeness, and mark the other equation so that we do not request it again, 
+but so that it is useful for answering the request from \m{n_1} when it comes. We have not found a satisfactory way to do this.\\
+Another reason for choosing to add all equalities in this case is that any arbitrary choice would be unintuitive for a user debugging verification.\\
+We could make \m{n_0} request for these equalities once at a time (e.g. first request for all equalities for \m{f(a,c)}, 
+propagate them and use them with the simplification calculus, and only if needed request for \m{f(a,d)} etc).
+These singular requests are similar to those performed in the IC3/PDR algorithm, and the problem is that, in practice, the price we pay for traversing the cfg up and down is much larger than the time we save by adding less intermediate terms.\\
+Another option we have considered would be to exploit the structure of such sets of \GFAs{} - here the set required by \m{n_0} can be written as (for the function \m{f}) \m{f(\s{a},\s{c,d})} and similarly for \m{n_1} as \m{f(\s{a,b},\s{c})}.\\
+The efficient representation problem for such sets is then similar to the problem of representing sets of rgfas, which we discuss in the implementation section.

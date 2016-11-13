@@ -1,0 +1,60 @@
+This is BibTeX, Version 0.99d (TeX Live 2014)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: thesis.aux
+The style file: abbrv.bst
+Reallocated field_info (elt_size=4) to 11693 items from 5000.
+Database file #1: biblio.bib
+Repeated entry---line 1204 of file biblio.bib
+ : @inproceedings{czeskis12ccs
+ :                            ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 2152 of file biblio.bib
+ : @misc{ARMTrustZone
+ :                   ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 2194 of file biblio.bib
+ : @misc{androidjb
+ :                ,
+I'm skipping whatever remains of this entry
+You've used 291 entries,
+            2118 wiz_defined-function locations,
+            1745 strings with 47457 characters,
+and the built_in function-call counts, 78050 in all, are:
+= -- 6836
+> -- 4212
+< -- 2
++ -- 1707
+- -- 1392
+* -- 4186
+:= -- 13328
+add.period$ -- 882
+call.type$ -- 291
+change.case$ -- 1569
+chr.to.int$ -- 0
+cite$ -- 291
+duplicate$ -- 3045
+empty$ -- 7058
+format.name$ -- 1392
+if$ -- 16423
+int.to.chr$ -- 0
+int.to.str$ -- 291
+missing$ -- 160
+newline$ -- 1465
+num.names$ -- 582
+pop$ -- 2424
+preamble$ -- 1
+purify$ -- 1278
+quote$ -- 0
+skip$ -- 2212
+stack$ -- 0
+substring$ -- 1479
+swap$ -- 421
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 1162
+warning$ -- 0
+while$ -- 582
+width$ -- 294
+write$ -- 3083
+(There were 3 error messages)

@@ -1,0 +1,15 @@
+C:\work\Slicer\src\Boogie2Slicer\Slicer\bin\Debug\Slicer.dll
+C:\work\Slicer\src\Boogie2Slicer\Slicer\bin\Debug\Slicer.pdb
+C:\work\Slicer\src\Boogie2Slicer\Slicer\bin\Debug\BoogieBasetypes.dll
+C:\work\Slicer\src\Boogie2Slicer\Slicer\bin\Debug\BoogieCore.dll
+C:\work\Slicer\src\Boogie2Slicer\Slicer\bin\Debug\BoogieCodeContractsExtender.dll
+C:\work\Slicer\src\Boogie2Slicer\Slicer\bin\Debug\BoogieParserHelper.dll
+C:\work\Slicer\src\Boogie2Slicer\Slicer\bin\Debug\BoogieGraph.dll
+C:\work\Slicer\src\Boogie2Slicer\Slicer\bin\Debug\BoogieBasetypes.pdb
+C:\work\Slicer\src\Boogie2Slicer\Slicer\bin\Debug\BoogieCore.pdb
+C:\work\Slicer\src\Boogie2Slicer\Slicer\bin\Debug\BoogieCodeContractsExtender.pdb
+C:\work\Slicer\src\Boogie2Slicer\Slicer\bin\Debug\BoogieParserHelper.pdb
+C:\work\Slicer\src\Boogie2Slicer\Slicer\bin\Debug\BoogieGraph.pdb
+C:\work\Slicer\src\Boogie2Slicer\Slicer\obj\Debug\Slicer.csprojResolveAssemblyReference.cache
+C:\work\Slicer\src\Boogie2Slicer\Slicer\obj\Debug\Slicer.dll
+C:\work\Slicer\src\Boogie2Slicer\Slicer\obj\Debug\Slicer.pdb

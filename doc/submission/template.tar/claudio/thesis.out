@@ -1,0 +1,76 @@
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.1.1}{Part I: Securing Applications Using Smartphones}{chapter.1}% 2
+\BOOKMARK [1][-]{section.1.2}{Part II: Smartphone Attacks and Countermeasures}{chapter.1}% 3
+\BOOKMARK [1][-]{section.1.3}{Related Publications}{chapter.1}% 4
+\BOOKMARK [1][-]{section.1.4}{Thesis Outline}{chapter.1}% 5
+\BOOKMARK [0][-]{chapter.2}{Background on Smartphones}{}% 6
+\BOOKMARK [1][-]{section.2.1}{Smartphone Hardware}{chapter.2}% 7
+\BOOKMARK [1][-]{section.2.2}{Smartphone Software}{chapter.2}% 8
+\BOOKMARK [1][-]{section.2.3}{Distribution Markets}{chapter.2}% 9
+\BOOKMARK [1][-]{section.2.4}{Summary}{chapter.2}% 10
+\BOOKMARK [-1][-]{part.1}{I Securing Applications Using Smartphones}{}% 11
+\BOOKMARK [0][-]{chapter.3}{Introduction}{part.1}% 12
+\BOOKMARK [0][-]{chapter.4}{Related Work}{part.1}% 13
+\BOOKMARK [1][-]{section.4.1}{Two-Factor Authentication for the Web}{chapter.4}% 14
+\BOOKMARK [1][-]{section.4.2}{Two-Factor Authentication for Payments}{chapter.4}% 15
+\BOOKMARK [1][-]{section.4.3}{Complementary Research Topics}{chapter.4}% 16
+\BOOKMARK [1][-]{section.4.4}{Summary}{chapter.4}% 17
+\BOOKMARK [0][-]{chapter.5}{Sound-Proof: Usable 2FA Based on Ambient Sound}{part.1}% 18
+\BOOKMARK [1][-]{section.5.1}{Introduction}{chapter.5}% 19
+\BOOKMARK [1][-]{section.5.2}{Assumptions and Goals}{chapter.5}% 20
+\BOOKMARK [1][-]{section.5.3}{Background on Sound Similarity}{chapter.5}% 21
+\BOOKMARK [1][-]{section.5.4}{Sound-Proof Architecture}{chapter.5}% 22
+\BOOKMARK [1][-]{section.5.5}{Prototype Implementation}{chapter.5}% 23
+\BOOKMARK [1][-]{section.5.6}{Evaluation}{chapter.5}% 24
+\BOOKMARK [1][-]{section.5.7}{User Study}{chapter.5}% 25
+\BOOKMARK [1][-]{section.5.8}{Discussion}{chapter.5}% 26
+\BOOKMARK [1][-]{section.5.9}{Related Work}{chapter.5}% 27
+\BOOKMARK [1][-]{section.5.10}{Summary and Future Work}{chapter.5}% 28
+\BOOKMARK [0][-]{chapter.6}{Practical and Secure Location Verification for Payments}{part.1}% 29
+\BOOKMARK [1][-]{section.6.1}{Introduction}{chapter.6}% 30
+\BOOKMARK [1][-]{section.6.2}{Problem Statement}{chapter.6}% 31
+\BOOKMARK [1][-]{section.6.3}{Background on TrustZone-enabled Smartphones}{chapter.6}% 32
+\BOOKMARK [1][-]{section.6.4}{Adversarial Model}{chapter.6}% 33
+\BOOKMARK [1][-]{section.6.5}{Our Solution}{chapter.6}% 34
+\BOOKMARK [1][-]{section.6.6}{Security Analysis}{chapter.6}% 35
+\BOOKMARK [1][-]{section.6.7}{Implementation}{chapter.6}% 36
+\BOOKMARK [1][-]{section.6.8}{Experimental Evaluation}{chapter.6}% 37
+\BOOKMARK [1][-]{section.6.9}{Discussion}{chapter.6}% 38
+\BOOKMARK [1][-]{section.6.10}{Alternative Approaches}{chapter.6}% 39
+\BOOKMARK [1][-]{section.6.11}{Related Work}{chapter.6}% 40
+\BOOKMARK [1][-]{section.6.12}{Summary and Future Work}{chapter.6}% 41
+\BOOKMARK [-1][-]{part.2}{II Smartphone Attacks and Countermeasures}{}% 42
+\BOOKMARK [0][-]{chapter.7}{Introduction}{part.2}% 43
+\BOOKMARK [0][-]{chapter.8}{Related Work}{part.2}% 44
+\BOOKMARK [1][-]{section.8.1}{Smartphone Malware Attacks}{chapter.8}% 45
+\BOOKMARK [1][-]{section.8.2}{Smartphone Malware Countermeasures}{chapter.8}% 46
+\BOOKMARK [1][-]{section.8.3}{Summary}{chapter.8}% 47
+\BOOKMARK [0][-]{chapter.9}{Personalized Indicators against Phishing on Smartphone Applications}{part.2}% 48
+\BOOKMARK [1][-]{section.9.1}{Introduction}{chapter.9}% 49
+\BOOKMARK [1][-]{section.9.2}{Phishing Attacks and Countermeasures}{chapter.9}% 50
+\BOOKMARK [1][-]{section.9.3}{User Study}{chapter.9}% 51
+\BOOKMARK [1][-]{section.9.4}{Discussion}{chapter.9}% 52
+\BOOKMARK [1][-]{section.9.5}{Deployment}{chapter.9}% 53
+\BOOKMARK [1][-]{section.9.6}{Secure Setup of Application Indicators}{chapter.9}% 54
+\BOOKMARK [1][-]{section.9.7}{Related Work}{chapter.9}% 55
+\BOOKMARK [1][-]{section.9.8}{Summary and Future Work}{chapter.9}% 56
+\BOOKMARK [0][-]{chapter.10}{Communication Channels between Colluding Applications}{part.2}% 57
+\BOOKMARK [1][-]{section.10.1}{Introduction}{chapter.10}% 58
+\BOOKMARK [1][-]{section.10.2}{Problem Statement}{chapter.10}% 59
+\BOOKMARK [1][-]{section.10.3}{Overt and Covert Channels in Android}{chapter.10}% 60
+\BOOKMARK [1][-]{section.10.4}{Analysis of Existing Tools}{chapter.10}% 61
+\BOOKMARK [1][-]{section.10.5}{Mitigation Techniques and Limitations}{chapter.10}% 62
+\BOOKMARK [1][-]{section.10.6}{Related Work}{chapter.10}% 63
+\BOOKMARK [1][-]{section.10.7}{Summary and Future Work}{chapter.10}% 64
+\BOOKMARK [0][-]{chapter.11}{Closing Remarks}{part.2}% 65
+\BOOKMARK [0][-]{appendix*.169}{Appendices}{part.2}% 66
+\BOOKMARK [1][-]{section.Alph0.1}{Other Bands}{appendix*.169}% 67
+\BOOKMARK [1][-]{section.Alph0.2}{System Usability Scale}{appendix*.169}% 68
+\BOOKMARK [1][-]{section.Alph0.3}{Post-test Questionnaire}{appendix*.169}% 69
+\BOOKMARK [1][-]{section.Alph0.4}{User Comments}{appendix*.169}% 70
+\BOOKMARK [1][-]{section.Alph0.5}{Emails}{appendix*.169}% 71
+\BOOKMARK [1][-]{section.Alph0.6}{Instructions for participants in the experimental groups.}{appendix*.169}% 72
+\BOOKMARK [1][-]{section.Alph0.7}{Post-test Questionnaire: Secure Setup of Indicators}{appendix*.169}% 73
+\BOOKMARK [1][-]{section.Alph0.8}{Bank Letter}{appendix*.169}% 74
+\BOOKMARK [0][-]{Item.14}{Bibliography}{part.2}% 75
+\BOOKMARK [0][-]{appendix*.174}{Resume}{part.2}% 76

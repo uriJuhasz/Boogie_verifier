@@ -1,0 +1,11 @@
+
+***Preprocessing clauses         [0] start  - g/n 231/ 485  c/a  1653/ 30864
+   CNF Conversion
+   CNF Conversion - expressions: 4782+227
+   **Done - clauses: 8806,atoms: 22227
+***Preprocessing clauses         [0] end    - g/n 231/ 485  c/a  8639/ 18431 - proved   0 - time [     7s]/[    10s]
+   [ 231]
+   [   7]
+   [  PC]
+
+***Extracting CFG                [0] start  - g/n 224/ 480  c/a  8639/ 18431

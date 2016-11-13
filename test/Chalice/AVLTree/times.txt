@@ -1,0 +1,3118 @@
+Microsoft Windows [Version 10.0.10586]
+(c) 2015 Microsoft Corporation. All rights reserved.
+
+C:\Users\uri>cd \work\slicer\test\Chalice\AVLTree
+
+C:\work\slicer\test\Chalice\AVLTree>dir
+ Volume in drive C has no label.
+ Volume Serial Number is 90A7-462F
+
+ Directory of C:\work\slicer\test\Chalice\AVLTree
+
+04-Jul-16  16:26    <DIR>          .
+04-Jul-16  16:26    <DIR>          ..
+02-Jul-16  09:45         3,781,645 AVLTree.1
+02-Jul-16  09:45         3,781,718 AVLTree.1.bpl
+04-Jul-16  14:19           115,654 AVLTree.AVLTree$monitorinvariant$checkDefinedness.1.orig.smt2
+04-Jul-16  14:19           110,544 AVLTree.AVLTree$monitorinvariant$checkDefinedness.init.orig.smt2
+03-Jul-16  22:04           115,654 AVLTree.AVLTree$monitorinvariant$checkDefinedness.orig.1.smt2
+03-Jul-16  22:04           110,544 AVLTree.AVLTree$monitorinvariant$checkDefinedness.orig.smt2
+04-Jul-16  14:19            19,331 AVLTree.AVLTree$monitorinvariant$checkDefinedness.pre.bpl
+03-Jul-16  22:04           115,755 AVLTree.AVLTree$monitorinvariant$checkDefinedness.pre.orig.smt2
+03-Jul-16  22:04           117,051 AVLTree.AVLTree$monitorinvariant$checkDefinedness.pre.smt2
+04-Jul-16  14:20           131,718 AVLTree.AVLTree.has$checkDefinedness.1.orig.smt2
+04-Jul-16  14:20           125,775 AVLTree.AVLTree.has$checkDefinedness.init.orig.smt2
+03-Jul-16  22:04           131,718 AVLTree.AVLTree.has$checkDefinedness.orig.1.smt2
+03-Jul-16  22:04           125,775 AVLTree.AVLTree.has$checkDefinedness.orig.smt2
+04-Jul-16  14:20           134,574 AVLTree.AVLTree.has$checkDefinedness.post.fw.smt2
+04-Jul-16  14:20           132,155 AVLTree.AVLTree.has$checkDefinedness.post.orig.smt2
+04-Jul-16  14:20           131,372 AVLTree.AVLTree.has$checkDefinedness.post.smt2
+04-Jul-16  14:20            21,444 AVLTree.AVLTree.has$checkDefinedness.pre.bpl
+04-Jul-16  14:20           132,524 AVLTree.AVLTree.has$checkDefinedness.pre.fw.smt2
+04-Jul-16  14:20           132,155 AVLTree.AVLTree.has$checkDefinedness.pre.orig.smt2
+04-Jul-16  14:20           131,035 AVLTree.AVLTree.has$checkDefinedness.pre.smt2
+04-Jul-16  14:20           222,555 AVLTree.AVLTree.has.1.orig.smt2
+21-Jun-16  09:15           310,541 AVLTree.AVLTree.has.boogie.smt2
+04-Jul-16  14:20           218,973 AVLTree.AVLTree.has.init.orig.smt2
+03-Jul-16  22:04           222,555 AVLTree.AVLTree.has.orig.1.smt2
+03-Jul-16  22:04           218,973 AVLTree.AVLTree.has.orig.smt2
+04-Jul-16  14:20           383,026 AVLTree.AVLTree.has.post.fw.smt2
+04-Jul-16  14:20           221,678 AVLTree.AVLTree.has.post.orig.smt2
+04-Jul-16  14:20           229,590 AVLTree.AVLTree.has.post.smt2
+04-Jul-16  14:20            58,679 AVLTree.AVLTree.has.pre.bpl
+04-Jul-16  14:20           252,752 AVLTree.AVLTree.has.pre.fw.smt2
+04-Jul-16  14:20           222,515 AVLTree.AVLTree.has.pre.orig.smt2
+04-Jul-16  14:20           219,939 AVLTree.AVLTree.has.pre.smt2
+21-Jun-16  09:15           232,438 AVLTree.AVLTree.has_checkDefinedness.boogie.smt2
+04-Jul-16  14:19           137,235 AVLTree.AVLTree.init$checkDefinedness.1.orig.smt2
+04-Jul-16  14:19           131,213 AVLTree.AVLTree.init$checkDefinedness.init.orig.smt2
+03-Jul-16  22:04           137,235 AVLTree.AVLTree.init$checkDefinedness.orig.1.smt2
+03-Jul-16  22:04           131,213 AVLTree.AVLTree.init$checkDefinedness.orig.smt2
+04-Jul-16  14:19           142,083 AVLTree.AVLTree.init$checkDefinedness.post.fw.smt2
+04-Jul-16  14:19           137,672 AVLTree.AVLTree.init$checkDefinedness.post.orig.smt2
+04-Jul-16  14:19           138,121 AVLTree.AVLTree.init$checkDefinedness.post.smt2
+04-Jul-16  14:19            21,421 AVLTree.AVLTree.init$checkDefinedness.pre.bpl
+04-Jul-16  14:19           139,612 AVLTree.AVLTree.init$checkDefinedness.pre.fw.smt2
+04-Jul-16  14:19           137,672 AVLTree.AVLTree.init$checkDefinedness.pre.orig.smt2
+04-Jul-16  14:19           137,955 AVLTree.AVLTree.init$checkDefinedness.pre.smt2
+04-Jul-16  14:19           205,944 AVLTree.AVLTree.init.1.orig.smt2
+21-Jun-16  09:15           184,099 AVLTree.AVLTree.init.boogie.smt2
+04-Jul-16  14:19           201,413 AVLTree.AVLTree.init.init.orig.smt2
+03-Jul-16  22:04           205,944 AVLTree.AVLTree.init.orig.1.smt2
+03-Jul-16  22:04           201,413 AVLTree.AVLTree.init.orig.smt2
+04-Jul-16  14:19           272,274 AVLTree.AVLTree.init.post.fw.smt2
+04-Jul-16  14:19           188,498 AVLTree.AVLTree.init.post.orig.smt2
+04-Jul-16  14:19           196,437 AVLTree.AVLTree.init.post.smt2
+04-Jul-16  14:19            45,397 AVLTree.AVLTree.init.pre.bpl
+04-Jul-16  14:19           236,823 AVLTree.AVLTree.init.pre.fw.smt2
+04-Jul-16  14:19           205,966 AVLTree.AVLTree.init.pre.orig.smt2
+04-Jul-16  14:19           206,066 AVLTree.AVLTree.init.pre.smt2
+21-Jun-16  09:15           131,667 AVLTree.AVLTree.init_checkDefinedness.boogie.smt2
+04-Jul-16  14:19           136,885 AVLTree.AVLTree.insert$checkDefinedness.1.orig.smt2
+04-Jul-16  14:19           136,837 AVLTree.AVLTree.insert$checkDefinedness.init.orig.smt2
+03-Jul-16  22:04           136,885 AVLTree.AVLTree.insert$checkDefinedness.orig.1.smt2
+03-Jul-16  22:04           136,837 AVLTree.AVLTree.insert$checkDefinedness.orig.smt2
+04-Jul-16  14:19           136,278 AVLTree.AVLTree.insert$checkDefinedness.post.fw.smt2
+04-Jul-16  14:19           133,669 AVLTree.AVLTree.insert$checkDefinedness.post.orig.smt2
+04-Jul-16  14:19           132,988 AVLTree.AVLTree.insert$checkDefinedness.post.smt2
+04-Jul-16  14:19            25,786 AVLTree.AVLTree.insert$checkDefinedness.pre.bpl
+04-Jul-16  14:19           134,157 AVLTree.AVLTree.insert$checkDefinedness.pre.fw.smt2
+04-Jul-16  14:19           133,669 AVLTree.AVLTree.insert$checkDefinedness.pre.orig.smt2
+04-Jul-16  14:19           132,651 AVLTree.AVLTree.insert$checkDefinedness.pre.smt2
+04-Jul-16  14:19           278,547 AVLTree.AVLTree.insert.1.orig.smt2
+21-Jun-16  09:15           265,285 AVLTree.AVLTree.insert.boogie.smt2
+04-Jul-16  14:19           275,556 AVLTree.AVLTree.insert.init.orig.smt2
+03-Jul-16  22:04           278,547 AVLTree.AVLTree.insert.orig.1.smt2
+03-Jul-16  22:04           275,556 AVLTree.AVLTree.insert.orig.smt2
+04-Jul-16  14:20           497,903 AVLTree.AVLTree.insert.post.fw.smt2
+04-Jul-16  14:20           271,566 AVLTree.AVLTree.insert.post.orig.smt2
+04-Jul-16  14:20           282,607 AVLTree.AVLTree.insert.post.smt2
+04-Jul-16  14:19            76,216 AVLTree.AVLTree.insert.pre.bpl
+04-Jul-16  14:19           337,563 AVLTree.AVLTree.insert.pre.fw.smt2
+04-Jul-16  14:19           279,027 AVLTree.AVLTree.insert.pre.orig.smt2
+04-Jul-16  14:19           277,859 AVLTree.AVLTree.insert.pre.smt2
+21-Jun-16  09:15           162,904 AVLTree.AVLTree.insert_checkDefinedness.boogie.smt2
+04-Jul-16  14:20           139,367 AVLTree.AVLTree.remove$checkDefinedness.1.orig.smt2
+04-Jul-16  14:20           140,620 AVLTree.AVLTree.remove$checkDefinedness.init.orig.smt2
+03-Jul-16  22:04           139,367 AVLTree.AVLTree.remove$checkDefinedness.orig.1.smt2
+03-Jul-16  22:04           140,620 AVLTree.AVLTree.remove$checkDefinedness.orig.smt2
+04-Jul-16  14:20           136,587 AVLTree.AVLTree.remove$checkDefinedness.post.fw.smt2
+04-Jul-16  14:20           133,976 AVLTree.AVLTree.remove$checkDefinedness.post.orig.smt2
+04-Jul-16  14:20           133,297 AVLTree.AVLTree.remove$checkDefinedness.post.smt2
+04-Jul-16  14:20            26,960 AVLTree.AVLTree.remove$checkDefinedness.pre.bpl
+04-Jul-16  14:20           134,466 AVLTree.AVLTree.remove$checkDefinedness.pre.fw.smt2
+04-Jul-16  14:20           133,976 AVLTree.AVLTree.remove$checkDefinedness.pre.orig.smt2
+04-Jul-16  14:20           132,960 AVLTree.AVLTree.remove$checkDefinedness.pre.smt2
+04-Jul-16  14:20           257,334 AVLTree.AVLTree.remove.1.orig.smt2
+21-Jun-16  09:15           296,623 AVLTree.AVLTree.remove.boogie.smt2
+04-Jul-16  14:20           254,540 AVLTree.AVLTree.remove.init.orig.smt2
+03-Jul-16  22:04           257,334 AVLTree.AVLTree.remove.orig.1.smt2
+03-Jul-16  22:04           254,540 AVLTree.AVLTree.remove.orig.smt2
+04-Jul-16  14:20           504,547 AVLTree.AVLTree.remove.post.fw.smt2
+04-Jul-16  14:20           256,776 AVLTree.AVLTree.remove.post.orig.smt2
+04-Jul-16  14:20           265,374 AVLTree.AVLTree.remove.post.smt2
+04-Jul-16  14:20            70,922 AVLTree.AVLTree.remove.pre.bpl
+04-Jul-16  14:20           304,706 AVLTree.AVLTree.remove.pre.fw.smt2
+04-Jul-16  14:20           257,885 AVLTree.AVLTree.remove.pre.orig.smt2
+04-Jul-16  14:20           254,701 AVLTree.AVLTree.remove.pre.smt2
+21-Jun-16  09:15           206,726 AVLTree.AVLTree.remove_checkDefinedness.boogie.smt2
+04-Jul-16  14:19           148,375 AVLTree.AVLTree.valid$checkDefinedness.1.orig.smt2
+04-Jul-16  14:19           145,207 AVLTree.AVLTree.valid$checkDefinedness.init.orig.smt2
+03-Jul-16  22:04           148,375 AVLTree.AVLTree.valid$checkDefinedness.orig.1.smt2
+03-Jul-16  22:04           145,207 AVLTree.AVLTree.valid$checkDefinedness.orig.smt2
+04-Jul-16  14:19           184,985 AVLTree.AVLTree.valid$checkDefinedness.post.fw.smt2
+04-Jul-16  14:19           148,372 AVLTree.AVLTree.valid$checkDefinedness.post.orig.smt2
+04-Jul-16  14:19           148,718 AVLTree.AVLTree.valid$checkDefinedness.post.smt2
+04-Jul-16  14:19            27,260 AVLTree.AVLTree.valid$checkDefinedness.pre.bpl
+04-Jul-16  14:19           160,442 AVLTree.AVLTree.valid$checkDefinedness.pre.fw.smt2
+04-Jul-16  14:19           148,988 AVLTree.AVLTree.valid$checkDefinedness.pre.orig.smt2
+04-Jul-16  14:19           147,851 AVLTree.AVLTree.valid$checkDefinedness.pre.smt2
+21-Jun-16  09:15           138,338 AVLTree.AVLTree.valid_checkDefinedness.boogie.smt2
+04-Jul-16  14:20           115,692 AVLTree.AVLTreeNode$monitorinvariant$checkDefinedness.1.orig.smt2
+04-Jul-16  14:20           110,582 AVLTree.AVLTreeNode$monitorinvariant$checkDefinedness.init.orig.smt2
+03-Jul-16  22:04           115,692 AVLTree.AVLTreeNode$monitorinvariant$checkDefinedness.orig.1.smt2
+03-Jul-16  22:04           110,582 AVLTree.AVLTreeNode$monitorinvariant$checkDefinedness.orig.smt2
+04-Jul-16  14:20            19,375 AVLTree.AVLTreeNode$monitorinvariant$checkDefinedness.pre.bpl
+03-Jul-16  22:04           115,793 AVLTree.AVLTreeNode$monitorinvariant$checkDefinedness.pre.orig.smt2
+03-Jul-16  22:04           116,718 AVLTree.AVLTreeNode$monitorinvariant$checkDefinedness.pre.smt2
+04-Jul-16  14:30           204,179 AVLTree.AVLTreeNode.close$checkDefinedness.1.orig.smt2
+04-Jul-16  14:30           212,874 AVLTree.AVLTreeNode.close$checkDefinedness.init.orig.smt2
+03-Jul-16  22:08           204,179 AVLTree.AVLTreeNode.close$checkDefinedness.orig.1.smt2
+03-Jul-16  22:08           212,874 AVLTree.AVLTreeNode.close$checkDefinedness.orig.smt2
+04-Jul-16  14:30           589,916 AVLTree.AVLTreeNode.close$checkDefinedness.post.fw.smt2
+04-Jul-16  14:30           202,937 AVLTree.AVLTreeNode.close$checkDefinedness.post.orig.smt2
+04-Jul-16  14:30           203,586 AVLTree.AVLTreeNode.close$checkDefinedness.post.smt2
+04-Jul-16  14:30            55,571 AVLTree.AVLTreeNode.close$checkDefinedness.pre.bpl
+04-Jul-16  14:30           262,970 AVLTree.AVLTreeNode.close$checkDefinedness.pre.fw.smt2
+04-Jul-16  14:30           204,837 AVLTree.AVLTreeNode.close$checkDefinedness.pre.orig.smt2
+04-Jul-16  14:30           199,084 AVLTree.AVLTreeNode.close$checkDefinedness.pre.smt2
+04-Jul-16  14:30           532,341 AVLTree.AVLTreeNode.close.1.orig.smt2
+21-Jun-16  09:18         1,472,075 AVLTree.AVLTreeNode.close.boogie.smt2
+04-Jul-16  14:30           541,994 AVLTree.AVLTreeNode.close.init.orig.smt2
+03-Jul-16  22:08           532,341 AVLTree.AVLTreeNode.close.orig.1.smt2
+03-Jul-16  22:08           541,994 AVLTree.AVLTreeNode.close.orig.smt2
+04-Jul-16  14:31         1,701,110 AVLTree.AVLTreeNode.close.post.fw.smt2
+04-Jul-16  14:31           530,766 AVLTree.AVLTreeNode.close.post.orig.smt2
+04-Jul-16  14:31           554,877 AVLTree.AVLTreeNode.close.post.smt2
+04-Jul-16  14:30           209,238 AVLTree.AVLTreeNode.close.pre.bpl
+04-Jul-16  14:30           652,914 AVLTree.AVLTreeNode.close.pre.fw.smt2
+04-Jul-16  14:30           533,552 AVLTree.AVLTreeNode.close.pre.orig.smt2
+04-Jul-16  14:30           524,904 AVLTree.AVLTreeNode.close.pre.smt2
+21-Jun-16  09:18         1,170,760 AVLTree.AVLTreeNode.close_checkDefinedness.boogie.smt2
+04-Jul-16  14:27           375,888 AVLTree.AVLTreeNode.getBalanceFactor$checkDefinedness.1.orig.smt2
+04-Jul-16  14:27           375,371 AVLTree.AVLTreeNode.getBalanceFactor$checkDefinedness.init.orig.smt2
+03-Jul-16  22:07           375,888 AVLTree.AVLTreeNode.getBalanceFactor$checkDefinedness.orig.1.smt2
+03-Jul-16  22:07           375,371 AVLTree.AVLTreeNode.getBalanceFactor$checkDefinedness.orig.smt2
+04-Jul-16  14:29           225,363 AVLTree.AVLTreeNode.getBalanceFactor$checkDefinedness.post.fw.smt2
+04-Jul-16  14:29           219,810 AVLTree.AVLTreeNode.getBalanceFactor$checkDefinedness.post.orig.smt2
+04-Jul-16  14:29           218,438 AVLTree.AVLTreeNode.getBalanceFactor$checkDefinedness.post.smt2
+04-Jul-16  14:27           150,393 AVLTree.AVLTreeNode.getBalanceFactor$checkDefinedness.pre.bpl
+04-Jul-16  14:28           379,023 AVLTree.AVLTreeNode.getBalanceFactor$checkDefinedness.pre.fw.smt2
+04-Jul-16  14:28           376,784 AVLTree.AVLTreeNode.getBalanceFactor$checkDefinedness.pre.orig.smt2
+04-Jul-16  14:28           357,786 AVLTree.AVLTreeNode.getBalanceFactor$checkDefinedness.pre.smt2
+04-Jul-16  14:29           304,614 AVLTree.AVLTreeNode.getBalanceFactor.1.orig.smt2
+21-Jun-16  09:18         1,138,613 AVLTree.AVLTreeNode.getBalanceFactor.boogie.smt2
+04-Jul-16  14:29           306,852 AVLTree.AVLTreeNode.getBalanceFactor.init.orig.smt2
+03-Jul-16  22:07           304,614 AVLTree.AVLTreeNode.getBalanceFactor.orig.1.smt2
+03-Jul-16  22:07           306,852 AVLTree.AVLTreeNode.getBalanceFactor.orig.smt2
+04-Jul-16  14:29           848,371 AVLTree.AVLTreeNode.getBalanceFactor.post.fw.smt2
+04-Jul-16  14:29           302,738 AVLTree.AVLTreeNode.getBalanceFactor.post.orig.smt2
+04-Jul-16  14:29           323,025 AVLTree.AVLTreeNode.getBalanceFactor.post.smt2
+04-Jul-16  14:29            98,308 AVLTree.AVLTreeNode.getBalanceFactor.pre.bpl
+04-Jul-16  14:29           364,454 AVLTree.AVLTreeNode.getBalanceFactor.pre.fw.smt2
+04-Jul-16  14:29           304,921 AVLTree.AVLTreeNode.getBalanceFactor.pre.orig.smt2
+04-Jul-16  14:29           303,429 AVLTree.AVLTreeNode.getBalanceFactor.pre.smt2
+04-Jul-16  14:29           158,044 AVLTree.AVLTreeNode.getBalanceFactorI$checkDefinedness.1.orig.smt2
+04-Jul-16  14:29           159,436 AVLTree.AVLTreeNode.getBalanceFactorI$checkDefinedness.init.orig.smt2
+03-Jul-16  22:08           158,044 AVLTree.AVLTreeNode.getBalanceFactorI$checkDefinedness.orig.1.smt2
+03-Jul-16  22:08           159,436 AVLTree.AVLTreeNode.getBalanceFactorI$checkDefinedness.orig.smt2
+04-Jul-16  14:29           178,058 AVLTree.AVLTreeNode.getBalanceFactorI$checkDefinedness.post.fw.smt2
+04-Jul-16  14:29           157,900 AVLTree.AVLTreeNode.getBalanceFactorI$checkDefinedness.post.orig.smt2
+04-Jul-16  14:29           156,833 AVLTree.AVLTreeNode.getBalanceFactorI$checkDefinedness.post.smt2
+04-Jul-16  14:29            36,705 AVLTree.AVLTreeNode.getBalanceFactorI$checkDefinedness.pre.bpl
+04-Jul-16  14:29           174,778 AVLTree.AVLTreeNode.getBalanceFactorI$checkDefinedness.pre.fw.smt2
+04-Jul-16  14:29           158,652 AVLTree.AVLTreeNode.getBalanceFactorI$checkDefinedness.pre.orig.smt2
+04-Jul-16  14:29           154,582 AVLTree.AVLTreeNode.getBalanceFactorI$checkDefinedness.pre.smt2
+04-Jul-16  14:29           377,190 AVLTree.AVLTreeNode.getBalanceFactorI.1.orig.smt2
+21-Jun-16  09:18         1,252,152 AVLTree.AVLTreeNode.getBalanceFactorI.boogie.smt2
+04-Jul-16  14:29           379,601 AVLTree.AVLTreeNode.getBalanceFactorI.init.orig.smt2
+03-Jul-16  22:08           377,190 AVLTree.AVLTreeNode.getBalanceFactorI.orig.1.smt2
+03-Jul-16  22:08           379,601 AVLTree.AVLTreeNode.getBalanceFactorI.orig.smt2
+04-Jul-16  14:29           529,765 AVLTree.AVLTreeNode.getBalanceFactorI.post.fw.smt2
+04-Jul-16  14:29           376,315 AVLTree.AVLTreeNode.getBalanceFactorI.post.orig.smt2
+04-Jul-16  14:30           373,450 AVLTree.AVLTreeNode.getBalanceFactorI.post.smt2
+04-Jul-16  14:29           140,531 AVLTree.AVLTreeNode.getBalanceFactorI.pre.bpl
+04-Jul-16  14:29           401,611 AVLTree.AVLTreeNode.getBalanceFactorI.pre.fw.smt2
+04-Jul-16  14:29           377,117 AVLTree.AVLTreeNode.getBalanceFactorI.pre.orig.smt2
+04-Jul-16  14:29           362,781 AVLTree.AVLTreeNode.getBalanceFactorI.pre.smt2
+21-Jun-16  09:18         1,063,449 AVLTree.AVLTreeNode.getBalanceFactorI_checkDefinedness.boogie.smt2
+21-Jun-16  09:18         1,143,121 AVLTree.AVLTreeNode.getBalanceFactor_checkDefinedness.boogie.smt2
+04-Jul-16  14:27           131,801 AVLTree.AVLTreeNode.has$checkDefinedness.1.orig.smt2
+04-Jul-16  14:27           125,858 AVLTree.AVLTreeNode.has$checkDefinedness.init.orig.smt2
+03-Jul-16  22:07           131,801 AVLTree.AVLTreeNode.has$checkDefinedness.orig.1.smt2
+03-Jul-16  22:07           125,858 AVLTree.AVLTreeNode.has$checkDefinedness.orig.smt2
+04-Jul-16  14:27           134,712 AVLTree.AVLTreeNode.has$checkDefinedness.post.fw.smt2
+04-Jul-16  14:27           132,238 AVLTree.AVLTreeNode.has$checkDefinedness.post.orig.smt2
+04-Jul-16  14:27           131,438 AVLTree.AVLTreeNode.has$checkDefinedness.post.smt2
+04-Jul-16  14:27            21,539 AVLTree.AVLTreeNode.has$checkDefinedness.pre.bpl
+04-Jul-16  14:27           132,610 AVLTree.AVLTreeNode.has$checkDefinedness.pre.fw.smt2
+04-Jul-16  14:27           132,238 AVLTree.AVLTreeNode.has$checkDefinedness.pre.orig.smt2
+04-Jul-16  14:27           131,093 AVLTree.AVLTreeNode.has$checkDefinedness.pre.smt2
+04-Jul-16  14:27           326,111 AVLTree.AVLTreeNode.has.1.orig.smt2
+21-Jun-16  09:18         1,020,021 AVLTree.AVLTreeNode.has.boogie.smt2
+04-Jul-16  14:27           324,839 AVLTree.AVLTreeNode.has.init.orig.smt2
+03-Jul-16  22:07           326,111 AVLTree.AVLTreeNode.has.orig.1.smt2
+03-Jul-16  22:07           324,839 AVLTree.AVLTreeNode.has.orig.smt2
+04-Jul-16  14:27           951,771 AVLTree.AVLTreeNode.has.post.fw.smt2
+04-Jul-16  14:27           323,914 AVLTree.AVLTreeNode.has.post.orig.smt2
+04-Jul-16  14:27           348,534 AVLTree.AVLTreeNode.has.post.smt2
+04-Jul-16  14:27           109,447 AVLTree.AVLTreeNode.has.pre.bpl
+04-Jul-16  14:27           409,379 AVLTree.AVLTreeNode.has.pre.fw.smt2
+04-Jul-16  14:27           326,381 AVLTree.AVLTreeNode.has.pre.orig.smt2
+04-Jul-16  14:27           330,239 AVLTree.AVLTreeNode.has.pre.smt2
+21-Jun-16  09:18           841,034 AVLTree.AVLTreeNode.has_checkDefinedness.boogie.smt2
+04-Jul-16  14:21           144,933 AVLTree.AVLTreeNode.init$checkDefinedness.1.orig.smt2
+04-Jul-16  14:21           138,207 AVLTree.AVLTreeNode.init$checkDefinedness.init.orig.smt2
+03-Jul-16  22:05           144,933 AVLTree.AVLTreeNode.init$checkDefinedness.orig.1.smt2
+03-Jul-16  22:05           138,207 AVLTree.AVLTreeNode.init$checkDefinedness.orig.smt2
+03-Jul-16  22:05           145,189 AVLTree.AVLTreeNode.init$checkDefinedness.post.orig.smt2
+03-Jul-16  22:05           155,919 AVLTree.AVLTreeNode.init$checkDefinedness.post.smt2
+04-Jul-16  14:21            25,291 AVLTree.AVLTreeNode.init$checkDefinedness.pre.bpl
+04-Jul-16  14:21           153,521 AVLTree.AVLTreeNode.init$checkDefinedness.pre.fw.smt2
+04-Jul-16  14:21           145,546 AVLTree.AVLTreeNode.init$checkDefinedness.pre.orig.smt2
+04-Jul-16  14:21           146,598 AVLTree.AVLTreeNode.init$checkDefinedness.pre.smt2
+05-Jul-16  03:43           226,761 AVLTree.AVLTreeNode.init.1.orig.smt2
+02-Jul-16  19:26           202,909 AVLTree.AVLTreeNode.init.boogie.smt2
+05-Jul-16  03:43           221,413 AVLTree.AVLTreeNode.init.init.orig.smt2
+03-Jul-16  22:05           226,761 AVLTree.AVLTreeNode.init.orig.1.smt2
+03-Jul-16  22:05           221,413 AVLTree.AVLTreeNode.init.orig.smt2
+05-Jul-16  03:44           365,100 AVLTree.AVLTreeNode.init.post.fw.smt2
+05-Jul-16  03:44           190,916 AVLTree.AVLTreeNode.init.post.orig.smt2
+05-Jul-16  03:44           189,801 AVLTree.AVLTreeNode.init.post.smt2
+05-Jul-16  03:43            53,567 AVLTree.AVLTreeNode.init.pre.bpl
+05-Jul-16  03:43           294,524 AVLTree.AVLTreeNode.init.pre.fw.smt2
+05-Jul-16  03:43           226,145 AVLTree.AVLTreeNode.init.pre.orig.smt2
+05-Jul-16  03:43           229,196 AVLTree.AVLTreeNode.init.pre.smt2
+21-Jun-16  09:15           293,343 AVLTree.AVLTreeNode.init_checkDefinedness.boogie.smt2
+04-Jul-16  14:21           149,024 AVLTree.AVLTreeNode.insert$checkDefinedness.1.orig.smt2
+04-Jul-16  14:21           151,654 AVLTree.AVLTreeNode.insert$checkDefinedness.init.orig.smt2
+03-Jul-16  22:05           149,024 AVLTree.AVLTreeNode.insert$checkDefinedness.orig.1.smt2
+03-Jul-16  22:05           151,654 AVLTree.AVLTreeNode.insert$checkDefinedness.orig.smt2
+03-Jul-16  22:05           149,280 AVLTree.AVLTreeNode.insert$checkDefinedness.post.orig.smt2
+03-Jul-16  22:05           157,275 AVLTree.AVLTreeNode.insert$checkDefinedness.post.smt2
+04-Jul-16  14:21            32,257 AVLTree.AVLTreeNode.insert$checkDefinedness.pre.bpl
+04-Jul-16  14:21           160,002 AVLTree.AVLTreeNode.insert$checkDefinedness.pre.fw.smt2
+04-Jul-16  14:21           149,637 AVLTree.AVLTreeNode.insert$checkDefinedness.pre.orig.smt2
+04-Jul-16  14:21           146,910 AVLTree.AVLTreeNode.insert$checkDefinedness.pre.smt2
+05-Jul-16  15:30           653,346 AVLTree.AVLTreeNode.insert.1.orig.smt2
+04-Jul-16  02:51           534,190 AVLTree.AVLTreeNode.insert.boogie.smt2
+05-Jul-16  15:30           660,207 AVLTree.AVLTreeNode.insert.init.orig.smt2
+04-Jul-16  12:24           653,346 AVLTree.AVLTreeNode.insert.orig.1.smt2
+04-Jul-16  12:24           660,207 AVLTree.AVLTreeNode.insert.orig.smt2
+05-Jul-16  15:35         5,847,166 AVLTree.AVLTreeNode.insert.post.fw.smt2
+05-Jul-16  15:35           641,636 AVLTree.AVLTreeNode.insert.post.orig.smt2
+05-Jul-16  15:35           719,988 AVLTree.AVLTreeNode.insert.post.smt2
+05-Jul-16  15:30           249,616 AVLTree.AVLTreeNode.insert.pre.bpl
+05-Jul-16  15:30           877,835 AVLTree.AVLTreeNode.insert.pre.fw.smt2
+05-Jul-16  15:30           653,939 AVLTree.AVLTreeNode.insert.pre.orig.smt2
+05-Jul-16  15:30           650,978 AVLTree.AVLTreeNode.insert.pre.smt2
+21-Jun-16  09:15           332,447 AVLTree.AVLTreeNode.insert_checkDefinedness.boogie.smt2
+04-Jul-16  14:25           156,194 AVLTree.AVLTreeNode.pruneMax$checkDefinedness.1.orig.smt2
+04-Jul-16  14:25           155,625 AVLTree.AVLTreeNode.pruneMax$checkDefinedness.init.orig.smt2
+03-Jul-16  22:06           156,194 AVLTree.AVLTreeNode.pruneMax$checkDefinedness.orig.1.smt2
+03-Jul-16  22:06           155,625 AVLTree.AVLTreeNode.pruneMax$checkDefinedness.orig.smt2
+04-Jul-16  14:25           216,460 AVLTree.AVLTreeNode.pruneMax$checkDefinedness.post.fw.smt2
+04-Jul-16  14:25           154,522 AVLTree.AVLTreeNode.pruneMax$checkDefinedness.post.orig.smt2
+04-Jul-16  14:25           155,423 AVLTree.AVLTreeNode.pruneMax$checkDefinedness.post.smt2
+04-Jul-16  14:25            35,682 AVLTree.AVLTreeNode.pruneMax$checkDefinedness.pre.bpl
+04-Jul-16  14:25           177,987 AVLTree.AVLTreeNode.pruneMax$checkDefinedness.pre.fw.smt2
+04-Jul-16  14:25           155,111 AVLTree.AVLTreeNode.pruneMax$checkDefinedness.pre.orig.smt2
+04-Jul-16  14:25           154,403 AVLTree.AVLTreeNode.pruneMax$checkDefinedness.pre.smt2
+04-Jul-16  14:25           459,257 AVLTree.AVLTreeNode.pruneMax.1.orig.smt2
+21-Jun-16  09:18           952,331 AVLTree.AVLTreeNode.pruneMax.boogie.smt2
+04-Jul-16  14:25           464,023 AVLTree.AVLTreeNode.pruneMax.init.orig.smt2
+03-Jul-16  22:06           459,257 AVLTree.AVLTreeNode.pruneMax.orig.1.smt2
+03-Jul-16  22:06           464,023 AVLTree.AVLTreeNode.pruneMax.orig.smt2
+04-Jul-16  14:25         1,787,515 AVLTree.AVLTreeNode.pruneMax.post.fw.smt2
+04-Jul-16  14:25           441,176 AVLTree.AVLTreeNode.pruneMax.post.orig.smt2
+04-Jul-16  14:26           468,754 AVLTree.AVLTreeNode.pruneMax.post.smt2
+04-Jul-16  14:25           166,547 AVLTree.AVLTreeNode.pruneMax.pre.bpl
+04-Jul-16  14:25           639,585 AVLTree.AVLTreeNode.pruneMax.pre.fw.smt2
+04-Jul-16  14:25           459,406 AVLTree.AVLTreeNode.pruneMax.pre.orig.smt2
+04-Jul-16  14:25           462,037 AVLTree.AVLTreeNode.pruneMax.pre.smt2
+21-Jun-16  09:17           692,536 AVLTree.AVLTreeNode.pruneMax_checkDefinedness.boogie.smt2
+04-Jul-16  14:26           155,809 AVLTree.AVLTreeNode.pruneMin$checkDefinedness.1.orig.smt2
+04-Jul-16  14:26           155,621 AVLTree.AVLTreeNode.pruneMin$checkDefinedness.init.orig.smt2
+03-Jul-16  22:06           155,809 AVLTree.AVLTreeNode.pruneMin$checkDefinedness.orig.1.smt2
+03-Jul-16  22:06           155,621 AVLTree.AVLTreeNode.pruneMin$checkDefinedness.orig.smt2
+04-Jul-16  14:26           217,169 AVLTree.AVLTreeNode.pruneMin$checkDefinedness.post.fw.smt2
+04-Jul-16  14:26           155,328 AVLTree.AVLTreeNode.pruneMin$checkDefinedness.post.orig.smt2
+04-Jul-16  14:26           156,122 AVLTree.AVLTreeNode.pruneMin$checkDefinedness.post.smt2
+04-Jul-16  14:26            35,685 AVLTree.AVLTreeNode.pruneMin$checkDefinedness.pre.bpl
+04-Jul-16  14:26           178,738 AVLTree.AVLTreeNode.pruneMin$checkDefinedness.pre.fw.smt2
+04-Jul-16  14:26           155,917 AVLTree.AVLTreeNode.pruneMin$checkDefinedness.pre.orig.smt2
+04-Jul-16  14:26           155,098 AVLTree.AVLTreeNode.pruneMin$checkDefinedness.pre.smt2
+04-Jul-16  14:26           470,811 AVLTree.AVLTreeNode.pruneMin.1.orig.smt2
+21-Jun-16  09:18         1,056,449 AVLTree.AVLTreeNode.pruneMin.boogie.smt2
+04-Jul-16  14:26           480,028 AVLTree.AVLTreeNode.pruneMin.init.orig.smt2
+03-Jul-16  22:07           470,811 AVLTree.AVLTreeNode.pruneMin.orig.1.smt2
+03-Jul-16  22:07           480,028 AVLTree.AVLTreeNode.pruneMin.orig.smt2
+04-Jul-16  14:27         2,192,986 AVLTree.AVLTreeNode.pruneMin.post.fw.smt2
+04-Jul-16  14:27           452,458 AVLTree.AVLTreeNode.pruneMin.post.orig.smt2
+04-Jul-16  14:27           475,839 AVLTree.AVLTreeNode.pruneMin.post.smt2
+04-Jul-16  14:26           173,985 AVLTree.AVLTreeNode.pruneMin.pre.bpl
+04-Jul-16  14:26           664,374 AVLTree.AVLTreeNode.pruneMin.pre.fw.smt2
+04-Jul-16  14:26           471,136 AVLTree.AVLTreeNode.pruneMin.pre.orig.smt2
+04-Jul-16  14:26           471,979 AVLTree.AVLTreeNode.pruneMin.pre.smt2
+21-Jun-16  09:18           780,434 AVLTree.AVLTreeNode.pruneMin_checkDefinedness.boogie.smt2
+04-Jul-16  14:31           182,867 AVLTree.AVLTreeNode.rebalanceLeft$checkDefinedness.1.orig.smt2
+04-Jul-16  14:31           187,664 AVLTree.AVLTreeNode.rebalanceLeft$checkDefinedness.init.orig.smt2
+03-Jul-16  22:08           182,867 AVLTree.AVLTreeNode.rebalanceLeft$checkDefinedness.orig.1.smt2
+03-Jul-16  22:08           187,664 AVLTree.AVLTreeNode.rebalanceLeft$checkDefinedness.orig.smt2
+04-Jul-16  14:31           381,169 AVLTree.AVLTreeNode.rebalanceLeft$checkDefinedness.post.fw.smt2
+04-Jul-16  14:31           181,069 AVLTree.AVLTreeNode.rebalanceLeft$checkDefinedness.post.orig.smt2
+04-Jul-16  14:31           180,280 AVLTree.AVLTreeNode.rebalanceLeft$checkDefinedness.post.smt2
+04-Jul-16  14:31            45,096 AVLTree.AVLTreeNode.rebalanceLeft$checkDefinedness.pre.bpl
+04-Jul-16  14:31           221,440 AVLTree.AVLTreeNode.rebalanceLeft$checkDefinedness.pre.fw.smt2
+04-Jul-16  14:31           183,277 AVLTree.AVLTreeNode.rebalanceLeft$checkDefinedness.pre.orig.smt2
+04-Jul-16  14:31           176,624 AVLTree.AVLTreeNode.rebalanceLeft$checkDefinedness.pre.smt2
+05-Jul-16  04:04         1,764,519 AVLTree.AVLTreeNode.rebalanceLeft.1.orig.smt2
+21-Jun-16  09:19         2,682,526 AVLTree.AVLTreeNode.rebalanceLeft.boogie.smt2
+05-Jul-16  04:03         1,781,734 AVLTree.AVLTreeNode.rebalanceLeft.init.orig.smt2
+03-Jul-16  22:09         1,764,519 AVLTree.AVLTreeNode.rebalanceLeft.orig.1.smt2
+03-Jul-16  22:09         1,781,734 AVLTree.AVLTreeNode.rebalanceLeft.orig.smt2
+05-Jul-16  04:05         1,267,476 AVLTree.AVLTreeNode.rebalanceLeft.post.fw.smt2
+05-Jul-16  04:05         1,016,589 AVLTree.AVLTreeNode.rebalanceLeft.post.orig.smt2
+05-Jul-16  04:05           909,282 AVLTree.AVLTreeNode.rebalanceLeft.post.smt2
+05-Jul-16  04:03           794,611 AVLTree.AVLTreeNode.rebalanceLeft.pre.bpl
+05-Jul-16  04:04         1,020,284 AVLTree.AVLTreeNode.rebalanceLeft.pre.fw.smt2
+05-Jul-16  04:04         1,016,589 AVLTree.AVLTreeNode.rebalanceLeft.pre.orig.smt2
+05-Jul-16  04:04           900,307 AVLTree.AVLTreeNode.rebalanceLeft.pre.smt2
+21-Jun-16  09:18         1,267,680 AVLTree.AVLTreeNode.rebalanceLeft_checkDefinedness.boogie.smt2
+03-Jul-16  22:16           184,449 AVLTree.AVLTreeNode.rebalanceLL$checkDefinedness.orig.1.smt2
+03-Jul-16  22:16           189,519 AVLTree.AVLTreeNode.rebalanceLL$checkDefinedness.orig.smt2
+03-Jul-16  22:16           184,321 AVLTree.AVLTreeNode.rebalanceLL$checkDefinedness.post.orig.smt2
+03-Jul-16  22:16           202,295 AVLTree.AVLTreeNode.rebalanceLL$checkDefinedness.post.smt2
+03-Jul-16  22:16            45,704 AVLTree.AVLTreeNode.rebalanceLL$checkDefinedness.pre.bpl
+03-Jul-16  22:16           184,321 AVLTree.AVLTreeNode.rebalanceLL$checkDefinedness.pre.orig.smt2
+03-Jul-16  22:16           203,036 AVLTree.AVLTreeNode.rebalanceLL$checkDefinedness.pre.smt2
+26-Jun-16  20:39         1,519,554 AVLTree.AVLTreeNode.rebalanceLL.boogie.smt2
+03-Jul-16  22:16           346,844 AVLTree.AVLTreeNode.rebalanceLL.orig.1.smt2
+03-Jul-16  22:16           345,737 AVLTree.AVLTreeNode.rebalanceLL.orig.smt2
+03-Jul-16  22:16           346,919 AVLTree.AVLTreeNode.rebalanceLL.post.orig.smt2
+03-Jul-16  22:16           529,371 AVLTree.AVLTreeNode.rebalanceLL.post.smt2
+03-Jul-16  22:16           108,751 AVLTree.AVLTreeNode.rebalanceLL.pre.bpl
+03-Jul-16  22:16           346,919 AVLTree.AVLTreeNode.rebalanceLL.pre.orig.smt2
+03-Jul-16  22:16           533,487 AVLTree.AVLTreeNode.rebalanceLL.pre.smt2
+21-Jun-16  09:30         2,774,668 AVLTree.AVLTreeNode.rebalanceLL_checkDefinedness.boogie.smt2
+03-Jul-16  22:13           280,884 AVLTree.AVLTreeNode.rebalanceLR$checkDefinedness.orig.1.smt2
+03-Jul-16  22:13           286,609 AVLTree.AVLTreeNode.rebalanceLR$checkDefinedness.orig.smt2
+03-Jul-16  22:14           280,942 AVLTree.AVLTreeNode.rebalanceLR$checkDefinedness.post.orig.smt2
+03-Jul-16  22:14           427,980 AVLTree.AVLTreeNode.rebalanceLR$checkDefinedness.post.smt2
+03-Jul-16  22:13            93,293 AVLTree.AVLTreeNode.rebalanceLR$checkDefinedness.pre.bpl
+03-Jul-16  22:13           280,942 AVLTree.AVLTreeNode.rebalanceLR$checkDefinedness.pre.orig.smt2
+03-Jul-16  22:13           438,273 AVLTree.AVLTreeNode.rebalanceLR$checkDefinedness.pre.smt2
+04-Jul-16  16:19         1,012,339 avltree.AVLTreeNode.rebalanceLR.1.orig.smt2
+21-Jun-16  09:30         3,289,911 AVLTree.AVLTreeNode.rebalanceLR.boogie.smt2
+04-Jul-16  16:19         1,030,596 avltree.AVLTreeNode.rebalanceLR.init.orig.smt2
+03-Jul-16  22:14         1,012,339 avltree.AVLTreeNode.rebalanceLR.orig.1.smt2
+03-Jul-16  22:14         1,030,596 avltree.AVLTreeNode.rebalanceLR.orig.smt2
+04-Jul-16  16:20         1,251,790 avltree.AVLTreeNode.rebalanceLR.post.fw.smt2
+04-Jul-16  16:20         1,012,779 AVLTree.AVLTreeNode.rebalanceLR.post.orig.smt2
+04-Jul-16  16:20           963,205 AVLTree.AVLTreeNode.rebalanceLR.post.smt2
+04-Jul-16  16:19           422,018 avltree.AVLTreeNode.rebalanceLR.pre.bpl
+04-Jul-16  16:19         1,204,383 avltree.AVLTreeNode.rebalanceLR.pre.fw.smt2
+04-Jul-16  16:19         1,014,533 AVLTree.AVLTreeNode.rebalanceLR.pre.orig.smt2
+04-Jul-16  16:19           974,228 AVLTree.AVLTreeNode.rebalanceLR.pre.smt2
+21-Jun-16  09:24         2,566,163 AVLTree.AVLTreeNode.rebalanceLR_checkDefinedness.boogie.smt2
+03-Jul-16  22:12           183,424 AVLTree.AVLTreeNode.rebalanceRight$checkDefinedness.orig.1.smt2
+03-Jul-16  22:12           188,138 AVLTree.AVLTreeNode.rebalanceRight$checkDefinedness.orig.smt2
+03-Jul-16  22:12           183,298 AVLTree.AVLTreeNode.rebalanceRight$checkDefinedness.post.orig.smt2
+03-Jul-16  22:12           200,244 AVLTree.AVLTreeNode.rebalanceRight$checkDefinedness.post.smt2
+03-Jul-16  22:12            45,165 AVLTree.AVLTreeNode.rebalanceRight$checkDefinedness.pre.bpl
+03-Jul-16  22:12           183,298 AVLTree.AVLTreeNode.rebalanceRight$checkDefinedness.pre.orig.smt2
+03-Jul-16  22:12           200,985 AVLTree.AVLTreeNode.rebalanceRight$checkDefinedness.pre.smt2
+21-Jun-16  09:24         3,491,464 AVLTree.AVLTreeNode.rebalanceRight.boogie.smt2
+03-Jul-16  22:12         1,764,458 AVLTree.AVLTreeNode.rebalanceRight.orig.1.smt2
+03-Jul-16  22:12         1,782,485 AVLTree.AVLTreeNode.rebalanceRight.orig.smt2
+03-Jul-16  22:13         1,016,292 AVLTree.AVLTreeNode.rebalanceRight.post.orig.smt2
+03-Jul-16  22:13         2,569,092 AVLTree.AVLTreeNode.rebalanceRight.post.smt2
+03-Jul-16  22:12           795,273 AVLTree.AVLTreeNode.rebalanceRight.pre.bpl
+03-Jul-16  22:13         1,016,292 AVLTree.AVLTreeNode.rebalanceRight.pre.orig.smt2
+03-Jul-16  22:13         2,583,702 AVLTree.AVLTreeNode.rebalanceRight.pre.smt2
+21-Jun-16  09:24         2,045,538 AVLTree.AVLTreeNode.rebalanceRight_checkDefinedness.boogie.smt2
+04-Jul-16  14:35           280,095 AVLTree.AVLTreeNode.rebalanceRL$checkDefinedness.1.orig.smt2
+04-Jul-16  14:35           285,789 AVLTree.AVLTreeNode.rebalanceRL$checkDefinedness.init.orig.smt2
+03-Jul-16  22:10           280,095 AVLTree.AVLTreeNode.rebalanceRL$checkDefinedness.orig.1.smt2
+03-Jul-16  22:10           285,789 AVLTree.AVLTreeNode.rebalanceRL$checkDefinedness.orig.smt2
+04-Jul-16  14:35           650,420 AVLTree.AVLTreeNode.rebalanceRL$checkDefinedness.post.fw.smt2
+04-Jul-16  14:35           278,262 AVLTree.AVLTreeNode.rebalanceRL$checkDefinedness.post.orig.smt2
+04-Jul-16  14:35           278,026 AVLTree.AVLTreeNode.rebalanceRL$checkDefinedness.post.smt2
+04-Jul-16  14:34            92,945 AVLTree.AVLTreeNode.rebalanceRL$checkDefinedness.pre.bpl
+04-Jul-16  14:35           346,627 AVLTree.AVLTreeNode.rebalanceRL$checkDefinedness.pre.fw.smt2
+04-Jul-16  14:35           280,689 AVLTree.AVLTreeNode.rebalanceRL$checkDefinedness.pre.orig.smt2
+04-Jul-16  14:35           269,536 AVLTree.AVLTreeNode.rebalanceRL$checkDefinedness.pre.smt2
+04-Jul-16  16:25         1,012,779 AVLTree.AVLTreeNode.rebalanceRL.1.orig.smt2
+23-Jun-16  19:03         1,532,342 AVLTree.AVLTreeNode.rebalanceRL.boogie.smt2
+04-Jul-16  16:25         1,030,076 AVLTree.AVLTreeNode.rebalanceRL.init.orig.smt2
+03-Jul-16  22:10         1,012,779 AVLTree.AVLTreeNode.rebalanceRL.orig.1.smt2
+03-Jul-16  22:10         1,030,076 AVLTree.AVLTreeNode.rebalanceRL.orig.smt2
+04-Jul-16  16:26         1,254,930 AVLTree.AVLTreeNode.rebalanceRL.post.fw.smt2
+04-Jul-16  16:26         1,013,216 AVLTree.AVLTreeNode.rebalanceRL.post.orig.smt2
+04-Jul-16  16:26           964,938 AVLTree.AVLTreeNode.rebalanceRL.post.smt2
+04-Jul-16  16:25           421,617 AVLTree.AVLTreeNode.rebalanceRL.pre.bpl
+04-Jul-16  16:26         1,208,580 AVLTree.AVLTreeNode.rebalanceRL.pre.fw.smt2
+04-Jul-16  16:25         1,014,973 AVLTree.AVLTreeNode.rebalanceRL.pre.orig.smt2
+04-Jul-16  16:26           975,914 AVLTree.AVLTreeNode.rebalanceRL.pre.smt2
+21-Jun-16  09:19         1,778,524 AVLTree.AVLTreeNode.rebalanceRL_checkDefinedness.boogie.smt2
+03-Jul-16  22:12           183,952 AVLTree.AVLTreeNode.rebalanceRR$checkDefinedness.orig.1.smt2
+03-Jul-16  22:12           189,136 AVLTree.AVLTreeNode.rebalanceRR$checkDefinedness.orig.smt2
+03-Jul-16  22:12           183,827 AVLTree.AVLTreeNode.rebalanceRR$checkDefinedness.post.orig.smt2
+03-Jul-16  22:12           211,827 AVLTree.AVLTreeNode.rebalanceRR$checkDefinedness.post.smt2
+03-Jul-16  22:12            45,686 AVLTree.AVLTreeNode.rebalanceRR$checkDefinedness.pre.bpl
+03-Jul-16  22:12           183,827 AVLTree.AVLTreeNode.rebalanceRR$checkDefinedness.pre.orig.smt2
+03-Jul-16  22:12           212,568 AVLTree.AVLTreeNode.rebalanceRR$checkDefinedness.pre.smt2
+21-Jun-16  13:44         1,124,777 AVLTree.AVLTreeNode.rebalanceRR.boogie.smt2
+03-Jul-16  22:12           347,550 AVLTree.AVLTreeNode.rebalanceRR.orig.1.smt2
+03-Jul-16  22:12           345,558 AVLTree.AVLTreeNode.rebalanceRR.orig.smt2
+03-Jul-16  22:12           347,625 AVLTree.AVLTreeNode.rebalanceRR.post.orig.smt2
+03-Jul-16  22:12           559,762 AVLTree.AVLTreeNode.rebalanceRR.post.smt2
+03-Jul-16  22:12           108,594 AVLTree.AVLTreeNode.rebalanceRR.pre.bpl
+03-Jul-16  22:12           347,625 AVLTree.AVLTreeNode.rebalanceRR.pre.orig.smt2
+03-Jul-16  22:12           563,874 AVLTree.AVLTreeNode.rebalanceRR.pre.smt2
+21-Jun-16  09:24         1,987,399 AVLTree.AVLTreeNode.rebalanceRR_checkDefinedness.boogie.smt2
+04-Jul-16  14:22           160,972 AVLTree.AVLTreeNode.remove$checkDefinedness.1.orig.smt2
+04-Jul-16  14:22           165,485 AVLTree.AVLTreeNode.remove$checkDefinedness.init.orig.smt2
+03-Jul-16  22:05           160,972 AVLTree.AVLTreeNode.remove$checkDefinedness.orig.1.smt2
+03-Jul-16  22:05           165,485 AVLTree.AVLTreeNode.remove$checkDefinedness.orig.smt2
+04-Jul-16  14:22           200,655 AVLTree.AVLTreeNode.remove$checkDefinedness.post.fw.smt2
+04-Jul-16  14:22           160,033 AVLTree.AVLTreeNode.remove$checkDefinedness.post.orig.smt2
+04-Jul-16  14:22           155,321 AVLTree.AVLTreeNode.remove$checkDefinedness.post.smt2
+04-Jul-16  14:22            38,325 AVLTree.AVLTreeNode.remove$checkDefinedness.pre.bpl
+04-Jul-16  14:22           168,021 AVLTree.AVLTreeNode.remove$checkDefinedness.pre.fw.smt2
+04-Jul-16  14:22           160,323 AVLTree.AVLTreeNode.remove$checkDefinedness.pre.orig.smt2
+04-Jul-16  14:22           154,548 AVLTree.AVLTreeNode.remove$checkDefinedness.pre.smt2
+05-Jul-16  03:29         1,056,949 AVLTree.AVLTreeNode.remove.1.orig.smt2
+24-Jun-16  12:06           930,096 AVLTree.AVLTreeNode.remove.boogie.smt2
+05-Jul-16  03:29         1,080,012 AVLTree.AVLTreeNode.remove.init.orig.smt2
+03-Jul-16  22:05         1,056,949 avltree.AVLTreeNode.remove.orig.1.smt2
+03-Jul-16  22:05         1,080,012 avltree.AVLTreeNode.remove.orig.smt2
+04-Jul-16  22:22         4,174,079 AVLTree.AVLTreeNode.remove.post.fw.smt2
+04-Jul-16  22:22         1,050,551 avltree.AVLTreeNode.remove.post.orig.smt2
+04-Jul-16  22:22         1,116,506 avltree.AVLTreeNode.remove.post.smt2
+05-Jul-16  03:29           466,275 avltree.AVLTreeNode.remove.pre.bpl
+05-Jul-16  03:29         1,479,976 AVLTree.AVLTreeNode.remove.pre.fw.smt2
+05-Jul-16  03:29         1,058,871 avltree.AVLTreeNode.remove.pre.orig.smt2
+05-Jul-16  03:29         1,046,447 avltree.AVLTreeNode.remove.pre.smt2
+21-Jun-16  09:16           470,400 AVLTree.AVLTreeNode.remove_checkDefinedness.boogie.smt2
+04-Jul-16  14:21           204,175 AVLTree.AVLTreeNode.valid$checkDefinedness.1.orig.smt2
+04-Jul-16  14:20           219,395 AVLTree.AVLTreeNode.valid$checkDefinedness.init.orig.smt2
+03-Jul-16  22:04           204,175 AVLTree.AVLTreeNode.valid$checkDefinedness.orig.1.smt2
+03-Jul-16  22:04           219,395 AVLTree.AVLTreeNode.valid$checkDefinedness.orig.smt2
+04-Jul-16  14:21           408,670 AVLTree.AVLTreeNode.valid$checkDefinedness.post.fw.smt2
+04-Jul-16  14:21           203,152 AVLTree.AVLTreeNode.valid$checkDefinedness.post.orig.smt2
+04-Jul-16  14:21           199,094 AVLTree.AVLTreeNode.valid$checkDefinedness.post.smt2
+04-Jul-16  14:20            56,329 AVLTree.AVLTreeNode.valid$checkDefinedness.pre.bpl
+04-Jul-16  14:21           259,761 AVLTree.AVLTreeNode.valid$checkDefinedness.pre.fw.smt2
+04-Jul-16  14:21           205,060 AVLTree.AVLTreeNode.valid$checkDefinedness.pre.orig.smt2
+04-Jul-16  14:21           196,086 AVLTree.AVLTreeNode.valid$checkDefinedness.pre.smt2
+21-Jun-16  09:15           343,762 AVLTree.AVLTreeNode.valid_checkDefinedness.boogie.smt2
+21-Jun-16  09:15           259,994 AVLTree.AVLTreeNode_monitorinvariant_checkDefinedness.boogie.smt2
+21-Jun-16  09:15           120,495 AVLTree.AVLTree_monitorinvariant_checkDefinedness.boogie.smt2
+02-Jul-16  09:45         3,781,958 AVLTree.bpl
+02-Jul-16  09:45            25,989 AVLTree.chalice
+02-Jul-16  09:45            99,075 AVLTree.init.z3
+02-Jul-16  09:45            44,535 AVLTree.insert.bpl
+02-Jul-16  09:45         2,119,962 AVLTree.newer.bpl
+02-Jul-16  09:45            19,131 AVLTree.noremove.chalice
+21-Jun-16  09:14         3,743,023 AVLTreeNode.boogie.smt2
+02-Jul-16  09:45            55,722 AVLTreeNode.init.77.logg
+20-Jun-16  21:27           428,888 AVLTreeNode.insert.boogie.smt2
+02-Jul-16  19:43            16,137 boogie.params
+02-Jul-16  09:45            11,038 boogie.timings.log
+02-Jul-16  09:45         2,477,953 carbon-AVLTree.bpl
+02-Jul-16  09:45                93 command.txt
+03-Jul-16  18:53               635 cvc4-latest.params
+03-Jul-16  10:00            26,969 cvc4.params
+02-Jul-16  09:45    <DIR>          Iterative
+02-Jul-16  09:45    <DIR>          nobalance
+02-Jul-16  09:45    <DIR>          nokeys
+02-Jul-16  09:45    <DIR>          temp
+02-Jul-16  09:45                49 timings.txt
+03-Jul-16  18:17       131,174,677 VSPerf(1).vspx
+03-Jul-16  20:33         4,393,504 VSPerf(2).vspx
+03-Jul-16  20:54        10,260,422 VSPerf(3).vspx
+04-Jul-16  15:32         8,523,310 VSPerf(4).vspx
+04-Jul-16  15:47         7,819,705 VSPerf(5).vspx
+04-Jul-16  15:55         5,886,983 VSPerf(6).vspx
+04-Jul-16  16:17         2,917,303 VSPerf(7).vspx
+04-Jul-16  16:21         6,271,370 VSPerf(8).vspx
+02-Jul-16  15:45        17,484,808 VSPerf.vspx
+02-Jul-16  09:45            18,108 z3.commandline
+02-Jul-16  09:45            41,436 z3.params
+             495 File(s)    422,509,814 bytes
+               6 Dir(s)  247,192,760,320 bytes free
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.post.smtlib
+(error "failed to open file 'AVLTree.AVLTreeNode.insert.post.smtlib'")
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.post.smt2
+(smt.restarting :propagations 87042 :decisions 851 :conflicts 101 :restart 150 :agility 0.00443889)
+(smt.restarting :propagations 296068 :decisions 4778 :conflicts 252 :restart 225 :agility 0.0175025)
+(smt.restarting :propagations 359163 :decisions 7756 :conflicts 478 :restart 337 :agility 0.0706228)
+(smt.restarting :propagations 579495 :decisions 13141 :conflicts 816 :restart 505 :agility 0.0722735)
+(smt.restarting :propagations 870773 :decisions 26546 :conflicts 1322 :restart 757 :agility 0.0991409)
+unsat
+(:add-rows                    734044
+ :added-eqs                   1780583
+ :arith-conflicts             1022
+ :assert-diseq                29582
+ :assert-lower                666241
+ :assert-upper                411694
+ :binary-propagations         276610
+ :bound-prop                  59894
+ :conflicts                   1922
+ :decisions                   39885
+ :del-clause                  2185037
+ :eq-adapter                  198205
+ :final-checks                27
+ :fixed-eqs                   433422
+ :gcd-tests                   1779
+ :ineq-splits                 1
+ :interface-eqs               26
+ :max-generation              83
+ :max-memory                  86.77
+ :max-missed-qa-cost          108.00
+ :memory                      20.83
+ :min-missed-qa-cost          106.00
+ :minimized-lits              38756
+ :missed-quant-instantiations 4
+ :mk-bool-var                 1689549
+ :mk-clause                   2251925
+ :num-allocs                  6969079952.00
+ :offset-eqs                  301242
+ :pivots                      61669
+ :propagations                1716658
+ :quant-instantiations        240122
+ :restarts                    5
+ :rlimit-count                12790882
+ :time                        16.70
+ :total-time                  16.76)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.post.fwsmt2
+(error "failed to open file 'AVLTree.AVLTreeNode.insert.post.fwsmt2'")
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.post.fw.smt2
+(smt.restarting :propagations 120474 :decisions 8910 :conflicts 101 :restart 150 :agility 0.000356378)
+(smt.restarting :propagations 303058 :decisions 26756 :conflicts 252 :restart 225 :agility 0.015887)
+(smt.restarting :propagations 537898 :decisions 47289 :conflicts 478 :restart 337 :agility 0.0283094)
+(smt.restarting :propagations 1075817 :decisions 78918 :conflicts 816 :restart 505 :agility 0.0194943)
+(smt.restarting :propagations 1845038 :decisions 118900 :conflicts 1322 :restart 757 :agility 0.0239278)
+unsat
+(:add-rows             1172983
+ :added-eqs            4644662
+ :arith-conflicts      753
+ :assert-diseq         52787
+ :assert-lower         1382261
+ :assert-upper         949174
+ :binary-propagations  858447
+ :bound-prop           87825
+ :conflicts            1805
+ :decisions            164263
+ :del-clause           4118670
+ :dyn-ack              3
+ :eq-adapter           397228
+ :final-checks         65
+ :fixed-eqs            795926
+ :gcd-tests            378
+ :ineq-splits          2
+ :interface-eqs        61
+ :max-generation       86
+ :max-memory           120.83
+ :memory               26.49
+ :minimized-lits       36128
+ :mk-bool-var          3140583
+ :mk-clause            4216470
+ :num-allocs           19620174904.00
+ :offset-eqs           736829
+ :pivots               87330
+ :propagations         3832318
+ :quant-instantiations 444243
+ :restarts             5
+ :rlimit-count         23987731
+ :time                 34.59
+ :total-time           34.72)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.post.orig.smt2
+(smt.restarting :propagations 72200 :decisions 526 :conflicts 101 :restart 150 :agility 0.0209865)
+(smt.restarting :propagations 160624 :decisions 4378 :conflicts 252 :restart 225 :agility 0.00291403)
+(smt.restarting :propagations 357788 :decisions 9440 :conflicts 478 :restart 337 :agility 0.0388521)
+(smt.restarting :propagations 517789 :decisions 12915 :conflicts 816 :restart 505 :agility 0.0584892)
+(smt.restarting :propagations 776065 :decisions 28409 :conflicts 1322 :restart 757 :agility 0.0636688)
+unsat
+(:add-rows             817125
+ :added-eqs            1937768
+ :arith-conflicts      1173
+ :assert-diseq         26416
+ :assert-lower         700713
+ :assert-upper         427287
+ :binary-propagations  240460
+ :bound-prop           71932
+ :conflicts            2065
+ :decisions            37906
+ :del-clause           2490124
+ :dyn-ack              2
+ :eq-adapter           230768
+ :final-checks         324
+ :fixed-eqs            476101
+ :gcd-tests            1891
+ :ineq-splits          1
+ :interface-eqs        322
+ :max-generation       86
+ :max-memory           89.75
+ :memory               22.79
+ :minimized-lits       54739
+ :mk-bool-var          1971571
+ :mk-clause            2572884
+ :num-allocs           9259542065.00
+ :offset-eqs           362305
+ :pivots               75846
+ :propagations         1806450
+ :quant-instantiations 269675
+ :restarts             5
+ :rlimit-count         14366959
+ :time                 19.22
+ :total-time           19.25)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.pre.smt2
+(smt.restarting :propagations 101905 :decisions 788 :conflicts 101 :restart 150 :agility 0.00460358)
+(smt.restarting :propagations 187557 :decisions 3419 :conflicts 252 :restart 225 :agility 0.00182399)
+(smt.restarting :propagations 339242 :decisions 7241 :conflicts 478 :restart 337 :agility 0.0399197)
+(smt.restarting :propagations 515762 :decisions 11220 :conflicts 816 :restart 505 :agility 0.0618786)
+(smt.restarting :propagations 801379 :decisions 24614 :conflicts 1322 :restart 757 :agility 0.0642573)
+(smt.restarting :propagations 1652283 :decisions 37877 :conflicts 2080 :restart 1135 :agility 0.0977675)
+unsat
+(:add-rows                    1051817
+ :added-eqs                   2432790
+ :arith-conflicts             1176
+ :assert-diseq                55410
+ :assert-lower                917365
+ :assert-upper                573802
+ :binary-propagations         386188
+ :bound-prop                  88552
+ :conflicts                   2231
+ :decisions                   41031
+ :del-clause                  2772103
+ :dyn-ack                     3
+ :eq-adapter                  283711
+ :final-checks                77
+ :fixed-eqs                   625105
+ :gcd-tests                   1137
+ :ineq-splits                 1
+ :interface-eqs               76
+ :max-generation              84
+ :max-memory                  101.32
+ :max-missed-qa-cost          108.00
+ :memory                      23.91
+ :min-missed-qa-cost          106.00
+ :minimized-lits              58011
+ :missed-quant-instantiations 4
+ :mk-bool-var                 2180746
+ :mk-clause                   2872463
+ :num-allocs                  11409192818.00
+ :offset-eqs                  428794
+ :pivots                      87550
+ :propagations                2355389
+ :quant-instantiations        289143
+ :restarts                    6
+ :rlimit-count                15979723
+ :time                        21.74
+ :total-time                  21.76)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.pre.fw.smt2
+(smt.restarting :propagations 28739 :decisions 5039 :conflicts 101 :restart 150 :agility 0.0194122)
+(smt.restarting :propagations 199715 :decisions 22785 :conflicts 252 :restart 225 :agility 0.0459307)
+(smt.restarting :propagations 331394 :decisions 40340 :conflicts 481 :restart 337 :agility 0.0489721)
+(smt.restarting :propagations 545351 :decisions 67653 :conflicts 819 :restart 505 :agility 0.0849681)
+(smt.restarting :propagations 983020 :decisions 116095 :conflicts 1325 :restart 757 :agility 0.0653935)
+(smt.restarting :propagations 1895086 :decisions 177060 :conflicts 2083 :restart 1135 :agility 0.0647815)
+unsat
+(:add-rows                    1595056
+ :added-eqs                   2528978
+ :arith-conflicts             1131
+ :assert-diseq                55410
+ :assert-lower                918509
+ :assert-upper                589406
+ :binary-propagations         580660
+ :bound-prop                  97593
+ :conflicts                   2225
+ :decisions                   180418
+ :del-clause                  2734975
+ :dyn-ack                     1
+ :eq-adapter                  285071
+ :final-checks                174
+ :fixed-eqs                   656819
+ :gcd-tests                   670
+ :ineq-splits                 1
+ :interface-eqs               173
+ :max-generation              83
+ :max-memory                  110.57
+ :max-missed-qa-cost          108.00
+ :memory                      26.28
+ :min-missed-qa-cost          107.00
+ :minimized-lits              71811
+ :missed-quant-instantiations 2
+ :mk-bool-var                 2218176
+ :mk-clause                   2842550
+ :num-allocs                  12200920673.00
+ :offset-eqs                  454492
+ :pivots                      94455
+ :propagations                2595055
+ :quant-instantiations        283540
+ :restarts                    6
+ :rlimit-count                17045731
+ :time                        24.05
+ :total-time                  24.08)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.remove.pre.smt2
+(smt.restarting :propagations 34051 :decisions 802 :conflicts 101 :restart 150 :agility 0.00808356)
+(smt.restarting :propagations 72565 :decisions 2404 :conflicts 252 :restart 225 :agility 0.0143872)
+(smt.restarting :propagations 210130 :decisions 6143 :conflicts 480 :restart 337 :agility 0.0613767)
+(smt.restarting :propagations 518984 :decisions 17561 :conflicts 818 :restart 505 :agility 0.01496)
+(smt.restarting :propagations 834484 :decisions 37682 :conflicts 1324 :restart 757 :agility 0.0885258)
+(smt.restarting :propagations 1658238 :decisions 53003 :conflicts 2082 :restart 1135 :agility 0.0905101)
+(smt.restarting :propagations 3734327 :decisions 80717 :conflicts 3218 :restart 1702 :agility 0.0361938)
+unsat
+(:add-rows                    2413709
+ :added-eqs                   5926994
+ :arith-conflicts             1930
+ :assert-diseq                111722
+ :assert-lower                2027838
+ :assert-upper                1440221
+ :binary-propagations         739590
+ :bound-prop                  177721
+ :conflicts                   3564
+ :decisions                   89480
+ :del-clause                  4793659
+ :dyn-ack                     4
+ :eq-adapter                  624392
+ :final-checks                20
+ :fixed-eqs                   1596052
+ :interface-eqs               20
+ :max-generation              85
+ :max-memory                  199.11
+ :max-missed-qa-cost          108.00
+ :memory                      42.36
+ :min-missed-qa-cost          106.00
+ :minimized-lits              90806
+ :missed-quant-instantiations 6
+ :mk-bool-var                 3934721
+ :mk-clause                   4981392
+ :num-allocs                  36660379851.00
+ :offset-eqs                  1136995
+ :pivots                      147115
+ :propagations                5209953
+ :quant-instantiations        523690
+ :restarts                    7
+ :rlimit-count                28600003
+ :time                        47.37
+ :total-time                  47.41)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.remove.post.smt2
+(smt.restarting :propagations 30456 :decisions 783 :conflicts 101 :restart 150 :agility 0.0137579)
+(smt.restarting :propagations 68449 :decisions 1946 :conflicts 252 :restart 225 :agility 0.0222343)
+(smt.restarting :propagations 265489 :decisions 4904 :conflicts 478 :restart 337 :agility 0.0742185)
+(smt.restarting :propagations 511077 :decisions 13900 :conflicts 816 :restart 505 :agility 0.0809857)
+(smt.restarting :propagations 873774 :decisions 34222 :conflicts 1322 :restart 757 :agility 0.0835214)
+(smt.restarting :propagations 1732822 :decisions 50585 :conflicts 2080 :restart 1135 :agility 0.0839527)
+(smt.restarting :propagations 3221879 :decisions 76174 :conflicts 3216 :restart 1702 :agility 0.0537131)
+unsat
+(:add-rows                    2074564
+ :added-eqs                   4709374
+ :arith-conflicts             1715
+ :assert-diseq                89902
+ :assert-lower                1591052
+ :assert-upper                1131208
+ :binary-propagations         594234
+ :bound-prop                  173637
+ :conflicts                   3304
+ :decisions                   76506
+ :del-clause                  3985444
+ :dyn-ack                     5
+ :eq-adapter                  553947
+ :final-checks                21
+ :fixed-eqs                   1247767
+ :gcd-tests                   607
+ :ineq-splits                 1
+ :interface-eqs               20
+ :max-generation              89
+ :max-memory                  184.43
+ :max-missed-qa-cost          108.00
+ :memory                      42.54
+ :min-missed-qa-cost          106.00
+ :minimized-lits              79472
+ :missed-quant-instantiations 4
+ :mk-bool-var                 3487534
+ :mk-clause                   4167629
+ :num-allocs                  29677540368.00
+ :offset-eqs                  870772
+ :pivots                      147433
+ :propagations                3908469
+ :quant-instantiations        412094
+ :restarts                    7
+ :rlimit-count                23743448
+ :time                        40.02
+ :total-time                  40.05)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.remove.orig.smt2
+(smt.restarting :propagations 10138 :decisions 383 :conflicts 109 :restart 150 :agility 0.0630929)
+(smt.restarting :propagations 65053 :decisions 1969 :conflicts 260 :restart 225 :agility 0.024043)
+(smt.restarting :propagations 186463 :decisions 8175 :conflicts 486 :restart 337 :agility 0.0250365)
+(smt.restarting :propagations 353367 :decisions 14677 :conflicts 824 :restart 505 :agility 0.0831401)
+(smt.restarting :propagations 1023583 :decisions 26747 :conflicts 1330 :restart 757 :agility 0.0674712)
+(smt.restarting :propagations 1849398 :decisions 35519 :conflicts 2093 :restart 1135 :agility 0.0659812)
+unsat
+(:add-rows                    1449596
+ :added-eqs                   3719755
+ :arith-conflicts             1433
+ :assert-diseq                74262
+ :assert-lower                1347255
+ :assert-upper                876037
+ :binary-propagations         531586
+ :bound-prop                  131959
+ :conflicts                   2907
+ :decisions                   58305
+ :del-clause                  3826943
+ :dyn-ack                     3
+ :eq-adapter                  448067
+ :final-checks                22
+ :fixed-eqs                   949209
+ :gcd-tests                   1638
+ :ineq-splits                 1
+ :interface-eqs               21
+ :max-generation              87
+ :max-memory                  140.06
+ :max-missed-qa-cost          109.00
+ :memory                      36.65
+ :min-missed-qa-cost          106.00
+ :minimized-lits              98016
+ :missed-quant-instantiations 3
+ :mk-bool-var                 3168576
+ :mk-clause                   3960927
+ :num-allocs                  22010178298.00
+ :offset-eqs                  675159
+ :pivots                      136177
+ :propagations                3369003
+ :quant-instantiations        392846
+ :restarts                    6
+ :rlimit-count                21739394
+ :time                        32.02
+ :total-time                  32.06)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.remove.pre.smt2
+(smt.restarting :propagations 34051 :decisions 802 :conflicts 101 :restart 150 :agility 0.00808356)
+(smt.restarting :propagations 72565 :decisions 2404 :conflicts 252 :restart 225 :agility 0.0143872)
+(smt.restarting :propagations 210130 :decisions 6143 :conflicts 480 :restart 337 :agility 0.0613767)
+(smt.restarting :propagations 518984 :decisions 17561 :conflicts 818 :restart 505 :agility 0.01496)
+(smt.restarting :propagations 834484 :decisions 37682 :conflicts 1324 :restart 757 :agility 0.0885258)
+(smt.restarting :propagations 1658238 :decisions 53003 :conflicts 2082 :restart 1135 :agility 0.0905101)
+(smt.restarting :propagations 3734327 :decisions 80717 :conflicts 3218 :restart 1702 :agility 0.0361938)
+unsat
+(:add-rows                    2413709
+ :added-eqs                   5926994
+ :arith-conflicts             1930
+ :assert-diseq                111722
+ :assert-lower                2027838
+ :assert-upper                1440221
+ :binary-propagations         739590
+ :bound-prop                  177721
+ :conflicts                   3564
+ :decisions                   89480
+ :del-clause                  4793659
+ :dyn-ack                     4
+ :eq-adapter                  624392
+ :final-checks                20
+ :fixed-eqs                   1596052
+ :interface-eqs               20
+ :max-generation              85
+ :max-memory                  199.11
+ :max-missed-qa-cost          108.00
+ :memory                      42.36
+ :min-missed-qa-cost          106.00
+ :minimized-lits              90806
+ :missed-quant-instantiations 6
+ :mk-bool-var                 3934721
+ :mk-clause                   4981392
+ :num-allocs                  36660379851.00
+ :offset-eqs                  1136995
+ :pivots                      147115
+ :propagations                5209953
+ :quant-instantiations        523690
+ :restarts                    7
+ :rlimit-count                28600003
+ :time                        47.84
+ :total-time                  47.88)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.remove.pre.orig.smt2
+(smt.restarting :propagations 10129 :decisions 173 :conflicts 101 :restart 150 :agility 0.0513992)
+(smt.restarting :propagations 72526 :decisions 2459 :conflicts 252 :restart 225 :agility 0.0248139)
+(smt.restarting :propagations 179855 :decisions 5416 :conflicts 478 :restart 337 :agility 0.0632988)
+(smt.restarting :propagations 298188 :decisions 9684 :conflicts 816 :restart 505 :agility 0.0636462)
+(smt.restarting :propagations 963329 :decisions 17673 :conflicts 1322 :restart 757 :agility 0.0394742)
+(smt.restarting :propagations 1678265 :decisions 28492 :conflicts 2080 :restart 1135 :agility 0.0565462)
+unsat
+(:add-rows             1478045
+ :added-eqs            4153691
+ :arith-conflicts      1573
+ :assert-diseq         62694
+ :assert-lower         1478084
+ :assert-upper         957470
+ :binary-propagations  396590
+ :bound-prop           140888
+ :conflicts            3004
+ :decisions            60791
+ :del-clause           4119578
+ :dyn-ack              1
+ :eq-adapter           532041
+ :final-checks         10
+ :fixed-eqs            1112792
+ :interface-eqs        10
+ :max-generation       84
+ :max-memory           150.51
+ :memory               39.20
+ :minimized-lits       82904
+ :mk-bool-var          3452503
+ :mk-clause            4265485
+ :num-allocs           26608693453.00
+ :offset-eqs           741292
+ :pivots               141829
+ :propagations         3830987
+ :quant-instantiations 444208
+ :restarts             6
+ :rlimit-count         23698091
+ :time                 36.70
+ :total-time           36.74)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.remove.post.orig.smt2
+(smt.restarting :propagations 10129 :decisions 173 :conflicts 101 :restart 150 :agility 0.0513992)
+(smt.restarting :propagations 72526 :decisions 2459 :conflicts 252 :restart 225 :agility 0.0248139)
+(smt.restarting :propagations 179855 :decisions 5416 :conflicts 478 :restart 337 :agility 0.0632988)
+(smt.restarting :propagations 298188 :decisions 9684 :conflicts 816 :restart 505 :agility 0.0636462)
+(smt.restarting :propagations 963329 :decisions 17673 :conflicts 1322 :restart 757 :agility 0.0394742)
+(smt.restarting :propagations 1678265 :decisions 28492 :conflicts 2080 :restart 1135 :agility 0.0565462)
+unsat
+(:add-rows             1478045
+ :added-eqs            4153691
+ :arith-conflicts      1573
+ :assert-diseq         62694
+ :assert-lower         1478084
+ :assert-upper         957470
+ :binary-propagations  396590
+ :bound-prop           140888
+ :conflicts            3004
+ :decisions            60791
+ :del-clause           4119578
+ :dyn-ack              1
+ :eq-adapter           532041
+ :final-checks         10
+ :fixed-eqs            1112792
+ :interface-eqs        10
+ :max-generation       84
+ :max-memory           150.51
+ :memory               39.20
+ :minimized-lits       82904
+ :mk-bool-var          3452503
+ :mk-clause            4265485
+ :num-allocs           26608693453.00
+ :offset-eqs           741292
+ :pivots               141829
+ :propagations         3830987
+ :quant-instantiations 444208
+ :restarts             6
+ :rlimit-count         23698091
+ :time                 35.55
+ :total-time           35.59)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.remove.post.fw.smt2
+(smt.restarting :propagations 12712 :decisions 5323 :conflicts 101 :restart 150 :agility 0.0847919)
+(smt.restarting :propagations 54470 :decisions 20027 :conflicts 252 :restart 225 :agility 0.0239413)
+(smt.restarting :propagations 204449 :decisions 44122 :conflicts 478 :restart 337 :agility 0.0594271)
+(smt.restarting :propagations 352755 :decisions 66661 :conflicts 816 :restart 505 :agility 0.108444)
+(smt.restarting :propagations 921530 :decisions 127412 :conflicts 1322 :restart 757 :agility 0.0477269)
+(smt.restarting :propagations 1965493 :decisions 240677 :conflicts 2080 :restart 1135 :agility 0.0516712)
+(smt.restarting :propagations 3410098 :decisions 398824 :conflicts 3216 :restart 1702 :agility 0.0846119)
+unsat
+(:add-rows                    2046116
+ :added-eqs                   4791078
+ :arith-conflicts             1726
+ :assert-diseq                110074
+ :assert-lower                1656617
+ :assert-upper                1139497
+ :binary-propagations         1114031
+ :bound-prop                  192145
+ :conflicts                   3458
+ :decisions                   407539
+ :del-clause                  4225296
+ :dyn-ack                     2
+ :eq-adapter                  526240
+ :final-checks                14
+ :fixed-eqs                   1292872
+ :interface-eqs               14
+ :max-generation              84
+ :max-memory                  195.60
+ :max-missed-qa-cost          108.00
+ :memory                      44.32
+ :min-missed-qa-cost          104.00
+ :minimized-lits              88840
+ :missed-quant-instantiations 7
+ :mk-bool-var                 3580668
+ :mk-clause                   4417134
+ :num-allocs                  32675422375.00
+ :offset-eqs                  848896
+ :pivots                      157523
+ :propagations                4816666
+ :quant-instantiations        432502
+ :restarts                    7
+ :rlimit-count                27858212
+ :time                        43.84
+ :total-time                  43.89)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.remove.orig.1.smt2
+(smt.restarting :propagations 10376 :decisions 177 :conflicts 101 :restart 150 :agility 0.0503258)
+(smt.restarting :propagations 101590 :decisions 2639 :conflicts 252 :restart 225 :agility 0.0077991)
+(smt.restarting :propagations 277405 :decisions 6454 :conflicts 481 :restart 337 :agility 0.0472629)
+(smt.restarting :propagations 426632 :decisions 11262 :conflicts 819 :restart 505 :agility 0.0397133)
+(smt.restarting :propagations 862612 :decisions 21512 :conflicts 1325 :restart 757 :agility 0.043174)
+(smt.restarting :propagations 1486705 :decisions 34032 :conflicts 2083 :restart 1135 :agility 0.0515493)
+unsat
+(:add-rows             1748506
+ :added-eqs            3620161
+ :arith-conflicts      1601
+ :assert-diseq         48230
+ :assert-lower         1299510
+ :assert-upper         812287
+ :binary-propagations  270925
+ :bound-prop           174877
+ :conflicts            2952
+ :decisions            68811
+ :del-clause           4277958
+ :dyn-ack              3
+ :eq-adapter           536920
+ :final-checks         18
+ :fixed-eqs            924291
+ :interface-eqs        18
+ :max-generation       84
+ :max-memory           151.22
+ :memory               39.14
+ :minimized-lits       85871
+ :mk-bool-var          3675951
+ :mk-clause            4421651
+ :num-allocs           28648343467.00
+ :offset-eqs           674134
+ :pivots               174445
+ :propagations         3043860
+ :quant-instantiations 441985
+ :restarts             6
+ :rlimit-count         23330609
+ :time                 35.04
+ :total-time           35.08)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.remove.orig.smt2
+(smt.restarting :propagations 10138 :decisions 383 :conflicts 109 :restart 150 :agility 0.0630929)
+(smt.restarting :propagations 65053 :decisions 1969 :conflicts 260 :restart 225 :agility 0.024043)
+(smt.restarting :propagations 186463 :decisions 8175 :conflicts 486 :restart 337 :agility 0.0250365)
+(smt.restarting :propagations 353367 :decisions 14677 :conflicts 824 :restart 505 :agility 0.0831401)
+(smt.restarting :propagations 1023583 :decisions 26747 :conflicts 1330 :restart 757 :agility 0.0674712)
+(smt.restarting :propagations 1849398 :decisions 35519 :conflicts 2093 :restart 1135 :agility 0.0659812)
+unsat
+(:add-rows                    1449596
+ :added-eqs                   3719755
+ :arith-conflicts             1433
+ :assert-diseq                74262
+ :assert-lower                1347255
+ :assert-upper                876037
+ :binary-propagations         531586
+ :bound-prop                  131959
+ :conflicts                   2907
+ :decisions                   58305
+ :del-clause                  3826943
+ :dyn-ack                     3
+ :eq-adapter                  448067
+ :final-checks                22
+ :fixed-eqs                   949209
+ :gcd-tests                   1638
+ :ineq-splits                 1
+ :interface-eqs               21
+ :max-generation              87
+ :max-memory                  140.06
+ :max-missed-qa-cost          109.00
+ :memory                      36.65
+ :min-missed-qa-cost          106.00
+ :minimized-lits              98016
+ :missed-quant-instantiations 3
+ :mk-bool-var                 3168576
+ :mk-clause                   3960927
+ :num-allocs                  22010178298.00
+ :offset-eqs                  675159
+ :pivots                      136177
+ :propagations                3369003
+ :quant-instantiations        392846
+ :restarts                    6
+ :rlimit-count                21739394
+ :time                        31.95
+ :total-time                  31.99)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.remove.post.orig.smt2
+(smt.restarting :propagations 10129 :decisions 173 :conflicts 101 :restart 150 :agility 0.0513992)
+(smt.restarting :propagations 72526 :decisions 2459 :conflicts 252 :restart 225 :agility 0.0248139)
+(smt.restarting :propagations 179855 :decisions 5416 :conflicts 478 :restart 337 :agility 0.0632988)
+(smt.restarting :propagations 298188 :decisions 9684 :conflicts 816 :restart 505 :agility 0.0636462)
+(smt.restarting :propagations 963329 :decisions 17673 :conflicts 1322 :restart 757 :agility 0.0394742)
+(smt.restarting :propagations 1678265 :decisions 28492 :conflicts 2080 :restart 1135 :agility 0.0565462)
+unsat
+(:add-rows             1478045
+ :added-eqs            4153691
+ :arith-conflicts      1573
+ :assert-diseq         62694
+ :assert-lower         1478084
+ :assert-upper         957470
+ :binary-propagations  396590
+ :bound-prop           140888
+ :conflicts            3004
+ :decisions            60791
+ :del-clause           4119578
+ :dyn-ack              1
+ :eq-adapter           532041
+ :final-checks         10
+ :fixed-eqs            1112792
+ :interface-eqs        10
+ :max-generation       84
+ :max-memory           150.51
+ :memory               39.20
+ :minimized-lits       82904
+ :mk-bool-var          3452503
+ :mk-clause            4265485
+ :num-allocs           26608693453.00
+ :offset-eqs           741292
+ :pivots               141829
+ :propagations         3830987
+ :quant-instantiations 444208
+ :restarts             6
+ :rlimit-count         23698091
+ :time                 35.13
+ :total-time           35.17)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.rebalanceLeft.boogie.smt2
+(smt.restarting :propagations 39001 :decisions 515 :conflicts 101 :restart 150 :agility 0.023842)
+(smt.restarting :propagations 93979 :decisions 1142 :conflicts 252 :restart 225 :agility 0.076934)
+(smt.restarting :propagations 229814 :decisions 2391 :conflicts 478 :restart 337 :agility 0.097577)
+unsat
+(:max-memory 40.30
+ :memory     3.83
+ :num-allocs 940433335
+ :time       4.42
+ :total-time 4.63)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.rebalanceRight.boogie.smt2
+(smt.restarting :propagations 88159 :decisions 942 :conflicts 101 :restart 150 :agility 0.0171251)
+(smt.restarting :propagations 167767 :decisions 1707 :conflicts 252 :restart 225 :agility 0.0562675)
+(smt.restarting :propagations 414883 :decisions 4543 :conflicts 478 :restart 337 :agility 0.0119961)
+(smt.restarting :propagations 823244 :decisions 6406 :conflicts 816 :restart 505 :agility 0.00715938)
+unsat
+(:max-memory 44.31
+ :memory     4.63
+ :num-allocs 3142830955
+ :time       10.80
+ :total-time 11.06)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.insert.post.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 132)
+(smt.restarting :propagations 78995 :decisions 928 :conflicts 101 :restart 150 :agility 0.00758369)
+(smt.simplifying-clause-set :num-deleted-clauses 14)
+(smt.restarting :propagations 237203 :decisions 4106 :conflicts 252 :restart 225 :agility 0.0198428)
+(smt.simplifying-clause-set :num-deleted-clauses 655)
+(smt.restarting :propagations 325803 :decisions 7386 :conflicts 478 :restart 337 :agility 0.0712841)
+(smt.simplifying-clause-set :num-deleted-clauses 40)
+(smt.simplifying-clause-set :num-deleted-clauses 124)
+(smt.restarting :propagations 556008 :decisions 12990 :conflicts 816 :restart 505 :agility 0.073842)
+(smt.simplifying-clause-set :num-deleted-clauses 14)
+(smt.simplifying-clause-set :num-deleted-clauses 339)
+(smt.restarting :propagations 804915 :decisions 24161 :conflicts 1322 :restart 757 :agility 0.0624699)
+(smt.simplifying-clause-set :num-deleted-clauses 23)
+(smt.simplifying-clause-set :num-deleted-clauses 847)
+unsat
+(:add-rows                    894746
+ :added-eqs                   1664410
+ :arith-conflicts             928
+ :assert-diseq                33966
+ :assert-lower                623201
+ :assert-upper                392773
+ :binary-propagations         262490
+ :bound-prop                  65185
+ :conflicts                   1743
+ :decisions                   33314
+ :del-clause                  1987481
+ :eq-adapter                  185700
+ :final-checks                26
+ :fixed-eqs                   396929
+ :gcd-tests                   1833
+ :ineq-splits                 1
+ :interface-eqs               25
+ :max-generation              86
+ :max-memory                  89.57
+ :max-missed-qa-cost          108.00
+ :memory                      20.96
+ :min-missed-qa-cost          106.00
+ :minimized-lits              34827
+ :missed-quant-instantiations 4
+ :mk-bool-var                 1562436
+ :mk-clause                   2058733
+ :num-allocs                  6282433608.00
+ :offset-eqs                  293401
+ :pivots                      60355
+ :propagations                1588072
+ :quant-instantiations        211131
+ :restarts                    5
+ :rlimit-count                11667403
+ :time                        15.19
+ :total-time                  15.22)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.insert.post.fw.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 151)
+(smt.restarting :propagations 57064 :decisions 7549 :conflicts 101 :restart 150 :agility 0.00158077)
+(smt.simplifying-clause-set :num-deleted-clauses 10)
+(smt.restarting :propagations 193505 :decisions 28593 :conflicts 252 :restart 225 :agility 0.02289)
+(smt.simplifying-clause-set :num-deleted-clauses 632)
+(smt.restarting :propagations 320052 :decisions 51010 :conflicts 478 :restart 337 :agility 0.0104939)
+(smt.simplifying-clause-set :num-deleted-clauses 64)
+(smt.simplifying-clause-set :num-deleted-clauses 146)
+(smt.restarting :propagations 574098 :decisions 82372 :conflicts 816 :restart 505 :agility 0.0317982)
+(smt.simplifying-clause-set :num-deleted-clauses 19)
+(smt.simplifying-clause-set :num-deleted-clauses 23)
+(smt.restarting :propagations 855023 :decisions 128555 :conflicts 1322 :restart 757 :agility 0.0648579)
+(smt.simplifying-clause-set :num-deleted-clauses 410)
+(smt.simplifying-clause-set :num-deleted-clauses 582)
+unsat
+(:add-rows                    621787
+ :added-eqs                   2090758
+ :arith-conflicts             915
+ :assert-diseq                44277
+ :assert-lower                764383
+ :assert-upper                492626
+ :binary-propagations         562818
+ :bound-prop                  70360
+ :conflicts                   1887
+ :decisions                   183588
+ :del-clause                  2317330
+ :dyn-ack                     1
+ :eq-adapter                  225832
+ :final-checks                59
+ :fixed-eqs                   498236
+ :interface-eqs               59
+ :max-generation              84
+ :max-memory                  87.01
+ :max-missed-qa-cost          108.00
+ :memory                      22.33
+ :min-missed-qa-cost          107.00
+ :minimized-lits              43404
+ :missed-quant-instantiations 2
+ :mk-bool-var                 1859805
+ :mk-clause                   2395657
+ :num-allocs                  7891188324.00
+ :offset-eqs                  338306
+ :pivots                      70157
+ :propagations                2240621
+ :quant-instantiations        242153
+ :restarts                    5
+ :rlimit-count                15038865
+ :time                        18.34
+ :total-time                  18.40)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.insert.post.orig.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 121)
+(smt.restarting :propagations 99466 :decisions 762 :conflicts 101 :restart 150 :agility 0.0209943)
+(smt.simplifying-clause-set :num-deleted-clauses 21)
+(smt.restarting :propagations 207591 :decisions 5823 :conflicts 252 :restart 225 :agility 0.00150947)
+(smt.simplifying-clause-set :num-deleted-clauses 461)
+(smt.restarting :propagations 397509 :decisions 13145 :conflicts 478 :restart 337 :agility 0.0472548)
+(smt.simplifying-clause-set :num-deleted-clauses 66)
+(smt.restarting :propagations 604285 :decisions 18659 :conflicts 816 :restart 505 :agility 0.0494027)
+(smt.simplifying-clause-set :num-deleted-clauses 58)
+(smt.simplifying-clause-set :num-deleted-clauses 388)
+(smt.restarting :propagations 896421 :decisions 28657 :conflicts 1322 :restart 757 :agility 0.090016)
+(smt.simplifying-clause-set :num-deleted-clauses 102)
+(smt.restarting :propagations 1817354 :decisions 45930 :conflicts 2080 :restart 1135 :agility 0.0144627)
+(smt.simplifying-clause-set :num-deleted-clauses 1124)
+unsat
+(:add-rows                    907532
+ :added-eqs                   2421886
+ :arith-conflicts             1248
+ :assert-diseq                33881
+ :assert-lower                884168
+ :assert-upper                548339
+ :binary-propagations         311175
+ :bound-prop                  79182
+ :conflicts                   2194
+ :decisions                   46451
+ :del-clause                  2980450
+ :eq-adapter                  282851
+ :final-checks                80
+ :fixed-eqs                   592757
+ :interface-eqs               80
+ :max-generation              85
+ :max-memory                  100.19
+ :max-missed-qa-cost          106.00
+ :memory                      24.86
+ :min-missed-qa-cost          105.00
+ :minimized-lits              59245
+ :missed-quant-instantiations 2
+ :mk-bool-var                 2339478
+ :mk-clause                   3074848
+ :num-allocs                  11820413090.00
+ :offset-eqs                  452936
+ :pivots                      87614
+ :propagations                2296890
+ :quant-instantiations        323110
+ :restarts                    6
+ :rlimit-count                17133818
+ :time                        22.69
+ :total-time                  22.72)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.insert.orig.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 81)
+(smt.restarting :propagations 40311 :decisions 1416 :conflicts 101 :restart 150 :agility 0.0123829)
+(smt.simplifying-clause-set :num-deleted-clauses 436)
+(smt.restarting :propagations 147223 :decisions 3900 :conflicts 252 :restart 225 :agility 0.0347314)
+(smt.simplifying-clause-set :num-deleted-clauses 85)
+(smt.restarting :propagations 271712 :decisions 6105 :conflicts 478 :restart 337 :agility 0.0737607)
+(smt.simplifying-clause-set :num-deleted-clauses 29)
+(smt.simplifying-clause-set :num-deleted-clauses 147)
+(smt.restarting :propagations 454851 :decisions 10324 :conflicts 816 :restart 505 :agility 0.0844013)
+(smt.simplifying-clause-set :num-deleted-clauses 68)
+(smt.simplifying-clause-set :num-deleted-clauses 334)
+(smt.restarting :propagations 685447 :decisions 18848 :conflicts 1322 :restart 757 :agility 0.0514049)
+(smt.simplifying-clause-set :num-deleted-clauses 38)
+(smt.simplifying-clause-set :num-deleted-clauses 916)
+unsat
+(:add-rows                    881829
+ :added-eqs                   1575934
+ :arith-conflicts             1040
+ :assert-diseq                19616
+ :assert-lower                589164
+ :assert-upper                337592
+ :binary-propagations         204522
+ :bound-prop                  68457
+ :conflicts                   1861
+ :decisions                   23464
+ :del-clause                  2208618
+ :dyn-ack                     2
+ :eq-adapter                  209107
+ :final-checks                64
+ :fixed-eqs                   372814
+ :gcd-tests                   78
+ :interface-eqs               64
+ :max-generation              85
+ :max-memory                  86.20
+ :max-missed-qa-cost          108.00
+ :memory                      21.79
+ :min-missed-qa-cost          106.00
+ :minimized-lits              63008
+ :missed-quant-instantiations 4
+ :mk-bool-var                 1758684
+ :mk-clause                   2283451
+ :num-allocs                  7608183151.00
+ :offset-eqs                  272115
+ :pivots                      72990
+ :propagations                1507339
+ :quant-instantiations        235056
+ :restarts                    5
+ :rlimit-count                12398059
+ :time                        17.03
+ :total-time                  17.06)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.insert.pre.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 90)
+(smt.restarting :propagations 101905 :decisions 788 :conflicts 101 :restart 150 :agility 0.00460358)
+(smt.simplifying-clause-set :num-deleted-clauses 31)
+(smt.restarting :propagations 187557 :decisions 3419 :conflicts 252 :restart 225 :agility 0.00182399)
+(smt.simplifying-clause-set :num-deleted-clauses 468)
+(smt.restarting :propagations 339242 :decisions 7241 :conflicts 478 :restart 337 :agility 0.0399197)
+(smt.simplifying-clause-set :num-deleted-clauses 149)
+(smt.simplifying-clause-set :num-deleted-clauses 141)
+(smt.restarting :propagations 515762 :decisions 11220 :conflicts 816 :restart 505 :agility 0.0618786)
+(smt.simplifying-clause-set :num-deleted-clauses 326)
+(smt.restarting :propagations 801379 :decisions 24614 :conflicts 1322 :restart 757 :agility 0.0642573)
+(smt.simplifying-clause-set :num-deleted-clauses 507)
+(smt.restarting :propagations 1652283 :decisions 37877 :conflicts 2080 :restart 1135 :agility 0.0977675)
+(smt.simplifying-clause-set :num-deleted-clauses 412)
+unsat
+(:add-rows                    1051817
+ :added-eqs                   2432790
+ :arith-conflicts             1176
+ :assert-diseq                55410
+ :assert-lower                917365
+ :assert-upper                573802
+ :binary-propagations         386188
+ :bound-prop                  88552
+ :conflicts                   2231
+ :decisions                   41031
+ :del-clause                  2772103
+ :dyn-ack                     3
+ :eq-adapter                  283711
+ :final-checks                77
+ :fixed-eqs                   625105
+ :gcd-tests                   1137
+ :ineq-splits                 1
+ :interface-eqs               76
+ :max-generation              84
+ :max-memory                  101.32
+ :max-missed-qa-cost          108.00
+ :memory                      23.91
+ :min-missed-qa-cost          106.00
+ :minimized-lits              58011
+ :missed-quant-instantiations 4
+ :mk-bool-var                 2180746
+ :mk-clause                   2872463
+ :num-allocs                  11409192818.00
+ :offset-eqs                  428794
+ :pivots                      87550
+ :propagations                2355389
+ :quant-instantiations        289143
+ :restarts                    6
+ :rlimit-count                15979723
+ :time                        22.73
+ :total-time                  22.75)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.insert.post.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 132)
+(smt.restarting :propagations 78995 :decisions 928 :conflicts 101 :restart 150 :agility 0.00758069)
+(smt.simplifying-clause-set :num-deleted-clauses 14)
+(smt.restarting :propagations 237203 :decisions 4106 :conflicts 252 :restart 225 :agility 0.0198394)
+(smt.simplifying-clause-set :num-deleted-clauses 655)
+(smt.restarting :propagations 325803 :decisions 7386 :conflicts 478 :restart 337 :agility 0.0712506)
+(smt.simplifying-clause-set :num-deleted-clauses 40)
+(smt.simplifying-clause-set :num-deleted-clauses 124)
+(smt.restarting :propagations 554240 :decisions 13006 :conflicts 816 :restart 505 :agility 0.0790406)
+(smt.simplifying-clause-set :num-deleted-clauses 14)
+(smt.simplifying-clause-set :num-deleted-clauses 339)
+(smt.restarting :propagations 799889 :decisions 23376 :conflicts 1322 :restart 757 :agility 0.0490967)
+(smt.simplifying-clause-set :num-deleted-clauses 30)
+(smt.simplifying-clause-set :num-deleted-clauses 1015)
+unsat
+(:add-rows             984048
+ :added-eqs            1709975
+ :arith-conflicts      957
+ :assert-diseq         32471
+ :assert-lower         615385
+ :assert-upper         385838
+ :binary-propagations  279659
+ :bound-prop           72033
+ :conflicts            1827
+ :decisions            32144
+ :del-clause           1988313
+ :eq-adapter           206855
+ :final-checks         27
+ :fixed-eqs            400720
+ :gcd-tests            1833
+ :ineq-splits          1
+ :interface-eqs        25
+ :max-generation       86
+ :max-memory           95.94
+ :memory               21.94
+ :minimized-lits       36045
+ :mk-bool-var          1616143
+ :mk-clause            2067735
+ :num-allocs           6873497191.00
+ :offset-eqs           298141
+ :pivots               64427
+ :propagations         1596361
+ :quant-instantiations 211527
+ :restarts             5
+ :rlimit-count         11688370
+ :time                 15.79
+ :total-time           15.82)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.insert.post.fw.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 149)
+(smt.restarting :propagations 125269 :decisions 10128 :conflicts 101 :restart 150 :agility 0.000332701)
+(smt.simplifying-clause-set :num-deleted-clauses 10)
+(smt.restarting :propagations 298983 :decisions 29729 :conflicts 252 :restart 225 :agility 0.0170124)
+(smt.simplifying-clause-set :num-deleted-clauses 627)
+(smt.restarting :propagations 509949 :decisions 48660 :conflicts 478 :restart 337 :agility 0.0212082)
+(smt.simplifying-clause-set :num-deleted-clauses 68)
+(smt.simplifying-clause-set :num-deleted-clauses 149)
+(smt.restarting :propagations 951961 :decisions 81456 :conflicts 816 :restart 505 :agility 0.000549622)
+(smt.simplifying-clause-set :num-deleted-clauses 19)
+(smt.simplifying-clause-set :num-deleted-clauses 162)
+(smt.restarting :propagations 1589663 :decisions 141621 :conflicts 1322 :restart 757 :agility 0.0419787)
+(smt.simplifying-clause-set :num-deleted-clauses 442)
+(smt.simplifying-clause-set :num-deleted-clauses 811)
+unsat
+(:add-rows                    1318689
+ :added-eqs                   3791459
+ :arith-conflicts             1007
+ :assert-diseq                68701
+ :assert-lower                1265671
+ :assert-upper                876670
+ :binary-propagations         782324
+ :bound-prop                  97282
+ :conflicts                   1978
+ :decisions                   208157
+ :del-clause                  3311674
+ :dyn-ack                     1
+ :eq-adapter                  332843
+ :final-checks                75
+ :fixed-eqs                   805114
+ :gcd-tests                   716
+ :ineq-splits                 2
+ :interface-eqs               72
+ :max-generation              84
+ :max-memory                  129.48
+ :max-missed-qa-cost          108.00
+ :memory                      26.06
+ :min-missed-qa-cost          107.00
+ :minimized-lits              42041
+ :missed-quant-instantiations 4
+ :mk-bool-var                 2592921
+ :mk-clause                   3419634
+ :num-allocs                  16114036821.00
+ :offset-eqs                  720884
+ :pivots                      74192
+ :propagations                3583695
+ :quant-instantiations        363272
+ :restarts                    5
+ :rlimit-count                20834491
+ :time                        31.45
+ :total-time                  31.51)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.insert.post.orig.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 121)
+(smt.restarting :propagations 99466 :decisions 762 :conflicts 101 :restart 150 :agility 0.0209943)
+(smt.simplifying-clause-set :num-deleted-clauses 21)
+(smt.restarting :propagations 207591 :decisions 5823 :conflicts 252 :restart 225 :agility 0.00150947)
+(smt.simplifying-clause-set :num-deleted-clauses 461)
+(smt.restarting :propagations 397509 :decisions 13145 :conflicts 478 :restart 337 :agility 0.0472548)
+(smt.simplifying-clause-set :num-deleted-clauses 66)
+(smt.restarting :propagations 604285 :decisions 18659 :conflicts 816 :restart 505 :agility 0.0494027)
+(smt.simplifying-clause-set :num-deleted-clauses 58)
+(smt.simplifying-clause-set :num-deleted-clauses 388)
+(smt.restarting :propagations 896421 :decisions 28657 :conflicts 1322 :restart 757 :agility 0.090016)
+(smt.simplifying-clause-set :num-deleted-clauses 102)
+(smt.restarting :propagations 1817354 :decisions 45930 :conflicts 2080 :restart 1135 :agility 0.0144627)
+(smt.simplifying-clause-set :num-deleted-clauses 1124)
+unsat
+(:add-rows                    907532
+ :added-eqs                   2421886
+ :arith-conflicts             1248
+ :assert-diseq                33881
+ :assert-lower                884168
+ :assert-upper                548339
+ :binary-propagations         311175
+ :bound-prop                  79182
+ :conflicts                   2194
+ :decisions                   46451
+ :del-clause                  2980450
+ :eq-adapter                  282851
+ :final-checks                80
+ :fixed-eqs                   592757
+ :interface-eqs               80
+ :max-generation              85
+ :max-memory                  100.19
+ :max-missed-qa-cost          106.00
+ :memory                      24.86
+ :min-missed-qa-cost          105.00
+ :minimized-lits              59245
+ :missed-quant-instantiations 2
+ :mk-bool-var                 2339478
+ :mk-clause                   3074848
+ :num-allocs                  11820413090.00
+ :offset-eqs                  452936
+ :pivots                      87614
+ :propagations                2296890
+ :quant-instantiations        323110
+ :restarts                    6
+ :rlimit-count                17133818
+ :time                        23.74
+ :total-time                  23.77)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.insert.orig.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 81)
+(smt.restarting :propagations 40311 :decisions 1416 :conflicts 101 :restart 150 :agility 0.0123829)
+(smt.simplifying-clause-set :num-deleted-clauses 436)
+(smt.restarting :propagations 147223 :decisions 3900 :conflicts 252 :restart 225 :agility 0.0347314)
+(smt.simplifying-clause-set :num-deleted-clauses 85)
+(smt.restarting :propagations 271712 :decisions 6105 :conflicts 478 :restart 337 :agility 0.0737607)
+(smt.simplifying-clause-set :num-deleted-clauses 29)
+(smt.simplifying-clause-set :num-deleted-clauses 147)
+(smt.restarting :propagations 454851 :decisions 10324 :conflicts 816 :restart 505 :agility 0.0844013)
+(smt.simplifying-clause-set :num-deleted-clauses 68)
+(smt.simplifying-clause-set :num-deleted-clauses 334)
+(smt.restarting :propagations 685447 :decisions 18848 :conflicts 1322 :restart 757 :agility 0.0514049)
+(smt.simplifying-clause-set :num-deleted-clauses 38)
+(smt.simplifying-clause-set :num-deleted-clauses 916)
+unsat
+(:add-rows                    881829
+ :added-eqs                   1575934
+ :arith-conflicts             1040
+ :assert-diseq                19616
+ :assert-lower                589164
+ :assert-upper                337592
+ :binary-propagations         204522
+ :bound-prop                  68457
+ :conflicts                   1861
+ :decisions                   23464
+ :del-clause                  2208618
+ :dyn-ack                     2
+ :eq-adapter                  209107
+ :final-checks                64
+ :fixed-eqs                   372814
+ :gcd-tests                   78
+ :interface-eqs               64
+ :max-generation              85
+ :max-memory                  86.20
+ :max-missed-qa-cost          108.00
+ :memory                      21.79
+ :min-missed-qa-cost          106.00
+ :minimized-lits              63008
+ :missed-quant-instantiations 4
+ :mk-bool-var                 1758684
+ :mk-clause                   2283451
+ :num-allocs                  7608183151.00
+ :offset-eqs                  272115
+ :pivots                      72990
+ :propagations                1507339
+ :quant-instantiations        235056
+ :restarts                    5
+ :rlimit-count                12398059
+ :time                        16.78
+ :total-time                  16.80)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.orig.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 84)
+(smt.restarting :propagations 10138 :decisions 383 :conflicts 109 :restart 150 :agility 0.0630929)
+(smt.simplifying-clause-set :num-deleted-clauses 449)
+(smt.restarting :propagations 65053 :decisions 1969 :conflicts 260 :restart 225 :agility 0.024043)
+(smt.simplifying-clause-set :num-deleted-clauses 18)
+(smt.simplifying-clause-set :num-deleted-clauses 39)
+(smt.restarting :propagations 186463 :decisions 8175 :conflicts 486 :restart 337 :agility 0.0250365)
+(smt.simplifying-clause-set :num-deleted-clauses 695)
+(smt.restarting :propagations 353367 :decisions 14677 :conflicts 824 :restart 505 :agility 0.0831401)
+(smt.simplifying-clause-set :num-deleted-clauses 41)
+(smt.restarting :propagations 1023583 :decisions 26747 :conflicts 1330 :restart 757 :agility 0.0674712)
+(smt.simplifying-clause-set :num-deleted-clauses 610)
+(smt.simplifying-clause-set :num-deleted-clauses 1236)
+(smt.restarting :propagations 1849398 :decisions 35519 :conflicts 2093 :restart 1135 :agility 0.0659812)
+(smt.simplifying-clause-set :num-deleted-clauses 5849)
+(smt.simplifying-clause-set :num-deleted-clauses 3217)
+unsat
+(:add-rows                    1449596
+ :added-eqs                   3719755
+ :arith-conflicts             1433
+ :assert-diseq                74262
+ :assert-lower                1347255
+ :assert-upper                876037
+ :binary-propagations         531586
+ :bound-prop                  131959
+ :conflicts                   2907
+ :decisions                   58305
+ :del-clause                  3826943
+ :dyn-ack                     3
+ :eq-adapter                  448067
+ :final-checks                22
+ :fixed-eqs                   949209
+ :gcd-tests                   1638
+ :ineq-splits                 1
+ :interface-eqs               21
+ :max-generation              87
+ :max-memory                  140.06
+ :max-missed-qa-cost          109.00
+ :memory                      36.65
+ :min-missed-qa-cost          106.00
+ :minimized-lits              98016
+ :missed-quant-instantiations 3
+ :mk-bool-var                 3168576
+ :mk-clause                   3960927
+ :num-allocs                  22010178298.00
+ :offset-eqs                  675159
+ :pivots                      136177
+ :propagations                3369003
+ :quant-instantiations        392846
+ :restarts                    6
+ :rlimit-count                21739394
+ :time                        31.28
+ :total-time                  31.31)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.post.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 132)
+(smt.restarting :propagations 35536 :decisions 990 :conflicts 101 :restart 150 :agility 0.0120395)
+(smt.simplifying-clause-set :num-deleted-clauses 10)
+(smt.restarting :propagations 111093 :decisions 3037 :conflicts 252 :restart 225 :agility 0.000735803)
+(smt.simplifying-clause-set :num-deleted-clauses 534)
+(smt.simplifying-clause-set :num-deleted-clauses 231)
+(smt.restarting :propagations 267607 :decisions 7667 :conflicts 478 :restart 337 :agility 0.000583958)
+(smt.simplifying-clause-set :num-deleted-clauses 9)
+(smt.simplifying-clause-set :num-deleted-clauses 508)
+(smt.restarting :propagations 386374 :decisions 15742 :conflicts 816 :restart 505 :agility 0.0094495)
+(smt.simplifying-clause-set :num-deleted-clauses 669)
+(smt.restarting :propagations 781494 :decisions 41072 :conflicts 1322 :restart 757 :agility 0.0265891)
+(smt.simplifying-clause-set :num-deleted-clauses 41)
+(smt.simplifying-clause-set :num-deleted-clauses 264)
+(smt.restarting :propagations 1469916 :decisions 51722 :conflicts 2080 :restart 1135 :agility 0.0310913)
+(smt.simplifying-clause-set :num-deleted-clauses 447)
+(smt.simplifying-clause-set :num-deleted-clauses 116)
+unsat
+(:add-rows                    1243136
+ :added-eqs                   3001273
+ :arith-conflicts             1233
+ :assert-diseq                67958
+ :assert-lower                1061047
+ :assert-upper                712782
+ :binary-propagations         433440
+ :bound-prop                  118353
+ :conflicts                   2653
+ :decisions                   64493
+ :del-clause                  3074480
+ :dyn-ack                     3
+ :eq-adapter                  347860
+ :final-checks                8
+ :fixed-eqs                   747640
+ :interface-eqs               8
+ :max-generation              86
+ :max-memory                  136.59
+ :max-missed-qa-cost          106.00
+ :memory                      34.83
+ :min-missed-qa-cost          105.00
+ :minimized-lits              64055
+ :missed-quant-instantiations 2
+ :mk-bool-var                 2548396
+ :mk-clause                   3196572
+ :num-allocs                  15682369319.00
+ :offset-eqs                  512091
+ :pivots                      107198
+ :propagations                2674901
+ :quant-instantiations        317489
+ :restarts                    6
+ :rlimit-count                17965410
+ :time                        25.66
+ :total-time                  25.70)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.post.fw.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 149)
+(smt.restarting :propagations 62198 :decisions 14507 :conflicts 101 :restart 150 :agility 0.00320981)
+(smt.simplifying-clause-set :num-deleted-clauses 2)
+(smt.restarting :propagations 171810 :decisions 30378 :conflicts 252 :restart 225 :agility 0.0275982)
+(smt.simplifying-clause-set :num-deleted-clauses 580)
+(smt.simplifying-clause-set :num-deleted-clauses 188)
+(smt.restarting :propagations 416224 :decisions 69519 :conflicts 478 :restart 337 :agility 0.0164253)
+(smt.simplifying-clause-set :num-deleted-clauses 10)
+(smt.simplifying-clause-set :num-deleted-clauses 555)
+(smt.restarting :propagations 753995 :decisions 107658 :conflicts 816 :restart 505 :agility 0.0239382)
+(smt.simplifying-clause-set :num-deleted-clauses 43)
+(smt.restarting :propagations 1967033 :decisions 207298 :conflicts 1322 :restart 757 :agility 0.0453359)
+(smt.simplifying-clause-set :num-deleted-clauses 859)
+(smt.restarting :propagations 3942944 :decisions 299057 :conflicts 2080 :restart 1135 :agility 0.0671372)
+(smt.simplifying-clause-set :num-deleted-clauses 358)
+unsat
+(:add-rows                    1576853
+ :added-eqs                   7950711
+ :arith-conflicts             1208
+ :assert-diseq                139539
+ :assert-lower                2243145
+ :assert-upper                1718165
+ :binary-propagations         1402394
+ :bound-prop                  170638
+ :conflicts                   2492
+ :decisions                   396751
+ :del-clause                  4824653
+ :dyn-ack                     1
+ :eq-adapter                  556305
+ :final-checks                17
+ :fixed-eqs                   1574287
+ :interface-eqs               17
+ :max-generation              84
+ :max-memory                  177.24
+ :max-missed-qa-cost          107.00
+ :memory                      40.18
+ :min-missed-qa-cost          106.00
+ :minimized-lits              54855
+ :missed-quant-instantiations 2
+ :mk-bool-var                 3959774
+ :mk-clause                   4997613
+ :num-allocs                  32741003130.00
+ :offset-eqs                  1779413
+ :pivots                      114785
+ :propagations                6231262
+ :quant-instantiations        509464
+ :restarts                    6
+ :rlimit-count                31282066
+ :time                        49.07
+ :total-time                  49.16)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.post.orig.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 124)
+(smt.restarting :propagations 10365 :decisions 172 :conflicts 101 :restart 150 :agility 0.0514731)
+(smt.simplifying-clause-set :num-deleted-clauses 13)
+(smt.restarting :propagations 76334 :decisions 2176 :conflicts 252 :restart 225 :agility 0.0243694)
+(smt.simplifying-clause-set :num-deleted-clauses 490)
+(smt.simplifying-clause-set :num-deleted-clauses 39)
+(smt.restarting :propagations 196586 :decisions 6432 :conflicts 478 :restart 337 :agility 0.0176041)
+(smt.simplifying-clause-set :num-deleted-clauses 173)
+(smt.simplifying-clause-set :num-deleted-clauses 8)
+(smt.restarting :propagations 378620 :decisions 11146 :conflicts 816 :restart 505 :agility 0.0480598)
+(smt.simplifying-clause-set :num-deleted-clauses 433)
+(smt.restarting :propagations 992198 :decisions 25883 :conflicts 1322 :restart 757 :agility 0.0385246)
+(smt.simplifying-clause-set :num-deleted-clauses 15)
+(smt.simplifying-clause-set :num-deleted-clauses 658)
+(smt.restarting :propagations 1854731 :decisions 45680 :conflicts 2080 :restart 1135 :agility 0.0481208)
+(smt.simplifying-clause-set :num-deleted-clauses 6399)
+unsat
+(:add-rows             1535308
+ :added-eqs            3458841
+ :arith-conflicts      1334
+ :assert-diseq         64091
+ :assert-lower         1226471
+ :assert-upper         783951
+ :binary-propagations  448917
+ :bound-prop           134940
+ :conflicts            2750
+ :decisions            60695
+ :del-clause           3552698
+ :dyn-ack              3
+ :eq-adapter           406725
+ :final-checks         20
+ :fixed-eqs            888094
+ :interface-eqs        20
+ :max-generation       88
+ :max-memory           146.34
+ :memory               37.17
+ :minimized-lits       89242
+ :mk-bool-var          2984884
+ :mk-clause            3687610
+ :num-allocs           21537773453.00
+ :offset-eqs           632522
+ :pivots               140585
+ :propagations         3004618
+ :quant-instantiations 358804
+ :restarts             6
+ :rlimit-count         20215226
+ :time                 29.40
+ :total-time           29.44)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.orig.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 84)
+(smt.restarting :propagations 10138 :decisions 383 :conflicts 109 :restart 150 :agility 0.0630929)
+(smt.simplifying-clause-set :num-deleted-clauses 449)
+(smt.restarting :propagations 65053 :decisions 1969 :conflicts 260 :restart 225 :agility 0.024043)
+(smt.simplifying-clause-set :num-deleted-clauses 18)
+(smt.simplifying-clause-set :num-deleted-clauses 39)
+(smt.restarting :propagations 186463 :decisions 8175 :conflicts 486 :restart 337 :agility 0.0250365)
+(smt.simplifying-clause-set :num-deleted-clauses 695)
+(smt.restarting :propagations 353367 :decisions 14677 :conflicts 824 :restart 505 :agility 0.0831401)
+(smt.simplifying-clause-set :num-deleted-clauses 41)
+(smt.restarting :propagations 1023583 :decisions 26747 :conflicts 1330 :restart 757 :agility 0.0674712)
+(smt.simplifying-clause-set :num-deleted-clauses 610)
+(smt.simplifying-clause-set :num-deleted-clauses 1236)
+(smt.restarting :propagations 1849398 :decisions 35519 :conflicts 2093 :restart 1135 :agility 0.0659812)
+(smt.simplifying-clause-set :num-deleted-clauses 5849)
+(smt.simplifying-clause-set :num-deleted-clauses 3217)
+unsat
+(:add-rows                    1449596
+ :added-eqs                   3719755
+ :arith-conflicts             1433
+ :assert-diseq                74262
+ :assert-lower                1347255
+ :assert-upper                876037
+ :binary-propagations         531586
+ :bound-prop                  131959
+ :conflicts                   2907
+ :decisions                   58305
+ :del-clause                  3826943
+ :dyn-ack                     3
+ :eq-adapter                  448067
+ :final-checks                22
+ :fixed-eqs                   949209
+ :gcd-tests                   1638
+ :ineq-splits                 1
+ :interface-eqs               21
+ :max-generation              87
+ :max-memory                  140.06
+ :max-missed-qa-cost          109.00
+ :memory                      36.65
+ :min-missed-qa-cost          106.00
+ :minimized-lits              98016
+ :missed-quant-instantiations 3
+ :mk-bool-var                 3168576
+ :mk-clause                   3960927
+ :num-allocs                  22010178298.00
+ :offset-eqs                  675159
+ :pivots                      136177
+ :propagations                3369003
+ :quant-instantiations        392846
+ :restarts                    6
+ :rlimit-count                21739394
+ :time                        31.39
+ :total-time                  31.43)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.pre.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 91)
+(smt.restarting :propagations 34051 :decisions 802 :conflicts 101 :restart 150 :agility 0.00808356)
+(smt.simplifying-clause-set :num-deleted-clauses 21)
+(smt.restarting :propagations 72565 :decisions 2404 :conflicts 252 :restart 225 :agility 0.0143872)
+(smt.simplifying-clause-set :num-deleted-clauses 436)
+(smt.simplifying-clause-set :num-deleted-clauses 248)
+(smt.restarting :propagations 210130 :decisions 6143 :conflicts 480 :restart 337 :agility 0.0613767)
+(smt.restarting :propagations 518984 :decisions 17561 :conflicts 818 :restart 505 :agility 0.01496)
+(smt.simplifying-clause-set :num-deleted-clauses 104)
+(smt.restarting :propagations 834484 :decisions 37682 :conflicts 1324 :restart 757 :agility 0.0885258)
+(smt.simplifying-clause-set :num-deleted-clauses 1585)
+(smt.simplifying-clause-set :num-deleted-clauses 285)
+(smt.restarting :propagations 1658238 :decisions 53003 :conflicts 2082 :restart 1135 :agility 0.0905101)
+(smt.simplifying-clause-set :num-deleted-clauses 1437)
+(smt.simplifying-clause-set :num-deleted-clauses 29)
+(smt.simplifying-clause-set :num-deleted-clauses 102)
+(smt.restarting :propagations 3734327 :decisions 80717 :conflicts 3218 :restart 1702 :agility 0.0361938)
+unsat
+(:add-rows                    2413709
+ :added-eqs                   5926994
+ :arith-conflicts             1930
+ :assert-diseq                111722
+ :assert-lower                2027838
+ :assert-upper                1440221
+ :binary-propagations         739590
+ :bound-prop                  177721
+ :conflicts                   3564
+ :decisions                   89480
+ :del-clause                  4793659
+ :dyn-ack                     4
+ :eq-adapter                  624392
+ :final-checks                20
+ :fixed-eqs                   1596052
+ :interface-eqs               20
+ :max-generation              85
+ :max-memory                  199.11
+ :max-missed-qa-cost          108.00
+ :memory                      42.36
+ :min-missed-qa-cost          106.00
+ :minimized-lits              90806
+ :missed-quant-instantiations 6
+ :mk-bool-var                 3934721
+ :mk-clause                   4981392
+ :num-allocs                  36660379851.00
+ :offset-eqs                  1136995
+ :pivots                      147115
+ :propagations                5209953
+ :quant-instantiations        523690
+ :restarts                    7
+ :rlimit-count                28600003
+ :time                        47.32
+ :total-time                  47.35)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.init.orig.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 84)
+(smt.restarting :propagations 10138 :decisions 383 :conflicts 109 :restart 150 :agility 0.0630929)
+(smt.simplifying-clause-set :num-deleted-clauses 449)
+(smt.restarting :propagations 65053 :decisions 1969 :conflicts 260 :restart 225 :agility 0.024043)
+(smt.simplifying-clause-set :num-deleted-clauses 18)
+(smt.simplifying-clause-set :num-deleted-clauses 39)
+(smt.restarting :propagations 186463 :decisions 8175 :conflicts 486 :restart 337 :agility 0.0250365)
+(smt.simplifying-clause-set :num-deleted-clauses 695)
+(smt.restarting :propagations 353367 :decisions 14677 :conflicts 824 :restart 505 :agility 0.0831401)
+(smt.simplifying-clause-set :num-deleted-clauses 41)
+(smt.restarting :propagations 1023583 :decisions 26747 :conflicts 1330 :restart 757 :agility 0.0674712)
+(smt.simplifying-clause-set :num-deleted-clauses 610)
+(smt.simplifying-clause-set :num-deleted-clauses 1236)
+(smt.restarting :propagations 1849398 :decisions 35519 :conflicts 2093 :restart 1135 :agility 0.0659812)
+(smt.simplifying-clause-set :num-deleted-clauses 5849)
+(smt.simplifying-clause-set :num-deleted-clauses 3217)
+unsat
+(:add-rows                    1449596
+ :added-eqs                   3719755
+ :arith-conflicts             1433
+ :assert-diseq                74262
+ :assert-lower                1347255
+ :assert-upper                876037
+ :binary-propagations         531586
+ :bound-prop                  131959
+ :conflicts                   2907
+ :decisions                   58305
+ :del-clause                  3826943
+ :dyn-ack                     3
+ :eq-adapter                  448067
+ :final-checks                22
+ :fixed-eqs                   949209
+ :gcd-tests                   1638
+ :ineq-splits                 1
+ :interface-eqs               21
+ :max-generation              87
+ :max-memory                  140.06
+ :max-missed-qa-cost          109.00
+ :memory                      36.65
+ :min-missed-qa-cost          106.00
+ :minimized-lits              98016
+ :missed-quant-instantiations 3
+ :mk-bool-var                 3168576
+ :mk-clause                   3960927
+ :num-allocs                  22010178298.00
+ :offset-eqs                  675159
+ :pivots                      136177
+ :propagations                3369003
+ :quant-instantiations        392846
+ :restarts                    6
+ :rlimit-count                21739394
+ :time                        31.09
+ :total-time                  31.13)
+
+C:\work\slicer\test\Chalice\AVLTree>for %f in (AVLTree.AVLTReeNode.remove.*.smt2) do z3 -smt2 -v:2 -st %f
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.1.orig.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 83)
+(smt.restarting :propagations 10376 :decisions 177 :conflicts 101 :restart 150 :agility 0.0503258)
+(smt.simplifying-clause-set :num-deleted-clauses 13)
+(smt.restarting :propagations 101590 :decisions 2639 :conflicts 252 :restart 225 :agility 0.0077991)
+(smt.simplifying-clause-set :num-deleted-clauses 457)
+(smt.simplifying-clause-set :num-deleted-clauses 45)
+(smt.restarting :propagations 277405 :decisions 6454 :conflicts 481 :restart 337 :agility 0.0472629)
+(smt.simplifying-clause-set :num-deleted-clauses 177)
+(smt.restarting :propagations 426632 :decisions 11262 :conflicts 819 :restart 505 :agility 0.0397133)
+(smt.restarting :propagations 862612 :decisions 21512 :conflicts 1325 :restart 757 :agility 0.043174)
+(smt.simplifying-clause-set :num-deleted-clauses 1008)
+(smt.simplifying-clause-set :num-deleted-clauses 1127)
+(smt.restarting :propagations 1486705 :decisions 34032 :conflicts 2083 :restart 1135 :agility 0.0515493)
+(smt.simplifying-clause-set :num-deleted-clauses 5390)
+unsat
+(:add-rows             1748506
+ :added-eqs            3620161
+ :arith-conflicts      1601
+ :assert-diseq         48230
+ :assert-lower         1299510
+ :assert-upper         812287
+ :binary-propagations  270925
+ :bound-prop           174877
+ :conflicts            2952
+ :decisions            68811
+ :del-clause           4277958
+ :dyn-ack              3
+ :eq-adapter           536920
+ :final-checks         18
+ :fixed-eqs            924291
+ :interface-eqs        18
+ :max-generation       84
+ :max-memory           151.22
+ :memory               39.14
+ :minimized-lits       85871
+ :mk-bool-var          3675951
+ :mk-clause            4421651
+ :num-allocs           28648343467.00
+ :offset-eqs           674134
+ :pivots               174445
+ :propagations         3043860
+ :quant-instantiations 441985
+ :restarts             6
+ :rlimit-count         23330609
+ :time                 34.48
+ :total-time           34.52)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.boogie.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 655)
+(smt.restarting :propagations 25870 :decisions 1017 :conflicts 101 :restart 150 :agility 0.0189751)
+(smt.simplifying-clause-set :num-deleted-clauses 119)
+(smt.restarting :propagations 97534 :decisions 4745 :conflicts 252 :restart 225 :agility 0.00582242)
+(smt.simplifying-clause-set :num-deleted-clauses 19)
+(smt.restarting :propagations 226758 :decisions 9678 :conflicts 478 :restart 337 :agility 0.0610679)
+(smt.simplifying-clause-set :num-deleted-clauses 4)
+(smt.restarting :propagations 461801 :decisions 16311 :conflicts 816 :restart 505 :agility 0.0607596)
+(smt.simplifying-clause-set :num-deleted-clauses 14)
+(smt.restarting :propagations 949757 :decisions 25048 :conflicts 1322 :restart 757 :agility 0.0489282)
+(smt.simplifying-clause-set :num-deleted-clauses 21)
+(smt.restarting :propagations 1589352 :decisions 40768 :conflicts 2080 :restart 1135 :agility 0.0303873)
+(smt.simplifying-clause-set :num-deleted-clauses 60)
+(smt.restarting :propagations 3095044 :decisions 70047 :conflicts 3216 :restart 1702 :agility 0.0293746)
+(smt.simplifying-clause-set :num-deleted-clauses 17)
+unsat
+(:add-rows             1741766
+ :added-eqs            6390590
+ :arith-conflicts      1427
+ :assert-diseq         76165
+ :assert-lower         1757861
+ :assert-upper         1194413
+ :binary-propagations  240
+ :bound-prop           179619
+ :conflicts            3970
+ :decisions            96147
+ :del-clause           4786239
+ :dyn-ack              11
+ :eq-adapter           681193
+ :final-checks         26
+ :fixed-eqs            1131976
+ :interface-eqs        26
+ :max-generation       86
+ :max-memory           185.78
+ :memory               184.98
+ :minimized-lits       133366
+ :mk-bool-var          4513927
+ :mk-clause            5061411
+ :num-allocs           35715565641.00
+ :num-checks           1
+ :offset-eqs           897778
+ :pivots               160911
+ :propagations         4478962
+ :quant-instantiations 905421
+ :restarts             7
+ :rlimit-count         33256735
+ :time                 53.90
+ :total-time           53.98)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.init.orig.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 84)
+(smt.restarting :propagations 10138 :decisions 383 :conflicts 109 :restart 150 :agility 0.0630929)
+(smt.simplifying-clause-set :num-deleted-clauses 449)
+(smt.restarting :propagations 65053 :decisions 1969 :conflicts 260 :restart 225 :agility 0.024043)
+(smt.simplifying-clause-set :num-deleted-clauses 18)
+(smt.simplifying-clause-set :num-deleted-clauses 39)
+(smt.restarting :propagations 186463 :decisions 8175 :conflicts 486 :restart 337 :agility 0.0250365)
+(smt.simplifying-clause-set :num-deleted-clauses 695)
+(smt.restarting :propagations 353367 :decisions 14677 :conflicts 824 :restart 505 :agility 0.0831401)
+(smt.simplifying-clause-set :num-deleted-clauses 41)
+(smt.restarting :propagations 1023583 :decisions 26747 :conflicts 1330 :restart 757 :agility 0.0674712)
+(smt.simplifying-clause-set :num-deleted-clauses 610)
+(smt.simplifying-clause-set :num-deleted-clauses 1236)
+(smt.restarting :propagations 1849398 :decisions 35519 :conflicts 2093 :restart 1135 :agility 0.0659812)
+(smt.simplifying-clause-set :num-deleted-clauses 5849)
+(smt.simplifying-clause-set :num-deleted-clauses 3217)
+unsat
+(:add-rows                    1449596
+ :added-eqs                   3719755
+ :arith-conflicts             1433
+ :assert-diseq                74262
+ :assert-lower                1347255
+ :assert-upper                876037
+ :binary-propagations         531586
+ :bound-prop                  131959
+ :conflicts                   2907
+ :decisions                   58305
+ :del-clause                  3826943
+ :dyn-ack                     3
+ :eq-adapter                  448067
+ :final-checks                22
+ :fixed-eqs                   949209
+ :gcd-tests                   1638
+ :ineq-splits                 1
+ :interface-eqs               21
+ :max-generation              87
+ :max-memory                  140.06
+ :max-missed-qa-cost          109.00
+ :memory                      36.65
+ :min-missed-qa-cost          106.00
+ :minimized-lits              98016
+ :missed-quant-instantiations 3
+ :mk-bool-var                 3168576
+ :mk-clause                   3960927
+ :num-allocs                  22010178298.00
+ :offset-eqs                  675159
+ :pivots                      136177
+ :propagations                3369003
+ :quant-instantiations        392846
+ :restarts                    6
+ :rlimit-count                21739394
+ :time                        31.14
+ :total-time                  31.17)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st avltree.AVLTreeNode.remove.orig.1.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 83)
+(smt.restarting :propagations 10376 :decisions 177 :conflicts 101 :restart 150 :agility 0.0503258)
+(smt.simplifying-clause-set :num-deleted-clauses 13)
+(smt.restarting :propagations 101590 :decisions 2639 :conflicts 252 :restart 225 :agility 0.0077991)
+(smt.simplifying-clause-set :num-deleted-clauses 457)
+(smt.simplifying-clause-set :num-deleted-clauses 45)
+(smt.restarting :propagations 277405 :decisions 6454 :conflicts 481 :restart 337 :agility 0.0472629)
+(smt.simplifying-clause-set :num-deleted-clauses 177)
+(smt.restarting :propagations 426632 :decisions 11262 :conflicts 819 :restart 505 :agility 0.0397133)
+(smt.restarting :propagations 862612 :decisions 21512 :conflicts 1325 :restart 757 :agility 0.043174)
+(smt.simplifying-clause-set :num-deleted-clauses 1008)
+(smt.simplifying-clause-set :num-deleted-clauses 1127)
+(smt.restarting :propagations 1486705 :decisions 34032 :conflicts 2083 :restart 1135 :agility 0.0515493)
+(smt.simplifying-clause-set :num-deleted-clauses 5390)
+unsat
+(:add-rows             1748506
+ :added-eqs            3620161
+ :arith-conflicts      1601
+ :assert-diseq         48230
+ :assert-lower         1299510
+ :assert-upper         812287
+ :binary-propagations  270925
+ :bound-prop           174877
+ :conflicts            2952
+ :decisions            68811
+ :del-clause           4277958
+ :dyn-ack              3
+ :eq-adapter           536920
+ :final-checks         18
+ :fixed-eqs            924291
+ :interface-eqs        18
+ :max-generation       84
+ :max-memory           151.22
+ :memory               39.14
+ :minimized-lits       85871
+ :mk-bool-var          3675951
+ :mk-clause            4421651
+ :num-allocs           28648343467.00
+ :offset-eqs           674134
+ :pivots               174445
+ :propagations         3043860
+ :quant-instantiations 441985
+ :restarts             6
+ :rlimit-count         23330609
+ :time                 34.51
+ :total-time           34.55)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.orig.i1.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 83)
+(smt.restarting :propagations 10376 :decisions 177 :conflicts 101 :restart 150 :agility 0.0503258)
+(smt.simplifying-clause-set :num-deleted-clauses 13)
+(smt.restarting :propagations 101590 :decisions 2639 :conflicts 252 :restart 225 :agility 0.0077991)
+(smt.simplifying-clause-set :num-deleted-clauses 457)
+(smt.simplifying-clause-set :num-deleted-clauses 45)
+(smt.restarting :propagations 277405 :decisions 6454 :conflicts 481 :restart 337 :agility 0.0472624)
+(smt.simplifying-clause-set :num-deleted-clauses 177)
+(smt.restarting :propagations 426632 :decisions 11262 :conflicts 819 :restart 505 :agility 0.0397132)
+(smt.restarting :propagations 863129 :decisions 21512 :conflicts 1325 :restart 757 :agility 0.0514618)
+(smt.simplifying-clause-set :num-deleted-clauses 1006)
+(smt.simplifying-clause-set :num-deleted-clauses 1127)
+(smt.restarting :propagations 1507085 :decisions 33726 :conflicts 2083 :restart 1135 :agility 0.0792464)
+(smt.simplifying-clause-set :num-deleted-clauses 5275)
+(smt.simplifying-clause-set :num-deleted-clauses 4350)
+unsat
+(:add-rows                    1786099
+ :added-eqs                   3283056
+ :arith-conflicts             1564
+ :assert-diseq                45243
+ :assert-lower                1182693
+ :assert-upper                732122
+ :binary-propagations         266144
+ :bound-prop                  146321
+ :conflicts                   2882
+ :decisions                   64698
+ :del-clause                  3794314
+ :dyn-ack                     3
+ :eq-adapter                  469702
+ :final-checks                18
+ :fixed-eqs                   853494
+ :interface-eqs               18
+ :max-generation              84
+ :max-memory                  151.31
+ :max-missed-qa-cost          108.00
+ :memory                      39.04
+ :min-missed-qa-cost          107.00
+ :minimized-lits              85012
+ :missed-quant-instantiations 2
+ :mk-bool-var                 3212722
+ :mk-clause                   3942463
+ :num-allocs                  24301314710.00
+ :offset-eqs                  613474
+ :pivots                      146760
+ :propagations                2957770
+ :quant-instantiations        395159
+ :restarts                    6
+ :rlimit-count                21281138
+ :time                        31.00
+ :total-time                  31.03)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.orig.i10.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 83)
+(smt.restarting :propagations 10376 :decisions 177 :conflicts 101 :restart 150 :agility 0.0503258)
+(smt.simplifying-clause-set :num-deleted-clauses 13)
+(smt.restarting :propagations 101590 :decisions 2639 :conflicts 252 :restart 225 :agility 0.0077991)
+(smt.simplifying-clause-set :num-deleted-clauses 457)
+(smt.simplifying-clause-set :num-deleted-clauses 45)
+(smt.restarting :propagations 277405 :decisions 6454 :conflicts 481 :restart 337 :agility 0.0472629)
+(smt.simplifying-clause-set :num-deleted-clauses 177)
+(smt.restarting :propagations 426632 :decisions 11262 :conflicts 819 :restart 505 :agility 0.0397133)
+(smt.restarting :propagations 862612 :decisions 21512 :conflicts 1325 :restart 757 :agility 0.043174)
+(smt.simplifying-clause-set :num-deleted-clauses 1008)
+(smt.simplifying-clause-set :num-deleted-clauses 1127)
+(smt.restarting :propagations 1486705 :decisions 34032 :conflicts 2083 :restart 1135 :agility 0.0515493)
+(smt.simplifying-clause-set :num-deleted-clauses 5390)
+unsat
+(:add-rows             1748506
+ :added-eqs            3620161
+ :arith-conflicts      1601
+ :assert-diseq         48230
+ :assert-lower         1299510
+ :assert-upper         812287
+ :binary-propagations  270925
+ :bound-prop           174877
+ :conflicts            2952
+ :decisions            68811
+ :del-clause           4277958
+ :dyn-ack              3
+ :eq-adapter           536920
+ :final-checks         18
+ :fixed-eqs            924291
+ :interface-eqs        18
+ :max-generation       84
+ :max-memory           151.22
+ :memory               39.14
+ :minimized-lits       85871
+ :mk-bool-var          3675951
+ :mk-clause            4421651
+ :num-allocs           28648343467.00
+ :offset-eqs           674134
+ :pivots               174445
+ :propagations         3043860
+ :quant-instantiations 441985
+ :restarts             6
+ :rlimit-count         23330609
+ :time                 34.52
+ :total-time           34.55)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.orig.i2.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 83)
+(smt.restarting :propagations 10376 :decisions 177 :conflicts 101 :restart 150 :agility 0.0503258)
+(smt.simplifying-clause-set :num-deleted-clauses 13)
+(smt.restarting :propagations 101590 :decisions 2639 :conflicts 252 :restart 225 :agility 0.0077991)
+(smt.simplifying-clause-set :num-deleted-clauses 457)
+(smt.simplifying-clause-set :num-deleted-clauses 45)
+(smt.restarting :propagations 277405 :decisions 6454 :conflicts 481 :restart 337 :agility 0.0472629)
+(smt.simplifying-clause-set :num-deleted-clauses 177)
+(smt.restarting :propagations 426632 :decisions 11262 :conflicts 819 :restart 505 :agility 0.0397133)
+(smt.restarting :propagations 862612 :decisions 21512 :conflicts 1325 :restart 757 :agility 0.043174)
+(smt.simplifying-clause-set :num-deleted-clauses 1008)
+(smt.simplifying-clause-set :num-deleted-clauses 1130)
+(smt.restarting :propagations 1468399 :decisions 32775 :conflicts 2083 :restart 1135 :agility 0.0446333)
+(smt.simplifying-clause-set :num-deleted-clauses 5285)
+unsat
+(:add-rows             1712137
+ :added-eqs            3006847
+ :arith-conflicts      1505
+ :assert-diseq         42913
+ :assert-lower         1065619
+ :assert-upper         652579
+ :binary-propagations  262749
+ :bound-prop           145205
+ :conflicts            2869
+ :decisions            52653
+ :del-clause           3564146
+ :dyn-ack              3
+ :eq-adapter           432103
+ :final-checks         18
+ :fixed-eqs            767051
+ :interface-eqs        18
+ :max-generation       85
+ :max-memory           151.87
+ :memory               39.51
+ :minimized-lits       90425
+ :mk-bool-var          3060586
+ :mk-clause            3715181
+ :num-allocs           23396951750.00
+ :offset-eqs           566675
+ :pivots               151916
+ :propagations         2641943
+ :quant-instantiations 364959
+ :restarts             6
+ :rlimit-count         19913784
+ :time                 28.55
+ :total-time           28.59)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.orig.i3.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 83)
+(smt.restarting :propagations 10376 :decisions 177 :conflicts 101 :restart 150 :agility 0.0503258)
+(smt.simplifying-clause-set :num-deleted-clauses 13)
+(smt.restarting :propagations 101590 :decisions 2639 :conflicts 252 :restart 225 :agility 0.0077991)
+(smt.simplifying-clause-set :num-deleted-clauses 457)
+(smt.simplifying-clause-set :num-deleted-clauses 45)
+(smt.restarting :propagations 277405 :decisions 6454 :conflicts 481 :restart 337 :agility 0.0472629)
+(smt.simplifying-clause-set :num-deleted-clauses 177)
+(smt.restarting :propagations 426632 :decisions 11262 :conflicts 819 :restart 505 :agility 0.0397133)
+(smt.restarting :propagations 862612 :decisions 21512 :conflicts 1325 :restart 757 :agility 0.043174)
+(smt.simplifying-clause-set :num-deleted-clauses 1008)
+(smt.simplifying-clause-set :num-deleted-clauses 1127)
+(smt.restarting :propagations 1486705 :decisions 34032 :conflicts 2083 :restart 1135 :agility 0.0515493)
+(smt.simplifying-clause-set :num-deleted-clauses 5390)
+unsat
+(:add-rows             1748506
+ :added-eqs            3620161
+ :arith-conflicts      1601
+ :assert-diseq         48230
+ :assert-lower         1299510
+ :assert-upper         812287
+ :binary-propagations  270925
+ :bound-prop           174877
+ :conflicts            2952
+ :decisions            68811
+ :del-clause           4277958
+ :dyn-ack              3
+ :eq-adapter           536920
+ :final-checks         18
+ :fixed-eqs            924291
+ :interface-eqs        18
+ :max-generation       84
+ :max-memory           151.22
+ :memory               39.14
+ :minimized-lits       85871
+ :mk-bool-var          3675951
+ :mk-clause            4421651
+ :num-allocs           28648343467.00
+ :offset-eqs           674134
+ :pivots               174445
+ :propagations         3043860
+ :quant-instantiations 441985
+ :restarts             6
+ :rlimit-count         23330609
+ :time                 34.63
+ :total-time           34.67)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.orig.i4.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 83)
+(smt.restarting :propagations 10376 :decisions 177 :conflicts 101 :restart 150 :agility 0.0503258)
+(smt.simplifying-clause-set :num-deleted-clauses 13)
+(smt.restarting :propagations 101590 :decisions 2639 :conflicts 252 :restart 225 :agility 0.0077991)
+(smt.simplifying-clause-set :num-deleted-clauses 457)
+(smt.simplifying-clause-set :num-deleted-clauses 45)
+(smt.restarting :propagations 277405 :decisions 6454 :conflicts 481 :restart 337 :agility 0.0472629)
+(smt.simplifying-clause-set :num-deleted-clauses 177)
+(smt.restarting :propagations 426632 :decisions 11262 :conflicts 819 :restart 505 :agility 0.0397133)
+(smt.restarting :propagations 862612 :decisions 21512 :conflicts 1325 :restart 757 :agility 0.043174)
+(smt.simplifying-clause-set :num-deleted-clauses 1008)
+(smt.simplifying-clause-set :num-deleted-clauses 1127)
+(smt.restarting :propagations 1486705 :decisions 34032 :conflicts 2083 :restart 1135 :agility 0.0515493)
+(smt.simplifying-clause-set :num-deleted-clauses 5390)
+unsat
+(:add-rows             1748506
+ :added-eqs            3620161
+ :arith-conflicts      1601
+ :assert-diseq         48230
+ :assert-lower         1299510
+ :assert-upper         812287
+ :binary-propagations  270925
+ :bound-prop           174877
+ :conflicts            2952
+ :decisions            68811
+ :del-clause           4277958
+ :dyn-ack              3
+ :eq-adapter           536920
+ :final-checks         18
+ :fixed-eqs            924291
+ :interface-eqs        18
+ :max-generation       84
+ :max-memory           151.22
+ :memory               39.14
+ :minimized-lits       85871
+ :mk-bool-var          3675951
+ :mk-clause            4421651
+ :num-allocs           28648343467.00
+ :offset-eqs           674134
+ :pivots               174445
+ :propagations         3043860
+ :quant-instantiations 441985
+ :restarts             6
+ :rlimit-count         23330609
+ :time                 34.34
+ :total-time           34.37)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.orig.i5.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 83)
+(smt.restarting :propagations 10376 :decisions 177 :conflicts 101 :restart 150 :agility 0.0503258)
+(smt.simplifying-clause-set :num-deleted-clauses 13)
+(smt.restarting :propagations 101590 :decisions 2639 :conflicts 252 :restart 225 :agility 0.0077991)
+(smt.simplifying-clause-set :num-deleted-clauses 457)
+(smt.simplifying-clause-set :num-deleted-clauses 45)
+(smt.restarting :propagations 277405 :decisions 6454 :conflicts 481 :restart 337 :agility 0.0472629)
+(smt.simplifying-clause-set :num-deleted-clauses 177)
+(smt.restarting :propagations 426632 :decisions 11262 :conflicts 819 :restart 505 :agility 0.0397133)
+(smt.restarting :propagations 862612 :decisions 21512 :conflicts 1325 :restart 757 :agility 0.043174)
+(smt.simplifying-clause-set :num-deleted-clauses 1008)
+(smt.simplifying-clause-set :num-deleted-clauses 1127)
+(smt.restarting :propagations 1486705 :decisions 34032 :conflicts 2083 :restart 1135 :agility 0.0515493)
+(smt.simplifying-clause-set :num-deleted-clauses 5390)
+unsat
+(:add-rows             1748506
+ :added-eqs            3620161
+ :arith-conflicts      1601
+ :assert-diseq         48230
+ :assert-lower         1299510
+ :assert-upper         812287
+ :binary-propagations  270925
+ :bound-prop           174877
+ :conflicts            2952
+ :decisions            68811
+ :del-clause           4277958
+ :dyn-ack              3
+ :eq-adapter           536920
+ :final-checks         18
+ :fixed-eqs            924291
+ :interface-eqs        18
+ :max-generation       84
+ :max-memory           151.22
+ :memory               39.14
+ :minimized-lits       85871
+ :mk-bool-var          3675951
+ :mk-clause            4421651
+ :num-allocs           28648343467.00
+ :offset-eqs           674134
+ :pivots               174445
+ :propagations         3043860
+ :quant-instantiations 441985
+ :restarts             6
+ :rlimit-count         23330609
+ :time                 34.72
+ :total-time           34.75)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.orig.i6.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 83)
+(smt.restarting :propagations 10376 :decisions 177 :conflicts 101 :restart 150 :agility 0.0503258)
+(smt.simplifying-clause-set :num-deleted-clauses 13)
+(smt.restarting :propagations 101590 :decisions 2639 :conflicts 252 :restart 225 :agility 0.0077991)
+(smt.simplifying-clause-set :num-deleted-clauses 457)
+(smt.simplifying-clause-set :num-deleted-clauses 45)
+(smt.restarting :propagations 277405 :decisions 6454 :conflicts 481 :restart 337 :agility 0.0472629)
+(smt.simplifying-clause-set :num-deleted-clauses 177)
+(smt.restarting :propagations 426632 :decisions 11262 :conflicts 819 :restart 505 :agility 0.0397133)
+(smt.restarting :propagations 862612 :decisions 21512 :conflicts 1325 :restart 757 :agility 0.043174)
+(smt.simplifying-clause-set :num-deleted-clauses 1008)
+(smt.simplifying-clause-set :num-deleted-clauses 1127)
+(smt.restarting :propagations 1486705 :decisions 34032 :conflicts 2083 :restart 1135 :agility 0.0515493)
+(smt.simplifying-clause-set :num-deleted-clauses 5390)
+unsat
+(:add-rows             1748506
+ :added-eqs            3620161
+ :arith-conflicts      1601
+ :assert-diseq         48230
+ :assert-lower         1299510
+ :assert-upper         812287
+ :binary-propagations  270925
+ :bound-prop           174877
+ :conflicts            2952
+ :decisions            68811
+ :del-clause           4277958
+ :dyn-ack              3
+ :eq-adapter           536920
+ :final-checks         18
+ :fixed-eqs            924291
+ :interface-eqs        18
+ :max-generation       84
+ :max-memory           151.22
+ :memory               39.14
+ :minimized-lits       85871
+ :mk-bool-var          3675951
+ :mk-clause            4421651
+ :num-allocs           28648343467.00
+ :offset-eqs           674134
+ :pivots               174445
+ :propagations         3043860
+ :quant-instantiations 441985
+ :restarts             6
+ :rlimit-count         23330609
+ :time                 35.47
+ :total-time           35.52)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.orig.i7.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 83)
+(smt.restarting :propagations 10376 :decisions 177 :conflicts 101 :restart 150 :agility 0.0503258)
+(smt.simplifying-clause-set :num-deleted-clauses 13)
+(smt.restarting :propagations 101590 :decisions 2639 :conflicts 252 :restart 225 :agility 0.0077991)
+(smt.simplifying-clause-set :num-deleted-clauses 457)
+(smt.simplifying-clause-set :num-deleted-clauses 45)
+(smt.restarting :propagations 277405 :decisions 6454 :conflicts 481 :restart 337 :agility 0.0472629)
+(smt.simplifying-clause-set :num-deleted-clauses 177)
+(smt.restarting :propagations 426632 :decisions 11262 :conflicts 819 :restart 505 :agility 0.0397133)
+(smt.restarting :propagations 862612 :decisions 21512 :conflicts 1325 :restart 757 :agility 0.043174)
+(smt.simplifying-clause-set :num-deleted-clauses 1008)
+(smt.simplifying-clause-set :num-deleted-clauses 1127)
+(smt.restarting :propagations 1486705 :decisions 34032 :conflicts 2083 :restart 1135 :agility 0.0515493)
+(smt.simplifying-clause-set :num-deleted-clauses 5390)
+unsat
+(:add-rows             1748506
+ :added-eqs            3620161
+ :arith-conflicts      1601
+ :assert-diseq         48230
+ :assert-lower         1299510
+ :assert-upper         812287
+ :binary-propagations  270925
+ :bound-prop           174877
+ :conflicts            2952
+ :decisions            68811
+ :del-clause           4277958
+ :dyn-ack              3
+ :eq-adapter           536920
+ :final-checks         18
+ :fixed-eqs            924291
+ :interface-eqs        18
+ :max-generation       84
+ :max-memory           151.22
+ :memory               39.14
+ :minimized-lits       85871
+ :mk-bool-var          3675951
+ :mk-clause            4421651
+ :num-allocs           28648343467.00
+ :offset-eqs           674134
+ :pivots               174445
+ :propagations         3043860
+ :quant-instantiations 441985
+ :restarts             6
+ :rlimit-count         23330609
+ :time                 37.45
+ :total-time           37.49)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.orig.i8.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 83)
+(smt.restarting :propagations 10376 :decisions 177 :conflicts 101 :restart 150 :agility 0.0503258)
+(smt.simplifying-clause-set :num-deleted-clauses 13)
+(smt.restarting :propagations 101590 :decisions 2639 :conflicts 252 :restart 225 :agility 0.0077991)
+(smt.simplifying-clause-set :num-deleted-clauses 457)
+(smt.simplifying-clause-set :num-deleted-clauses 45)
+(smt.restarting :propagations 277405 :decisions 6454 :conflicts 481 :restart 337 :agility 0.0472629)
+(smt.simplifying-clause-set :num-deleted-clauses 177)
+(smt.restarting :propagations 426632 :decisions 11262 :conflicts 819 :restart 505 :agility 0.0397133)
+(smt.restarting :propagations 862612 :decisions 21512 :conflicts 1325 :restart 757 :agility 0.043174)
+(smt.simplifying-clause-set :num-deleted-clauses 1008)
+(smt.simplifying-clause-set :num-deleted-clauses 1127)
+(smt.restarting :propagations 1486705 :decisions 34032 :conflicts 2083 :restart 1135 :agility 0.0515493)
+(smt.simplifying-clause-set :num-deleted-clauses 5390)
+unsat
+(:add-rows             1748506
+ :added-eqs            3620161
+ :arith-conflicts      1601
+ :assert-diseq         48230
+ :assert-lower         1299510
+ :assert-upper         812287
+ :binary-propagations  270925
+ :bound-prop           174877
+ :conflicts            2952
+ :decisions            68811
+ :del-clause           4277958
+ :dyn-ack              3
+ :eq-adapter           536920
+ :final-checks         18
+ :fixed-eqs            924291
+ :interface-eqs        18
+ :max-generation       84
+ :max-memory           151.22
+ :memory               39.14
+ :minimized-lits       85871
+ :mk-bool-var          3675951
+ :mk-clause            4421651
+ :num-allocs           28648343467.00
+ :offset-eqs           674134
+ :pivots               174445
+ :propagations         3043860
+ :quant-instantiations 441985
+ :restarts             6
+ :rlimit-count         23330609
+ :time                 34.31
+ :total-time           34.34)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.orig.i9.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 83)
+(smt.restarting :propagations 10376 :decisions 177 :conflicts 101 :restart 150 :agility 0.0503258)
+(smt.simplifying-clause-set :num-deleted-clauses 13)
+(smt.restarting :propagations 101590 :decisions 2639 :conflicts 252 :restart 225 :agility 0.0077991)
+(smt.simplifying-clause-set :num-deleted-clauses 457)
+(smt.simplifying-clause-set :num-deleted-clauses 45)
+(smt.restarting :propagations 277405 :decisions 6454 :conflicts 481 :restart 337 :agility 0.0472629)
+(smt.simplifying-clause-set :num-deleted-clauses 177)
+(smt.restarting :propagations 426632 :decisions 11262 :conflicts 819 :restart 505 :agility 0.0397133)
+(smt.restarting :propagations 862612 :decisions 21512 :conflicts 1325 :restart 757 :agility 0.043174)
+(smt.simplifying-clause-set :num-deleted-clauses 1008)
+(smt.simplifying-clause-set :num-deleted-clauses 1127)
+(smt.restarting :propagations 1486705 :decisions 34032 :conflicts 2083 :restart 1135 :agility 0.0515493)
+(smt.simplifying-clause-set :num-deleted-clauses 5390)
+unsat
+(:add-rows             1748506
+ :added-eqs            3620161
+ :arith-conflicts      1601
+ :assert-diseq         48230
+ :assert-lower         1299510
+ :assert-upper         812287
+ :binary-propagations  270925
+ :bound-prop           174877
+ :conflicts            2952
+ :decisions            68811
+ :del-clause           4277958
+ :dyn-ack              3
+ :eq-adapter           536920
+ :final-checks         18
+ :fixed-eqs            924291
+ :interface-eqs        18
+ :max-generation       84
+ :max-memory           151.22
+ :memory               39.14
+ :minimized-lits       85871
+ :mk-bool-var          3675951
+ :mk-clause            4421651
+ :num-allocs           28648343467.00
+ :offset-eqs           674134
+ :pivots               174445
+ :propagations         3043860
+ :quant-instantiations 441985
+ :restarts             6
+ :rlimit-count         23330609
+ :time                 34.38
+ :total-time           34.42)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st avltree.AVLTreeNode.remove.orig.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 84)
+(smt.restarting :propagations 10138 :decisions 383 :conflicts 109 :restart 150 :agility 0.0630929)
+(smt.simplifying-clause-set :num-deleted-clauses 449)
+(smt.restarting :propagations 65053 :decisions 1969 :conflicts 260 :restart 225 :agility 0.024043)
+(smt.simplifying-clause-set :num-deleted-clauses 18)
+(smt.simplifying-clause-set :num-deleted-clauses 39)
+(smt.restarting :propagations 186463 :decisions 8175 :conflicts 486 :restart 337 :agility 0.0250365)
+(smt.simplifying-clause-set :num-deleted-clauses 695)
+(smt.restarting :propagations 353367 :decisions 14677 :conflicts 824 :restart 505 :agility 0.0831401)
+(smt.simplifying-clause-set :num-deleted-clauses 41)
+(smt.restarting :propagations 1023583 :decisions 26747 :conflicts 1330 :restart 757 :agility 0.0674712)
+(smt.simplifying-clause-set :num-deleted-clauses 610)
+(smt.simplifying-clause-set :num-deleted-clauses 1236)
+(smt.restarting :propagations 1849398 :decisions 35519 :conflicts 2093 :restart 1135 :agility 0.0659812)
+(smt.simplifying-clause-set :num-deleted-clauses 5849)
+(smt.simplifying-clause-set :num-deleted-clauses 3217)
+unsat
+(:add-rows                    1449596
+ :added-eqs                   3719755
+ :arith-conflicts             1433
+ :assert-diseq                74262
+ :assert-lower                1347255
+ :assert-upper                876037
+ :binary-propagations         531586
+ :bound-prop                  131959
+ :conflicts                   2907
+ :decisions                   58305
+ :del-clause                  3826943
+ :dyn-ack                     3
+ :eq-adapter                  448067
+ :final-checks                22
+ :fixed-eqs                   949209
+ :gcd-tests                   1638
+ :ineq-splits                 1
+ :interface-eqs               21
+ :max-generation              87
+ :max-memory                  140.06
+ :max-missed-qa-cost          109.00
+ :memory                      36.65
+ :min-missed-qa-cost          106.00
+ :minimized-lits              98016
+ :missed-quant-instantiations 3
+ :mk-bool-var                 3168576
+ :mk-clause                   3960927
+ :num-allocs                  22010178298.00
+ :offset-eqs                  675159
+ :pivots                      136177
+ :propagations                3369003
+ :quant-instantiations        392846
+ :restarts                    6
+ :rlimit-count                21739394
+ :time                        31.07
+ :total-time                  31.10)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.post.fw.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 112)
+(smt.restarting :propagations 21125 :decisions 12760 :conflicts 101 :restart 150 :agility 0.0179079)
+(smt.simplifying-clause-set :num-deleted-clauses 3)
+(smt.restarting :propagations 87273 :decisions 28167 :conflicts 252 :restart 225 :agility 0.0216079)
+(smt.simplifying-clause-set :num-deleted-clauses 752)
+(smt.simplifying-clause-set :num-deleted-clauses 244)
+(smt.restarting :propagations 210428 :decisions 48656 :conflicts 478 :restart 337 :agility 0.00749447)
+(smt.simplifying-clause-set :num-deleted-clauses 14)
+(smt.simplifying-clause-set :num-deleted-clauses 343)
+(smt.restarting :propagations 401448 :decisions 83796 :conflicts 816 :restart 505 :agility 0.0255875)
+(smt.simplifying-clause-set :num-deleted-clauses 56)
+(smt.restarting :propagations 858773 :decisions 150912 :conflicts 1322 :restart 757 :agility 0.0175397)
+(smt.simplifying-clause-set :num-deleted-clauses 742)
+(smt.simplifying-clause-set :num-deleted-clauses 934)
+(smt.restarting :propagations 2179355 :decisions 255615 :conflicts 2080 :restart 1135 :agility 0.000242671)
+(smt.simplifying-clause-set :num-deleted-clauses 101)
+(smt.simplifying-clause-set :num-deleted-clauses 177)
+(smt.simplifying-clause-set :num-deleted-clauses 8915)
+unsat
+(:add-rows             1625065
+ :added-eqs            4378034
+ :arith-conflicts      1340
+ :assert-diseq         65617
+ :assert-lower         1467357
+ :assert-upper         992557
+ :binary-propagations  782747
+ :bound-prop           139473
+ :conflicts            2676
+ :decisions            360143
+ :del-clause           4334580
+ :dyn-ack              2
+ :eq-adapter           577311
+ :final-checks         117
+ :fixed-eqs            1073504
+ :gcd-tests            1
+ :interface-eqs        117
+ :max-generation       86
+ :max-memory           160.54
+ :memory               35.84
+ :minimized-lits       57959
+ :mk-bool-var          3565598
+ :mk-clause            4460202
+ :num-allocs           27533443763.00
+ :offset-eqs           816044
+ :pivots               120712
+ :propagations         4255020
+ :quant-instantiations 464149
+ :restarts             6
+ :rlimit-count         27065012
+ :time                 38.63
+ :total-time           38.69)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st avltree.AVLTreeNode.remove.post.orig.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 84)
+(smt.restarting :propagations 10662 :decisions 175 :conflicts 101 :restart 150 :agility 0.0505905)
+(smt.simplifying-clause-set :num-deleted-clauses 12)
+(smt.restarting :propagations 85008 :decisions 2437 :conflicts 252 :restart 225 :agility 0.0303847)
+(smt.simplifying-clause-set :num-deleted-clauses 474)
+(smt.simplifying-clause-set :num-deleted-clauses 44)
+(smt.restarting :propagations 236355 :decisions 5537 :conflicts 478 :restart 337 :agility 0.056101)
+(smt.simplifying-clause-set :num-deleted-clauses 560)
+(smt.restarting :propagations 426261 :decisions 14219 :conflicts 816 :restart 505 :agility 0.0709177)
+(smt.restarting :propagations 907632 :decisions 25512 :conflicts 1322 :restart 757 :agility 0.0332204)
+(smt.simplifying-clause-set :num-deleted-clauses 146)
+(smt.restarting :propagations 1729432 :decisions 36495 :conflicts 2080 :restart 1135 :agility 0.0733958)
+(smt.simplifying-clause-set :num-deleted-clauses 49)
+(smt.simplifying-clause-set :num-deleted-clauses 7446)
+unsat
+(:add-rows                    1435840
+ :added-eqs                   3257014
+ :arith-conflicts             1425
+ :assert-diseq                48651
+ :assert-lower                1116751
+ :assert-upper                718434
+ :binary-propagations         364351
+ :bound-prop                  138489
+ :conflicts                   2856
+ :decisions                   52358
+ :del-clause                  3471736
+ :dyn-ack                     2
+ :eq-adapter                  404546
+ :final-checks                19
+ :fixed-eqs                   834976
+ :interface-eqs               19
+ :max-generation              85
+ :max-memory                  144.54
+ :max-missed-qa-cost          107.00
+ :memory                      37.54
+ :min-missed-qa-cost          106.00
+ :minimized-lits              81680
+ :missed-quant-instantiations 2
+ :mk-bool-var                 2936849
+ :mk-clause                   3617367
+ :num-allocs                  20938883406.00
+ :offset-eqs                  631316
+ :pivots                      138568
+ :propagations                2838580
+ :quant-instantiations        355865
+ :restarts                    6
+ :rlimit-count                19768173
+ :time                        29.07
+ :total-time                  29.11)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st avltree.AVLTreeNode.remove.post.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 107)
+(smt.restarting :propagations 37613 :decisions 1083 :conflicts 101 :restart 150 :agility 0.0213527)
+(smt.simplifying-clause-set :num-deleted-clauses 22)
+(smt.restarting :propagations 52905 :decisions 1771 :conflicts 252 :restart 225 :agility 0.0863324)
+(smt.simplifying-clause-set :num-deleted-clauses 602)
+(smt.simplifying-clause-set :num-deleted-clauses 239)
+(smt.restarting :propagations 177555 :decisions 7767 :conflicts 478 :restart 337 :agility 0.0184222)
+(smt.simplifying-clause-set :num-deleted-clauses 1093)
+(smt.restarting :propagations 326651 :decisions 12538 :conflicts 816 :restart 505 :agility 0.112107)
+(smt.restarting :propagations 632418 :decisions 22629 :conflicts 1322 :restart 757 :agility 0.0804557)
+(smt.simplifying-clause-set :num-deleted-clauses 97)
+(smt.simplifying-clause-set :num-deleted-clauses 851)
+(smt.restarting :propagations 1577522 :decisions 43220 :conflicts 2080 :restart 1135 :agility 0.000686275)
+(smt.simplifying-clause-set :num-deleted-clauses 20)
+(smt.simplifying-clause-set :num-deleted-clauses 98)
+(smt.simplifying-clause-set :num-deleted-clauses 9223)
+unsat
+(:add-rows                    1353810
+ :added-eqs                   3808948
+ :arith-conflicts             1347
+ :assert-diseq                66144
+ :assert-lower                1348045
+ :assert-upper                931191
+ :binary-propagations         455624
+ :bound-prop                  125919
+ :conflicts                   2750
+ :decisions                   69120
+ :del-clause                  3690211
+ :dyn-ack                     2
+ :eq-adapter                  472221
+ :final-checks                9
+ :fixed-eqs                   982814
+ :interface-eqs               9
+ :max-generation              84
+ :max-memory                  149.68
+ :max-missed-qa-cost          108.00
+ :memory                      35.20
+ :min-missed-qa-cost          107.00
+ :minimized-lits              55950
+ :missed-quant-instantiations 2
+ :mk-bool-var                 3081556
+ :mk-clause                   3808380
+ :num-allocs                  21403330542.00
+ :offset-eqs                  638089
+ :pivots                      125748
+ :propagations                3192840
+ :quant-instantiations        373831
+ :restarts                    6
+ :rlimit-count                20625874
+ :time                        31.36
+ :total-time                  31.39)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st AVLTree.AVLTreeNode.remove.pre.fw.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 89)
+(smt.restarting :propagations 12230 :decisions 4604 :conflicts 101 :restart 150 :agility 0.0664585)
+(smt.simplifying-clause-set :num-deleted-clauses 9)
+(smt.restarting :propagations 52316 :decisions 18884 :conflicts 252 :restart 225 :agility 0.0313863)
+(smt.simplifying-clause-set :num-deleted-clauses 479)
+(smt.simplifying-clause-set :num-deleted-clauses 173)
+(smt.restarting :propagations 187867 :decisions 46920 :conflicts 478 :restart 337 :agility 0.0379268)
+(smt.simplifying-clause-set :num-deleted-clauses 577)
+(smt.restarting :propagations 343816 :decisions 73257 :conflicts 816 :restart 505 :agility 0.0893253)
+(smt.simplifying-clause-set :num-deleted-clauses 1412)
+(smt.restarting :propagations 1045544 :decisions 158103 :conflicts 1322 :restart 757 :agility 0.0631703)
+(smt.restarting :propagations 2041230 :decisions 254837 :conflicts 2080 :restart 1135 :agility 0.0610329)
+(smt.simplifying-clause-set :num-deleted-clauses 59)
+(smt.simplifying-clause-set :num-deleted-clauses 1609)
+(smt.simplifying-clause-set :num-deleted-clauses 146)
+(smt.restarting :propagations 4373041 :decisions 459519 :conflicts 3216 :restart 1702 :agility 0.000289434)
+(smt.simplifying-clause-set :num-deleted-clauses 30)
+unsat
+(:add-rows                    1947546
+ :added-eqs                   5946685
+ :arith-conflicts             1594
+ :assert-diseq                121348
+ :assert-lower                2082526
+ :assert-upper                1423550
+ :binary-propagations         1269778
+ :bound-prop                  166100
+ :conflicts                   3313
+ :decisions                   467023
+ :del-clause                  5291270
+ :dyn-ack                     4
+ :eq-adapter                  700551
+ :final-checks                18
+ :fixed-eqs                   1522809
+ :interface-eqs               18
+ :max-generation              85
+ :max-memory                  178.30
+ :max-missed-qa-cost          108.00
+ :memory                      41.03
+ :min-missed-qa-cost          106.00
+ :minimized-lits              90436
+ :missed-quant-instantiations 4
+ :mk-bool-var                 4306962
+ :mk-clause                   5464641
+ :num-allocs                  36823927497.00
+ :offset-eqs                  1067932
+ :pivots                      136919
+ :propagations                5799173
+ :quant-instantiations        535196
+ :restarts                    7
+ :rlimit-count                33710020
+ :time                        48.66
+ :total-time                  48.70)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st avltree.AVLTreeNode.remove.pre.orig.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 83)
+(smt.restarting :propagations 10129 :decisions 173 :conflicts 101 :restart 150 :agility 0.0513992)
+(smt.simplifying-clause-set :num-deleted-clauses 10)
+(smt.restarting :propagations 72526 :decisions 2459 :conflicts 252 :restart 225 :agility 0.0248139)
+(smt.simplifying-clause-set :num-deleted-clauses 546)
+(smt.simplifying-clause-set :num-deleted-clauses 231)
+(smt.restarting :propagations 179855 :decisions 5416 :conflicts 478 :restart 337 :agility 0.0632988)
+(smt.simplifying-clause-set :num-deleted-clauses 20)
+(smt.restarting :propagations 298188 :decisions 9684 :conflicts 816 :restart 505 :agility 0.0636462)
+(smt.restarting :propagations 963329 :decisions 17673 :conflicts 1322 :restart 757 :agility 0.0394742)
+(smt.simplifying-clause-set :num-deleted-clauses 895)
+(smt.simplifying-clause-set :num-deleted-clauses 106)
+(smt.restarting :propagations 1678265 :decisions 28492 :conflicts 2080 :restart 1135 :agility 0.0565462)
+(smt.simplifying-clause-set :num-deleted-clauses 6726)
+(smt.simplifying-clause-set :num-deleted-clauses 4102)
+unsat
+(:add-rows             1478045
+ :added-eqs            4153691
+ :arith-conflicts      1573
+ :assert-diseq         62694
+ :assert-lower         1478084
+ :assert-upper         957470
+ :binary-propagations  396590
+ :bound-prop           140888
+ :conflicts            3004
+ :decisions            60791
+ :del-clause           4119578
+ :dyn-ack              1
+ :eq-adapter           532041
+ :final-checks         10
+ :fixed-eqs            1112792
+ :interface-eqs        10
+ :max-generation       84
+ :max-memory           150.51
+ :memory               39.20
+ :minimized-lits       82904
+ :mk-bool-var          3452503
+ :mk-clause            4265485
+ :num-allocs           26608693453.00
+ :offset-eqs           741292
+ :pivots               141829
+ :propagations         3830987
+ :quant-instantiations 444208
+ :restarts             6
+ :rlimit-count         23698091
+ :time                 37.94
+ :total-time           37.98)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:2 -st avltree.AVLTreeNode.remove.pre.smt2
+(smt.searching)
+(smt.simplifying-clause-set :num-deleted-clauses 91)
+(smt.restarting :propagations 34051 :decisions 802 :conflicts 101 :restart 150 :agility 0.00808356)
+(smt.simplifying-clause-set :num-deleted-clauses 21)
+(smt.restarting :propagations 72565 :decisions 2404 :conflicts 252 :restart 225 :agility 0.0143872)
+(smt.simplifying-clause-set :num-deleted-clauses 436)
+(smt.simplifying-clause-set :num-deleted-clauses 248)
+(smt.restarting :propagations 210130 :decisions 6143 :conflicts 480 :restart 337 :agility 0.0613767)
+(smt.restarting :propagations 518984 :decisions 17561 :conflicts 818 :restart 505 :agility 0.01496)
+(smt.simplifying-clause-set :num-deleted-clauses 104)
+(smt.restarting :propagations 834484 :decisions 37682 :conflicts 1324 :restart 757 :agility 0.0885258)
+(smt.simplifying-clause-set :num-deleted-clauses 1585)
+(smt.simplifying-clause-set :num-deleted-clauses 285)
+(smt.restarting :propagations 1658238 :decisions 53003 :conflicts 2082 :restart 1135 :agility 0.0905101)
+(smt.simplifying-clause-set :num-deleted-clauses 1437)
+(smt.simplifying-clause-set :num-deleted-clauses 29)
+(smt.simplifying-clause-set :num-deleted-clauses 102)
+(smt.restarting :propagations 3734327 :decisions 80717 :conflicts 3218 :restart 1702 :agility 0.0361938)
+unsat
+(:add-rows                    2413709
+ :added-eqs                   5926994
+ :arith-conflicts             1930
+ :assert-diseq                111722
+ :assert-lower                2027838
+ :assert-upper                1440221
+ :binary-propagations         739590
+ :bound-prop                  177721
+ :conflicts                   3564
+ :decisions                   89480
+ :del-clause                  4793659
+ :dyn-ack                     4
+ :eq-adapter                  624392
+ :final-checks                20
+ :fixed-eqs                   1596052
+ :interface-eqs               20
+ :max-generation              85
+ :max-memory                  199.11
+ :max-missed-qa-cost          108.00
+ :memory                      42.36
+ :min-missed-qa-cost          106.00
+ :minimized-lits              90806
+ :missed-quant-instantiations 6
+ :mk-bool-var                 3934721
+ :mk-clause                   4981392
+ :num-allocs                  36660379851.00
+ :offset-eqs                  1136995
+ :pivots                      147115
+ :propagations                5209953
+ :quant-instantiations        523690
+ :restarts                    7
+ :rlimit-count                28600003
+ :time                        49.85
+ :total-time                  49.88)
+
+C:\work\slicer\test\Chalice\AVLTree>

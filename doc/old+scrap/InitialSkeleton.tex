@@ -1,0 +1,44 @@
+
+\subsection{Overview}
+Here I intend to describe the basic observations that drive the work:
+\begin{enumerate}
+	\item Locality in Hoare style proofs
+	\item Program variable scoping related to symbols appearing in proof steps
+	\item Specialized handling for maps/heaps - heap usage patterns in programs
+	\item Relevance of axioms related to the CFG structure
+	\item Case splits in proofs related to the CFG branches vs axiom/goal clause shape
+	\item Goal directed proofs
+	\item Thesis about short "ground term distance" as related specifically to computer program proofs
+	\item Relevant ground terms as the key to the proof
+	\item Maximal reuse of lemmas
+\end{enumerate}
+	
+
+\subsection{Preliminaries}
+Here I will describe the basic shape of programs that we can handle and the process of bringing them to that shape (Boogie style) - cutting loops with invariants, pacification, SSA/DSA.
+I will start with a Chalice/Dafny/C sharp example and go through the stages (just showing results not the process) to show how to produce the running example.
+
+\subsection{VCG proofs}
+Discussion of encodings of the program for verification and the subsequent proof search, showing on examples the observations on locality, ground term prevalence and "distance", scoping, case splits, axiom relevance and lemma sharing.
+I will discuss the implications when using SMT/Resolution based provers as backends and maybe symbolic execution.
+
+\subsection{Control Flow Graph}
+Here I will discuss the shape of CFGs we encounter and how this information is only implicit in when used for VCG.
+I will relate here to the relevance of axioms per CFG node, usage of path conditions (equivalence and implication) to add relevant axioms and case splits directed by branches.
+I will also discuss here the usage of lemmas and the motivation to push the lemmas as far back in the CFG as possible.
+Here comes also the CFG optimizations we do, with examples and a discussion of the advantages and why this is more efficient than the solver in standard VCG.
+
+\subsection{Locality and Scope}
+	\subsubsection{Locality in Hoare style proofs}
+	Here I will discuss the thesis that Hoare style proofs use mostly local data (I will try to formalize "modular" proofs), with examples, as well using the program level scoping to try and reduce the proof search space.
+	\subsubsection{Locality in the set of ground terms required for the proof}
+	This part relates to the thesis about short "ground term distance" - I will try to encode this in a formal way and maybe can show that it is relevant in a wider scope.
+	\subsubsection{Goal directed proof search}
+	This section relates to the techniques to take advantage of the extra information we have about assertions.
+
+\subsection{DSA/SSA and maps/heaps}
+	\subsubsection{SSA}
+		Here I will discuss how the SSA form helps take advantage of locality in proofs (with examples).
+	\subsubsection{Heaps and maps}
+		This section will discuss the common usage of heaps in program verification (e.g. use reachability, global quantification, frame rules, heap locations relevant for a proof relative to those explicit in the program) difficulties standard VCG has with heaps and how the specialized knowledge we have can be put to good use - and why this is not easily encodable into SMT.
+

@@ -1,0 +1,57 @@
+Actors
+	FactorialActor.act
+	
+AVLTree.Chalice
+
+	AVLTreeNode.rebalanceLR
+	AVLTreeNode.rebalanceRL
+	AVLTreeNode.remove
+	AVLTreeNode.insert
+	AVLTreeNode.pruneMin
+	AVLTreeNode.pruneMax
+
+
+AVLTree.Dafny
+	AVLTree.InsertRecursion
+	
+AVLTreeGhostField
+	AVLTree.InsertRecursion
+	
+B4
+	Map.Remove
+	
+BFS
+	BreadthFirstSearch.BFS
+	
+TreeBarrier
+	Node.Barrier
+		
+Valentine
+	COST-verif-comp-2011-4-FloydCycleDetect.dfy.bpl
+		Impl$$_module.Node.AnalyzeList
+	cachedBuilds0.bpl
+		Impl$$_module.__default.EvalLemma
+		
+FrozenObjects
+	FrozenObjects.bpl
+		SExpressionSimplifier.Nary.Simplify
+		
+Stereotypes
+	PIP.bpl
+		Node..updatePriorities
+		Node..acquire
+		AddToEnd
+		AddSubTree
+	Sequence
+		InsertAtTheMiddleAfter
+		
+VCC
+	vcc2_comp.bpl
+		find
+	vcc2_RedBlackTree.bpl
+		tree_insert
+		left_rotate
+		right_rotate
+		
+		
+		vscomp2010_p3_v0.bpl

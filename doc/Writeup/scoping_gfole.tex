@@ -1,0 +1,1639 @@
+\newpage
+\section{Ground Clause Interpolation}\label{section:scoping:gfole}
+The verification algorithm presented in section \ref{section:gfole_basic} for ground programs is complete based on the completeness of ground superposition. However, once we enforce scoping, completeness is lost, as we have seen in examples even for the ground unit fragment.
+
+In this section we present our algorithm for ground interpolation in the CFG, and show it is sound and complete using a modification of the model generation proof.
+For non unit clauses, we use the ideas from the unit algorithm - approximating the equational theory of suffixes.
+In this section we only work with terms and clauses and not with EC-nodes, clause-ECs or EC-graphs.
+We discuss binary interpolation, but only use $\Gamma$ rather than \m{N^b}, 
+and hence we show completeness for any \m{N^b} which $\Gamma$ approximates.
+
+The main idea is to apply the superposition calculus to \m{N^t} with, instead of standard unification,
+ unification modulo an equality theory that approximates a model for \m{N^b}.
+
+The standard completeness proof for superposition (e.g. \cite{BachmairGanzingerSuperposition}) shows how to build a model for a set of clauses saturated w.r.t. superposition that does not contain the empty clause, where the model is the smallest congruence that includes the maximal equalities of non-redundant clauses from the set. 
+
+We define a set of equalities $\Gamma$ over \langI{} that is constructed from maximal equalities of clauses in \m{N^b} and hence over-approximate a model for \m{N^b}, and we define a congruence relation \eqg{} that satisfies all equations in $\Gamma$.
+and saturate \m{N^t} w.r.t. superposition with unification modulo \eqg{}.
+Whenever unification in an inference uses information from \eqg{}, we add the assumptions used, as a set of negated equations, to the conclusion, in order to preserve soundness, as \m{=_{\Gamma}} is an over-approximation.
+This process implies, in fact, two-way communications between \m{N^t} and \m{N^b}, as the maximal equality of a clause in \m{N^b} can add an equality to $\Gamma$ which can enable a derivation in \m{N^t} which in turn produces a clause in \m{N^b}.
+
+We show completeness using the model from the standard proof for \m{N^b}, and extending it with a construction similar to the standard model for \m{N^t} that is normalized w.r.t. \m{N^b}.
+We use a partial ordering \m{\succ_i} instead of \m{\succ} in \m{N^t} which approximates any ordering on interface terms: 
+\m{s \succ_i t} only if, for any \m{N^b}, the normal form of s (in a candidate model for \m{N^b}) is greater than the normal form of t.
+The algorithm in this section can be seen as an extension of (the ground part of) both \cite{McMillan08} and \cite{BaumgartnerWaldmann13}, 
+adjusted to account for the two-way communication we have described for the unit ground fragment. It is also related to \cite{KovacsVoronkov09}.
+We discuss the differences in the related work section.
+
+\subsection{Basics}
+In this section we discuss the basic ideas of our algorithm for superposition based ground interpolation.\\
+The basics of the algorithm are:
+\begin{itemize}
+	\item Superposition in \m{N^t} is done with unification modulo an equality theory \m{=_{\Gamma}} that over-approximates a model of \m{N^b}.\\
+	Communication from \m{N^b} to \m{N^t} proceeds through refinement of the approximation \m{=_{\Gamma}} while communication from \m{N^t} to \m{N^b} is done through derived interpolation clauses over \langI{}.
+	\item Any clause derived under an equality assumption from \m{=_{\Gamma}} is qualified with the assumption.
+	\item For superposition in \m{N^t}, we use a separating partial order \m{\prec_i} that approximates the total order by assuming that any pair of terms over \langI{} is unordered. This is done by selecting a limit ordinal \m{l^t} and ensuring that the tkbo weight for each symbol in \langtp{} is larger than \m{l^t} and for each symbol in \langb{} it is smaller. We then perform ordering comparisons on an ordinal truncated at \m{l^t}.
+\end{itemize}
+
+\noindent
+We begin with an example - shown in figure \ref{example.3.1.1.3.1}
+\begin{figure}[H]
+\m{N^t = \s{c=f(a,\textcolor{red}{x}),d=f(b,\textcolor{red}{x})}}\\
+\m{N^b = \s{a=\textcolor{blue}{l},b=\textcolor{blue}{l},c \neq d}}
+\caption{
+The ordering is:\\
+\m{\textcolor{red}{x} \succsep d \succ c \succ b \succ a \succsep \textcolor{blue}{l}}}
+\label{example.3.1.1.3.1}
+\end{figure}
+
+
+\noindent
+Here superposition would produces the following refutation:
+
+\bigskip
+
+\noindent
+\infer[]
+	{\emptyClause}
+	{
+			{\infer[]
+				{\m{c=d}}
+				{
+					\infer[]
+						{\m{\underline{f(\textcolor{blue}{l},\textcolor{red}{u})}=c}}
+						{\m{\underline{a}=\textcolor{blue}{l}} & \m{c=f(\underline{a},\textcolor{red}{x})}}
+					& 
+					\infer[]
+						{\m{\underline{f(\textcolor{blue}{l},\textcolor{red}{u})}=d}}
+						{\m{\underline{b}=\textcolor{blue}{l}} & \m{d=f(\underline{b},\textcolor{red}{x})}}
+				}
+			}
+		& 
+			\m{c \neq d}
+	}
+	
+\bigskip
+
+\noindent
+This refutation is not a local proof, as we have mixed-color clauses, literals and terms.
+Our algorithm first communicates from \m{N^b} to \m{N^t} the approximation of the model \m{=_{\Gamma}}, 
+specifically \m{a=_{\Gamma} b} derived from \s{\underline{a}=\textcolor{blue}{l},\underline{b}=\textcolor{blue}{l}}.
+Next, \m{N^t} performs some superposition steps using unification modulo \m{=_{\Gamma}} to generate an interpolation clause which is communicated to \m{N^b}.
+\m{N^b} uses the interpolation clause to derive the empty clause.
+We use the notation \m{a=b \vdash_{\Gamma} f(a,\textcolor{red}{x})=f(b,\textcolor{red}{x})} to denote that the terms 
+\m{f(a,\textcolor{red}{x}),f(b,\textcolor{red}{x})}, which are in the sub-term closure of maximal terms of \m{N^t}, 
+are equal under the equality theory \m{=_{\Gamma}}, using the assumption \m{a=b}.
+In order to construct $\Gamma$ we use a rough over-approximation of the model for \m{N^b} by considering any two maximal terms in clauses from \m{N^b} that appear in maximal positive literals to be equal - the set of such maximal terms we name M.
+The process is summarized below:
+
+\bigskip
+
+\noindent
+At \m{N^b}:
+
+\bigskip
+
+\noindent
+\infer[]
+{\m{a=b \vdash_{\Gamma} f(a,\textcolor{red}{x})=f(b,\textcolor{red}{x})}}
+{\infer[]
+	{\m{a=b \vdash_{\Gamma} a=b}}
+	{
+		\infer[]
+		{\m{a=b \in \Gamma}}
+		{
+			\infer[]
+			{\m{a \in M}}
+			{\m{\underline{a}=\textcolor{blue}{l}}}
+			& 
+			\infer[]
+			{\m{b \in M}}
+			{\m{\underline{b}=\textcolor{blue}{l}}}
+		}
+	}
+}
+\bigskip
+
+\noindent
+At \m{N^t}:
+
+\bigskip
+
+\noindent
+\infer[\m{a=b \vdash_{\Gamma} f(a,\textcolor{red}{x})=f(b,\textcolor{red}{x})}]
+{\m{b \neq a \lor \underline{d}=c}}
+{
+	\m{\underline{f(a,\textcolor{red}{x})}=c}
+		&
+	\m{\underline{f(b,\textcolor{red}{x})}=d}
+}
+\bigskip
+
+\noindent
+The interpolation clause is now \m{b \neq a \lor \underline{d}=c}
+
+\bigskip
+
+\noindent
+Back at \m{N^b}:
+
+\bigskip
+
+\noindent
+\infer[]
+	{\emptyClause}
+	{
+			\infer[]
+				{\m{\textcolor{blue}{l} \neq \textcolor{blue}{l}}}
+				{
+					\m{\underline{a} = \textcolor{blue}{l}}
+					& 
+					{\infer[]
+						{\m{\underline{a} \neq \textcolor{blue}{l}}}
+						{
+							\m{\underline{b} = \textcolor{blue}{l}}
+							& 
+							\infer[]
+							{\m{\underline{b} \neq a}}
+							{
+								{\m{b \neq a \lor \underline{d}=c}}
+									&
+								\m{\underline{d} \neq c}
+							}
+						}
+					}
+				}
+	}
+
+\bigskip
+
+
+\subsubsection*{Notation}
+We use two \textcolor{blue}{limit terms} \m{\textcolor{blue}{l^t}} and \m{\textcolor{blue}{l^b}} to describe the minimal top term and minimal interface term, respectively. In practice, we allow \m{N^t} to include some terms that are smaller than \m{l^b}, for example  theory constants (e.g. numbers) which are always at the bottom of the ordering, and e.g. the first DSA version of a method parameter used in both pre- and post-conditions. This addition does not affect soundness or completeness, and we leave it out of the formalization for simplicity.\\
+For the ordering $\succ$, we use $\succeq$ for $\succ \cup =$. \\
+We use \m{\textcolor{blue}{\curlyeqsucc}} between terms to mean that any sub-term of the left term is greater than the right term - specifically, we write \m{l^t \succ t \curlyeqsucc l^b} to mean that \m{t \in \langI}.
+
+\subsection{Approximation of the bottom model}
+We describe now our interpolation calculus.\\
+We use our basic approximation \m{=_{\Gamma}} for the model of \m{N^b} and the encoding of assumptions in derivations, and later discuss enhancements to both these parts.\\
+We define first the set of maximal terms of clauses in a set of clauses S as \m{\textcolor{blue}{\maxTerms{S}}} - formally:
+\begin{definition}{Maximal terms}
+
+\noindent
+The set of maximal terms w.r.t. $\succ$\\
+\m{\maxTerm{C} \triangleq max_{\succ} \s{t \mid t \trianglelefteq C}}\\
+\m{\maxTerms{S} \triangleq \s{\maxTerm{C} \mid C \in S}}
+
+\label{def_maxTerms}
+\end{definition}
+
+We use a partial order $\prec_{\m{i}}$ to approximate $\prec$ as described below, we define the set of maximal terms w.r.t. this ordering, and maximal positive terms, as follows:
+\begin{definition}{Maximal terms w.r.t. $\succ_{\m{i}}$}
+
+\noindent
+The set of maximal terms w.r.t. $\succ_{\m{i}}$\\
+\m{\maxTermi{C} \triangleq \s{t \trianglelefteq C \mid \forall s \trianglelefteq C \cdot s \not\succ_{\m{i}} t}}\\
+\m{\maxTermsi{S} \triangleq \s{\maxTermi{C} \mid C \in S}}\\
+\m{\maxTermip{C} \triangleq \s{t \in \maxTermi{C} \mid \exists s \cdot t=s \in C \land \forall A \in C \cdot A \not\succ_{\m{i}} t=s}}\\
+\m{\maxTermsip{S} \triangleq \bigcup\limits_{C \in S} \maxTermip{C}}
+
+\label{def_maxTermsi}
+\end{definition}
+
+\noindent
+The calculus to calculate $\Gamma$ is described in figure \ref{SP_P}.
+
+\begin{figure}
+\[
+\begin{array}{llll}
+	\vcenter{
+		\infer[]
+		{\m{l=r \in \Gamma}}
+		{
+			\m{C \lor \underline{l=r}}
+		}
+	}&
+			\begin{array}{ll}
+				\m{l^t \succ l,r \curlyeqsucc l^b}\\
+				\m{l=r \succ C}
+			\end{array}\\	
+	
+	\vspace{1cm}
+	\\
+	\vcenter{
+		\infer[]
+		{\m{l \in M}}
+		{
+			\m{C \lor \underline{l}=r} &
+		}
+	}&
+	\begin{array}{ll}
+		\m{l^t \succ l \curlyeqsucc l^b}\\
+		\m{r \not\curlyeqsucc l^b}\\
+		\m{l \succ r}\\
+		\m{l=r \succ C}
+	\end{array}\\	
+	
+	\vspace{1cm}
+	\\
+\vcenter{
+	\infer[]
+	{\m{s = t \in \Gamma}}
+	{
+		\m{l \in M} & 
+		\m{r \in M}
+	}
+}	&
+	\begin{array}{ll}
+		\m{s,t \preceq l^t}\\
+		\m{l \trianglelefteq s \trianglelefteq \maxTermsip{N^t}}\\
+		\m{r \trianglelefteq t \trianglelefteq \maxTermsi{N^t}}
+	\end{array}\\	
+\end{array}
+\]
+\caption{
+The calculation of the simple over-approximation $\Gamma$ of the model for \m{N^b}\\
+The first rule communicates a maximal interface equality directly.\\
+The second rule defines M as the maximal terms of clauses in \m{N^b} that are in \langI{} but for which the normal form in the candidate model is not representable in \langI - this corresponds exactly to our requests.\\
+The third rule equates any two super terms of requested terms that are sub-terms of maximal terms (one positive) - an over-approximation.
+}
+\label{SP_P}
+\end{figure}
+
+\noindent
+The approximation of the model of \m{N^b} abstracts all terms smaller than \m{l^b} to be equal.\\
+The relation \m{\textcolor{blue}{\eqg}} is defined as the smallest congruence that satisfies all of the equalities in $\Gamma$.
+
+\noindent
+The third rule defining $\Gamma$ states that each pair of interface terms with each at least one sub-term that has a normal form that is not in the interface (that is, includes a term over \langbp) is considered potentially equal.\\
+There are two reasons for this rough rule:\\
+The first reason is the way we handle joins - as we have seen in chapter \ref{chapter:gfole}, 
+when we have to use a non-unit fall-back at joins with EC-graphs, we get a clause where the maximal literal is an equation on a sub-term of our maximal term, hence for the over-approximation to be complete we need to consider all super-terms of each requested term.\\
+The second reason is that we do not communicate any equality where the larger term includes non-interface terms - for example, consider the interpolation problem in figure \ref{example.4.1.3.2.1}:
+\begin{figure}[H]
+\m{N^t = \s{C,D,\lnot A \lor \underline{g(c,\textcolor{red}{y})} = \textcolor{red}{x}, \lnot B \lor \underline{g(f(b),\textcolor{red}{y})}\neq \textcolor{red}{x}}}\\
+\m{N^b = \s{A,B,\lnot C \lor \underline{c}=f(h(a,\textcolor{blue}{m})),\lnot C \lor \underline{h(a,\textcolor{blue}{m})}=\textcolor{blue}{l},\lnot D \lor \underline{b}=\textcolor{blue}{l}}}
+\caption{interpolation over-approximation example\\
+The ordering satisfies \m{c \succ  b \succ f(h(a,\textcolor{blue}{m})) \succ h(a,\textcolor{blue}{m}) \succ \textcolor{blue}{l}}
+}
+\label{example.4.1.3.2.1}
+\end{figure}
+
+Here, the normal form of both c and f(b) in the model for \m{N^b} is \m{f(\textcolor{blue}{l})}, but the only terms communicated (as M) are \s{c,b}.
+The inference we get is:
+
+\bigskip
+
+\noindent
+\[
+\begin{array}{llll}
+	\vcenter{
+		\infer[
+			\inidasg{c\neq f(b)}{g(c,\textcolor{red}{y})}{g(f(b),\textcolor{red}{y})}
+		]
+		{\m{ c \neq f(b) \lor \lnot A \lor \lnot B \lor \textcolor{red}{x} \neq \textcolor{red}{x}}}
+		{
+			\m{\lnot A \lor \underline{g(c,\textcolor{red}{y})} = \textcolor{red}{x}} &
+			\m{ \underline{g(f(b),\textcolor{red}{y})}\neq \textcolor{red}{x} \lor \lnot B}
+		}
+	} 
+\\	
+\end{array}
+\]
+
+\noindent
+The interpolant is \s{C,D,\lnot A \lor \lnot B \lor f(b) \neq c}
+
+Note that this encoding of $\Gamma$ is more coarse than the one we had for unit equalities.
+We could replace it with our encoding of \m{g_n^i} from the previous section but include all maximal equalities, not just unit equalities. We use the simpler definition above for simplicity.
+
+\textbf{Encoding assumptions:}\\
+In order to encode the assumptions from \eqg{} we use the \newdef{interface top disagreement set \idasg{s}{t}} for two terms s,t where \m{s \eqg t}. This set is the justification set we had in section \ref{extracting_justification}, simplified.
+
+For any s,t s.t. \m{s \eqg t}, \idasg{s}{t} is an interface clause (disjunction of dis-\\
+equalities) that satisfies \\
+\m{N^b \models \idasg{s}{t} \lor N^b \models s=t}\\
+This is, in a sense, a negation of an interpolant, as \m{\idasg{s}{t} \lor s=t} is a tautology.\\
+The formal definition is found in figure \ref{idasg_def}.\\
+We select recursively the top interface-terms that are not identical and add their negation to the clause - for example \\
+\m{\idasg{g(f(a),\textcolor{red}{y})}{g(f(b),\textcolor{red}{y})} = f(a) \neq f(b)} \\
+rather than \m{a \neq b}.\\
+However, note that this is the weakest such interpolant, but not the most concise - for example:\\
+\m{\idasg{g(a,f(a),\textcolor{red}{y})}{g(b,f(b),\textcolor{red}{y})} = f(a) \neq f(b) \lor a \neq b} \\
+Which is equivalent to, but less concise than \\
+\m{a \neq b}\\
+And also \\
+\m{\idasg{g(a,b,c,\textcolor{red}{y})}{g(c,a,b,\textcolor{red}{y})} = a \neq c \lor b \neq a \lor b \neq c} \\
+Where a more concise option is \\
+\m{a \neq b \lor b \neq c}.\\
+A simple method to get optimal assumptions would be to work with equality constrained clauses (e.g. as in \cite{DBLP:conf/cade/NieuwenhuisR92}) where the equality constraint will include all our assumptions. 
+We can represent the equality constraint as an EC-graph and extract justifications only when the clause is in \langI.
+This simplifies also the implementation for more precise versions of $\Gamma$ described later. 
+We leave this as future work.
+
+\begin{figure}
+\m{\idasg{s}{t} \triangleq \bigvee \idasgs{s}{t}}
+
+\bigskip
+
+\noindent
+\m{\idasgs{s=\fa{f}{u}}{t=\fa{g}{v}} \triangleq
+	\begin{cases}
+		\emptyset                                            & \m{s \equiv t}\\
+		\s{s \neq t}                                         & \m{s,t \prec{l^t}}\\
+		\bigcup\limits_{i} \idasgs{u_i}{v_i}                 & \m{f \equiv g}
+	\end{cases}
+}
+\caption{Top interface disagreement set definition\\
+\idasg{s}{t} is a partial function, only defined if \m{s \eqg t}
+}
+\label{idasg_def}
+\end{figure}
+
+\subsection{Interpolation ordering}
+We use a partial ordering \m{\textcolor{blue}{\prec_i}} for our interpolation calculus, which is an approximation of the total order $\prec$:\\
+The order is essentially a truncated tkbo (transfinite Knuth-Bendix ordering described in section \ref{section:preliminaties:ordering} )- \textcolor{blue}{ttkbo} - the definition is as per tkbo except:
+\begin{itemize}
+	\item Each interface term has a tkbo weight of 0
+	\item Each interface term is unordered with any other interface term
+\end{itemize}
+
+\noindent
+For example:\\
+\m{N^b = \s{A \lor \underline{a}=\textcolor{blue}{l},A \lor \underline{f(b)}=\textcolor{blue}{m}}}\\
+Assuming that \m{\textcolor{red}{y} \succ \textcolor{red}{x}} but \m{weight(\textcolor{red}{y})=weight(\textcolor{red}{x})}:\\
+\m{g(a,\textcolor{red}{x}),g(f(a),\textcolor{red}{x}),g(f(b),\textcolor{red}{x})} are unordered w.r.t. \m{\prec_i}.\\
+\m{g(\textcolor{red}{y},a) \succ_i g(\textcolor{red}{x},f(b)) \succ_i g(f(b),\textcolor{red}{y}) \succ_i g(b,\textcolor{red}{x})}.\\
+Note that, although \m{N^t} knows that b is its own normal form, it cannot order the normal forms of \m{b,f(b)}, 
+while \m{N^b} can.
+
+\noindent
+The following properties of the ordering are easy to see:
+\begin{lemma}
+\m{\succ_i \subseteq \succ}\\
+\m{s \succ_i t \Rightarrow s \succ t}\\
+\m{\forall s,t \succeq l^t \cdot s \vartriangleright t \Rightarrow s \succ_i t}
+\label{lemma_succ_i}
+\end{lemma}
+
+\noindent
+For \m{N^b} we use the standard ordering $\prec$.\\
+When we are interpolating in the CFG, each EC-node will have one pair of \m{l^t,l^b} for all direct predecessors and one for all direct successors,
+and will apply our interpolation calculus \m{SP_I} with the pair for the successors.
+
+\noindent
+We could use the abstraction $\Gamma$ also for $\succ_{\m{i}}$, so that we could order more terms (e.g. interface terms that do not have any sub-term as a maximal term in \m{N^b}). This would mean that the ordering might change when a new clause is derived at \m{N^b}.\\
+The problem is that the ordering can be inverted  - for example, if \m{b \succ_i a} because neither b nor a are maximal terms in \m{N^b},
+but once \m{b = \textcolor{blue}{l}} is derived at \m{N^b}, we cannot anymore order them, and so some more inferences might become valid.
+On the one hand it is likely that many interface terms never become maximal terms, and so we can prevent more derivations from taking place, on the other hand, the overhead of incrementally updating the ordering might be expensive. We leave this as future work.
+
+\subsection{Interpolation superposition calculus}
+The modified superposition calculus we use for interpolation (for binary interpolation, for \m{N^t}) is shown in figure \ref{SP_I}.
+
+\begin{figure}
+When each premise P satisfies \m{P \succeq l^t}:
+
+\[
+\begin{array}{llll}
+
+	\vspace{1cm}
+	
+	\m{sup^i_{=}} &
+	\vcenter{
+		\infer[]
+		{\m{B \lor C \lor D \lor \termRepAt{s}{r}{p}=t}}
+		{
+			\m{C \lor \underline{l}=r } 
+				&
+			\m{\underline{s} = t \lor D}
+		}
+	}&
+			\begin{array}{ll}
+				\m{\sci{1} l \not\preceq_i r, \sci{2} l=r \not\preceq_i C}\\
+				\m{\sci{3} s \not\preceq_i t, \sci{4} s=t \not\preceq_i D}\\
+				\m{\sci{5} s=t \not\preceq_i l=r}\\
+				\m{\sci{6} \mathbf{l,s \succeq l^t}}\\
+				\m{\sci{7} \mathbf{B = \idasg{l}{\termAt{\mathbf{s}}{\mathbf{p}}}}}
+			\end{array}\\	
+	
+	\vspace{1cm}
+	
+	
+	\m{sup^i_{\neq}}&
+	\vcenter{
+		\infer[]
+		{\m{B \lor C \lor D \lor \termRepAt{s}{r}{p}\neq t}}
+		{
+			\m{C \lor \underline{l}=r} 
+				&
+			\m{\underline{s} \neq t \lor D}
+		}
+	} &
+
+			\begin{array}{ll}
+				\m{\sci{1} l \not\preceq_i r, \sci{2} l=r \not\preceq_i C}\\
+				\m{\sci{3} s \not\preceq_i t, \sci{4} s\neq t \succeq D}\\
+				\m{\sci{5} s \neq t \not\prec_i l=r}\\
+				\m{\sci{6} \mathbf{l,s \succeq l^t}}\\
+				\m{\sci{7} \mathbf{B = \idasg{l}{\termAt{\mathbf{s}}{\mathbf{p}}}}}
+			\end{array}	\\
+	
+	\vspace{1cm}
+
+	\m{res^i_{=}}&
+	\vcenter{
+		\infer[]
+		{\m{B \lor C}}
+		{
+			\m{C \lor \underline{s \neq t}}
+		}
+	} &
+
+			\begin{array}{ll}
+				\m{\sci{1} s \neq t \succeq C}\\
+				\m{\sci{2} \mathbf{s \succeq l^t}}\\
+				\m{\sci{3} \mathbf{B = \idasg{s}{t}}}
+			\end{array}
+		\\
+
+	\vspace{1cm}
+	\m{fact^i_{=}}&
+	\vcenter{
+		\infer[]
+		{\m{B \lor C \lor r \neq t \lor s = r}}
+		{
+			\m{C \lor l = r \lor \underline{s = t}}
+		}
+	} &
+			\begin{array}{ll}
+				\m{\sci{1} s \not\preceq_i t, \sci{2} s=t \not\preceq_i C \lor l=r }\\
+				\m{\sci{3} l \not\preceq_i r}\\
+				\m{\sci{4} \mathbf{s,l \succeq l^t}}\\
+				\m{\sci{5} \mathbf{B = \idasg{s}{l}}}
+			\end{array}	\\
+
+\end{array}
+\]
+
+When, for each premise P, \m{P \prec l^t}, we use the standard calculus \SPG{}.\\
+There are no binary inferences between premises \m{C,D} s.t. \m{C \succ l^t \succ D}.
+
+\caption{
+The interpolation superposition calculus \m{SP_I}
+}
+\label{SP_I}
+\end{figure}
+
+The calculus \m{SP_I} is a straightforward extension of our unit ground interpolation algorithm to non-unit clauses.
+The main differences from the standard calculus \SPG{} are:
+\begin{itemize}
+	\item We use \m{\not\prec_i} instead of \m{\succ}, as \m{\prec_i} is a partial order.
+	\item Instead of the standard (ground) unification \m{l = \termAt{s}{p}} we use \m{l \eqg \termAt{s}{p}}\\
+		We write it as \m{B = \idasg{l}{\termAt{s}{p}}} and use B in the conclusion
+	\item We add (disjunct) the top interface disagreement set of the unification to the conclusion of each rule 
+	\item The calculus applies only to clauses in \m{N^t} - we use SP for clauses in \m{N^b}
+\end{itemize}
+
+
+\begin{definition}{\textbf{Colored clause sets}}
+
+\noindent
+A set of clauses N is \textcolor{blue}{colored} (w.r.t. \m{l^t,l^b,\prec}) iff \\
+\m{\forall C \in N \cdot (C \curlyeqsucc l^b \lor C \prec l^t)}.\\
+We repeat the definitions from before for the two parts of N:\\
+\m{N^t \triangleq \s{C \in N \mid C \curlyeqsucc l^b}}\\
+\m{N^b \triangleq \s{C \in N \mid C \prec l^t}}\\
+As \m{ l^t \succ l^b}, \m{N^t \cap N^b = \emptyset}.
+\label{coloured_set}
+\end{definition}
+
+\noindent
+The calculus \m{SP_I} preserves the property of being colored:
+\begin{lemma}{Preservation of the coloured property by \m{SP_I}}
+
+\noindent
+Our calculus has the property that:\\
+\m{\forall N \cdot N=N^t \cup N^b \Rightarrow SP_I(N)=(SP_I(N))^t \cup (SP_I(N))^b}\\
+Which means that if we begin with a colored set of clauses, the result of any derivation in \m{SP_I} will also be colored.
+\end{lemma}
+
+
+
+\textbf{Completeness:}
+The completeness proof for our ground interpolation calculus is given in section \ref{appendix:interpolation:completeness} of the appendix.
+The proof follows the common model generation method for completeness proofs, where the model is divided to a model for \m{N^b} and a a model for \m{N^t}.
+
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\subsection{Redundancy elimination}
+%Redundancy elimination is an important part of the strength of superposition - many generated clauses can be eliminated, reducing the search space of the prover.
+%In this section we examine the interaction of simplification inferences with our scoped proof and interpolation algorithm.\\
+%Consider the following binary interpolation problem:\\
+%\m{N^t = \{A,\lnot B \lor \textcolor{red}{x}=g(a,\underline{\textcolor{red}{z}}),\lnot B \lor \textcolor{red}{y}=g(b,\underline{\textcolor{red}{z}}),}\\
+%\m{\lnot B \lor f(\underline{\textcolor{red}{x}},c)=\textcolor{red}{w}, \lnot B \lor f(\underline{\textcolor{red}{y}},d) \neq \textcolor{red}{w}\}}\\
+%\m{N^b = \s{B,\textcolor{blue}{M},\lnot A \lor \underline{a}=\textcolor{blue}{l},\lnot A \lor \underline{b}=\textcolor{blue}{l},\lnot \textcolor{blue}{M} \lor \underline{c}=\textcolor{blue}{m},\lnot \textcolor{blue}{M} \lor \underline{d}=\textcolor{blue}{m}}}\\
+%With \\
+%\m{\textcolor{red}{z} \succ \textcolor{red}{y} \succ \textcolor{red}{x} \succ \textcolor{red}{w} \succsep d \succ c \succ b \succ a \succ B \succ A \succsep \textcolor{blue}{m} \succ \textcolor{blue}{l} \succ \textcolor{blue}{M} }\\
+%The interpolation clauses are \\
+%\s{A,B, \lnot C \lor \lnot D \lor a \neq b \lor c \neq \underline{d} }
+%
+%\bigskip
+%
+%\noindent
+%A non-local proof would be:
+%
+%\bigskip
+%
+%\noindent
+%\infer[]
+%{\m{\lnot A \lor \lnot B \lor \underline{\textcolor{red}{y}}=\textcolor{red}{x}}}
+%{
+	%\infer[]
+		%{\m{\lnot A \lor \lnot B \lor \underline{g(\textcolor{blue}{l},\textcolor{red}{z})}=\textcolor{red}{x}}}
+		%{
+			%\m{\lnot A \lor \underline{a}=\textcolor{blue}{l}}
+				%& 
+			%\m{g(\underline{a},\textcolor{red}{z})=\textcolor{red}{x} \lor \lnot B} 
+		%}
+			%&
+	%\infer[]
+		%{\m{\underline{g(\textcolor{blue}{l},\textcolor{red}{z})}=\textcolor{red}{y} \lor \lnot A \lor \lnot B}}
+		%{
+			%\m{\lnot A \lor \underline{b}=\textcolor{blue}{l}}&
+			%\m{g(\underline{b},\textcolor{red}{z})=\textcolor{red}{y} \lor \lnot B}
+		%}
+%}
+%
+%\bigskip
+%
+%\noindent
+%\infer[]
+%{\m{\underline{f(\textcolor{red}{x},\textcolor{blue}{m})\neq\textcolor{red}{w}} \lor \lnot \textcolor{blue}{M} \lor \lnot A \lor \lnot B}}
+%{
+	%\m{\lnot \textcolor{blue}{M} \lor \underline{d}=\textcolor{blue}{m}}
+		%& 
+	%\infer[]
+	%{\m{\lnot A \lor \lnot B \lor \underline{f(\textcolor{red}{x},d)} \neq \textcolor{red}{w}}}
+	%{
+		%\m{\lnot A \lor \lnot B \lor \underline{\textcolor{red}{y}}=\textcolor{red}{x}}
+			%&
+		%\m{f(\underline{\textcolor{red}{y}},d) \neq \textcolor{red}{w} \lor \lnot B}
+	%}
+%}
+%\bigskip
+%
+%\noindent
+%\infer[]
+%{\emptyClause}
+%{
+	%\infer*[]
+	%{}
+	%{
+		%\infer[]
+		%{\m{\lnot \textcolor{blue}{M} \lor \lnot A \lor \underline{\lnot B}  }}
+		%{
+			%\infer[]
+			%{\m{\lnot \textcolor{blue}{M} \lor \lnot B \lor \underline{f(\textcolor{red}{x},\textcolor{blue}{m})=\textcolor{red}{w}}}}
+			%{
+				%\m{\lnot \textcolor{blue}{M} \lor \underline{c}=\textcolor{blue}{m}}
+					%&
+				%\m{f(\textcolor{red}{x},\underline{c})=\textcolor{red}{w} \lor \lnot B } 
+			%}
+					%&
+			%\m{\underline{f(\textcolor{red}{x},\textcolor{blue}{m})\neq\textcolor{red}{w}} \lor \lnot \textcolor{blue}{M} \lor \lnot A \lor \lnot B }
+		%}
+	%}
+%}
+%
+%
+%\bigskip
+%
+%\noindent
+%And the version with eager simplifications:
+%
+%
+%\bigskip
+%
+%\infer[]
+%{\m{\underline{\textcolor{red}{y}}=\textcolor{red}{x}}}
+%{
+	%\infer[]
+	%{\m{\underline{g(\textcolor{blue}{l},\textcolor{red}{z})}=\textcolor{red}{x}}}
+	%{
+		%\m{
+			%\infer[]
+			%{\m{\underline{a}=\textcolor{blue}{l}}}
+			%{\m{A} & \hcancel{\m{\lnot A \lor \underline{a}=\textcolor{blue}{l}}}}
+		%}
+			%&
+		%\infer[]
+		%{\hcancel{g(\underline{a},\textcolor{red}{z})=\textcolor{red}{x}}}
+		%{\m{B} & \hcancel{\lnot B \lor \textcolor{red}{x}=\underline{g(a,\textcolor{red}{z})}}}
+	%}
+		%&
+	%\infer[]
+	%{\hcancel{\underline{g(\textcolor{blue}{l},\textcolor{red}{z})}=\textcolor{red}{y}}}
+	%{
+		%\m{
+			%\infer[]
+			%{\m{\underline{b}=\textcolor{blue}{l}}}
+			%{\m{A} & \hcancel{\m{\lnot A \lor \underline{b}=\textcolor{blue}{l}}}}
+		%}
+			%&
+		%\infer[]
+		%{\hcancel{\underline{g(b,\textcolor{red}{z})}=\textcolor{red}{y}}}
+		%{\m{B} & \hcancel{\lnot B \lor \textcolor{red}{y}=\underline{g(b,\textcolor{red}{z})}}}
+	%}
+%}
+%\bigskip
+%\bigskip
+%
+%\bigskip
+%
+%\noindent
+%\infer[]
+%{\m{f(\textcolor{red}{x},\textcolor{blue}{m}) = \textcolor{red}{w}}}
+%{
+	%\infer[]
+	%{\m{\underline{c}=\textcolor{blue}{m}}}
+	%{\m{\textcolor{blue}{M}} & \hcancel{\m{\lnot \textcolor{blue}{M} \lor \underline{c}=\textcolor{blue}{m}}}}
+		%&
+	%\infer[]
+	%{\hcancel{\m{f(\textcolor{red}{x},\underline{c}) = \textcolor{red}{w}}}}
+	%{
+		%\m{B} & \hcancel{\lnot B \lor f(\underline{\textcolor{red}{x}},c) = \textcolor{red}{w}}
+	%}
+%}
+%
+%\bigskip
+%
+%\noindent
+%\infer[]
+%{\m{f(\textcolor{red}{x},\textcolor{blue}{m}) \neq \textcolor{red}{w}}}
+%{
+	%\infer[]
+	%{\m{\underline{d}=\textcolor{blue}{m}}}
+	%{\m{\textcolor{blue}{M}} & \hcancel{\m{\lnot \textcolor{blue}{M} \lor \underline{d}=\textcolor{blue}{m}}}}
+		%&
+	%\infer[]
+	%{\hcancel{\m{f(\textcolor{red}{x},\underline{d}) \neq \textcolor{red}{w}}}}
+	%{
+		%\m{\underline{\textcolor{red}{y}}=\textcolor{red}{x}}
+			%&
+		%\infer[]
+		%{\hcancel{\m{f(\underline{\textcolor{red}{y}},d) \neq \textcolor{red}{w}}}}
+		%{\m{B} & \hcancel{\lnot B \lor f(\underline{\textcolor{red}{y}},d) \neq \textcolor{red}{w}}}
+	%}
+%}
+%
+%\bigskip
+%
+%\noindent
+%\infer[]
+%{\emptyClause}
+%{
+	%\m{f(\textcolor{red}{x},\textcolor{blue}{m}) = \textcolor{red}{w}}
+		%&
+	%\m{f(\textcolor{red}{x},\textcolor{blue}{m}) \neq \textcolor{red}{w}}
+%}
+%
+%\bigskip
+%
+%
+%
+%\noindent
+%Most intermediate conclusions in the above derivation are simple unit clauses.
+%
+%\bigskip
+%
+%\noindent
+%The local proof without simplifications goes as follows:\\
+%\noindent
+%At \m{N^b}:
+%
+%\bigskip
+%
+%\noindent
+%\infer[]
+%{\m{a=b \in \Gamma}}
+%{
+	%\infer[]
+	%{\m{a \in M}}
+	%{\m{\lnot A \lor \underline{a}=\textcolor{blue}{l}}}
+		%&
+	%\infer[]
+	%{\m{b \in M}}
+	%{\m{\lnot A \lor \underline{b}=\textcolor{blue}{l}}}
+%}
+%
+%\bigskip
+%
+%\noindent
+%\infer[]
+%{\m{c=d \in \Gamma}}
+%{
+	%\infer[]
+	%{\m{c \in M}}
+	%{\m{\lnot \textcolor{blue}{L} \lor \underline{c}=\textcolor{blue}{m}}}
+		%&
+	%\infer[]
+	%{\m{d \in M}}
+	%{\m{\lnot \textcolor{blue}{M} \lor \underline{d}=\textcolor{blue}{m}}}
+%}
+%
+%\bigskip
+%
+%%\noindent
+%%.....\\
+%%\m{a=b=c=d \in P}
+%%
+%%\bigskip
+%
+%\noindent
+%Then at \m{N^t}:
+%
+%\bigskip
+%
+%\noindent
+%
+%\bigskip
+%
+%\noindent
+%\infer[]
+%{\m{\lnot B \lor a \neq b \lor c \neq \underline{d} }}
+%{
+	%\m{
+		%\infer[]
+		%{\m{\lnot B \lor a \neq b \lor c \neq d \lor \textcolor{red}{w} \neq \textcolor{red}{w}}}
+		%{
+			%\m{\lnot B \lor \underline{f(\textcolor{red}{x},c)}=\textcolor{red}{w}}
+				%&
+%\infer[]
+%{\m{\lnot B \lor a \neq b \lor \underline{f(\textcolor{red}{x},d)} \neq \textcolor{red}{w}}}
+%{
+	%\infer[]
+	%{\m{\lnot B \lor a \neq b \lor \underline{\textcolor{red}{y}}=\textcolor{red}{x}}}
+	%{
+		%\m{\lnot B \lor \textcolor{red}{x}=\underline{g(a,\textcolor{red}{z})}} 
+			%&
+		%\m{\lnot B \lor \textcolor{red}{y}=\underline{g(b,\textcolor{red}{z})}} 
+	%}
+		%&
+	%\m{\lnot B \lor f(\underline{\textcolor{red}{y}},d) \neq \textcolor{red}{w}}
+%}
+%%			\m{\lnot B \lor a \neq b \lor \underline{f(\textcolor{red}{x},d)} \neq \textcolor{red}{w}}
+		%}
+	%}
+%}
+%
+%\bigskip
+%
+%
+%
+%\noindent
+%And again at \m{N^b}:
+%
+%\bigskip
+%
+%\noindent
+%\infer[]
+%{\m{\lnot \textcolor{blue}{M} \lor \lnot B\lor a \neq \underline{b} \lor \textcolor{blue}{m} \neq \textcolor{blue}{m} }}
+%{
+	%\m{\lnot \textcolor{blue}{M} \lor \underline{c}=\textcolor{blue}{m}}
+		%&
+	%\m{
+		%\infer[]
+		%{\m{\lnot \textcolor{blue}{M} \lor \lnot B \lor a \neq b \lor \underline{c} \neq \textcolor{blue}{m} }}
+		%{
+			%\m{\lnot \textcolor{blue}{M} \lor \underline{d}=\textcolor{blue}{m}}
+				%&
+			%\m{\lnot B \lor a \neq b \lor c \neq \underline{d} }
+		%}
+	%}
+%}
+%
+%
+%\bigskip
+%
+%\noindent
+%\infer[]
+%{\m{\lnot \textcolor{blue}{M} \lor \lnot A \lor \lnot \underline{B} \lor \textcolor{blue}{l} \neq \textcolor{blue}{l} \lor \textcolor{blue}{m} \neq \textcolor{blue}{m} }}
+%{
+	%\m{\lnot A \lor \underline{a}=\textcolor{blue}{l}}
+		%&
+	%\m{
+		%\infer[]
+		%{\m{\lnot \textcolor{blue}{M} \lor \lnot A \lor \lnot B \lor \underline{a} \neq \textcolor{blue}{l} \lor \textcolor{blue}{m} \neq \textcolor{blue}{m} }}
+		%{
+			%\m{\lnot A \lor \underline{b}=\textcolor{blue}{l}}
+				%&
+			%\m{ \lnot \textcolor{blue}{M} \lor \lnot B \lor a \neq \underline{b} \lor \textcolor{blue}{m} \neq \textcolor{blue}{m} }
+		%}			
+%}
+%}
+%
+%
+%
+%\bigskip
+%
+%
+%\noindent
+%\infer[]
+%{\emptyClause}
+%{
+		%\m{\textcolor{blue}{M}}
+		%&
+		%\infer[]
+		%{\m{\lnot \textcolor{blue}{M}}}
+		%{
+			%\infer[]
+			%{\m{\m{\lnot \textcolor{blue}{M} \lor \underline{\textcolor{blue}{l} \neq \textcolor{blue}{l}}}}}
+			%{
+				%\infer[]
+				%{\m{\m{\lnot \textcolor{blue}{M} \lor \textcolor{blue}{l} \neq \textcolor{blue}{l} \lor \underline{\textcolor{blue}{m} \neq \textcolor{blue}{m}} }}}
+				%{
+					%\m{A}
+						%&
+					%\infer[]
+					%{\m{\lnot \textcolor{blue}{M} \lor \underline{\lnot A} \lor \textcolor{blue}{l} \neq \textcolor{blue}{l} \lor \textcolor{blue}{m} \neq \textcolor{blue}{m} }}
+					%{\m{B} & \m{\lnot \textcolor{blue}{M} \lor \lnot A \lor \underline{\lnot B} \lor \textcolor{blue}{l} \neq \textcolor{blue}{l} \lor \textcolor{blue}{m} \neq \textcolor{blue}{m} }}
+				%}
+			%}	
+		%}
+%}
+%\bigskip
+%
+%
+%\noindent
+%The local proof with simplifications proceeds as follows:
+%
+%\noindent
+%\m{N^t} sends \s{A} to \m{N^b}.
+%
+%\bigskip
+%
+%\noindent
+%At \m{N^b}:
+%
+%\bigskip
+%
+%\noindent
+%\infer[]
+%{\m{a=b\in \Gamma}}
+%{
+	%\infer[]
+	%{\m{a \in M}}
+	%{
+		%\infer[]
+		%{\m{\underline{a}=\textcolor{blue}{l}}}
+		%{
+			%\m{A}
+				%&
+			%\hcancel{\lnot A \lor \underline{a}=\textcolor{blue}{l}}
+		%}
+	%}
+		%&
+	%\infer[]
+	%{\m{b \in M}}
+	%{
+		%\infer[]
+		%{\m{\underline{b}=\textcolor{blue}{l}}}
+		%{
+			%\m{A}
+				%&
+			%\hcancel{\lnot A \lor \underline{b}=\textcolor{blue}{l}}
+		%}
+	%}
+%}
+%
+%\bigskip
+%
+%\noindent
+%\infer[]
+%{\m{c=d \in \Gamma}}
+%{
+	%{
+		%\infer[]
+		%{\m{c \in M}}
+		%{
+			%\infer[]
+			%{\m{\underline{c}=\textcolor{blue}{m}}}
+			%{
+				%\m{\textcolor{blue}{M}}
+					%&
+				%\hcancel{\lnot \textcolor{blue}{M} \lor \underline{c}=\textcolor{blue}{m}}
+			%}
+		%}
+	%}
+		%&
+	%\infer[]
+	%{\m{d \in M}}
+	%{
+		%\infer[]
+		%{\m{\underline{d}=\textcolor{blue}{m}}}
+		%{
+			%\m{\textcolor{blue}{M}}
+				%&
+			%\hcancel{\lnot \textcolor{blue}{M} \lor \underline{d}=\textcolor{blue}{m}}
+		%}
+	%}
+%}
+%
+%\bigskip
+%
+%%\noindent
+%%.....\\
+%%\m{a=b=c=d \in P}
+%%
+%%\bigskip
+%
+%\noindent
+%Then at \m{N^t}:
+%
+%\bigskip
+%
+%\noindent
+%\infer[]
+%{\m{\lnot B \lor a \neq b \lor \underline{f(\textcolor{red}{x},d)} \neq \textcolor{red}{w}}}
+%{
+	%\infer[]
+	%{\m{\lnot B \lor a \neq b \lor \underline{\textcolor{red}{y}}=\textcolor{red}{x}}}
+	%{
+		%\m{\lnot B \lor \textcolor{red}{x}=\underline{g(a,\textcolor{red}{z})}} 
+			%&
+		%\m{\lnot B \lor \textcolor{red}{y}=\underline{g(b,\textcolor{red}{z})}} 
+	%}
+		%&
+	%\m{\lnot B \lor f(\underline{\textcolor{red}{y}},d) \neq \textcolor{red}{w}}
+%}
+%
+%\bigskip
+%
+%\noindent
+%\infer[]
+%{\m{\lnot B \lor a \neq b \lor c \neq \underline{d} }}
+%{
+	%\infer[]
+	%{\hcancel{\lnot B \lor a \neq b \lor c \neq d \lor \underline{\textcolor{red}{w} \neq \textcolor{red}{w}}}}
+	%{
+		%\m{\lnot B \lor \underline{f(\textcolor{red}{x},c)}=\textcolor{red}{w}}
+			%&
+		%\m{\lnot B \lor a \neq b \lor \underline{f(\textcolor{red}{x},d)} \neq \textcolor{red}{w}}
+	%}
+%}
+%
+%\bigskip
+%
+%
+%
+%\noindent
+%And again at \m{N^b}:
+%
+%\bigskip
+%\infer[]
+%{\emptyClause}
+%{
+	%\infer[]
+	%{\hcancel{\textcolor{blue}{l} \neq \textcolor{blue}{l}}}
+	%{
+		%\m{\underline{a}=\textcolor{blue}{l}}
+			%&
+		%\infer[]
+		%{\hcancel{\underline{a} \neq \textcolor{blue}{l} }}
+		%{
+			%\m{\underline{b}=\textcolor{blue}{l}}
+				%&
+			%\infer[]
+			%{\hcancel{\underline{b} \neq a}}
+			%{
+				%\infer[]
+				%{\hcancel{a \neq \underline{b} \lor \textcolor{blue}{m} \neq \textcolor{blue}{m} }}
+				%{
+					%\m{\underline{c}=\textcolor{blue}{m}}
+						%&
+					%\infer[]
+					%{\hcancel{a \neq b \lor \underline{c} \neq \textcolor{blue}{m} }}
+					%{
+						%\m{\underline{d}=\textcolor{blue}{m}}
+							%&
+						%\infer[]
+						%{\hcancel{a \neq b \lor c \neq \underline{d} }}
+						%{
+							%\m{B}
+								%&
+							%\hcancel{\lnot B \lor a \neq b \lor c \neq \underline{d} }
+						%}
+					%}
+				%}
+			%}
+		%}			
+	%}
+%}
+%
+%\bigskip
+%
+%\noindent
+%
+%\noindent
+%We can see that, while the local proof benefits from eager simplification, it cannot be made as narrow as the non-local proof.
+%Specifically, interpolation clauses can collect many literals that have to be propagated (in our setting) throughout the CFG
+%until the CFG-node where they can be simplified.
+
+%\subsection{Completeness proof}
+
+
+\subsection{Ordering for Interpolation}
+In this section we describe how we establish an adequate total order on ground terms for interpolation for the whole CFG.
+
+Extending our interpolation calculus to a DAG CFG requires that we have a separating total order on all program constants, so that whenever a constant in scope at a CFG-node is not in scope in the successor, it is separated from the any constant that is in scope in the successor.\\
+For a linear program, we can simply assign decreasing limit ordinals to each CFG-node, so that the root node has the maximal limit ordinal and each successor has a lower limit ordinal. We then assign each constant the weight \m{n\omega+1} where n is the limit ordinal index of the last CFG-node where it appears.\\
+However, this solution does not extend immediately to tree-shaped CFGs, as different branches may imply different orderings. Consider, for example, figure \ref{snippet4.5.1}:
+\begin{figure}[H]
+\begin{lstlisting}
+$\m{n_1:}$
+	assume a$\neq$b
+if (*)
+	$\m{n_2:}$
+		assume f(a)=f(b)
+	$\m{n_3:}$
+		assert f(a)=c
+else
+	$\m{n_4:}$
+		assume f(a)$\neq$f(b)
+	$\m{n_5:}$
+		assert f(b)=c
+\end{lstlisting}
+\caption{Interpolation ordering for trees}
+\label{snippet4.5.1}
+\end{figure}
+
+The \lstinline|then| branch implies that \m{b\succsep a} while the \lstinline|else|  branch implies that \m{a \succsep b}.
+There is no total order with minimal scoping that respects the separating constraint for this program.
+
+Our solution to this problem is to add a further DSA version for every constant at a branch that is in scope in at least one successor of the branch, unless it is in scope at the join of the branch.
+For figure \ref{snippet4.5.1} the modified program is shown in figure \ref{snippet4.5.1b}:
+\begin{figure}[H]
+\begin{lstlisting}
+$\m{n_1:}$
+	assume a$\neq$b
+if (*)
+	$\m{n_2.0:}$
+		assume a$_1$=a
+		assume b$_1$=b
+	$\m{n_2:}$
+		assume f(a$_1$)=f(b$_1$)
+	$\m{n_3:}$
+		assert f(a$_1$)=c
+else
+	$\m{n_4.0:}$
+		assume a$_2$=a
+		assume b$_2$=b
+	$\m{n_4:}$
+		assume f(a$_2$)$\neq$f(b$_2$)
+	$\m{n_5:}$
+		assert f(b$_2$)=c
+\end{lstlisting}
+\caption{Interpolation ordering for trees - additional DSA versions}
+\label{snippet4.5.1b}
+\end{figure}
+
+After this transformation, and after ensuring that the scope for each constant is contiguous (by renaming one instance of a constant that appears on two parallel branches but neither at branch nor join point), we can choose any topological order of the nodes and assign limit ordinal indices accordingly.
+
+\subsection{Related and future work}
+The main difference in our work from other works is the setting in which we work - verification in a DAG-shaped CFG.
+Our work is closely related to \cite{BaumgartnerWaldmann13} and \cite{McMillan08}. The main difference from both papers, beside the setting, is that our calculus remains in the ground fragment for ground programs, while other works use a form of abstraction that adds quantified variables to a clause - the complexity of most proof steps is lower for ground clauses.
+
+In \cite{BaumgartnerWaldmann13} (which is an extension of \cite{DBLP:journals/aaecc/BachmairGW94}), the authors present a superposition calculus that works modulo a theory. Their calculus essentially calculates interpolants between a set of clauses and a theory - the difference with our calculus, besdies that we remain in the ground fragment for a ground input, is that we can use equalities from the theory to direct interpolation, hence improving accuracy.
+
+The theory is encoded as the rule
+
+\bigskip
+
+\noindent
+\infer[]
+{\emptyClause}
+{\m{C_1 .... C_n}}
+
+\bigskip
+
+Where \m{C_1 .. C_n} are a set of clauses over the signature of the theory which are unsatisfiable in the theory.\\
+The calculus of \cite{BaumgartnerWaldmann13} is similar to superposition, 
+except that clauses that participate in the proof are converted using \emph{weak abstraction:}\\
+Roughly, weak abstraction is application of the following transformation:\\
+\m{\termRepAt{C}{t}{p} \rightarrow \textcolor{green}{X} \neq t \lor \termRepAt{C}{\textcolor{green}{X}}{p}} \\
+where t is a term in the theory vocabulary (roughly equivalent to \langb{} in our case) that does not contain normal free variables and \textcolor{green}{X} is an \emph{abstraction variable}, which is roughly a free variable that can only be instantiated with theory terms - only terms that are in \langb{}.\\
+Unification respects abstraction variables in the sense that, for the mgu $\sigma$, \m{\sigma(X) \in \langb{}} and \langb{} includes all abstraction variables.\\
+For example \ref{example.3.1.1.3.1}, using superposition with weak abstraction the derivation is roughly equivalent to:
+
+\bigskip
+
+\noindent
+\infer[\m{\sigma = \s{\textcolor{green}{Y} \mapsto \textcolor{green}{X}}}]
+{\m{\textcolor{green}{X} \neq a \lor \textcolor{green}{X} \neq b \lor c=d}}
+{
+	\infer[]
+		{\m{\textcolor{green}{X} \neq a \lor \underline{f(\textcolor{green}{X},\textcolor{red}{u})}=c}}
+		{\m{\m{f(\underline{a},\textcolor{red}{x})=c}}}
+	& 
+	\infer[]
+		{\m{\textcolor{green}{Y} \neq b \lor \underline{f(\textcolor{green}{Y},\textcolor{red}{u})}=d}}
+		{\m{f(\underline{b},\textcolor{red}{x})=d}}
+}
+	
+\bigskip
+
+And then, for the theory \m{N^b}:
+
+\bigskip
+
+\noindent
+\infer*[]
+{\m{\emptyClause}}
+{
+	\m{\textcolor{green}{X} \neq a \lor \textcolor{green}{X} \neq b \lor c=d}
+}
+	
+\bigskip
+
+The main difference with our approach is that, if \m{N^b \not\models a=b},
+we can avoid the above superposition derivation in \m{N^t} (if the approximation of \m{I^b} is precise enough) while their system does not take \m{N^b} into account in unification, and hence we can ensure completeness (for the ground fragment) while allowing strictly less derivations.
+
+\noindent
+In their system, using the above example, the following is \emph{not} a valid derivation:
+
+\bigskip
+
+\noindent
+\infer[\m{\sigma = \s{\textcolor{green}{X} \mapsto \textcolor{red}{y}}}]
+{\m{\textcolor{red}{y} \neq a \lor c=d}}
+{
+	\infer[]
+		{\m{\textcolor{green}{X} \neq a \lor \underline{f(\textcolor{green}{X},\textcolor{red}{z})}=c}}
+		{\m{\m{f(\underline{a},\textcolor{red}{z})=c}}}
+	& 
+	{\m{\underline{f(\textcolor{red}{y},\textcolor{red}{z})}=d}}
+}
+	
+\bigskip
+
+\noindent
+Because the unifier maps an abstraction variable \textcolor{green}{X} to a term not in \\\langb.
+Hence, their calculus avoids several unnecessary derivations (derivations that would be allowed if abstraction used normal variables as in  the original \cite{DBLP:journals/aaecc/BachmairGW94}) without losing completeness (for the ground fragment).\\
+Abstraction is restricted (roughly) to top-background terms, meaning, in our context, terms over \langb{} whose direct super-term is not in \langb{} - for example for:\\
+\m{\forall x \cdot g(f(b,c),f(h(a,x),\textcolor{red}{z}))=d}\\
+The weak abstraction is:\\
+\m{\textcolor{green}{X} \neq a \lor \textcolor{green}{Y} \neq f(b,c) \lor g(\textcolor{green}{Y},f(h(\textcolor{green}{X},x),\textcolor{red}{z})=d}\\
+Where b,c, are not abstracted because they are not top \m{N^b} terms (f(b,c) is their direct super-term), 
+and x is not abstracted because it is a (non-abstraction) variable.\\
+\cite{BaumgartnerWaldmann13} shows a calculus for non-ground superposition with an opaque background theory, 
+shows completeness in the ground case, and some conditions for completeness in the non-ground case (i.e. \m{N^t} includes non-ground clauses).\\
+The main advantage of our method is that we use an approximation of the theory (in our case \m{N^b}) to restrict abstraction further 
+(so that our communication is bi-directional), and we only perform the equivalent of abstraction when necessary for unification, 
+so that we remain in the ground fragment for a ground problem - hence the interpolant also remains ground.
+The authors discuss an improvement to their calculus that defines a sub-set of the theory terms (\langb) 
+as \emph{domain elements} which are all known to be unequal to each other (e.g. numbers). 
+They show that it is not necessary to abstract these elements (as, essentially, they are in their normal form already). 
+In our calculus, if e.g. numbers are at the bottom of the ordering, we get the same effect.
+The non-ground aspects of the comparison with the non-ground version of our calculus will is discussed in section \ref{section:fole:scoping}.
+
+
+\bigskip
+
+\noindent
+In \cite{McMillan08}, the author presents a superposition calculus for deriving an interpolant between two sets of clauses, as in our setting.\\
+The author uses a separating ordering similar to ours, and ensures (ground) completeness using the following \emph{procrastination} rule:
+
+\bigskip
+
+\noindent
+\m{
+	\vcenter{
+		\infer[]
+			{\m{f(\textcolor{blue}{l},\textcolor{red}{x})=c}}
+			{\m{\underline{a}=\textcolor{blue}{l}} & \m{\underline{f(a,\textcolor{red}{x})=c}}}
+	}
+	\rightarrow
+		\vcenter{
+			\infer[]
+				{\m{\forall y \cdot y \neq a \lor f(y,\textcolor{red}{x})=c \mid a \succ y}}
+				{\m{\underline{f(a,\textcolor{red}{x})}=c}}
+		}
+	}
+
+
+\bigskip
+
+\noindent
+Where y is a fresh normal variable, and the constraint \m{\mid a \succ y} is an ordering constraint (as in \cite{DBLP:books/el/RV01/NieuwenhuisR01} section 5). Roughly, the constraint means that any unifier \m{\sigma} used in an inference with the clause, it must hold that \m{a \succ \sigma{y} }. In this system, ordering constraints are used to ensure that the proof is local. The author mentions (discussion of lemma 3) that ordering constraints could be checked for feasibility and then discarded, rather than propagated (which adds a significant overhead), and the conclusion of non-local derivations discarded.\\
+Note that the ordering constraints are, in a sense, a more precise variant on weak abstraction, as they constrain the newly introduced variables to be smaller than a given term, while essentially weak abstraction constrains the abstraction variables to be smaller than \m{l^t}.
+We write the above replacement as the following rule in proofs:
+
+\bigskip
+
+\noindent
+\[
+\begin{array}{llll}
+\infer[\m{s \succ l^t,l = \termAt{s}{p}}]
+{\m{\forall x \cdot x \neq \termAt{s}{p} \lor C \lor D \lor \termRepAt{s}{x}{p} \bowtie t \mid \termAt{s}{p} \succ x}}
+{
+	\m{C \lor \underline{l}=r} &
+	\m{s \bowtie t \lor D}
+} &
+\begin{array}{ll}
+	\m{\sci{1} l \not\preceq r, \sci{2} l=r \not\preceq C}\\
+	\m{\sci{3} s \not\prec t, \sci{4} s\bowtie t \not\prec D}\\
+	\m{\sci{5} s \bowtie t \not\preceq l=r}\\
+	\m{\sci{6} \mathbf{s \succeq l^t \succ l}}
+\end{array}	\\
+
+\end{array}
+\]
+
+\bigskip
+
+
+\noindent
+For example \ref{example.3.1.1.3.1}, the proof would be as follows:
+
+
+\bigskip
+
+\noindent
+\infer[\m{\sigma=\s{z \mapsto y}}]
+{\m{\forall y \cdot y \neq b \lor y \neq a \lor \underline{d}=c \mid a \succ y \land b \succ y}}
+{
+	\infer[]
+	{\m{\forall y \cdot y \neq a \lor \underline{f(y,\textcolor{red}{x})}=c \mid a \succ y}}
+	{
+		\m{\underline{a}=\textcolor{blue}{l}}
+			&
+		\m{\underline{f(a,\textcolor{red}{x})}=c}
+	}
+		&
+	\infer[]
+	{\m{\forall z \cdot z \neq b \lor \underline{f(z,\textcolor{red}{x})}=d \mid b \succ z}}
+	{
+		\m{\underline{b}=\textcolor{blue}{l}}
+			&
+		\m{\underline{f(b,\textcolor{red}{x})}=d}
+	}
+}
+
+
+\bigskip
+
+\noindent
+Where y,z are normal variables. We could replace \m{a \succ y \land b \succ y} with \m{a \succ y} as \m{b \succ a}.\\
+This is followed, in \m{N^b} (dropping the ordering constraints):\\
+\bigskip
+
+\noindent
+\infer[]
+	{\emptyClause}
+	{
+		\infer[]
+		{\m{\textcolor{blue}{l} \neq \textcolor{blue}{l}}}
+		{
+			\infer[]
+				{\m{\forall y \cdot y \neq \textcolor{blue}{l} \lor y \neq \textcolor{blue}{l}}}
+				{
+					\m{\underline{a} = \textcolor{blue}{l}}
+					& 
+					{\infer[]
+						{\m{\forall y \cdot \underline{a} \neq y \lor y \neq \textcolor{blue}{l}}}
+						{
+							\m{\underline{b} = \textcolor{blue}{l}}
+							& 
+							\infer[]
+							{\m{\forall y \cdot \underline{b} \neq y \lor a \neq y}}
+							{
+								\m{\forall y \cdot y \neq b \lor y \neq a \lor \underline{d}=c}
+									&
+								\m{\underline{d \neq c}}
+							}
+						}
+					}
+				}
+		}
+	}
+
+
+\bigskip
+
+
+\noindent
+The derivations above use the fact that a,b are maximal equality terms in order to drive abstraction, as opposed to \cite{BaumgartnerWaldmann13}
+which (in a different setting) produces an abstraction for \emph{each} term in \langI.\\
+Dropping the ordering constraints at \m{N^t} makes the abstraction not weak, similarly to \cite{DBLP:journals/aaecc/BachmairGW94} (i.e., in the above example, the variables y,z above can be unified with terms in \langtp such as \m{\textcolor{red}{x}} ).
+
+
+The first difference of our approach is that we always remain in the ground fragment as long as the input is ground (and do not introduce fresh variables otherwise), and so we produce ground interpolants. 
+One might consider adding an un-abstraction rule to interpolation clauses (similar to that suggested in \cite{BaumgartnerWaldmann13}) in order to produce ground interpolants:
+\bigskip
+
+\noindent
+\[
+\begin{array}{llll}
+\vcenter{
+\infer[]
+{\m{C[t/x]}}
+{
+	\m{\forall x \cdot x \neq t \lor C}
+}} &
+\begin{array}{ll}
+	\m{\sci{1} C,t \prec l^t}\\
+	\m{\sci{2} x \not\trianglelefteq t}\\
+\end{array}\\
+\end{array}
+\]
+
+\bigskip
+
+The second difference is that their approach abstracts each clause separately, even if it is not a candidate for any inference, while our approach performs essentially a combined step of abstraction (or procrastination), superposition and then unabstraction.
+Our $\Gamma$ is, in a sense, a summary of all the possible abstractions of maximal terms.
+%
+%\noindent
+%\textbf{Non convex $\Gamma$:}\\
+%In our system, \m{\Gamma, \eqg} are parameters, and we can make them more or less accurate. 
+%Importantly, we can make $\Gamma$ non-convex if we track, for each clause, which of the ground dis-equalities are assumptions (B in the conclusion in our rules) and so avoid mixing equality theories from different paths, as happens e.g. in example \ref{example_4.2.1.9_program}.
+%In order to use a non-convex theory, we define $\Gamma$ as a set of sets of equations, and use equality constraints to track our assumptions, so that the rule \m{sup^i_=} is as follows:
+%
+%\[
+%\begin{array}{llll}
+%
+	%\vspace{1cm}
+	%
+	%\m{sup^i_{=}} &
+	%\vcenter{
+		%\infer[]
+		%{\m{C \lor D \lor \termRepAt{s}{r}{p}=t \mid B,B_1,B_2}}
+		%{
+			%\m{C \lor \underline{l}=r  \mid B_1} 
+				%&
+			%\m{\underline{s} = t \lor D \mid B_2}
+		%}
+	%}&
+			%\begin{array}{ll}
+				%\m{\sci{1} l \not\preceq_i r, \sci{2} l=r \not\preceq_i C}\\
+				%\m{\sci{3} s \not\preceq_i t, \sci{4} s=t \not\preceq_i D}\\
+				%\m{\sci{5} s=t \not\preceq_i l=r}\\
+				%\m{\sci{6} l,s \succeq l^t}\\
+				%\m{\sci{7} \m{\inidasg{B}{l}{\termAt{\mathbf{s}}{\mathbf{p}}}}}\\
+				%\m{\sci{8} \mathbf{\exists S \in \Gamma \cdot B \cup B_1 \cup B_2 \subseteq S}}
+			%\end{array}\\	
+	%
+	%\vspace{1cm}
+	%
+%\end{array}
+%\]
+%
+%\noindent
+%Where \m{B,B_1,B_2} are the equality constraints.
+%
+%\noindent
+%So that \sci{8} does not hold in example \ref{example_4.2.1.9_program} 
+%for unifying \m{h(c_1,c_2,\textcolor{red}{x})} with \\
+%\m{h(d_1,d_2,\textcolor{red}{x})} because \\
+%\m{\Gamma = \s{\s{a=b, c_1=d_1},\s{a=b, c_2=d_2}}} rather than\\
+%\m{\Gamma = \s{\s{a=b, c_1=d_1,c_2=d_2}}}.
+%
+%\bigskip
+%
+%\noindent
+%A second, minor difference is that we handle maximal equalities l=r where \m{l^t \succ l \succ r \succ l^b} differently from the case where
+%\m{l^t \succ l \succ l^b \succ r} - so that our approximation is somewhat more precise - for example:\\
+%If \m{N^b = \s{\textcolor{blue}{M} \lor \underline{c}=b,\textcolor{blue}{M} \lor \underline{d}=a}}, 
+%we do not allow e.g. the inference
+%
+%\bigskip
+%
+%\noindent
+%\infer[]
+%{\m{c \neq d \lor e \neq e}}
+%{
+	%\m{f(c,\textcolor{red}{x})=e} &
+	%\m{f(d,\textcolor{red}{x})\neq e}
+%}
+%
+%\bigskip
+%
+%\noindent
+%The procrastination rule will allow it by deriving:
+%
+%\bigskip
+%
+%\noindent
+%\infer
+%{\m{y \neq d \lor y \neq c \lor e \neq e \mid c \succ y,d\succ y}}
+%{
+	%\infer[]
+	%{\m{y \neq c \lor f(y,\textcolor{red}{x})=e \mid c \succ y}}
+	%{\m{\textcolor{blue}{M} \lor \underline{c}=b} & \m{f(c,\textcolor{red}{x})=e}}
+		%&
+	%\infer[]
+	%{\m{z \neq d \lor f(z,\textcolor{red}{x})\neq e \mid d \succ z}}
+	%{\m{\textcolor{blue}{M} \lor \underline{d}=a} & \m{z \neq d \lor f(z,\textcolor{red}{x})\neq e \mid d \succ z}}
+%}
+%
+%\bigskip
+%
+%\noindent
+%Where the conclusion has a satisfiable ordering constraint.\\
+%Weak abstraction would work similarly.
+%
+%\bigskip
+%
+%Note that, in our setting, preventing useless derivations can be more important than in the general case, 
+%as clause propagation can be a significant overhead - we emphasize more on reducing the proof search space than on the efficiency of each step in the proof search.
+%
+%\textbf{Variants of definitions for $\Gamma$:}\\
+%In our system \m{\Gamma,\vdash_{\Gamma}} are parameters. We have shown one simple instance of these parameters, and it would be interesting to explore other, more precise, variants.
+%
+%Some useless derivations are not prevented in any of the three systems because of the over-approximation for super-terms - consider the example in figure \ref{example.4.1.3.3.1}:
+%\begin{figure}[H]
+%\m{N^t = \s{(1) \underline{f(b,\textcolor{red}{v})} = \textcolor{red}{u},(2)\underline{f(g(c),\textcolor{red}{v})} \neq \textcolor{red}{u},
+%(3)\underline{f(h(c),\textcolor{red}{v})} \neq \textcolor{red}{u},(4)\underline{f(a,\textcolor{red}{v})} \neq \textcolor{red}{u}}}\\
+%\m{N^b = \s{(5)\underline{b} = \textcolor{blue}{m},(6)\underline{c} = \textcolor{blue}{m}, (7)\underline{g(\textcolor{blue}{m})} = \textcolor{blue}{m} }}
+%\caption{Example for the imprecision of different techniques}
+%\label{example.4.1.3.3.1}
+%\end{figure}
+%
+%\bigskip 
+%
+%\noindent
+%Standard (non-local) superposition will allow the inferences between the pairs 
+%(5)(1)=\m{f(\textcolor{blue}{m},\textcolor{red}{v}) = \textcolor{red}{u}} (the result we name (1a)),\\
+%(6)(2)=\m{f(g(\textcolor{blue}{m}),\textcolor{red}{v}) \neq \textcolor{red}{u}}(2a),\\
+%(6)(3)=\m{f(h(\textcolor{blue}{m}),\textcolor{red}{v}) \neq \textcolor{red}{u}}(3a), and then\\
+%(7)(2a)= \m{f(\textcolor{blue}{m},\textcolor{red}{v}) \neq \textcolor{red}{u}}(2b) and finally\\
+%(1a)(2b) = \emptyClause.\\
+%Limiting these to \m{N^t}, essentially we have allowed a derivation between (1)(2).
+%
+%\bigskip
+%
+%\noindent
+%Our system will allow the following inferences at \m{N^t}:
+%
+%\bigskip
+%
+%\noindent
+%\infer[
+%]
+%{\m{b=g(c) \in \Gamma}}
+%{
+	%\infer[]
+	%{\m{b \in M}}
+	%{\m{\underline{b}=\textcolor{blue}{m}}}
+		%&
+	%\infer[
+%\begin{tabular}{ll}
+	%\m{c \triangleleft g(c) \trianglelefteq \maxTerms{N^t}}
+	%\end{tabular}
+	%]
+	%{\m{g(c) \in M}}
+	%{\m{\underline{c}=\textcolor{blue}{m}}}
+%}
+%
+%\bigskip
+%
+%\noindent
+%And similarly to derive \\
+%\m{b\eqg h(c) \eqg g(c)}, but no equality for a,\\
+%while only \m{b=g(c)} is actually needed for completeness.\\
+%We will, hence, allow superposition derivations between each pair in (1)(2)(3) - 3 in total, although only (1)(2) is needed for a refutation.
+%
+%\bigskip
+%
+%\noindent
+%For  ~\cite{McMillan08}, we get the following derivations:
+%
+%\bigskip
+%
+%\noindent
+%\infer[]
+%{\m{(2a)~\forall x \cdot c \neq x \lor \underline{f(g(x),\textcolor{red}{v})} = \textcolor{red}{u} \mid c \succ x}}
+%{
+	%{\m{\underline{c}=\textcolor{blue}{m}}}
+		%&
+	%\m{\underline{f(g(c),\textcolor{red}{v})} = \textcolor{red}{u}}
+%}
+%
+%\bigskip
+%\noindent
+%And similarly we can derive \\
+%{\m{(1a)~\forall y \cdot b \neq y \lor \underline{f(y,\textcolor{red}{v})} = \textcolor{red}{u} \mid b \succ y}} \\
+%{\m{(3a)~\forall z \cdot c \neq z \lor \underline{f(h(z),\textcolor{red}{v})} = \textcolor{red}{u} \mid c \succ z}}
+%
+%\bigskip
+%
+%\noindent
+%And now, in addition:
+%
+%\bigskip
+%
+%\noindent
+%\infer[]
+%{\m{(2b)~\forall x,w \cdot c \neq x \lor g(x) \neq w \lor \underline{f(w,\textcolor{red}{v})} = \textcolor{red}{u} \mid b \succ x, g(x) \succ w}}
+%{
+	%\m{\underline{g(\textcolor{blue}{m})} = \textcolor{blue}{m}}
+		%&
+	%\m{\forall x \cdot c \neq x \lor \underline{f(g(x),\textcolor{red}{v})} = \textcolor{red}{u} \mid b \succ x}
+%}
+%
+%\bigskip
+%
+%\noindent
+%Of the five clauses (1a)(2a)(2b)(3a)(4), both (1a),(2b) have each a valid superposition derivation with each other of the five clauses (7 in total).\\
+%Superposition of (1)(1a) and similarly (2)(2a) and (3)(3a) will be performed but the conclusion rejected by the ordering constraints (so minimally unification is needed).\\
+%Here, we have avoided derivations with (4) as in our system, but, additionally, we have avoided derivations with (3),(3a), 
+%essentially as h(c) was abstracted to h(z) rather than to a variable, and g(c) was treated differently only because of the equation 
+%\m{\underline{g(\textcolor{blue}{m})} = \textcolor{blue}{m}}, which the other two approaches are oblivious to.\\
+%Note especially, that we needed to find \m{mgu(g(\textcolor{blue}{m}),g(x))} where \m{g(x)} appears only in \m{N^t} 
+%but \m{g(\textcolor{blue}{m})} is not in scope in \m{N^t} - in our setting this would require a new mechanism for propagation.\\
+%In the non-ground case we may need to find e.g. \m{mgu(g(\textcolor{blue}{m},y),g(x,\textcolor{red}{u}))} which is exactly what we are trying to avoid - 
+%a mixed substitution.
+%
+%\bigskip
+%
+%\noindent
+%Weak abstraction will derive:
+%
+%\bigskip
+%
+%\noindent
+%\infer[]
+%{\m{(2A)g(c) \neq \textcolor{green}{X} \lor \underline{f(\textcolor{green}{X},\textcolor{red}{v})} = \textcolor{red}{u}}}
+%{
+	%\m{\underline{f(g(c),\textcolor{red}{v})} = \textcolor{red}{u}}
+%}
+%
+%\bigskip
+%
+%\noindent
+%And similarly \\
+%{\m{(1A)b \neq \textcolor{green}{Y} \lor \underline{f(\textcolor{green}{Y},\textcolor{red}{v})} = \textcolor{red}{u}}} \\
+%{\m{(3A)h(c) \neq \textcolor{green}{Z} \lor \underline{f(\textcolor{green}{Z},\textcolor{red}{v})} = \textcolor{red}{u}}}\\
+%{\m{(4A)a \neq \textcolor{green}{W} \lor \underline{f(\textcolor{green}{W},\textcolor{red}{v})} = \textcolor{red}{u}}}
+%
+%\bigskip
+%
+%\noindent
+%Of the four clauses (1A)(2A)(3A)(4A), weak abstraction will allow superposition between each (abstracted) pair - 6 in total.
+%
+%\bigskip
+%
+%\noindent
+%To summarize the comparison, we can see that our system remains in the ground fragment while the other two systems do not.
+%Weak abstraction prevents unification with terms in \langtp{} by (slightly) changing the unification algorithm,
+%while procrastination relies on ordering constraints for that purpose. 
+%We use a system of ground equations, which allows easy bi-directional communication between \m{N^t} and \m{N^b}, 
+%but our presented version of $\Gamma,\eqg$ uses a rough over-approximation for super-terms, 
+%which we hope to improve in future work.\\
+%
+%One can view IC3/PDR as the most accurate abstraction (at the price of communication overhead) - in our example, 
+%IC3 might find the model \\
+%\m{b=c=g(b)=g(c)} for \m{N^b} and communicate it to \m{N^t}, 
+%which will return (in the best case of generalization) \m{b \neq g(c)}, which is sufficient as an interpolant.\\
+%However, as we have mentioned before, this does not extend readily to DAGs where the above model will have to be communicated from e.g. an assertion node 
+%to the node which \m{N^t} represents, and if it is communicated through join-branch pairs, we will have to communicate (exponentially) more models (as per the number of paths) unless some abstraction is done on the model. 
+%A combination of satisfaction and saturation would be interesting future work.
+
+
+\subsubsection*{Other related work}
+
+\textbf{Superposition modulo Shostak theories:} Another related work is \\
+\cite{SuperpositionModuloShostak}, which shows a superposition calculus that works modulo a Shostak theory. 
+A Shostak theory (\cite{Shostak84},\cite{DBLP:conf/frocos/BarrettDS02}) is an alternative approach to satisfiability modulo a theory, where a Shostak theory is composed of two elements: a canonizer which is a function $\sigma$ that rewrites a term to its normal form in the theory, and a solver, which essentially evaluates an equation,
+returns whether the equation holds, does not hold, or a set of equalities on variables in the equation if the theory does not imply the equation or its negation. \\
+The authors use \emph{blackbox path ordering} which is an instance of lexicographic path ordering (LPO),
+that satisfies some additional properties, of  interest to us is that it is \emph{compatible with canonizer application} - that is, roughly, 
+\m{t \succeq \sigma(t)} where $\sigma$ is the canonizer function and t an arbitrary term. As our EC-graphs can be thought of as rewriting to normal form, and as we have used some rewriting to normal form for the integer theory, it would be interesting to see how ttkbo interacts with such a canonizer. 
+
+\textbf{Different ordering:} 
+We require at most as many limit ordinals as there are CFG-nodes, and hence our ttkbo weights are always within $\omega^{\omega}$.\\
+However, as our \m{l^t,l^b} are decreasing as we traverse the CFG in program execution direction, 
+program extension (e.g. loop unrolling) might require us to shift all calculated ttkbo weights by some \m{n\omega}, which can be implemented easily.
+
+In \cite{KovacsVoronkov09}, for two sets of clauses \m{N^t,N^b} over scopes \langt,\langb{} respectively ,
+the search for an interpolant uses an ordering where \\
+\m{\langtp \succsep \langI} and \\
+\m{\langbp \succsep \langI} \\
+while in our case and in \cite{McMillan08} \\
+\m{\langtp \succsep \langI \succsep \langbp}
+
+The main advantage of their work is that they do not need to modify the superposition calculus. 
+Our main advantage is that our ordering extends to trees and DAGs - which is required for our verification algorithm.
+
+The first promises completeness for ground local proofs as there cannot be any valid inference with premises in 
+both \langtp and \langbp (proven in \cite{KovacsVoronkov09} for ground FOL with equality and linear arithmetic by showing by induction that such an inference is never valid). 
+However, it does not extend readily for sequence (or tree or DAG) interpolants as each non-leaf, non-root CFG-node has at least two interfaces, with a predecessor and a successor, and so the ordering constraints cannot be all satisfied. Their solution is to run an interpolation instance per interface.
+
+
+The second extends readily to sequence and tree, and DAG interpolants, however, SP is not complete as-is for local proofs for cases as we have seen above. For this reason we have added unification relative to an equational theory, ~\cite{McMillan08} adds procrastination and \cite{BaumgartnerWaldmann13} adds weak abstraction.
+
+
+\textbf{Ordering:}\\
+Our ordering is oriented and separating in the style of ~\cite{McMillan08}, meaning that each term that is in scope at a node but not at its successor is \emph{larger} in the ordering. The idea of separation using tkbo was presented in \cite{LudwigWaldmann07} motivated by hierarchic theorem proving and further discussed in \cite{KovacsMoserVoronkov11}.
+TKBO is mentioned as a potential separating ordering for interpolation in \cite{KovacsVoronkov09}, while ~\cite{McMillan08} suggests a variant of recursive path ordering (RPO). We have found TKBO more appropriate for sequence, tree and DAG interpolants as it is easy to generate weights that satisfy the ordering constraints, for interface terms we can share the calculation of the weight 
+(evaluation of $\prec_i$ is still done on a truncated weight - for each CFG-node there is a designated \m{l^t}), 
+and often $\prec/\prec_i$ can be determined using just the weight comparison, without resorting to the recursive inspection of terms.

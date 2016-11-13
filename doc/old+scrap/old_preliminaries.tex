@@ -1,0 +1,317 @@
+%====================================================================================================================
+%====================================================================================================================
+\section{Preliminaries}
+In this section we discuss the setup in which we are working.
+
+%====================================================================================================================
+\subsection{CFG}
+We start with the control flow graph of the VC of a program in Boogie format (e.g. Chalice output), after it has been transformed into a DAG and all the statements have been converted to \lstinline{assert} or \lstinline{assume} statements (as done by Boogie).
+
+Each node in the CFG is a basic block in the original program, containing a sequence of statements.
+Each node has a set of predecessor nodes, when this set is empty the node would be termed the \emph{root} node (we rewrite the CFG to have exactly one of these), if it has more than one predecessor it is a \emph{join} node, and otherwise it is a \emph{sequential} node. A \emph{leaf} node has no successors. 
+
+Branch conditions are converted to \lstinline{assume} statements at the targets of the branch (as done by Boogie).
+We rewrite the CFG to have only binary branches by cascading branches that are more than binary.
+We do the same for join points - trying to match join points to branch points.
+
+For each binary branch \node{b}, with $\succs{b} = \{\node{b_t}, \node{b_e}\}$,
+we add a condition \variable{c_b} which is a Boolean variable, in addition to the assume statements on each side.
+
+We add the statement \lstinline[mathescape]{assume $\variable{c_b}$} at the beginning of \node{b_t} and \lstinline[mathescape]{assume $\lnot \variable{c_b}$} at the beginning of \node{b_e}.
+
+These variables allow us to encode succinctly, for a given trace of the program from \node{root} to \node{n}, which path was used, and hence better encode facts at join points.
+
+We rewrite the CFG by first splitting all basic blocks that contain assertions so that each block has at most one assertion, and that assertion appears at the end of the block (for branch nodes that end in an assertion we add another empty node after the assertion to serve as the branch point - so every node with an assertion has at most one successor).
+
+Next, for each node \node{n} that ends with an assertion \lstinline[mathescape]{assert $\clause{e}$}, we add a new leaf node successor \node{n_a} with the statement \lstinline[mathescape]{assume $\clause{\lnot e}$}, and potentially, if we want assert-as-assume, add the statement \lstinline[mathescape]{assume $\clause{e}$} to the beginning of the successor of \node{n} (if any). The node \node{n_a} is termed a \emph{goal} or \emph{assertion} node, and the set of all such nodes is termed \goals.
+
+Each assertion becomes a branch with the assertion expression as the branch condition, where the branch in which the assertion holds continues with the next statement, while the branch where the assertion does not hold is a leaf node with just the statement \lstinline[mathescape]{assume $\clause{\lnot e}$}. Now we remove the \lstinline{assert} statement from the node \node{n}.
+
+At the end of this process each node contains only \lstinline{assume} statements, and all leaf nodes are assertion nodes.
+
+For example: (We use labels as the names of basic blocks)
+\begin{lstlisting}[mathescape]
+$n$:
+assume A
+assume B
+assert C
+assume D
+assert E
+if (*)
+  $nt$:
+  assume F
+  assert G
+else
+  $ne$:
+  assume H
+$nj$:
+assert I
+\end{lstlisting}
+
+Would become:
+\begin{lstlisting}[mathescape]
+$n$:
+assume A
+assume B
+if (*)
+  $n_a$:
+  assume $\lnot$C
+  abort //leaf node
+$n1$:
+assume C //assert as assume
+assume D
+if (*)
+  $n1_a$:
+  assume $\lnot$E
+  abort //leaf node
+$n2$:
+assume E
+if (*)
+  $nt$:
+  assume F
+  if (*)
+    $nt_a$:
+    assume $\lnot$G
+    abort //leaf node
+  $nt1$:
+  assume G
+else
+  $ne$:
+  assume H
+$nj$:
+assume $\lnot$I
+abort //leaf node
+\end{lstlisting}
+
+\noindent
+Where $\goals = \{n_a,n1_a,nt_a,nj_a\}$.\\
+\noindent
+As each CFG node has a sequence of only \lstinline{assume} statements, their order does not matter, so we, in fact, encode the CFG nodes as having a \emph{set} of \lstinline{assume} statements.
+
+Our objective is to show that all assertion nodes are infeasible.
+Each \lstinline{assume} statement has an expression in the Boogie language, which we convert into a (set of) clause(s) in FOLE CNF - so each node ends up with a set of clauses that represent the effect of executing the statements in that node.
+
+We also merge two consecutive nodes where the first one has only one successor and no assertions.
+
+We assume the DAG is trimmed, so that all nodes are reachable from the root node, and all nodes have a path to at least one assertion node.
+
+We end up with a DAG with one source, where each node has a set of clauses, all branches and joins are binary, and some leaf nodes are marked as assertion or \emph{goal} nodes.
+
+We denote the set of all joined branches in the program \branches.
+
+\subsubsection*{Well Branching Programs}
+Here we define a restriction on the branching structure of the CFG, which helps simplify many of the following steps.
+The restriction stems from standard (\lstinline{goto}-less) structured control flow - branches are joined in reverse order of branching, and each join joins exactly one branch fully (except for dead-end leaves).
+We found that most graphs generated for the VC of a structured program adhere to this form, and as it simplifies the following treatment significantly we will assume our CFGs adhere to this restriction.
+Later we will discuss how to lift this restriction if needed.
+We begin with the following definitions:
+A binary branch \node{b} has two successors, \node{b_t} and \node{b_e}, and the corresponding branch condition variable \variable{c_b}
+	
+\begin{definition}
+	A \emph{corresponding join} \node{j_b} for a branch node \node{b}	is a node that satisfies:
+	\begin{itemize}
+		\item $\node{j_b} \in \cap_{n \in \succs{b}} \succst{n}$ - reachable from all branch sides
+		\item $\cap_{n \in \succs{b}} \succst{n} \subseteq \succst{\node{j_b}}$ - minimal
+		\item $\forall \node{n} \in \predst{j_b} : \\
+			(
+				(\node{b} \in \predst{n}) 
+					\lor 
+				(\node{b} \in \succsto{n} \land \node{b} \in \succst{\succs{n} \cap \predst{j_b}})
+			)$  - All paths from the \node{root} to \node{j_b} pass through \node{b}
+		\item On any path from \node{b} to \node{j_b}, for each branch on the path there is also a corresponding join for that branch on the path (recursive)
+	\end{itemize}
+\end{definition}
+
+\begin{definition}
+	A \emph{good join} \node{j_b} is a corresponding join for a binary branch \node{b}.
+\end{definition}
+
+\begin{definition}
+	A \emph{well branching program} is a program where all joins are good joins and all branches have a corresponding join (or no join) - this is actually the structure of any program written in a structured language without using \lstinline{goto}, \lstinline{break},\lstinline{continue}, \lstinline{abort}, \lstinline{return} or any exceptional program flow.
+\end{definition}
+
+From now on we assume the program is well branching.
+
+For a well branching program, we define by \branches the set of branch nodes which have a join (this escludes the branches that branch to an assertion node) and \joins the set of join nodes.
+
+\begin{definition}
+For each branch \node{b} in \branches we define:
+\begin{itemize}
+	\item The join $\join{b}=\node{j_b}$ and its inverse $\branch{j_b}=\node{b}$
+	\item The true resp. false branch targets \node{b_t}, \node{b_f}
+	\item The the set of nodes on the true resp. false side that reach the join as $\tns{b}=\succst{b_t} \cap \predsto{j_b}$ resp. $\fns{b}=\succst{b_f} \cap \predsto{j_b}$.
+	\item The true resp. false join nodes $\node{b_{jt}} \in \preds{j_b} \cap \tns{b}$ resp. $\node{b_{jf}} \in \preds{j_b} \cap \fns{b}$
+\end{itemize}
+\end{definition}
+
+%====================================================================================================================
+\subsubsection{Semantics}
+As we are using the Boogie semantics, an assertion fails iff there is any trace that reaches it and in which the assertion does not hold. After our CFG transformations this means that an assertion fails iff the assertion node is \emph{feasible} (has at least one trace reaching it from the root node). Note that this means that the point \emph{after} the \lstinline{assume} statements in that node is feasible. This is not exactly equivalent to having the statements on CFG edges because join nodes can have statements.
+
+This is equivalent to saying that the set of feasible states at \node{n} (meaning after executing the statements at \node{n}) is not empty. We term the set of feasible states at \node{n} the \emph{poststates} of \node{n}.
+We term the \emph{prestate} of \node{n} the union of the post-states of the predecessors of \node{n}, where the pre-state of the root node is \true.
+
+The post-state of \node{n} is equivalent to the image of the pre-states of \node{n} after applying the transformer of the statements at \node{n}.
+As we have only \lstinline{assume} statements, this just means all the pre-states that satisfy the expressions of all \lstinline{assume} statements at \node{n}.
+
+We will represent the sets of pre-states and post-states of nodes (and their over-approximations) using sets of clauses (where the set of states is the set of models of their conjunction). These we term the \emph{pre-condition} and  \emph{post-condition} of a node, respectively.
+
+We represent the set of pre-conditions of \node{n} as a FOLE formula \precondz{n}, and the set of clauses that is the FOLE-CNF conversion of all the expressions of all \lstinline{assume} statements in \node{n} as \clauses{n}, and the post-condition of \node{n} as \postcondz{n} - as follows:
+
+\noindent
+$\precondz{root} = \true$ \\
+$\node{n} \neq \node{root} \Rightarrow ( \precondz{n} \triangleq \lor_{p \in \preds{n}} \postcondz{p})$ \\
+$ \postcondz{n} \triangleq \precondz{n} \land \clauses{n}$
+
+Note that this formula can include a lot of repetition if the DAG is not a tree - the set of clauses of a node would be included as many times as there are paths from that node to \node{n}, we would like to prevent that.
+
+We will actually be using slightly different versions,
+\precond{n} and \postcond{n}, that are semantically equivalent but syntactically simpler - as we will show later. However, for reasoning about the semantics we will use for now \precondz{n} and \postcondz{n}.
+
+For each internal node \node{n}, \postcond{n} is shared by the \postcond{} of all assertions reachable from \node{n}.
+Hence, if we have two transitive successor assertion nodes of \node{n}, \node{a_1} and \node{a_2}, and we have a proof of infeasibility of each from \postcond{a_1}, \postcond{a_2} respectively, we could expect that the proof DAGs would share subDAGs of lemmas that depend only on clauses from \postcond{n} (or, potentially, the proof DAGs could be rearranged, to have such sharing).
+We try to take advantage of this sharing, which is only partially exploited when generating a flat VC for the entire program (CDCL based provers can generate some of these shared lemmas on the flat VC, but that is done ad-hoc rather than directly exploiting the CFG structure).
+
+We try to maximize such sharing by having a prover for each CFG node \node{n}, which is responsible for deducing all the \emph{relevant} lemmas that hold at \node{n}, and that do not hold in all its predecessors.
+These lemmas can then be propagated down the CFG and used where necessary.
+Determining the relevancy of lemmas deducible at \node{n} depends, of course, on the assertions that are reachable from \node{n}. 
+Our objective is to have a mechanism for triggering deductions at \node{n} based on the needs of \node{n}'s successors.
+We will describe several mechanism that try to trigger potentially relevant deductions, while avoiding as many useless deductions as possible. 
+A key mechanism would be identifying a subset of the deductions that are "safe", such as unit propagation and subsumption, meaning that they only contract the number and size of clauses and cannot bring about an explosion in the size of the problem. We would apply these safe deductions eagerly and only when that is insufficient would we apply unsafe deductions.
+
+%====================================================================================================================
+\subsubsection{Path Conditions}
+For each branch $\node{b} \in \branches$, we have a unique Boolean variable \variable{c_b} that is assumed \true on the \lstinline{then} (\emph{true}) side and \false on the \lstinline{else} (\emph{false}) side.
+This allows us to identify each node in the DAG with a propositional formula over these Boolean variables. 
+For a node \node{n} we would call this formula \pcz{n} (the path condition of \node{n}).
+In order to define this formula exactly we need to define first a helper formula \lpc{n} (local path condition) - as follows:
+\begin{lstlisting}[mathescape,tabsize=2]
+$\lpc{root} = \true$
+if $(\exists \node{b} \in \branches : \node{n} = \node{b_t}$ //unique
+	$\lpc{n} = \variable{c_b}$
+else if $(\exists \node{b} \in \branches : \node{n} = \node{b_f}$ //unique
+	$\lpc{n} = \lnot\variable{c_b}$
+else
+	$\lpc{n} = \true$
+\end{lstlisting}
+	
+\noindent
+Now we define:\\
+$\pcz{root} = \true$ \\
+$\node{n}\neq\node{root} \Rightarrow \pcz{n} = (\lor_{p \in \preds{n}} \pcz{p}) \land \lpc{n}$
+
+\noindent
+We would usually refer to a Boolean simplified version of \pcz{n} - \pc{n} - as otherwise it often has a lot of redundancy.
+
+\noindent
+We define \pc{n} as follows:
+\begin{lstlisting}[mathescape,tabsize=2]
+$\pc{root}=\true$
+if $(\|\preds{b}\|=1)$
+	if $\exists \node{b} \in \branches : \node{n} \in \succs{b}$ 
+		$\pc{n} = \pc{b} \land \lpc{n}$
+	else 
+		$\pc{n} = \pc{b}$
+else //($\|\preds{b}\|=2$)
+	$\pc{n} = \land \cap_{\node{p} \in \preds{n}} \mathbf{literals}(\pc{p})$ //$=\pc{\branch{n}}$
+\end{lstlisting}
+	
+\begin{theorem}
+	For well branching programs, for every node \node{n}, $\pcz{n}\Leftrightarrow\pc{n}$
+\end{theorem}
+
+Note that \pcz{n} does not identify a node uniquely (semantically), for example, when a sequential node's predecessor has only one non leaf successor, both nodes would have the same path conditions, and so each assertion leaf node would have the same path condition as its direct predecessor (we do not create branch condition variables for branches created for assertions, as they never join).
+
+It is easy to see that a in good branching program, for any node \node{n}, \pc{n} would be just a conjunction of literals which are the (possibly negated) branch conditions, and hence its negation (as we use it only on the left side of an implication) is always in CNF form.
+
+For a node \node{n} the transitive predecessors (not including \node{n} itself) are \predsto{n} .
+For each transitive predecessor \node{p} the path condition is \pc{p}. 
+The path condition of a transitive predecessor \node{p} of \node{n} \emph{relative} to \node{n} is \rpc{p}{n} - this represents, intuitively, the path information that is in \node{p} and not in \node{n}.\\
+For example, if we had:
+\begin{lstlisting}[tabsize=2]
+if (A)
+	if (B)
+		p: ...
+	else
+		...
+	if (C)
+		n:...
+	else
+		...
+\end{lstlisting}
+
+Then $\pc{p} = \clause{A \land B}$, $\pc{n} = \clause{A \land C}$ and $\rpc{p}{n}=\clause{B}$, because \clause{B} is the path information that we have in \node{p} that is lost in \node{n}.
+In a well branching program, where \pc{p} and \pc{n} are conjunctions of literals (and cannot have conflicting literals), we would have $\rpc{p}{n} \triangleq \pc{p} \setminus \pc{n}$ (treating \pc{n},\pc{p} as sets of literals).
+So $\rpc{p}{n}=\true$ unless \node{p} is on one side of a branch that is joined before reaching \node{n}.
+
+In non-well branching programs, we can weaken the definition and choose any \rpc{p}{n} that satisfies:
+\begin{itemize}
+	\item $\pc{p} \Rightarrow \rpc{p}{n}$ (it must only have information from \pc{p})
+	\item $(\rpc{p}{n} \land \pc{n}) \Rightarrow \pc{p}$ (it must have all the extra information from \pc{p} that is not in \pc{n})
+\end{itemize}
+
+Using this formula we find another formula equivalent to the precondition of n: \\
+$\precondz{n} \Leftrightarrow ((\land_{\node{p} \in \predsto{n}} (\pc{p} \rightarrow \land_{\clause{c} \in \clauses{p}} \clause{c}))) \land \pc{n}$ \\
+Now we attach the path condition to each clause, and use the relative path condition to keep the CNF form:\\
+$\precond{n} \triangleq ((\land_{\node{p} \in \predsto{n}} \land_{\clause{c} \in \clauses{p}} (\rpc{p}{n} \rightarrow \clause{c})) \land \pc{n})$\\
+Now we can express \postcond{n} in CNF:\\
+$\postcond{n} \triangleq (\precond{n} \land \land_{\clause{c} \in \clauses{n}} \clause{c} )$
+
+The set of models of \postcond{n} is the set of states that we can have after node n - and as the program is passive and deterministic, this identifies uniquely the set of traces that reach \node{n} from the \node{root}.
+We add all global axioms (in their CNF version) to \clauses{root}.
+We will use the following property extensively:
+
+\begin{lemma}
+\label{lem:clauses}
+Given a CFG and a node \node{n} in the CFG, if we add to \\
+ \clauses{n} a clause that is implied by \clauses{n}, or even a clause that is implied by \postcond{n}, the set of models of \postcond{n} does not change, and so the feasibility of all assertion nodes does not change.
+Furthermore, the set of models of all other nodes also does not change.
+\end{lemma}
+
+%Lemma~\ref{lem:bla}
+\begin{lemma}
+For a good join \node{j_b} for the branch \node{b} with the condition variable \node{c_b}:
+\begin{itemize}
+	\item $\pc{j_b}=\pc{b}$
+	\item $\pc{\tns{b}}=\pc{b} \land \variable{c_b}$
+	\item $\pc{\fns{b}}=\pc{b} \land \lnot\variable{c_b}$
+\end{itemize}
+\end{lemma}
+
+For a sequential node \node{n} with a predecessor \node{p}, we can add to \clauses{n} any member of \clauses{p} without changing the set of models of \postcond{n}.
+For a good join node \node{j_b} we can add any clause from $\clauses{\tns{b}} \cap \clauses{\fns{b}}$ to \clauses{j_b} without changing the set of post-states of any node.
+
+As a the feasibility of a node depends only on its transitive predecessors, we can freely add successor nodes to any node in the CFG without affecting the set of traces reaching any of the existing nodes. This can be useful, for example, if we want to unroll a loop gradually, and also if we want to prove the assertions from the beginning of the program to the end, and simplify the CFG as assertions are eliminated.
+
+An alternative formulation of path conditions could be, rather than using branch variables, to use a Boolean variable per program point, which is indeed often used when encoding VCs.
+The disadvantage would be that we have to add several clauses that say, essentially, that if we are past a join point then exactly one of the sides of the branch must have been taken - which we get for free when using a Boolean variable and its negation. 
+As we'll see later, this encoding would also make it harder to propagate clauses forward after a join.
+The advantage for the alternative encoding is that a program without corresponding joins (where joins happen not in reverse order to branches), would have simpler path conditions - our path conditions (in CNF, but also in DNF) could become exponential if the program is not good branching.
+
+%====================================================================================================================
+\subsubsection{Scoping and DSA}
+We are trying to promote reasoning that is local to program points, and so the variable scoping inherent in the program (and more so in the DSA version) suggests itself.
+One way to limit the set of clauses that can be deduced in each program point is to reduce the \emph{vocabulary} of the prover - the set of function and predicate symbols in the language over which the prover works.
+As a first approximation, we can easily see that the vocabulary of $\postcond{n}$ includes at most only the symbols that appear in the transitive predecessors of \node{n} (including \node{n}).
+This, however, still means that assertions towards the end of the program (e.g. postconditions) would have the full scope of the program, we would like to reduce this further.
+For each node \node{n}, the set of program variables (after DSA conversion) that are in scope in \node{n} is the set of \emph{live variables} at \node{n}.
+A variable \variable{v} is alive at \node{n} if it is used in \node{n} itself (that is, appears in one of \node{n}'s clauses), or if it is used in both a transitive predecessor and transitive successor of \node{n} - that is, there is a path through \node{n} in which \variable{v} is used both before and after \node{n}.
+
+We distinguish 2 kinds of scoping - the first is static and uses only syntactic information to calculate the maximal scope that will be needed at a given node - \sScope{n}, the second is the dynamic scope, which is initially equal to \vars{n} ($\cup_{\clause{c} \in \clauses{n}} \vars{c}$), and can grow up to \sScope{n} on demand.
+
+The static scope of a node \node{n} cannot be reduced to less than the live variables at \node{n}.
+The spectrum then, for the \emph{static scope} of a node, is between the set of live variables at that node and the union of live variables of all of the node's transitive predecessors, including itself - formally:\\
+$\backScope{n} \triangleq \cup_{p \in \predst{n}} \vars{p}$ \\
+$\forScope{n} \triangleq \cup_{s \in \succst{n}} \vars{s}$ \\
+$\liveVars{n} \triangleq \forScope{n} \cap \backScope{n}$ \\
+$\liveVars{n} \subseteq \sScope{n} \subseteq \backScope{n}$
+
+As FOLE admits interpolation, if \postcond{n} is inconsistent and a variable \variable{v} is in \precond{n} but not in \clauses{n}, we can always calculate an interpolant between \precond{n} and \clauses{n}  that would not include \variable{v} and will be sufficient to show the inconsistency of \postcond{n}.
+In FOLE, calculating this interpolant will often include using existential quantification to eliminate the variable \variable{v}.
+In our setting this would not usually prove very useful as:
+\begin{itemize}
+	\item As we deal with CNF clauses, the existential quantification will have to be Skolemized and so we end up with a new function/constant instead of the old variable name - this might make sense if we have unrolled loops and are trying to infer an invariant, but otherwise keeping the old variable name keeps more information without introducing new symbols
+	\item When we have a variable that goes out of scope on both sides of a branch, while being assigned down a DSA chain, at the join point we must perform the existential quantification, and hence Skolemization, on the clauses coming from both sides together, or otherwise we might duplicate many of the facts about the common variable (though completeness is, in general, not an issue - there is an independent interpolant for each side) - we want to be able to communicate clauses with the \lstinline{then} and \lstinline{else} branches independently
+\end{itemize}
+
+Rather than force \sScope{n} to be \backScope{n}, we remove from scope constants that can be represented as a term over other constants that are in \backScope{n} - as is often the case in DSA.

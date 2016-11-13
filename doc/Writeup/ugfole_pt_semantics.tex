@@ -1,0 +1,250 @@
+\newpage
+\section{Predicate Transformer Semantics} \label{predicate_transformer_semantics_section}
+In this section we refine the strongest post-conditions discussed earlier in order to show which part of the verification can be done at the unit level. 
+
+For this discussion we need some extra terminology:\\
+As before, we denote the set of clauses known at a node \node{n} as \clauses{n}.
+We want to define the subset of \precond{n} and \postcond{n} these which is guaranteed to be unit ground equalities.
+
+Remember the definitions for pre and post conditions:
+\begin{figure}[H]
+$
+\begin{array}{lll}
+	\precond{n}  &\triangleq   & \bigwedge\limits_{\substack{\node{p} \in \predsto{n} \\ \clause{c} \in \clauses{p}}} (\rpc{p}{n} \rightarrow \clause{c}) \\
+	\postcond{n} & \triangleq  & \lpc{n} \land \precond{n} \land \bigwedge \clauses{n}
+\end{array}
+$
+\caption{pre and post conditions}
+\end{figure}
+
+Remember that we can add to \clauses{n} any \clause{C} if $\postcond{n} \vdash \clause{C}$ without losing soundness or completeness.
+
+We assume from now on that $\lpc{n} \in \clauses{n}$.\\
+We write the definitions in CNF treating \rpc{p}{n} as a set of literals and using
+\m{\lnot \rpc{p}{n}} for \m{\bigvee\limits_{\m{l} \in \rpc{p}{n}} \lnot \m{l}}
+
+The first version of CNF strongest post-conditions is:
+\begin{figure}[H]
+$
+\begin{array}{lll}
+	\vspace{10pt}
+	\precondZ{n}  & \triangleq & \bigwedge\limits_{\substack{\node{p} \in \predsto{n} \\ \clause{c} \in \clauses{p}}} 
+(\clause{c} \lor \lnot \rpc{p}{n} )\\
+	\vspace{10pt}
+	\postcondZ{n} & \triangleq & \precondZ{n} \land \bigwedge \clauses{n} \\
+\end{array}
+$
+\caption{clause pre and post conditions}
+\end{figure}
+
+The clauses $(\clause{c} \lor \lnot \rpc{p}{n} )$ are still not unit clauses and contain path (non equality) literals.
+We could remap path literals to constant equality literals as in the transformation from PL to GFOLE but that still leaves us with no unit clauses.
+
+The first step is to reformulate preconditions as a function of only direct predecessors:
+\begin{figure}[H]
+$
+\begin{array}{lll}
+	\vspace{10pt}
+	\precondI{n}   & \triangleq & \bigwedge\limits_{\substack{ \node{p} \in \preds{n} \\\clause{c} \in \postcondI{p}}}
+( \clause{c} \lor \lnot \rpc{p}{n}) \\
+	\vspace{10pt}
+	\postcondI{n} & \triangleq & \precondI{n} \land \bigwedge \clauses{n}
+\end{array}
+$
+\caption{pre and post conditions 1}
+\end{figure}
+
+This is semantically equivalent to the above, the proof relying on the lemma that:\\
+$\forall \node{n} \cdot \forall \node{p} \in \preds{n} \cdot \forall \node{p_1} \in \predsto{p} \cdot \rpc{p_1}{n} = \rpc{p}{n} \cup \rpc{p_1}{p}$
+
+For the next version we look at \rpc{p}{n} where \node{p} is a direct predecessor of \node{n}, we have two options:
+\begin{itemize}
+	\item \node{n} is a sequential node and $\rpc{p}{n}=\emptyset$ which means $\lnot \rpc{p}{n} \Leftrightarrow \false$
+	\item \node{n} is a join node that joins the path condition \m{c} and so for a direct predecessor \node{p}, $\rpc{p}{n} \in \s{c,\lnot c}$
+\end{itemize}
+
+In order to avoid losing precision because of infeasible predecessors, we define the set of valid predecessors:\\
+$\vpredsII{n} \triangleq \s{\node{p} \in \preds{n} \mid  \emptyClause \not\in \postcondII{p}}$
+
+The next step is to remove, syntactically, the redundant \true literals in the clauses - for that we will use the set of \emph{common clauses}
+\cprecondII{n} between all of the feasible (not provably infeasible) direct predecessors of a node, which for sequential nodes is just all the clauses from the predecessor:\\
+$\cprecondII{n}  \triangleq \bigcap\limits_{\node{p} \in \vpredsII{n}} \postcondII{p}$\\
+We define also the complement \uprecondII{n,p}, the clauses unique to a predecessor.
+
+The preconditions of the node will include the empty clause iff it is not the root and all the direct predecessors are provably infeasible.\\
+The next iteration of the definitions is as follows:
+\begin{figure}[H]
+$
+\begin{array}{lll}
+	\vspace{10pt}
+	\vpredsII{n}     & \triangleq & \s{\node{p} \in \preds{n} \mid  \emptyClause \not\in \postcondII{p}} \\
+	\vspace{10pt}
+	\cprecondII{n}   & \triangleq & \bigcap\limits_{\node{p} \in \vpredsII{n}} \postcondII{p} \\
+	\vspace{10pt}
+	\uprecondII{n,p} & \triangleq & \postcondII{p} \setminus \cprecondII{n} \\
+	\vspace{10pt}
+	\precondII{n}    & \triangleq & \bigwedge\cprecondII{n} \wedge \bigwedge\limits_{\substack{\node{p} \in \vpredsII{n}\\\clause{c} \in \uprecondII{n,p}}} 
+	(\m{c} \lor \lnot \rpc{p}{n})\\
+	\vspace{10pt}
+	\postcondII{n} & \triangleq & \precondII{n} \land \bigwedge \clauses{n}
+\end{array}
+$
+\caption{pre and post conditions 2}
+\end{figure}
+
+Now a sequential node would get all the unit clauses from the predecessors and join nodes would get all the common unit clauses.
+Additionally, there is much less in the way of redundant literals in clauses.
+This can serve as a good basis for finding the set of unit clauses that the algorithm will calculate, however, consider the following program:
+\begin{figure}[H]
+\begin{lstlisting}
+$\node{p_b}:$
+if ($\m{c_1}$)
+	$\node{p_t}:$
+	assume a=b
+else
+	$\node{p_e}:$
+	assume b=c
+$\node{p_j}:$
+assume a=c
+	$\node{p_ja}:$
+	assert a=b
+\end{lstlisting}
+\caption{three way join}
+\label{snippet3.1}
+\end{figure}
+
+Here, \\
+$
+\begin{array}{lll}
+\precondII{p_j}     & = & \s{\lnot \m{c_1} \lor \term{a=b}, \m{c_1} \lor \term{b=c}} \\
+\postcondII{p_j}    & = & \s{\term{a=c}, \lnot \m{c_1} \lor \term{a=b}, \m{c_1} \lor \term{b=c}} \\
+\postcondII{p_{ja}} & = & \s{\term{a \neq b},\term{a=c}, \lnot \m{c_1} \lor \term{a=b}, \m{c_1} \lor \term{b=c}}
+\end{array}
+$\\
+This is sufficient in order to prove the assertion, but if we restrict \precondII{n} 
+to only ground unit equalities that are in both predecessors, we get:\\
+$
+\begin{array}{lll}
+	\restrict{\precondII{p_j}}{u}     & = & \s{} \\
+	\restrict{\postcondII{p_j}}{u}    & = & \s{\term{a=c}} \\
+	\restrict{\postcondII{p_{ja}}}{u} & = & \s{\term{a \neq b},\term{a=c}}
+\end{array}
+$\\
+Which is insufficient. 
+This is the general problem where $\m{(a \sqcup b) \sqcap c}$ is potentially less precise than $\m{(a \sqcap c) \sqcup (b \sqcap c)}$.
+This problem is mentioned in ~\cite{GulwaniTiwariNecula04} as the \emph{context sensitive join}.
+In order to be able to handle this fragment we want to use the transitive congruence closure of $(\clauses{n} \cup \postcondII{p})$ in the intersection.
+We will see more related examples for this later.
+
+Using the above, we define, for a node \node{n} and a direct predecessor \node{p} the \emph{relative clauses} of \node{p} as:\\
+$\rClausesIII{p}{n} \triangleq (\CCR{\postcondIII{p} \cup \clauses{n}})$\\
+and using that we refine the set of valid predecessors:\\
+$\vpredsIII{n}      \triangleq \s{\node{p} \in \preds{n} \mid  \emptyClause \not\in \rClausesIII{p}{n}}$\\
+We use \m{\mathbf{CC_R}} because it is the only calculus of the three where the closure is guaranteed to be finite 
+(for \m{\mathbf{CC}} the closure is finitely representable as a graph but not a set of equations - discussed later).
+
+The motivation for this formulation comes from programs such as this:
+\begin{figure}[H]
+\begin{lstlisting}
+if (*)
+	$\node{p_t}:$
+	assume $\m{f(a) \neq f(b)}$
+else	
+	$\node{p_e}:$
+	assume $\m{c=d}$
+$\node{p_j}:$
+assume $\m{a=b}$
+	$\node{p_{ja}}:$
+	assert $\m{c=d}$
+\end{lstlisting}
+\caption{join inequality propagation}
+\label{snippet3.2}
+\end{figure}
+
+Here $\vpredsII{p_j}=\s{p_e}$ because \\
+$\emptyClause \in \CCR{\clauses{p_j} \cup \clauses{p_t}}=\CCR{f(a) \neq f(b),a=b} \\
+=\s{a=b,f(a)=f(b),f(a) \neq f(b),\emptyClause}$,\\
+ and so we can use the clause \m{c=d} from \node{p_e}, which would not be possible without considering both \clauses{p_j}, \clauses{p_t} and congruence closure.
+
+%\s{s \neq t \mid \exists u,v \cdot \s{\term{s=u,v=t,u \neq v}} \subseteq \m{S} } \cup \\
+%\s{ \emptyClause \mid \exists s,t \cdot \s{\term{s=t,s \neq t}} \subseteq \m{S} } \cup \\
+%\mathbf{DAI}(\m{S})$
+
+%We will explain the last rule in the following.
+
+\noindent
+Now we can define another version of our preconditions:
+\begin{figure}[H]
+$
+\begin{array}{lll}
+	\vspace{10pt}
+	\rClausesIII{p}{n} & \triangleq & \CCR{\postcondIII{p} \cup \clauses{n}} \\
+	\vspace{10pt}
+	\vpredsIII{n}      & \triangleq & \s{\node{p} \in \preds{n} \mid  \emptyClause \not\in \rClausesIII{p}{n}} \\
+	\vspace{10pt}
+	\cprecondIII{n}   & \triangleq & \bigcap\limits_{\node{p} \in \vpredsIII{n}} \rClausesIII{p}{n} \\
+	\vspace{10pt}
+	\uprecondIII{n,p} & \triangleq & \postcondIII{p} \setminus \cprecondIII{n} \\
+	\vspace{10pt}
+	\precondIII{n}    & \triangleq & \bigwedge\cprecondIII{n} \wedge \bigwedge\limits_{\substack{\node{p} \in \vpredsIII{n}\\\clause{c} \in \uprecondIII{n,p}}} 
+	(\m{c} \lor \lnot \rpc{p}{n})\\
+	\vspace{10pt}
+	\postcondIII{n} & \triangleq & \CCR{\precondIII{n} \land \bigwedge \clauses{n}}
+\end{array}
+$
+\caption{pre and post conditions 3}
+\label{prepost3}
+\end{figure}
+
+Now coming back to ~\ref{snippet3.1}:\\
+$
+\begin{array}{lllll}
+\CCR{\postcondIII{p_t} \cup \clauses{p_j}}  & = & \s{a=b,b=c,c=a} \\
+\CCR{\postcondIII{p_e} \cup \clauses{p_j}}  & = & \s{a=b,b=c,c=a} \\
+\cprecondIII{p_j}                          & = & \s{a=b,b=c,c=a} \\
+\precondIII{p_j}                           & = & \s{a=b,b=c,c=a} \\
+\postcondIII{p_j}                          & = & \s{a=b,b=c,c=a} \\
+\postcondIII{p_{ja}}                       & = & \s{a=b,b=c,c=a,a \neq b,\emptyClause} \\
+\end{array}
+$\\
+This is sufficient in order to prove the assertion, even under the unit restriction.
+
+The space complexity of the pre and post conditions above, referring to \size{\ECs{\mathbf{\postcondIII{n}}}} is, however, in the worst case double exponential in the size of the original program, as we will show in later sections.
+
+Also, as mentioned before, a simple program as this:
+\begin{figure}[H]
+\begin{lstlisting}
+if (*)
+	$\node{p_t}:$
+	assume $\m{f(a) = f(b)}$
+else	
+	$\node{p_e}:$
+	assume $\m{a=b}$
+$\node{p_j}:$
+	...
+	$\node{p_{ja}}:$
+	assert $\m{f(a)=f(b)}$
+\end{lstlisting}
+\caption{join congruence closure}
+\label{snippet3.3}
+\end{figure}
+
+Will not verify with the above formulation as (again, showing only unit clauses and not showing reflexive equalities)\\
+$
+\begin{array}{lllll}
+\restrict{\CCR{\postcondIII{p_t} \cup \clauses{p_j}}}{\m{u}}  & = & \s{f(a)=f(b)} \\
+\restrict{\CCR{\postcondIII{p_e} \cup \clauses{p_j}}}{\m{u}}  & = & \s{a=b} \\
+\restrict{\cprecondIII{p_j}}{\m{u}}                          & = & \s{} \\
+\restrict{\precondIII{p_j}}{\m{u}}                           & = & \s{} \\
+\restrict{\postcondIII{p_j}}{\m{u}}                          & = & \s{} \\
+\restrict{\postcondIII{p_{ja}}}{\m{u}}                       & = & \s{f(a) \neq f(b)} \\
+\end{array}
+$
+
+The terms \m{f(a)} and \m{f(b)} will not appear at the join as they are not both represented on both sides of the join.
+
+This is obviously highly unsatisfactory - a potentially double exponential set of equations that cannot verify very simple correct programs.
+In a sense, the join (and also equality propagation to sequential nodes) is both too eager and too lazy - it propagates equalities regardless of the statements in successor nodes.
+As in the propositional case, we want propagation to be goal sensitive - that is, propagate information that is potentially useful in successors. Also as in the propositional case, we have seen that we do not want to propagate, in the unit fragment, all the potentially useful information, as this might too high complexity, or even not be finitely representable.\\
+In the next section we discuss complexity issues inherent with the representation of these post conditions in the fragment and th following section will discuss a method to propagate equalities using information both from predecessors and successors.
+

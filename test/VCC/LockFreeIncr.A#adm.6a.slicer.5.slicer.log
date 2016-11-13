@@ -1,0 +1,20 @@
+
+***Preprocessing clauses         [0] start  - g/n   1/   6  c/a   133/  2066
+   CNF Conversion
+   CNF Conversion - expressions: 292+1
+   **Done - clauses:  550,atoms:  1428
+***Preprocessing clauses         [0] end    - g/n   1/   6  c/a   515/   917 - proved   0 - time [     0s]/[     0s]
+   [   1]
+   [   0]
+   [  PC]
+
+***Extracting CFG                [0] start  - g/n   1/   6  c/a   515/   917
+***Extracting CFG                [0] end    - g/n   0/   1  c/a   510/   911 - proved   1 - time [    34s]/[    35s]
+   [   1][   0]
+   [   0][  34]
+   [  PC][  EC]
+!!!!!!!!!!!!!!!!!!!!!!!!!Refuted!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+***Analysis done - time: [    35s] - proven 0 goals
+Still 0/0 goals and 1/1 nodes
+Total time - A#adm:     35s
+Slicer Ended - function "A#adm"

@@ -1,0 +1,122 @@
+\chapter{Non Unit Ground First Order Logic with Equality}
+As we have seen before, the propositional fragment supports interpolation, although a local proof based on interpolants can be inefficient (exponential minimal interpolant even when a linear sized non-local proof exists). 
+Ground first order logic with equality also supports interpolation (effective proof given in ~\cite{McMillan05} and ~\cite{FuchsGoelGrundyKrsticTinelli2012}). 
+For two sets of unit ground (in)equalities size whose union is inconsistent, where the size (number of subterm occurrences) of the union is \m{n}, we can always find an interpolant that has at most \m{n} clauses, each of at most \m{n} literals, as we will show now:
+
+The reason we repeat this result is that we present it in our terminology and introduce some of the ideas that will later drive the implementation:
+
+We are given two sets of ground (in)equalities \m{A} and \m{B}, we use the standard definition were \m{\Sigma_A},\m{\Sigma_B} is the set of function symbols that appear in \m{A} resp. \m{B}. \m{\Sigma_{AB}=\Sigma_A \cap \Sigma_B}.
+A term in \Ts{\Sigma_{AB}} is a neutral term, A term in $\Ts{\Sigma_{A}} \setminus \Ts{\Sigma_{AB}},\Ts{\Sigma_{A}} \setminus \Ts{\Sigma_{AB}}$ is an \m{A} resp. \m{B} term, and the same for literals and clauses.
+If \m{A \cup B \models \bot} then a \emph{reverse interpolant} \m{I} for \m{A,B} is a neutral clause such that:
+\begin{itemize}
+	\item $\m{A \rightarrow I}$
+	\item $\m{B \land I \models \bot}$
+	\item $\m{I \in \Cs{\Sigma_{AB}}}$
+\end{itemize}
+
+An interpolant does not always exist as a set of ground (in)equalities, but it does exist as a set of ground clauses as we will show.
+
+We will effectively construct the interpolant using a congruence closure graph.
+For a given set of (in)equations \m{E} we define an 
+\emph{EC graph} \m{G} as a graph where each node is labeled with a subset of \terms{E} so that the labels form a partition (the intersection of the labels of each each two nodes are disjoint and the union of all nodes is the whole set).
+For a node \m{n} and a term \m{t} , we write \m{t \in n} when \m{t} is a member of the label of \m{n} and we write \m{[t]_G} for the node whose label contains \m{t}.
+Note that this means that the graph represents an equivalence relation on \terms{E}, as symmetry, transitivity and reflexivity are satisfied by construction.
+We write \m{G \models \m{s=t}} when \m{s,t} are in the same node in \m{G}, and extend this to tuples where 
+\m{G \models \m{\tup{s}=\tup{t}} \Leftrightarrow \land_i G \models s_i=t_i}.\\
+An \emph{EC graph} \m{G} is \emph{congruence closed} if, for each \m{\fa{f}{s},\fa{f}{t} \in \terms{E}}, 
+if \m{G \models \m{\tup{s}=\tup{t}}} then \m{G \models \m{\fa{f}{s}=\tup{f}{t}}}.\\
+Given any such graph \m{G}, we can perform congruence closure by merging any pair of nodes \m{n_1,n_2} that satisfy the above condition - that is, \\
+if \m{\fa{f}{s} \in n_1 \land \fa{f}{t} \in n_2 \land G \models \tup{s} = \tup{t} } until no further nodes can be merged.
+
+In order to build the congruence closure of \m{E}, first we build an EC graph with each node labeled by exactly one term.
+For each equality \m{s=t \in E}, we merge the nodes that are labeled with \m{s,t}.
+Now we perform congruence closure to get the graph \m{CCG(E)}.
+Denoting only the positive equalities in \m{E} as \m{E^+} and similarly \m{E^-} for inequalities, we now have, for any two terms \m{s,t \in E} 
+\m{E^+ \models s=t \Leftrightarrow [s]_G=[t]_G} - so \m{E} is satisfiable iff, for each inequality \m{s \neq t \in E} 
+\m{[s]_{CCG(E)} \neq [t]_{CCG(E)}}.
+
+We define mapping a term \fa{f}{t} to such a congruence closed graph \m{G} as follows:
+\begin{lstlisting}
+mapTerm( $\fa{f}{t}$ ) : Node
+	$\tup{n} = $ mapTerm($\m{t}$)
+	if ($\m{G(\fa{f}{n})}$ is defined)
+		return $\m{G(\fa{f}{n})}$
+	else
+		add a new node \m{n} to $\m{G}$ and label it with $\m{\fa{f}{t}}$
+		return n
+\end{lstlisting}
+
+~\cite{FuchsGoelGrundyKrsticTinelli2012}) create (essentially) a graph \m{CCG(A \cup B)}, colour it according to the the origin (\m{A} or \m{B}) of each equation that justified a merge, and construct the interpolant as a clause out of summaries of these equations.
+
+We take a related but slightly different approach: we build two separate congruence closed EC graph \m{G_A^0} and \m{G_B^0} and then start to propagate information between them - at each stage \m{i} :\\
+Informally - \m{A} propagates to \m{B} a set of equalities \m{A_i} over neutral terms that encodes minimally all the nodes that \m{B} can merge, and similarly \m{B} sends to \m{A} \m{B_i}. 
+\m{B} merges each pair of nodes in an equation in \m{A^i}, performs \emph{extended congruence closure} (defined in the following) to get the graph \m{B_i} and checks for unsatisfiablity against \m{B^-}, and \m{A} performs the same steps to get \m{A^i}.
+This continues until both \m{A_i} and \m{B_i} are empty. 
+We can now build the interpolant as \m{\bigwedge\limits_i \bigwedge\limits_{a \in A_i} ((\bigwedge\limits_{j<i} B_j) \rightarrow A_i) }\\
+The interpolant is in CNF form but not necessarily minimal because potentially we could drop some \m{B_j} terms for some \m{i}s, but at is of at most quadratic size as, at each step, \m{\size{G_A^{i}} + \size{G_B^{i}} < \size{G_A^{i-1}} + \size{G_B^{i-1}}} by the stopping condition, and the initial size is at most \m{\size{A} + \size{B}}.
+
+The extended congruence closure ensures that \m{A} and \m{B} can always communicate an equality - 
+basically it means that for each term $\fa{f}{s} \in \m{G_A^0}$, 
+if 
+\m{    \exists \tup{c} \in L_{AB} \cdot \bigwedge\limits_i c_i \in [s_i]_{G_A^0} } but \\
+then we define \m{c_i = min([s_i]_{G_A^0} \cap L_{AB})} and add the term 
+\m{\fa{f}{c}} to \m{[\fa{f}{s}]_{G_A^0}}.
+we use some arbitrary total order on ground terms in \m{L_{AB}},
+
+This is to ensure completeness in cases as:\\
+\m{A=\s{a=c_1, f(a)=c_2}} \\
+\m{B=\s{b=c_1, f(b) \neq c_2}} \\
+The run in this case, without extended congruence closure, would be:\\
+\m{G_A^0 = \s{\s{a,c_1}, \s{f(a),c_2}}}
+\m{G_B^0 = \s{\s{b,c_1}, \s{f(b)},\s{c_2}}}
+And no equalities can be communicated as there is no common term for \m{f(b)}.\\
+Extended congruence closure would give:\\
+\m{G_A^0 = \s{\s{a,c_1}, \s{f(a),f(c_1),c_2}}} \\
+\m{G_B^0 = \s{\s{b,c_1}, \s{f(b),f(c_1)},\s{c_2}}} \\
+And then 
+\m{A_1 = \s{f(c_1)=c_2}} \\
+\m{B_1 = \emptyset} \\
+And 
+\m{G_B^1 = \s{\s{b,c_1}, \s{f(b),f(c_1),c_2}}} which is unsatisfiable with \m{f(b) \neq c_2}.
+
+Now we can define \m{A_i,B_i} formally:\\
+We basically want a minimal number of equations that encode the equalities on \m{A} terms no known at \m{B} and vice versa.\\
+To build \m{A_i}, we first draw an edge between each node in \m{G_A^i} and each node in \m{G_B^i} it shares at least one term with.\\
+Next we take the intersection \m{C_k} of each connected component of the resulting graph with \m{G_B^i}.
+We define the minimal \m{AB} term of a node \m{n} as \m{min_t(n) \triangleq min(n \cap L_{AB})} and for a set of nodes \m{S} \\
+\m{min_t(S) \triangleq min(\s{min_t(n) \mid n \in S})}\\
+we add the equations \\
+\s{ min_t(c_k) = min_t(n) \mid n \in \m{C_k} \land min_t(c_k) \notin n} to \m{A_i} - so \\
+\m{G^i{'} = (G_A^i \cup G_B^i, \s{(n_A,n_B) \in G_A^i \times G_B^i \mid n_A \cap n_B \neq \emptyset)})} \\
+\m{A_i \triangleq \{ min_t(C) = min_t(n) \mid}\\
+\m{\exists D \in SCC(GA^i{'}) \cdot C = D \cap G_B^i \land n \in C \land min_t(n) \neq min_t(C)\}}\\
+We construct \m{B_i} analogously.
+
+\textbf{Soundness and completeness:} We show this algorithm is sound and complete and produces an interpolant :\\
+We show that our algorithm simulates a run of the standard congruence closure algorithm - 
+the global graph would be - \\
+\m{G^i = \s{\cup S \cap \terms{A \cup B} \mid S \in SCC(G^i{'}}} - that is, the congruence closure merge of \m{G_A^i} and \m{G_B^i} 
+with the terms added by extended congruence closure removed.\\
+\m{G^i} is a partition of \terms{A \cup B} as each term appears in at least one node in \m{G_A^i} or \m{G_B^i}, each of which is a partition, and if a term appears in both graphs, the nodes in which it appears would be in the same connected component.
+Each operation (merge from original axiom or congruence closure) in either \m{G_A^i} or \m{G_B^i} is directly reflected in \m{G^i} as two terms are in the same node in either graph iff they are in the same node in the global graph by definition.
+Merging nodes in \m{G_B^i} according to \m{A_i} does not change \m{G^i} by definition - so each operation is sound.\\
+We now have to show completeness:
+Our claim is that if \m{A_i = B_i = \emptyset} then \m{G^i} is congruence closed and the equivalence relation it defines on terms 
+includes all the equalities in \m{A \cup B}.\\
+The second condition holds by the definition of \m{G_A^0,G_B^0} and \m{G^i}.
+Now assume there are terms \fa{f}{s}, \fa{f}{t} where \m{G^i \models \tup{s}=\tup{t}} but \m{G^i \not\models \fa{f}{s}=\fa{f}{t}}, 
+Now assume $\fa{f}{s} \in \terms{A}$ - this means $\fa{f}{t} \in \terms{B}$ because \m{G_A^i} is congruence closed.\\
+but, for each \m{i} if \m{G^i \models s_i=t_i} then there are nodes \m{s_i \in na_i \in G_A^i,t_i \in nb_i \in G_B^i} such that 
+\m{\s{na_i,nb_i} \in SCC(G^i{'})} because \m{na_i \neq nb_i} and each SCC has at most two elements as \m{A_i = B_i = \emptyset}.
+So \m{na_i \cap L_{AB} = nb_i \cap L_{AB}} as each graph is a partition, 
+and hence \m{min_t(na_i) = min_t(nb_i)} and so by the definition of extended congruence closure
+\m{\fa{f}{min_t(\tup{na})} \in [\fa{f}{s}]_{G_A^i}} and \m{\fa{f}{min_t(\tup{na})} \in [\fa{f}{t}]_{G_B^i}} and so 
+\m{ \s{[\fa{f}{s}]_{G_A^i}, [\fa{f}{t}]_{G_B^i}} \in SCC(G^i{'})} and finally \m{G^i \models \fa{f}{s} = \fa{f}{t}} - a contradiction.
+
+A technicality here is that \m{G_A^i} must initially include $\terms{B} \cap L_{AB}$ and vice versa, otherwise the equality of minima might not hold.
+
+The reason that we get an interpolant is that, for each \m{i}, we have proven \m{A \land \bigwedge\limits_{j<i} B_j \models A_i}
+and \m{B \land \bigwedge\limits_{j<i} A_j \models B_i} and foreach \m{s=t} s.t. \m{G_B^i \models s=t } we have shown 
+\m{B \land \bigwedge\limits_{j<i} A_j \models s=t}. So, if \m{G_B} is the \m{B} graph of the last step, 
+\m{\forall s,t \in \terms{B}, G_B \models s=t \Leftrightarrow A \cup B \models s=t}.
+The notable property of the propagation here is that we only exchanged a linear number of equalities in each direction.

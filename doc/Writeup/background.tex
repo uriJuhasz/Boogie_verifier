@@ -1,0 +1,174 @@
+\section*{Background}
+We discuss here briefly some of the main existing technologies for theorem proving for first order logic with equality (FOLE) and some of its sub-fragments, as FOLE has proven to be sufficiently expressive for many verification tasks and there are practical automatic theorem provers that support it. 
+Many provers also support directly extensions of FOLE that are either not directly axiomatizable in FOLE or for which no efficient axiom system has been found - specifically, rational and integer linear arithmetic and also bit-vectors, arrays and strings.
+
+A notable exception to the expressiveness of FOLE is that it cannot express transitive closure and least fixed points useful for describing heap structures - however, transitive closure logics are beyond the scope of this work, and most are even not semi-decidable (see e.g. \cite{DBLP:journals/aml/GradelOR99},\cite{DBLP:conf/csl/ImmermanRRSY04}). Verification systems for heap manipulating programs often use either recursive data structures or restricted forms of quantification (\cite{MuellerSchwerhoffSummers16b}) 
+in order to utilize the more mature field of FOLE theorem proving.
+
+\subsection*{Automated theorem provers}
+Most current theorem provers for FOLE or its fragments are based on some form of resolution, either on the DPLL algorithm (\cite{DBLP:journals/cacm/DavisLL62}) or on superposition (\cite{BachmairGanzingerSuperposition}) and ultimately resolution with unification (\cite{Robinson:1965:MLB:321250.321253}). Virtually all current theorem provers prove the validity of a formula by showing that its negation is unsatisfiable.
+
+\subsubsection*{SMT solvers}
+DPLL based SMT solvers (e.g. \cite{DBLP:conf/cav/BarrettCDHJKRT11},\cite{DBLP:conf/tacas/MouraB08}) generally work by trying to build a model for a formula. The model is constructed for a propositional formula by \textit{deciding}, at each step, the propositional value of one ground literal that occurs in the original formula (a literal is an atom or its negation, where the definition of an atom depends on the logic used - for FOLE an atom is an equality on terms). Once a literal has been decided, the formula is simplified by replacing all occurrences of the literal with the selected Boolean value and simplifying the formula accordingly (the formula is often kept in CNF form in which case simplification is simply unit propagation and pure literal elimination) - simplification may produce further unit clauses that are also propagated. 
+If a contradiction is reached at any point (for CNF - a contradiction is the empty clause), the algorithm backtracks to the last decision and \textit{learns} the negation of the decision - adding the negated literal to the set of clauses and simplifying clauses accordingly. If learning the negated literal also produces a contradiction the previous decision is reversed. If the negated top decision produces a conflict then the formula is not satisfiable.
+If all literals have been decided and no contradiction has been found then the set of decisions and simplified clauses define a model for the formula - at any point in the algorithm the set of decided and derived literals is called the candidate model. 
+
+\textbf{Conflict driven clause learning:} A major improvement in the DPLL algorithm which has made it practical is conflict driven clause learning (CDCL) (\cite{GRASP}). CDCL improves upon DPLL by maintaining a graph that keeps track of the implications between literals that have been decided, and hence allows the algorithm to \textit{learn} a new clause when a conflict is reached that includes only the negation of the decisions that have caused the conflict. The algorithm backtracks to the first decision involved in the conflict, rather than to the last decision as in DPLL. CDCL was shown to be exponentially more efficient than the original DPLL (\cite{DBLP:conf/aaai/HertelBPG08}).
+
+An important property of the propositional DPLL algorithm is that the space requirement is at most proportional to the number of literals in the input formula (the sequence of decided and derived literals). On the other hand, the algorithm can progress - learn new information - only when a conflict is reached. For propositional logic and GFOLE the depth of the search is bounded by the size of the input, but when quantifiers are involved the depth of the search is not bounded.
+
+Nelson and Oppen have added the efficient handling of equality to the ground DPLL procedure above 
+and the handling of some ground theories for which satisfiability is decidable (\cite{DBLP:journals/toplas/NelsonO79}).
+The algorithm handles equality by using a congruence closure (CC) data structure which allows deciding and backtracking equality literals.
+The congruence closure data structure detects contradictions by maintaining dis-equality edges and is, at any stage of the algorithm, the candidate model for equality. Ground theories are decided by sending each theory decision procedure the subset of the candidate model that is relevant, with the non-theory symbols abstracted away and, if no contradiction is found, all equality literals between terms in the original formula are decided until either a conflict is found or a full model is found which is agreed by all theories. Several improvements have been proposed to this algorithm, notably allowing a theory decision procedure, when it reports a set of literals as satisfiable, to also report the set of (dis)equalities that are implied by the set of literals (over the terms that occur in the literals), in a similar fashion to unit propagation.
+
+\textbf{Shostak theories:} An alternative method for combining ground propositional and equality reasoning with a theory was introduced by Shostak (\cite{Shostak84}).
+The Shostak method requires, instead of a just a satisfiability decision procedure, a \textit{canonizer} that rewrites any theory term to a normal form (where two theory terms are equal iff they have the same normal form) and a \textit{solver} that decides satisfiability for a set of literals in normal form, and outputs a \textit{solved form} of the input literals, which intuitively means that it expresses one of the input variables as a function of the rest of the variables (variables for the theory are the top non-theory ground terms that occur in the theory literals). The Shostak method is used in the theorem prover Alt-Ergo (\cite{DBLP:journals/entcs/ConchonCKL08}).
+
+
+\textbf{DPLL for first order logic:}
+The original DPLL algorithm applied to quantified FOL formula by repeatedly generating ground instances of the quantified clauses and applying the DPLL algorithm incrementally to the set of ground instances - this extension to quantified FOL has not seen much practical use. Current SMT solvers usually use some heuristics to create ground instances of quantified clauses (e.g. \cite{DBLP:conf/cade/ReynoldsTGKDB13},\cite{DBLP:conf/cav/GeM09}). One common heuristic uses patterns (also called triggers), where, for each quantified clause, a set of terms over the free variables that occur in the clause is selected - the \textit{triggers}, and a ground instance of the clause is generated only if the ground instance of each trigger is E-unifiable (unifiable modulo the equality theory encoded in the CC data structure) with a term represented by the CC data structure.\\
+Another approach for handling quantifier in SMT solvers is model-based quantifier instantiation (MBQI) (\cite{DBLP:conf/cav/GeM09}) which determines a set of relevant ground instances (potentially infinite) for each quantified clause and incrementally tries to find a model for a subset of the relevant instances.
+If any such subset is unsatisfiable then the original formula is unsatisfiable, otherwise a model is found which can be used to guide further instantiation. 
+Current SMT solvers tend to be very efficient on problems involving propositional and ground first order logic, and the ground linear integer and rational theories. Problems including quantifiers are sometimes not handled as efficiently by SMT solvers, and especially the performance of the prover is very sensitive to small changes in the input. 
+
+\textbf{Incremental or Lazy CNF conversion:}
+Another technique that contributes significantly to the success of SMT solvers is incremental or lazy CNF conversion (\cite{DBLP:conf/cav/BarrettDS02},\cite{DBLP:conf/cav/FlanaganJOS03}).
+The basic algorithms of DPLL and its CDCL variant operate on a formula in CNF form (a set (conjunction) of clauses (disjunctions of literals)). In order to convert an arbitrary propositional logic (PL) formula including arbitrary logical connectives in polynomial time and space, it is sometimes necessary to introduce new literals that represent the (propositional) value of sub-formulae (\cite{Baaz2001273}), and add clauses to the result that encode the equivalence between the newly introduced literal and the sub-formula - for example: \\
+$A \lor (B \land C)$ \\
+is converted to\\
+$(A \lor L_1) \land (L_1 \Leftrightarrow (B \land C))$\\
+which is then converted to CNF as\\
+$\{A \lor L1, L_1 \lor \lnot B \lor \lnot C, \lnot L_1 \lor B, \lnot L_1 \lor C\}$.\\
+$L_1$ is the newly introduced literal and the formula $L_1 \Leftrightarrow (B \land C)$ is the definition of $L_1$.
+
+The original DPLL algorithm converts the negation of a formula to a CNF set of clauses and then performs steps of deciding a literal, simplifying and backtracking when a conflict is detected.\\
+Roughly, the idea of lazy CNF conversion in DPLL is to begin with a set of clauses that includes only the negation of the literal that represents the entire formula, and only add definition clauses to the clause-set when the relevant literal is decided with the relevant polarity. The advantage of this technique is that it prevents interference between clauses that may not be on the same decision branch.
+Consider, for example, the program in figure \ref{snippet_1.3}.\\
+\begin{figure}
+\begin{lstlisting}
+n$_0$: if (a>0)
+	...
+	if (b=2*a+1)
+		....
+	else
+		....
+else
+	n$_2$: b:=a-1
+n$_3$: assert (a+b)$^2$>0
+\end{lstlisting}
+\caption{Example for lazy CNF conversion}
+\label{snippet_1.3}
+\end{figure}
+
+Depending on the encoding of the VC and the order of decisions by the SMT solver, eager CNF conversion may cause the prover to produce the following candidate model (showing only theory relevant literals):\\
+$\{b=2a+1, b=a-1, \lnot a>0, (a+b)^2>0$.\\
+The literals $b=2a+1, b=a-1$ should not be part of the same candidate model as they occur on different branches - the choice of whether $b=2a+1$ or not is irrelevant for the proof of the outer else path.
+%This candidate model is sent to the theory solver for arithmetic.\\
+%The two literals $b=2a+1, b=a-1, a>0$ should never be sent together to the theory solver as they are not on the same branch
+%
+%\noindent
+%A possible VC for the example is\\
+%$(\mathbf{let}~~ n_3Ok = (a+b)^2>0) ~~ \mathbf{in}$\\
+%$((a>0 \Rightarrow (b=2a+1 \Rightarrow n_3ok)) \land$\\
+%$(a\not>0 \Rightarrow (b=a-1 \Rightarrow n_3ok)))$\\
+%The $\mathbf{let}$ expressions allows the VC to include several copies of a formula, 
+%without enlarging the input text.\\
+%The definitions for the lazy CNF version are:\\
+%$(n_3ok \Leftrightarrow (a+b)^2>0)$\\
+%$(L_0 \Leftrightarrow (b=2a+1 \Rightarrow n_3ok))$\\
+%$(L_1 \Leftrightarrow (a>0 \Rightarrow L_0))$\\
+%$(L_2 \Leftrightarrow (b=a-1 \Rightarrow n_3ok))$\\
+%$(L_3 \Leftrightarrow (a\not>0 \Rightarrow L_2))$\\
+%$(L_4 \Leftrightarrow (L_1 \land L_3)))$\\
+%And the VC is \\
+%$L_4$.
+%
+%\noindent
+%The proof process proceeds as follows:\\
+%The clause set is initialized with $\{\lnot L_4\}$.\\
+%The definition of $L_4$ is expanded and we get\\
+%$\{\lnot L_4, \lnot L_1 \lor \lnot L_3\}$\\
+%The prover can choose to decide either $\lnot L_1$ or $\lnot L_3$.\\
+%If $\lnot L_1$ is chosen we expand definitions and get:\\
+%$\{\lnot L_4, \lnot L_1, a>0, L_0\}$\\
+%And then:\\
+%$\{\lnot L_4, \lnot L_1, L_0, a>0, b=2a+1, \lnot n_3ok\}$\\
+%And finally:\\
+%$\{\lnot L_4, \lnot L_1, L_0, \lnot n_3Ok, a>0, b=2a+1, (a+b)^2\not>0\}$\\
+%The theory solver is given the problem \\
+%$\{a>0, b=2a+1, (a+b)*(a+b)\not>0\}$\\
+%which it reports unsatisfiable.\\
+%Next the SMT solver reverses the last decision, $\lnot L_1$, and we get, after definitions expansion:\\
+%$\{\lnot L_4, L_1, \lnot L_3, L_2, \lnot n_3ok, a\not>0, b=a-1, (a+b)^2\not>0\}$\\
+%The problem sent to the theory solver is \\
+%$\{a\not>0, b=a-1, (a+b)*(a+b)\not>0\}$\\
+%which it reports unsatisfiable. As there is no decision to backtrack, the formula is proven.
+%
+%The key property of the above proof is that at no point in the proof-search process the prover had to consider both literals 
+%$b=2a+1$ and $b=a-1$.\\
+%Eager CNF conversion will produce the following CNF for the negated VC (after simplification, assuming the same sub-formula renaming):\\
+%$\{\lnot L_1 \lor \lnot L_3,$\\
+%$L_1 \lor a>0, L_1 \lor \lnot L_0,$\\
+%$L_0 \lor b=2a+1, L_0 \lor \lnot n_3ok,$\\
+%$L_3 \lor a\not>0, L_3 \lor \lnot L_2,$\\
+%$L_2 \lor b=a-1, L_2 \lor \lnot n_3ok,$\\
+%$n_3ok \lor (a+b)^2>0\}$\\
+%Here the prover has more choices for deciding literals, and specifically can choose to decide both
+%$b=2a+1$ and $b=a-1$ - for example, reaching the candidate model:\\
+%$\{\lnot L_1, \lnot L_0, \lnot n_3ok, b=2a+1, b=a-1, a>0, (a+b)^2>0\}$\\
+%And then send the problem\\
+%$\{b=2a+1, b=a-1, a>0, (a+b)^2>0$\\
+%To the theory solver, where the literal $b=a-1$ is redundant.
+%The deepest branch of any decision tree for lazy CNF was 1 while the eager CNF admits deeper decision trees 
+%(in this simple example a simple analysis of literal polarities can restrict the decision tree depth also for eager CNF, but does not hold in the general case).
+
+
+For a large program with many branches such redundancy can make a significant performance difference (as reported in \cite{DBLP:conf/cav/BarrettDS02},\cite{DBLP:journals/jacm/DetlefsNS05}). Even more significant is the fact that when pattern-based quantified instantiation is used, 
+and the above encoding is used for the VC, lazy CNF conversion ensures that quantifiers are instantiated only with sets of terms that occur on some path in the program, and specifically not on opposing branches.
+
+
+\subsubsection*{Superposition}
+Another approach for equational theorem proving is superposition, based ultimately on resolution (\cite{Robinson:1965:MLB:321250.321253}) and unfailing Knuth-Bendix completion\\
+(\cite{DBLP:journals/logcom/BachmairG94}).
+Ordered resolution (for propositional logic) can be seen also as a search with candidate models: given a formula in CNF (a conjunction of disjunctions of literals), we order the clauses according to some total order on literals and its extension for clauses.\\
+A clause is redundant if it is entailed by smaller clauses. 
+The candidate model is the set of maximal literals of non-redundant clauses where the maximal literal is positive.\\
+The candidate is not a model iff some non-redundant clause has a maximal negative literal that occurs positively in the model, in which case we resolve the two clauses on their maximal literals and the conclusion is a smaller (at least from the bigger premise) clause that encodes the case-split on the maximal literal for the two clauses (it entails that one of the premises holds, regardless of the value of the maximal literal). If the empty clause is derived the set is unsatisfiable, otherwise the process terminates when no new resolutions can be performed.\\
+For GFOLE and FOLE equalities and dis-equalities are used instead of propositional literals. The difficulty is that a set of maximal equalities can be inconsistent with a different dis-equality (e.g. $a=b$ is inconsistent with $f(a)\neq f(b)$). 
+To solve this difficulty, resolution is replaced with a restriction of ordered paramodulation (rewriting the maximal term of one clause with the maximal equality of another clause) and additional inference rules, ensuring that the candidate model forms a convergent rewrite system and each maximal term in a maximal literal is rewritten to normal form. For example, the terms \m{C \lor \underline{l}=r, \underline{f(l)}=t \lor D} where the maximal terms are underlined, produce \m{C \lor D \lor f(r)=t} with a superposition inference - this clause encodes a case-split, either \m{C} holds or \m{l=r} holds and then we can rewrite the right premise to \m{D \lor f(r)=t}.
+For quantified clauses, unification is used to restrict the number of possible inferences and the candidate model is constructed from the (often countable) set of ground instances of clauses.\\
+Saturation based provers such as these based on superposition often work by maintaining two sets of clauses, 
+the first set is clauses that are inter-saturated (so all valid inferences with all premises in this set have been performed) and the second set of not yet saturated clauses.
+
+The strength of superposition based provers is in handling quantifiers while the main weaknesses are handling large Boolean problems and handling theories for which no efficient axiomatization has been found. A key difference between saturation based provers (that derive new clauses from existing clauses, such as superposition) and DPLL based provers is that DPLL based provers must find a conflict in order to derive new (learned) clauses, and hence progress, and the complexity of finding one conflict is not bounded when quantifiers are involved, while saturation based provers can generate new clauses (and hence progress) at a known complexity bound (e.g. perform all valid inferences between a not-yet saturated clause and the saturated set and add the clause to the set - with complexity dependent on the size of the saturated set).
+
+\subsubsection*{Instantiation based theorem proving}
+Another approach for theorem proving in instantiation based (\cite{Korovin2008}, with equality \cite{DBLP:conf/cade/KorovinS10}).
+The approach uses unification, as in resolution based provers, in order to find substitutions, but, instead of performing resolution, the instantiated versions of the premises are added to the clause set - for example:\\
+For the premises $Q(x) \lor P(x,b)$, $\lnot P(a,y) \lor R(y)$, resolution produces $\{Q(a) \lor R(b)\}$ while instantiation produces $\{Q(f(a)) \lor P(a,b),\lnot P(a,b) \lor R(b)\}$. The attraction of the approach is that it avoids producing large clauses as in superposition, but it requires a different solution for the propositional part of the proof.\\
+After some steps of instantiation, the prover temporarily substitutes a new constant (not part of the vocabulary), for all free variables in all clauses and uses a SAT solver (or SMT solver with equality) to check for satisfiability.
+Instantiation for FOL with equality is implemented in the iProver theorem prover (\cite{DBLP:conf/cade/KorovinS10}).
+
+\subsubsection*{St\aa lmarck's method}
+A somewhat different approach for propositional satisfiability, that also handles ground equalities, is St\aa lmarck's method (\cite{DBLP:conf/fmcad/SheeranS98}). This method has seen somewhat less research as it is protected by patent laws.\\
+The interesting aspect of the method, in our context, is the approach for handling case-splits.
+The algorithm maintains the formula for which satisfiability is to be checked in a specific form, somewhat similar to lazy CNF,  
+and saturates the formula w.r.t. a set of simplification rules (a somewhat similar concept to unit propagation in DPLL).
+The main difference in formula representation and simplification is that literal equivalence can be represented natively - for example,
+the simplification rules can learn that $A \Leftrightarrow B$ without determining the actual truth values for $A$ and $B$.
+When simplification is insufficient for refutation, the algorithm performs a case split on some literal or atomic formula, 
+and simplifies instances of the formula for both polarities of the literals split on. 
+If neither branch finds a contradiction, a form of join is performed which adds any fact learned separately on both branches to the pre-split formula, the two formula instances used for the case-split branches are discarded.
+The algorithm proceeds by case-splitting on all relevant atomic formulae - which includes equality between two literals and between a literal and a Boolean constant.
+If no contradiction is found, the algorithm proceeds by performing case splits of depth 2 - for each relevant atomic formula $f$, first choose a value $V$, simplify an instance of the formula, and then recursively perform the depth-1 case-splitting, and similarly for $f=\lnot V$.
+We find this method interesting because it shares with DPLL the property that the space needed is approximately proportional to the depth of the decision tree, but, as opposed to DPLL and CDCL, it ensures progress regardless of finding a conflict, and has a well defined hierarchy of fragments (by the case-split depth) that can be applied incrementally.
+An extension for first order logic is given in \cite{Björk2009}.
+We have not tried to adapt this technique to our setting, but the kinds of joins used, both in the PL and FOLE versions, are related to the joins we perform in join nodes in the CFG.
+
+\subsubsection*{Model evolution}
+An algorithm for theorem proving related to DPLL is that of \textit{model evolution} (\cite{BaumgartnerPelzerTinelli12}) implemented in the Darwin theorem prover (\cite{Fuchs:Darwin:Thesis:2004}). Model evolution behaves like DPLL but decides also non-ground literals where, essentially, unification is used to select substituted versions of quantified literals to decide upon. The model evolution calculus has the advantage that quantifiers are handled directly, and unification is used for directing instantiation. 
+However, as with the methods for handling quantifiers in SMT solvers, a conflict must be reached in order to learn new information, and the search depth is not bounded.
+
+
+

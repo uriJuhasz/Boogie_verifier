@@ -1,0 +1,1 @@
+"C:\boogie\Boogie.exe" /errorLimit:28 /z3opt:/rs:42 /enhancedErrorMessages:1  /trace /vcsMaxKeepGoingSplits:10 /vcsKeepGoingTimeout:1  /proc:ProveInv /xml:resultInvComp.xml Heap.bpl Region.bpl Auxiliary.bpl TreeStereotype.bpl TreeOperations.bpl TreeInvariant.bpl CompositeType.bpl CompositeOperations.bpl CompositeInvariant.bpl InvCompositeProofs.bpl

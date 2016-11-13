@@ -1,0 +1,69 @@
+\section{Control Flow}
+When generating the VC for a given program, some information about the CFG has to be encoded into first order logic.
+Mainly, for an assertion anywhere in the code, only information from statements that precede the assertion can be used to prove the assertion, and two statements on parallel branches are treated differently than two statements in sequence.
+The weakest precondition (WP) calculus (\cite{Dijkstra:1975:GCN:360933.360975}) is often used as a basis for converting a program and a specification to a logical formula that is valid iff the program satisfies the specification. 
+A WP calculus suitable for verification with an intermediate verification language is described in \cite{Leino:2005:EWP:1066417.1710882}, which assumes a program constructed of \lstinline|assert| and \lstinline|assume| statements. As noted in the paper, applying the original formulation of WP to a program with n sequential non-nested branches produces a VC of size that is exponential in n (essentially a case split on each possible path in the CFG), and hence a more efficient formulation is required for many programs.
+A common method for encoding a polynomial sized VC (also suggested in \cite{Leino:2005:EWP:1066417.1710882}) 
+is to use a nullary predicate per basic block of the original program, which represents either that execution has reached that basic block or that, if execution reaches that basic block, then all assertions in the block and its successors hold. 
+In either encoding, some implications are encoded between these nullary predicates which encode the structure of the CFG.
+However, in any encoding into a logic that does not support graph structures directly, the explicit graph structure is lost and hence some graph properties that are easily exploitable in an analysis that uses the CFG are lost.
+% - for proving each of the assertions \lstinline|e1,e2,e3,e4| a different subset of the statements \lstinline|S1,S2,S3,S4|
+To prove that an assertion holds, it must be shown that it holds on any path reaching it from the root.
+For each such path, the prover has to show that after executing the statements on the path the assertion holds.
+As we only treat passive statements (\lstinline|assert| and \lstinline|assume|) for the DSA form of the program, the order of execution of the statements on the path does not matter for the proof of the program - hence for each path we have to show that the set of assumed or asserted formulae on the path implies the formula in the assertion. We call these sets of formulae the relevant sets for proving the assertion - for example,  in the program in figure \ref{snippet_1.1},
+for \lstinline{assert e3}, the set $\{\{$\lstinline{S1,S3}$\}$,$\{$\lstinline{S2,S3}$\}\}$ is the set of all relevant subsets of the program statements relevant for the assertion. Each such subset represents a path reaching the assertion from the root. 
+
+
+\begin{figure}
+\begin{lstlisting}
+if (b1)
+	S1;
+	assert e1;
+else
+	S2;
+	assert e2;
+j$_1$:
+if (b2)
+	S3;
+	assert e3;
+else
+	S4;
+	assert e4;
+\end{lstlisting}
+\caption{Example for the information contained in the CFG}
+\label{snippet_1.1}
+\end{figure}
+
+\subsection*{Relevance}
+The first property that is made implicit in the encoding of the VC is relevance - for example, assume that the above program is encoded into a VC and sent to an SMT solver, and, during the proof search, the SMT solver decides on a literal that encodes the fact that the trace passes through \lstinline|S1| (that is, the \lstinline|then| branch of the first conditional is taken), or, depending on the exact VC encoding, that an assertion does not hold on a path that passes through \lstinline|S1|.
+There is nothing preventing the SMT solver from deciding on a literal that occurs only in \lstinline|S2|, although this is not necessary in order to prove any assertion - a model (trace of a failing assertion) that encodes a trace that passes through \lstinline|S1| is fully defined by the interpretation for symbols that occur on the path of the trace - which may not include some of the symbols that occur  \lstinline|S2|.
+Some of the simplifications performed by SMT solvers (unit propagation and pure literal elimination) can prevent some of these cases, but for complicated CFGs the proportion of the cases eliminated is limited.
+Many of the more successful SMT solvers use incremental or lazy CNF conversion (e.g. \cite{DBLP:conf/cav/BarrettDS02},\cite{DBLP:journals/jacm/DetlefsNS05}) which can prevent much of the interference when the VC is encoded carefully.
+The parallel of the above for a superposition based prover is that if \lstinline|S1| and \lstinline|S2| are each encoded into a set of clauses, there is no need to perform any inference between a clause that encodes \lstinline|S1| and a clause that encodes \lstinline|S2|,
+as this inference will not participate in the proof that the assertion holds on any path of the program.
+
+\subsection*{Joins}
+A second property of the CFG that is less exploitable on a monolithic VC is that of sharing lemmas on joins.
+Consider the case where some lemma $\m{C}$ implied separately by \lstinline|S1| and \lstinline|S2| is sufficient, together with the encoding of \lstinline|S3|, to prove that the assertion \lstinline|assert e3| holds. 
+For propositional logic, lemmas do not include new literals (although some proofs can be shortened by introducing new literals - e.g. the pigeonhole principle in extended resolution), for ground first order logic with equality (GFOLE - called QF\_UF in the SMT community) and more so for FOLE, the introduction of new literals, even if constructed only from the VC  vocabulary, can sometimes allow a significantly shorter shortest proof.
+Abstract interpretation tools search explicitly for such lemmas in a fixed logical fragment. CDCL based SMT solvers (\cite{GRASP}), in general, can learn some of these lemmas (we discuss this issue in more detail later - see also \cite{DPLLJoin}). 
+Superposition based provers can also sometimes generate join lemmas.
+
+%\subsection{Directionality}
+%\subsection{Goal Directed Proofs}
+	%Some resolution based theorem provers, when presented with a set of axioms and a theorem, can search for a proof/refutation of the theorem under the assumption that the axioms are consistent.
+	%This has the advantage of reducing the proof search space as it only considers proofs that contain the assertion - when the set of axioms is known to be consistent.
+	%In the context of program proofs, we have several sets of axioms:
+	%\begin{itemize}
+	%\item The mathematical axioms for the relevant domains (integers, booleans, sequences etc), which are often known to be consistent.
+	%\item The program specific axioms that come from the type system, data structure definitions and aliasing/specification methodology - these are also usually assumed to be consistent and proven separately.
+	%\item The axioms that encode the CFG structure - these are also usually consistent by construction, but can encode unreachable CFG nodes by false branch conditions.
+	%\item Axioms that encode the executable program statements - these are also usually consistent, but may conflict with axioms that represent specification.
+	%\item Axioms that encode assumptions generated by the specification methodology - e.g. pre-conditions, method call-return post-conditions, loop invariants - when these conflict it usually means a program location is unreachable.
+	%\item Assertions - when the rest of the axioms (on execution paths leading to the assertion) are consistent, but the addition of the assertion makes them inconsistent, it means the assertion does not hold.
+	%So when trying to refute the negation of an assertion a at program point p, we could usually limit ourselves to either showing that p is unreachable or showing that a does not hold at p.
+	%As the second case is usually much more common (a program would usually have many small assertions generated by the specification methodology and programming language semantics as well as explicitly by the programmer, and most would be in reachable CFG nodes).
+	%\end{itemize}
+	%We can bias our proof search in the direction of assertions: we look for a refutation based at the negation of the said assertion (with some weight on the path condition leading to it) and of course completely ignore any CFG node that cannot reach that assertion.
+	%We try to prove each assertion separately, and when an assertion CFG node is proven we can trim the CFG so that all nodes lead to at least one assertion node - and remember the lemmas we found on the way whether the refutation succeeded or not.
+	%We only do resolution on atoms and clauses coming (transitively) from the assertion and only do quantifier instantiation on ground terms that come (transitively) from an assertion.

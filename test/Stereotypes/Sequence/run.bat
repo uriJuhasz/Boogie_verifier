@@ -1,0 +1,1 @@
+Boogie /errorLimit:28 /enhancedErrorMessages:1  /trace /vcsMaxKeepGoingSplits:20 /vcsKeepGoingTimeout:5 /xml:result.xml ListOperations.bpl  Heap.bpl Region.bpl ListStereotype.bpl ListInvariant.bpl ListImplementation.bpl

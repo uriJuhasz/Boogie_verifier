@@ -1,0 +1,148 @@
+\chapter{Related Work}
+\label{chap:ps_relatedwork}
+
+In this chapter we review related work in the area of two-factor authentication. We first look at traditional systems that look at providing a second authentication factor for the web. That is, systems where the second authentication factor is required for the user to login to a website. We then evaluate related work in the field of strengthening the security of payments, both online and at points of sale.
+
+\section{Two-Factor Authentication for the Web}
+
+\paragraph{Hardware Tokens.}
+Hardware tokens range from the RSA SecurID~\cite{rsa} to recent dongles~\cite{yubico} that comply with the FIDO U2F~\cite{fido} standard for universal 2FA. In the first case, the user is asked to input a fixed-length one-time code that is displayed on the RSA SecurID token (e.g., a 6 digit number) into the login website. The number displayed changes at fixed time intervals (typically 30 seconds). These tokens are usually tamper resistant and require a synchronization phase at manufacturing time where a secret is shared between the hardware token and the service provider.
+
+The new generation of hardware tokens, such as Yubico~\cite{yubico}, is easier to use but requires the token to be physically connected to the PC used to login (e.g., through a USB connection). Upon login, the user has to press a button (or touch a particular part of the token). This ensures that the user is in possession of the hardware token and is actually performing the login operation (the user action demonstrates the user intention to login).
+
+Solutions based on hardware tokens require the user to carry and interact with the token and may be expensive to deploy because the service provider must ship one token per customer. In the case of standardized solutions (e.g., solutions that comply with the FIDO U2F~\cite{fido} specification) only one token is required for any service provider. Anyway, in this case, the browser and the system through which the user is performing the login must support this new hardware peripheral.
+
+In~\cite{fourthfactor} the authors propose an additional factor to the main three ones. That is, they explore the usage of the social network of a user, someone he knows, as the fourth authentication factor. Overall they propose this fourth factor, in the form of vouching for a user, to be used in emergency situations where the other factors (i.e., passwords and hardware tokens) are not available.
+
+\paragraph{Software Tokens.}
+With the advent and widespread use of smartphones the solutions based on hardware tokens have been migrated to use applications that the user installs and configures on his personal mobile devices.
+
+Google 2-Step Verification~\cite{google_authentication} is an example of a 2FA mechanism based on one-time codes, that uses software tokens on phones. The verification code is retrieved either from an application running on the phone or via SMS. Similar to the RSA SecurID, this mechanism requires the user to copy the verification code from the phone to the browser upon login. Similar solutions are also offered by other application vendors such as AgileBits 1Password~\cite{1password} and Authy~\cite{authy}.
+
+Researchers have also proposed to use the smartphone to provide cues to a user while he interacts with a graphical password on his computer~\cite{graphpass}. In particular the smartphone would instruct the user on which parts of the graphical password he has to click in order to perform the login. This solution requires the user to interact with his smartphone every time he performs a login operation and changes the traditional password-only authentication system considerably.
+
+In order to simplify what the user has to do upon login, similar to Yubico, Duo~Push~\cite{duosecurity} and Encap~Security~\cite{encap} prompt the user with a push message on his smartphone with information on the current login attempt. The push message includes the username, the server being accessed, and the IP address of the client with approximate geolocation information. Simply tapping the notification will allow the user to login. In some countries, a similar approach is also used to confirm online transactions through the use of the Transakt application~\cite{transakt} when using a credit card for an online purchase.
+
+Compared to hardware tokens, these solutions incur smaller costs to the service providers that do not have to manufacture and ship the hardware tokens to their users. The user is required to own a smartphone and install an application. Nonetheless, both solution spaces require the user to interact with his phone to authorize the login or the online transaction.
+
+\subsection{Reduced-Interaction 2FA}
+
+Standard solutions for code-based 2FA we just described are deployed by different online services (e.g., Google, Facebook, Github, Microsoft, Apple). For these vendors 2FA is an optional mechanism that users have to opt-in to use. Banking websites that allow online transactions are using 2FA mechanisms similar to the ones presented (through hardware tokens or SMS-based delivery of one-time codes). For such services 2FA is a mandatory requirement. Recent research has highlighted the very low adoption rate that 2FA mechanisms suffer from when they are optional~\cite{petsas15eurosec,imperi13umsurvey}. One of the reasons that could negatively impact 2FA adoption is its poor usability. In particular users are not used to move away from a password-only authentication system and find use of 2FA cumbersome~\cite{gunson11cs,weir10int}. We now look at proposed solutions that try to minimize the interaction between the user and the second authentication factor, making the added security mechanism more usable.
+
+\paragraph{Short-range Radio Communication.}
+PhoneAuth~\cite{czeskis12ccs} is a 2FA proposal that leverages unpaired (unauthenticated RFCOMM) Bluetooth communication between the browser and the phone, in order to eliminate user-phone interaction. The choice to use unpaired bluetooth communication eliminates the requirement to pair the user's smartphone with all the devices from which he wishes to login to a particular website.
+The Bluetooth channel enables the server (through the browser) and the phone to engage in a challenge-response protocol which provides the second authentication factor.
+% Similarly,~\cite{parno06fc} and~\cite{shirvanian14} also leverage Bluetooth communication between the browser and the phone.
+%The server can send a verification code to the computer and ask for the same code from the phone.
+%The computer and the phone can communicate using Bluetooth as in PhoneAuth~\cite{czeskis12ccs}. %, or any other short-range communication technology.
+
+The proposed solution requires the web browser to expose a Bluetooth API, something that is currently not available.
+A specification to expose a Bluetooth API in browsers has been proposed by the Web Bluetooth Community Group~\cite{w3cwebbluetooth}.
+It is unclear whether the proposed API will support the unauthenticated RFCOMM or similar functionality which is required to enable seamless connectivity between the browser and the phone.
+However, if the Bluetooth connection is unauthenticated, an adversary equipped with a powerful antenna may connect to the victim's phone from afar~\cite{aircable} and login on behalf of the user, despite the second authentication factor being enabled.
+Prevention of range-extension attacks could be achieved via distance-bounding protocols~\cite{rasmussen10usenix}. However, today's phones and computers lack the hardware to run such protocols.
+
+Authy~\cite{authy}, aside from the code-based solution presented before, can be configured to allow a seamless 2FA mechanism using Bluetooth communication between the computer and the phone. The idea is to have the smartphone close to the computer from where the login attempt is being made. Upon request of the second authentication factor an application installed on the user's computer queries the code from the Authy application on the user's smartphone and automatically fills the code into the browser input field. Authy does, therefore, require extra software to be installed on the user's computer or on any device from which the user wishes to login.
+
+As an alternative to Bluetooth, the browser and the phone can communicate over WiFi~\cite{shirvanian14}.
+This approach only works when both devices are on the same network.
+The authors propose to use extra software on the computer to virtualize the wireless interface and create a software access point (AP) with which the phone needs to be associated. The user has to perform this setup procedure every time he uses a new computer to log in.
+Their solution also requires a phone application listening for incoming connections in the background, which is currently not possible on iOS.
+
+Finally, the browser and the phone can communicate through near field communication (NFC). NFC hardware is not commonly found in commodity computers, and current browsers do not expose APIs to access NFC hardware.
+Similar to Bluetooth, the NFC communication range can be extended by an adversary equipped with a directional antenna~\cite{diakos13joe, haselsteiber06rfidsec}.
+Furthermore, a solution based on NFC would not completely remove user-phone interaction because the user would still need to hold his phone close to the computer or where the NFC reader is placed.
+
+In general the proposed short-range radio communication solutions try to limit the user interaction with the second authentication token. The idea is to increase the usability of 2FA mechanisms to foster larger user adoption. We have presented some of the pitfalls of these solutions such as range-extension attacks or the requirement of new software to be installed on all the devices from which the user performs login operations.
+
+\paragraph{Location Information.}
+When the user is performing a login operation, the server can check if the computer and the phone are co-located by comparing their GPS coordinates.
+GPS sensors are available on all modern phones but are rare on commodity computers.
+If the computer from which the user logs in has no GPS sensor, it can use the geolocation API exposed by some browsers~\cite{firefoxgeolocation}.
+The API allows to estimate the current location by querying Google Location Services with information about nearby wireless access points and the device's IP address.
+In indoor environments or where the GPS sensor on the phone does not have a fix, the phone may also use the geolocation API of the browser.
+Nevertheless, information retrieved via the geolocation API may not be accurate, for example when the device is behind a VPN or it is connected to a large managed network (such as enterprise or university networks). Similarly, if the phone does not use GPS coordinates and relies on its IP address to estimate its location, the location query is likely to return the coordinates of the data connection provider.
+Furthermore, geolocation information can be easily guessed by an adversary.
+For example, assume the adversary knows the location of the victim's workplace and uses that location as the second authentication factor.
+This attack is likely to succeed during working hours since the victim is presumably at his workplace.
+
+\paragraph{Near-ultrasound.}
+SlickLogin~\cite{slicklogin} minimizes the user-phone interaction by transferring the verification code from the computer to the phone encoded using near-ultrasounds.
+The idea is to use spectrum frequencies that are non-audible for the majority of the population but that can be reproduced by the speakers of commodity computers ($>18$kHz).
+Using non-audible frequencies accommodates for scenarios where users may not want their devices to make audible noise.
+Due to their size, the speakers of commodity computers can only produce highly directional near-ultrasound frequencies~\cite{russell98amjphys}.
+Near-ultrasound signals also attenuate faster, when compared to sounds in the lower part of the spectrum ($<18$kHz)~\cite{arentz11ubicomp,hazas02ubicomp}.
+With SlickLogin, the user must ensure that the speaker volume is at a sufficient level during login.
+Also, login will fail if a headset is plugged into the output jack of the computer from which the user is performing the login.
+Finally, this approach may not work in scenarios where there is in-band noise (e.g., when listening to music or in cafes)~\cite{hazas02ubicomp}.
+We also note that a solution based on near-ultrasounds may result unpleasant for young people and animals that are capable of hearing sounds above 18kHz~\cite{valiente14audiology}.
+
+\paragraph{Other Sensors.}
+A 2FA mechanism can combine the readings of multiple sensors that measure ambient characteristics, such as temperature, concentration of gases in the atmosphere, humidity, and altitude, as proposed in~\cite{shrestha14}. These combined sensor modalities can be used to verify the proximity between the computer through which the user is trying to login and his phone. However, today's computers and phones lack the hardware sensors that are required for such an approach to work, making such a proposal not deployable.
+
+% As we will discuss in the following sections, Sound-Proof is more usable and deployable, albeit less secure, than existing proposals. However, we argue that this design choice can edge for larger user adoption.
+
+\section{Two-Factor Authentication for Payments}
+
+In the previous section we have summarized deployed system and research proposals that implement or improve two-factor authentication for the web. We now focus on the proposals and deployed systems that propose the use of 2FA for payments.
+
+Payments at points of sale have received particular attention in terms of
+increasing their security and preventing frauds derived from credit card theft
+and cloning. Recently, MasterCard has proposed to use the location of the
+card-holder's smartphone to improve fraud detection in payments at points of
+sale~\cite{mastercardpatent}. The proposal is presented at a high level and suggests to check the smartphone reported GPS location to the authorization server when a payment is processed. The server can compare the location reported by the phone and the known location of the point of sale where the transaction is taking place. Only if the two match (or are within a given range threshold) the transaction is authorized. In the patent there is no technical information on how to address potential smartphone OS compromise, user enrollment in the system or the migration of the user to a new smartphone.
+
+The authors of~\cite{park09acsac} propose to mitigate fraud in payments at
+points of sale, using the phone location as an additional evidence to
+distinguish between legitimate and fraudulent transactions. In contrast to the
+MasterCard proposal, the bank sends a message to the user phone with the
+details of the transactions (including the location of the merchant and the one
+of the phone, as provided by the network operator) and asks the user to confirm
+the payment. This solution requires changes to the GSM infrastructure to
+provide the user with the current location of his phone, the points of sale to
+handle extra messages and additional cryptographic operations, and ultimately
+the overall user experience. Furthermore, the protocols in~\cite{park09acsac}
+do not account for a compromised mobile OS, nor they address enrollment. The
+authors do assume an adversary who can intercept any communication channel and
+require that the bank shares pair-wise keys with the phone, the mobile network
+operator, and the point of sale.
+
+Securing online payments with two-factor authentication is the focus of a
+number of work that leverage hardware and software tokens to generate one-time
+passwords~\cite{barclays_pinsentry,paypalkey,rsasecurid}, biometric
+scanners~\cite{unitedbankers,utahbank}, or simply user-remembered
+passwords~\cite{verifiedbyvisa}. Financial institutions are deploying systems
+that leverage modern smartphones to replace traditional payment cards and using
+NFC-enabled point of sale terminals~\cite{googlewallet,isis}. Such solutions can
+only be used at selected stores or face large investments for hardware upgrades
+at merchants.  Other systems that enhance the security of payment card
+transactions, require the user to confirm the payment through SMS messages or
+phone calls~\cite{validsoft}.
+
+\section{Complementary Research Topics}
+
+We conclude this chapter with related work in topics complementary to two-factor authentication.
+
+\subsection{Biometrics}
+
+While the second authentication factor proves to the service provider that the user is in possession of a second device, biometrics can be used to strengthen the login procedure or completely replace it by focusing on something that the user itself has (as in, a physical property of the user) and that is unique. 
+
+Research as well as deployed systems have looked at using the users' fingerprints to authenticate a user to a system~\cite{fingerprint}. The most recent introduction in this field is the use of fingerprint sensors integrated within mobile devices. The overall idea is that upon registration, the user provides the fingerprint of one or multiple fingers. Upon login the user places his finger over a reader that scans his fingerprint and sends it to the server for comparison. While fingerprints are unique to each individual, recent work has shown how easy it is to recreate a person's fingerprint from an object that he touched~\cite{cccfingerprintoriginal,cccfingerprint}. Similar attacks have been shown to work also on the latest solutions that try to evaluate the ``liveliness'' of the finger that is scanned, on top of performing the fingerprint scan.
+
+Other deployed systems, for instance to grant access to buildings, range from iris scanners~\cite{eyelock} to voice~\cite{nuanceauth} and palm veins recognition solutions~\cite{fujitsupalm,m2syspalm}. More recent work in the area of biometric-based authentication has looked at how to authenticate a user by exploiting his unique body electrical transmission~\cite{rasmussenpulse} or eye movements~\cite{rasmussen15}. In all proposals, similar to fingerprints, a reference value for the physical property is stored on the server and matched against a new scan when the user attempts to access a protected resource. These new systems have not been shown to be easily attackable.
+
+Finally, we mention recent work that authenticate users by performing continous verification of user's interaction patterns. In these work the user interaction with a device (e.g. a keyboard~\cite{keyboardbiometrics}, a mouse~\cite{mousebiometrics}, a touchscreen~\cite{touchscreenbiometrics}) is profiled over time. Only if the interaction matches the user habitual one the user is allowed to remain logged into the system. 
+
+\subsection{Security of Passwords}
+
+Most two-factor authentication mechanisms rely, as the first factor, on a user's password. The problem with password-only authentication systems is that their security comes from the strength of users passwords. Recent password databases leaks~\cite{evernotehack,yahoohack,linkedinhack} have shown that users tend to choose weak passwords and also that users tend to re-use passwords across services~\cite{passwordreuse}.
+
+Researchers have analyzed the problem extensively in recent years and have proposed a plethora of countermeasures. In general, proposals focused on client-side increased password strength~\cite{passhash,vaultwww,passpet,passwordsstrenghts} and server-side password protection through new cryptographic tools~\cite{honeycomb,honeysp}.
+
+\section{Summary}
+
+A large number of deployed systems as well as research proposals focused on two-factor authentication methods both for web logins and payments. In the first case, the user is required to provide a second authentication factor in order to access a protected online resource. In the second case, the user is required to perform additional operations or provide extra information to guarantee that the payment is indeed a legitimate one.
+
+Both deployed systems and research proposals suffer from limited usability, in that they require the user to change his behavior when logging in or when performing a payment at a point of sale. Furthermore, some systems suffer from poor deployability as they require additional software on the user's computer or changes to the current infrastructure, something that is costly and requires a long time to be carried out.
+
+In the following chapters we will try to overcome these limitations in both scenarios while enhancing the security of currently deployed systems.

@@ -1,0 +1,222 @@
+\section{Proof direction}
+
+\subsection*{preliminaries}
+Several systems have been suggested for proving the correctness of a program relative to a specification.
+Hoare's axiomatic semantics ~\cite{DBLP:journals/cacm/Hoare69} is a deductive system for showing program correctness and most current systems are, to some degree, based on it.
+
+The system is parametric in the underlying assertion logic (the logic used to prove assertions on a single program state).
+The rule that shows this parametericity is the rule of consequence, which uses implication of the assertion logic in the premise of the rule. As we are not interested in developing a proof tool for the underlying logic (which, in our case means FOL), we will be using a backend proving tool for that logic and refer to it as an oracle for that logic - thus we are a-priori limited only to proofs in which all implications used in the rule of consequence are provable by our oracle.
+
+In this system, as in many other deductive systems, a single program can have several different valid proofs.
+As our objective is to find such proofs quickly, we would like to be able to reduce the proof-search-space in order to find proofs faster, while still being able to find a proof for every (relatively) provable program.
+(we call a program relatively provable when it has a Hoare proof in which all implications used in the rule of consequence are provable by our oracle).
+
+Given a set of valid proofs for the same program, there are some obvious characteristics by which we could choose which proof we prefer:
+\begin{itemize}
+	\item Size: measured by the number of nodes in the proof tree and or the total size of terms in the proof
+	\item Redundancy: some deduction steps can be eliminated while still leaving the proof valid (the exact definition is more complicated, as extra deduction steps can add unnecessary information (conjuncts) to a rule premise)
+	\item Oracle complexity: some assertion-logic theorems take much longer to prove on some oracles - a proof with simpler assertion-logic parts might be preferable (for example, SMT solvers are usually weak on quantifier instantiation, while resolution based solvers without a dedicated integer engine are often weak on arithmetic) - as long as it doesn't take that much longer to find.
+\end{itemize}
+
+A search strategy that only covers an "optimal" (in some of the above or other senses) proof might be expected to find such a proof faster if it exists.
+
+For example, consider the following program:
+\begin{lstlisting}
+	x := y * y + 5
+	z := x + 1
+	assert z>0
+\end{lstlisting}		
+
+we could come up with the following Hoare proof:
+\begin{lstlisting}
+	{}
+	^$\models$^
+	{^$y \times y+5=y \times y+5$^}
+	x := y*y+5
+	{^$x=y \times y+5$^}
+	^$\models$^
+	{^$x+1=x+1 \land x=y \times y+5$^}
+	z := x+1
+	{^$z=x+1 \land x=y \times y+5 $^}
+	^$\models$^
+	{^$z>0$^}
+	assert z>0
+\end{lstlisting}		
+
+Or this one:
+\begin{lstlisting}
+	{}
+	^$\models$^
+	{^$y \times y+5+1>0$^}
+	x := y*y+5
+	{^$x+1>0$^}
+	z := x+1
+	{^$z>0$^}
+	assert z>0
+\end{lstlisting}		
+
+if we were to write the wlp of this program we would get:
+$y \times y + 5 + 1>0$ which is in some sense the optimal formula to send to the theorem prover.
+
+However, consider this case:
+\begin{lstlisting}
+	x := y * y + 5
+	if (b)
+		x := x+1
+	else
+		y := y+1
+	z := x + 1
+	assert z>0
+\end{lstlisting}		
+
+The wlp in this case is:
+$\lnot b \implies y \times y + 5 + 1>0 \land b \implies y \times y + 5 + 1 + 1>0$
+
+Which is not optimal.
+
+Boogie style (passive program,DSA) we would get: \\
+$
+\begin{array}{lll}
+\mathbf{let}\ J0_{Ok} = x_1+1>0 & &\mathbf{in}\\
+\mathbf{let}\ T0_{Ok} = x_1=x_0+1 &\Rightarrow J0_{Ok} & \mathbf{in} \\
+\mathbf{let}\ E0_{Ok} = x_1=x_0   \Rightarrow y_1=y_0+1 &\Rightarrow J0_{Ok} &\mathbf{in}\\
+\mathbf{let}\ B0_{Ok} = x_0 = y_0 \times y_0 + 5 &\Rightarrow T0_{Ok} \land E0_{Ok} &\mathbf{in}\\
+B0_{Ok}
+\end{array}
+$
+
+%$\mathbf{let}\ J0_{Ok} = x_1+1>0 \ \mathbf{in} $ \\
+%$\mathbf{let}\ T0_{Ok} = x_1=x_0+1 \implies J0_{Ok} \ \mathbf{in} $ \\
+%$\mathbf{let}\ E0_{Ok} = x_1=x_0   \implies y_1=y_0+1 \implies J0_{Ok} \ \mathbf{in} $ \\
+%$\mathbf{let}\ B0_{Ok} = x_0 = y_0 \times y_0 + 5 \implies T0_{Ok} \land E0_{Ok} \ \mathbf{in}$ \\
+%$B0_{Ok}$ \\
+
+
+The second proof is more concise and more goal-directed in the sense that it propagates to each point in the program the minimum information needed there for the proof.
+
+A common search strategy is to lever the generic search strategy in the oracle, by translating the problem from the program logic ( Hoare or equivalent) to the assertion-logic - thus generating the verification condition (VC) for the program.
+We assume the specification (user assertions, pre+post conditions of called and verified method, and methodology specific assertions), are all part of the program, encoded as assertions in our intermediate language.
+
+The most common (and first) way of encoding the VC is using some flavour of wp-semantics ~\cite{Dijkstra:1975:GCN:360933.360975}.
+A dual method would be to calculate the strongest postcondition of the program.
+
+Another approach that is used to prove (and infer) properties of programs is static analysis, which could be thought of, in broad terms, as calculating a kind of strongest post condition (with a very specific and fixed strategy for guessing loop invariants and for abstracting at join points) over a much smaller fragment of the assertion logic (e.g. linear inequalities with or without disjunction).
+These analyses are often focused on a specific domain (e.g. linear arithmetic, arrays, heaps (shape analysis)) and would be strong and fast in proving properties over this domain which is in their fragment, but not much else, and so choosing the fragment and strategy are crucial for a working tool, while a general theorem prover can handle a broader range of problems but often in less depth.
+Some theorem provers, especially SMT solvers, incorporate specialized solvers for specific domains and fragments but they rely on the encoding of the problem into a VC to utilize this specialized solver, and hence some information that is explicit in the program (CFG structure, DSA relations between variables, scope) becomes implicit in the VC and so the theorem prover has to apply generic search strategies to try and prove the VC.
+Some static analyses also work backwards (similar to wp-semantics).
+Some theorem provers can perform a sort of inference using logical interpolation, but a VCG tool usually needs user supplied invariants.
+
+A third common method is symbolic execution ~\cite{Boyer:1975:SFS:390016.808445} - where a program is executed with symbolic values for the inputs, branching the execution on program branches.
+A symbolic execution engine collects the information in the program in a manner similar to sp-semantics, except that as it branches execution on branches it does not have to join disjunctive information at join points in the CFG.
+A symbolic execution engine can maintain a symbolic version of the program heap at each location, and hence have a dedicated heap domain which can be more efficient than the FOL representation.
+The engine can query a theorem prover (or solver for some domain), when the symbolic state affects the program execution: e.g. the  control flow - check if a branch/loop condition is feasible, heap - check if an updated heap location is aliased, assertion - check if an assertion holds.
+Symbolic execution can sometimes also be performed backwards.
+
+
+\subsubsection*{Direction}
+The main advantages in analyzing a program forwards:
+\begin{itemize}
+	\item The transformer (predicate/abstract etc) is often simpler than for backwards analysis - as the actual program is run forward
+	\item Partial results are useful - for example, a run of symbolic execution or forward static analysis can prove some of the assertions in a program and also generate some (partial) invariants for certain program locations - these can be used to simplify the problem, run it through another tool or annotate the program.
+\end{itemize}
+
+The main advantages in analyzing a program backwards:
+\begin{itemize}
+	\item The analysis is goal directed - information which can be determined not to be relevant for the proof is not taken into account.
+	This can eliminate a large part of the program or state-space or axioms
+\end{itemize}
+
+
+In both cases, using some reasoning tool on intermediate states can be helpful in reducing the search space - for example:
+In forward analysis, if we encounter a heap assignment, we can try and determine which other heap locations the assigned location can alias. Without this information, we must assume that any location on the heap could be written and so we would have a larger and more complicated (disjunctive) state.
+In both directions, if we can deduce that a certain branch is infeasible, we can disregard that branch.
+
+When generating a VC (either wp or sp), the program flow direction is only implicitly encoded.
+If a goal directed theorem prover is used for proving the VC, and the assertions are marked as goals, then at least some of the benefit of backward analysis can be obtained.
+
+Our aim is to try and combine forwards and backwards elements in our tool in order to gain the benefits of both.
+
+For example:
+\begin{lstlisting}
+function f1()
+{
+	assume x!=y
+	assume x!=z
+	x.f = 1
+	
+	if (c)
+		y.f = -1
+	else
+		z.f = -2
+		
+	assert x.f>0
+}
+\end{lstlisting}		
+
+with the DSA form:
+
+\begin{lstlisting}
+function f1()
+{
+	assume x!=y
+	assume x!=z
+	assume h0[x,f] = 1          //mapRead(h0,x,f) = 1
+	
+	if (c)
+		assume h1 = h0[y.f := -1] //h1 = mapWrite(h0,y,f,-1)
+	else
+		assume h1 = h0[z.f := -2] //h1 = mapWrite(h0,z,f,-2)
+		
+	assert h1[x.f]>0            //mapRead(h1,x,f) > 0
+}
+\end{lstlisting}		
+
+Here we are only interested in the value of \lstinline{x.f}, but we do not know that \expression{x \neq y} and the weakest precondition is (bold conjuncts are goal conjuncts): \\
+	$x \neq y$ \\
+	$x \neq z$ \\
+	$mapRead(h_0,x,f) = 1 $ \\
+	$(\lnot c \implies h1 = mapWrite(h_0,z,f,-2) $ \\
+	$(      c \implies h1 = mapWrite(h_0,y,f,-1) $ \\
+	$\mathbf{\lnot mapRead(h_1,x,f) > 0} $
+
+and with many heap assignments it grows larger and larger, while a very simple forward analysis would generate, after the branch (with the negated assertion):\\
+	$x \neq y $ \\
+	$x \neq z $ \\
+	$h[x,f] = 1 $ \\
+	$(\lnot c \implies h[z,f]=-2)$ \\
+	$(      c \implies h[y,f]=-1)$ \\
+	$\mathbf{\lnot h[x,f] > 0}$
+
+We aim at a more lazy tool, that will first get to the assertion $\mathbf{\lnot h_1[x,f] > 0}$, and then will try to get information about the value of the relevant ground terms (int this case: \{ $h_1$,$x$,$f$,$h_1[x,f]$ \}
+The information we get for a specific program location is only information implied by its predecessors - so we get: \\
+	for $x$ : \\
+	$x \neq y $ \\
+	$x \neq z $ \\
+	for $h_1[x,f]$ : \\
+	we query down the line and get to line 8: \\
+	$h_1[x,f] = h_0[y.f := -1][x,f]$ \\
+	Now we know (from the map axioms) that $x \neq y$ or $x = y$ are needed - so we query further and get: \\
+	$x \neq y $ \\
+	And now we have \\
+	$h_1[x,f] = h_0[x,f]$ \\
+	We query about  \\
+	$h_0[x,f]$ \\
+	And get \\
+	$h_0[x,f]=1$ \\
+	And so (congruence closure): \\
+	$h_1[x,f]=1$
+	
+	The same for line 10 we get: \\
+	$h1[x,f]=1$
+	
+	and so we join these to get at line 11: \\
+	$h1[x,f]=1$ \\
+	And now with \\
+	$\lnot h1[x,f]>0$ \\
+	we get \\
+	$\lnot 1>0$ \\ 
+	Which an integer engine could discharge 
+
+\subsubsection*{note}
+A note regarding wp vs wlp and partial vs total correctness: as our intermediate representation does not include loops, the only way a program may not terminate (which would mean that some designated set of terminal states is not reachable) is if the CFG is initially not connected to the designated end states or if some combination of \lstinline{assume} statements makes the end states unreachable.
+We do not consider non-termination and hence are only interested in partial correctness / wlp (note that a frontend tool could encode a variant check after the loop body (and also recursion variants), hence we are able to handle termination, but are oblivious to it).

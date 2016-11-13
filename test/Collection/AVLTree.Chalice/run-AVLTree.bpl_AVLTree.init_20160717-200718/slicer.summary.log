@@ -1,0 +1,28 @@
+Running AVLTree.Chalice - AVLTree.bpl - AVLTree.init
+  Boogie: c:\work\slicer\src\Binaries\Boogie.exe
+  Boogie params: /slice /noProver
+  Z3: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+  Z3 params: -smt2 -st -v:1
+SlicerTime: AVLTree.init.start                                           - 1
+SlicerTime: AVLTree.init.build                                           - 3
+SlicerTime: AVLTree.init.maps                                            - 4
+SlicerTime: AVLTree.init.end                                             - 4
+Z3runtime: AVLTree.AVLTree.init.build.fw.orig                           - 0   
+Z3runtime: AVLTree.AVLTree.init.build.fw                                - 0   
+Z3runtime: AVLTree.AVLTree.init.build.mrs                               - 0   
+Z3runtime: AVLTree.AVLTree.init.build.orig                              - 4   
+Z3runtime: AVLTree.AVLTree.init.build                                   - 4   
+Z3runtime: AVLTree.AVLTree.init.end.fw.orig                             - 0   
+Z3runtime: AVLTree.AVLTree.init.end.fw                                  - 0   
+Z3runtime: AVLTree.AVLTree.init.end.mrs                                 - 0   
+Z3runtime: AVLTree.AVLTree.init.end.orig                                - 4   
+Z3runtime: AVLTree.AVLTree.init.end                                     - 5   
+Z3runtime: AVLTree.AVLTree.init.round_1_MR.fw.orig                      - 0   
+Z3runtime: AVLTree.AVLTree.init.round_1_MR.fw                           - 0   
+Z3runtime: AVLTree.AVLTree.init.round_1_MR.mrs                          - 0   
+Z3runtime: AVLTree.AVLTree.init.round_1_MR.orig                         - 4   
+Z3runtime: AVLTree.AVLTree.init.round_1_MR                              - 5   
+Z3runtime: AVLTree.AVLTree.init.start.1.orig                            - 0   
+Z3runtime: AVLTree.AVLTree.init.start.1                                 - 5   
+Z3runtime: AVLTree.AVLTree.init.start.orig                              - 0   
+Z3runtime: AVLTree.AVLTree.init.start                                   - 4   

@@ -1,0 +1,861 @@
+Running AVLTree.Chalice - AVLTree.bpl - AVLTree.init
+  Boogie: c:\work\slicer\src\Binaries\Boogie.exe
+  Boogie params: /slice /noProver
+  Z3: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+  Z3 params: -smt2 -st -v:1
+Running Boogie Slicer
+Executing:
+ ExecEXE: c:\work\slicer\src\Binaries\Boogie.exe
+ ExecArgs: /slice /noProver /proc:AVLTree.init AVLTree.bpl
+Running....
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+Slicer starting - function "AVLTree.init"
+Preprocessing:
+ -      0s
+FOLing around:
+
+
+***Preprocessing clauses         [0] start  - g/n  24/ 115  c/a   464/  6873
+   FOL conversion
+   CNF Conversion
+   CNF Conversion - expressions: 635+24
+   **Done - clauses: 1276,atoms:  3491
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [0] end    - g/n  24/ 115  c/a  1274/  2779 - proved   0 - time [     0s]/[     1s]
+
+***Extracting CFG                [0] start  - g/n  24/ 115  c/a  1274/  2779
+   Correlating branches
+   Compressing blocks
+   Calculating branch conditions
+   Calculating variable forward scope
+   Calculating live variables
+   Calculating variable scope
+   Calculating extra terms
+   Calculating DSA pass 1
+   Calculating DSA pass 2
+   Calculating Key Nodes
+   Calculating variable order
+***Extracting CFG                [0] end    - g/n  16/  83  c/a  1158/  2056 - proved   8 - time [     0s]/[     1s]
+
+***Building Universes            [0] start  - g/n  16/  83  c/a  1158/  2056
+***Building Universes            [0] end    - g/n  14/  79  c/a  2569/  3430 - proved   2 - time [     1s]/[     3s]
+
+***Saturating CFG Maps           [1] start  - g/n  14/  79  c/a  2569/  3430
+***Saturating CFG Maps           [1] end    - g/n   9/  63  c/a  3570/  4444 - proved   5 - time [     1s]/[     4s]
+
+***Saturating CFG[In]            [1] start  - g/n   9/  63  c/a  3570/  4444
+***Saturating CFG[In]            [1] end    - g/n   8/  62  c/a  3547/  4419 - proved   1 - time [     0s]/[     4s]
+
+***Saturating Equalities         [2] start  - g/n   8/  62  c/a  3547/  4419
+***Saturating Equalities         [2] end    - g/n   8/  62  c/a  3547/  4419 - proved   0 - time [     0s]/[     4s]
+***Analysis done - time: [     5s] - proven 8 goals
+Still 8/16 goals and 62/83 nodes
+
+FOL -      6s
+Total time - AVLTree.init:      4s
+Slicer Ended - function "AVLTree.init"
+
+Boogie program verifier finished with 1 verified, 0 errors
+
+E:
+Run ended
+SlicerTime: AVLTree.init.start                                           - 1
+SlicerTime: AVLTree.init.build                                           - 3
+SlicerTime: AVLTree.init.maps                                            - 4
+SlicerTime: AVLTree.init.end                                             - 4
+Running Boogie Slicer done
+Running Boogie
+Executing:
+ ExecEXE: c:\work\slicer\src\Binaries\Boogie.exe
+ ExecArgs: /trace /traceTimes /proverLog:@PROC@.boogie.smt2 /proc:AVLTree.init AVLTree.bpl
+Running....
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0.0010007 s]
+Parsing AVLTree.bpl
+>>> Starting resolution   [0.9044495 s]
+>>> Starting typechecking   [1.0510469 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [2.4820512 s]
+
+Running abstract interpretation...
+  [0.1581047 s]
+>>> Starting implementation verification   [2.6516638 s]
+>>> Starting live variable analysis   [2.6866866 s]
+>>> Finished implementation verification   [3.0580025 s]
+
+Verifying AVLTree.init ...
+  [0.407 s, 24 proof obligations]  verified
+
+Boogie program verifier finished with 1 verified, 0 errors
+E:
+
+Run ended
+Running Boogie done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.build.fw.orig.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.build.fw.orig.smt2
+Running....
+unsat
+(:add-rows                1254
+ :added-eqs               1220
+ :arith-conflicts         18
+ :assert-diseq            18
+E:
+ :assert-lower            378
+ :assert-upper            272
+ :binary-propagations     1152
+ :bound-prop              112
+ :conflicts               39
+ :decisions               344
+ :del-clause              3000
+ :eliminated-applications 1
+ :eq-adapter              236
+ :fixed-eqs               195
+ :max-generation          4
+ :max-memory              3.74
+ :memory                  1.74
+ :minimized-lits          29
+ :mk-clause               3322
+ :num-allocs              1950008.00
+ :offset-eqs              71
+ :pivots                  279
+ :propagations            1996
+ :quant-instantiations    329
+ :rlimit-count            46048
+ :time                    0.04
+ :total-time              0.05)
+
+Run ended
+Z3runtime: AVLTree.AVLTree.init.build.fw.orig                           - 0   
+Running Z3 done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.build.fw.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.build.fw.smt2
+Running....
+unsat
+(:add-rows                914
+ :added-eqs               838
+ :arith-conflicts         14
+ :assert-diseq            34
+ :assert-lower            271
+E:
+ :assert-upper            185
+ :binary-propagations     838
+ :bound-prop              74
+ :conflicts               32
+ :decisions               327
+ :del-clause              2039
+ :eliminated-applications 6
+ :eq-adapter              177
+ :fixed-eqs               111
+ :max-generation          4
+ :max-memory              3.64
+ :memory                  1.72
+ :minimized-lits          26
+ :mk-clause               2347
+ :num-allocs              1958811.00
+ :offset-eqs              48
+ :pivots                  183
+ :propagations            1400
+ :quant-instantiations    235
+ :rlimit-count            54392
+ :time                    0.04
+ :total-time              0.05)
+
+Run ended
+Z3runtime: AVLTree.AVLTree.init.build.fw                                - 0   
+Running Z3 done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.build.mrs.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.build.mrs.smt2
+Running....
+unsat
+(:add-rows                951
+ :added-eqs               835
+E:
+ :arith-conflicts         14
+ :assert-diseq            34
+ :assert-lower            267
+ :assert-upper            185
+ :binary-propagations     839
+ :bound-prop              74
+ :conflicts               33
+ :decisions               326
+ :del-clause              2118
+ :eliminated-applications 6
+ :eq-adapter              179
+ :fixed-eqs               111
+ :max-generation          4
+ :max-memory              3.64
+ :memory                  1.72
+ :minimized-lits          26
+ :mk-clause               2433
+ :num-allocs              2063987.00
+ :offset-eqs              48
+ :pivots                  183
+ :propagations            1409
+ :quant-instantiations    235
+ :rlimit-count            54533
+ :time                    0.04
+ :total-time              0.05)
+
+Run ended
+Z3runtime: AVLTree.AVLTree.init.build.mrs                               - 0   
+Running Z3 done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.build.orig.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.build.orig.smt2
+Running....
+unsat
+(:add-rows                1513
+ :added-eqs               1157
+ :arith-conflicts         15
+ :assert-diseq            22
+ :assert-lower            371
+E:
+ :assert-upper            275
+ :binary-propagations     741
+ :bound-prop              77
+ :conflicts               34
+ :decisions               56
+ :del-clause              2916
+ :eliminated-applications 1
+ :eq-adapter              225
+ :fixed-eqs               208
+ :max-generation          4
+ :max-memory              3.70
+ :memory                  1.74
+ :minimized-lits          26
+ :mk-clause               3198
+ :num-allocs              1900711.00
+ :offset-eqs              66
+ :pivots                  239
+ :propagations            1559
+ :quant-instantiations    328
+ :rlimit-count            43533
+ :time                    0.43
+ :total-time              0.44)
+
+Run ended
+Z3runtime: AVLTree.AVLTree.init.build.orig                              - 4   
+Running Z3 done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.build.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.build.smt2
+Running....
+unsat
+(:add-rows                1310
+ :added-eqs               865
+ :arith-conflicts         12
+E:
+ :assert-diseq            35
+ :assert-lower            259
+ :assert-upper            188
+ :binary-propagations     461
+ :bound-prop              52
+ :conflicts               31
+ :decisions               44
+ :del-clause              1935
+ :eliminated-applications 6
+ :eq-adapter              180
+ :fixed-eqs               122
+ :max-generation          4
+ :max-memory              3.58
+ :memory                  1.72
+ :minimized-lits          38
+ :mk-clause               2225
+ :num-allocs              2002837.00
+ :offset-eqs              73
+ :pivots                  184
+ :propagations            927
+ :quant-instantiations    237
+ :rlimit-count            51679
+ :time                    0.44
+ :total-time              0.45)
+
+Run ended
+Z3runtime: AVLTree.AVLTree.init.build                                   - 4   
+Running Z3 done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.end.fw.orig.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.end.fw.orig.smt2
+Running....
+unsat
+(:add-rows                1263
+ :added-eqs               1099
+E:
+ :arith-conflicts         15
+ :assert-diseq            14
+ :assert-lower            322
+ :assert-upper            234
+ :binary-propagations     1066
+ :bound-prop              76
+ :conflicts               32
+ :decisions               203
+ :del-clause              2240
+ :eliminated-applications 6
+ :eq-adapter              202
+ :fixed-eqs               162
+ :max-generation          4
+ :max-memory              3.57
+ :memory                  1.69
+ :minimized-lits          33
+ :mk-clause               2616
+ :num-allocs              1658236.00
+ :offset-eqs              69
+ :pivots                  221
+ :propagations            1677
+ :quant-instantiations    300
+ :rlimit-count            42451
+ :time                    0.04
+ :total-time              0.05)
+
+Run ended
+Z3runtime: AVLTree.AVLTree.init.end.fw.orig                             - 0   
+Running Z3 done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.end.fw.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.end.fw.smt2
+Running....
+unsat
+(:add-rows                456
+ :added-eqs               650
+ :arith-conflicts         9
+ :assert-diseq            20
+ :assert-lower            201
+E:
+ :assert-upper            144
+ :binary-propagations     652
+ :bound-prop              75
+ :conflicts               21
+ :decisions               93
+ :del-clause              1588
+ :eliminated-applications 11
+ :eq-adapter              123
+ :fixed-eqs               85
+ :max-generation          4
+ :max-memory              3.50
+ :memory                  1.68
+ :minimized-lits          15
+ :mk-clause               1840
+ :num-allocs              1786292.00
+ :offset-eqs              33
+ :pivots                  128
+ :propagations            1002
+ :quant-instantiations    163
+ :rlimit-count            49858
+ :time                    0.03
+ :total-time              0.04)
+
+Run ended
+Z3runtime: AVLTree.AVLTree.init.end.fw                                  - 0   
+Running Z3 done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.end.mrs.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.end.mrs.smt2
+Running....
+unsat
+(:add-rows                629
+ :added-eqs               1674
+ :arith-conflicts         8
+ :assert-diseq            22
+ :assert-lower            366
+E:
+ :assert-upper            251
+ :binary-propagations     1189
+ :bound-prop              156
+ :conflicts               24
+ :decisions               85
+ :del-clause              2182
+ :eliminated-applications 11
+ :eq-adapter              229
+ :fixed-eqs               145
+ :max-generation          4
+ :max-memory              3.91
+ :memory                  1.80
+ :minimized-lits          18
+ :mk-clause               2476
+ :num-allocs              2369419.00
+ :offset-eqs              76
+ :pivots                  198
+ :propagations            1701
+ :quant-instantiations    230
+ :rlimit-count            56282
+ :time                    0.04
+ :total-time              0.06)
+
+Run ended
+Z3runtime: AVLTree.AVLTree.init.end.mrs                                 - 0   
+Running Z3 done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.end.orig.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.end.orig.smt2
+Running....
+unsat
+(:add-rows                1225
+ :added-eqs               939
+ :arith-conflicts         14
+ :assert-diseq            15
+E:
+ :assert-lower            309
+ :assert-upper            227
+ :binary-propagations     514
+ :bound-prop              74
+ :conflicts               28
+ :decisions               42
+ :del-clause              2056
+ :eliminated-applications 1
+ :eq-adapter              179
+ :fixed-eqs               158
+ :max-generation          4
+ :max-memory              3.52
+ :memory                  1.63
+ :minimized-lits          23
+ :mk-clause               2301
+ :num-allocs              1741571.00
+ :offset-eqs              51
+ :pivots                  189
+ :propagations            987
+ :quant-instantiations    288
+ :rlimit-count            39660
+ :time                    0.42
+ :total-time              0.43)
+
+Run ended
+Z3runtime: AVLTree.AVLTree.init.end.orig                                - 4   
+Running Z3 done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.end.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.end.smt2
+Running....
+unsat
+(:add-rows                392
+ :added-eqs               631
+ :arith-conflicts         8
+ :assert-diseq            20
+ :assert-lower            195
+E:
+ :assert-upper            140
+ :binary-propagations     409
+ :bound-prop              79
+ :conflicts               19
+ :decisions               28
+ :del-clause              1454
+ :eliminated-applications 11
+ :eq-adapter              120
+ :fixed-eqs               80
+ :max-generation          4
+ :max-memory              3.42
+ :memory                  1.64
+ :minimized-lits          8
+ :mk-clause               1689
+ :num-allocs              1814046.00
+ :offset-eqs              35
+ :pivots                  130
+ :propagations            713
+ :quant-instantiations    162
+ :rlimit-count            48620
+ :time                    0.53
+ :total-time              0.54)
+
+Run ended
+Z3runtime: AVLTree.AVLTree.init.end                                     - 5   
+Running Z3 done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.round_1_MR.fw.orig.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.round_1_MR.fw.orig.smt2
+Running....
+unsat
+(:add-rows                1248
+ :added-eqs               1176
+ :arith-conflicts         17
+ :assert-diseq            18
+ :assert-lower            363
+E:
+ :assert-upper            259
+ :binary-propagations     1128
+ :bound-prop              100
+ :conflicts               37
+ :decisions               265
+ :del-clause              2406
+ :eliminated-applications 6
+ :eq-adapter              221
+ :fixed-eqs               182
+ :max-generation          4
+ :max-memory              3.59
+ :memory                  1.69
+ :minimized-lits          37
+ :mk-clause               2813
+ :num-allocs              1708274.00
+ :offset-eqs              80
+ :pivots                  245
+ :propagations            1822
+ :quant-instantiations    317
+ :rlimit-count            43270
+ :time                    0.04
+ :total-time              0.05)
+
+Run ended
+Z3runtime: AVLTree.AVLTree.init.round_1_MR.fw.orig                      - 0   
+Running Z3 done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.round_1_MR.fw.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.round_1_MR.fw.smt2
+Running....
+unsat
+(:add-rows                450
+ :added-eqs               673
+ :arith-conflicts         9
+ :assert-diseq            23
+ :assert-lower            202
+E:
+ :assert-upper            144
+ :binary-propagations     716
+ :bound-prop              73
+ :conflicts               26
+ :decisions               155
+ :del-clause              1633
+ :eliminated-applications 11
+ :eq-adapter              127
+ :fixed-eqs               89
+ :max-generation          4
+ :max-memory              3.44
+ :memory                  1.68
+ :minimized-lits          16
+ :mk-clause               1898
+ :num-allocs              1737195.00
+ :offset-eqs              29
+ :pivots                  126
+ :propagations            1115
+ :quant-instantiations    171
+ :rlimit-count            50561
+ :time                    0.03
+ :total-time              0.04)
+
+Run ended
+Z3runtime: AVLTree.AVLTree.init.round_1_MR.fw                           - 0   
+Running Z3 done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.round_1_MR.mrs.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.round_1_MR.mrs.smt2
+Running....
+unsat
+(:add-rows                659
+ :added-eqs               1584
+ :arith-conflicts         7
+ :assert-diseq            20
+E:
+ :assert-lower            365
+ :assert-upper            260
+ :binary-propagations     1149
+ :bound-prop              158
+ :conflicts               23
+ :decisions               81
+ :del-clause              2209
+ :eliminated-applications 11
+ :eq-adapter              246
+ :fixed-eqs               142
+ :max-generation          4
+ :max-memory              3.90
+ :memory                  1.79
+ :minimized-lits          16
+ :mk-clause               2505
+ :num-allocs              2369543.00
+ :offset-eqs              58
+ :pivots                  205
+ :propagations            1669
+ :quant-instantiations    230
+ :rlimit-count            56323
+ :time                    0.05
+ :total-time              0.06)
+
+Run ended
+Z3runtime: AVLTree.AVLTree.init.round_1_MR.mrs                          - 0   
+Running Z3 done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.round_1_MR.orig.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.round_1_MR.orig.smt2
+Running....
+unsat
+(:add-rows                1231
+ :added-eqs               1086
+ :arith-conflicts         15
+ :assert-diseq            22
+ :assert-lower            360
+E:
+ :assert-upper            265
+ :binary-propagations     552
+ :bound-prop              77
+ :conflicts               33
+ :decisions               47
+ :del-clause              2264
+ :eliminated-applications 1
+ :eq-adapter              211
+ :fixed-eqs               204
+ :max-generation          4
+ :max-memory              3.55
+ :memory                  1.66
+ :minimized-lits          21
+ :mk-clause               2505
+ :num-allocs              1752374.00
+ :offset-eqs              66
+ :pivots                  216
+ :propagations            1131
+ :quant-instantiations    312
+ :rlimit-count            40840
+ :time                    0.40
+ :total-time              0.41)
+
+Run ended
+Z3runtime: AVLTree.AVLTree.init.round_1_MR.orig                         - 4   
+Running Z3 done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.round_1_MR.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.round_1_MR.smt2
+Running....
+unsat
+(:add-rows                395
+ :added-eqs               661
+ :arith-conflicts         9
+E:
+ :assert-diseq            23
+ :assert-lower            201
+ :assert-upper            146
+ :binary-propagations     409
+ :bound-prop              76
+ :conflicts               24
+ :decisions               33
+ :del-clause              1532
+ :eliminated-applications 11
+ :eq-adapter              124
+ :fixed-eqs               86
+ :max-generation          4
+ :max-memory              3.46
+ :memory                  1.64
+ :minimized-lits          8
+ :mk-clause               1776
+ :num-allocs              1858525.00
+ :offset-eqs              31
+ :pivots                  136
+ :propagations            744
+ :quant-instantiations    172
+ :rlimit-count            48831
+ :time                    0.55
+ :total-time              0.56)
+
+Run ended
+Z3runtime: AVLTree.AVLTree.init.round_1_MR                              - 5   
+Running Z3 done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.start.1.orig.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.start.1.orig.smt2
+Running....
+unsat
+(:add-rows                1323
+ :added-eqs               1243
+ :arith-conflicts         19
+E:
+ :assert-diseq            19
+ :assert-lower            381
+ :assert-upper            277
+ :binary-propagations     1248
+ :bound-prop              113
+ :conflicts               44
+ :decisions               356
+ :del-clause              3408
+ :eliminated-applications 1
+ :eq-adapter              249
+ :fixed-eqs               196
+ :max-generation          4
+ :max-memory              3.75
+ :memory                  1.74
+ :minimized-lits          33
+ :mk-clause               3738
+ :num-allocs              2007278.00
+ :offset-eqs              74
+ :pivots                  285
+ :propagations            2169
+ :quant-instantiations    340
+ :rlimit-count            46580
+ :time                    0.05
+ :total-time              0.05)
+
+Run ended
+Z3runtime: AVLTree.AVLTree.init.start.1.orig                            - 0   
+Running Z3 done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.start.1.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.start.1.smt2
+Running....
+unsat
+(:add-rows                1517
+ :added-eqs               1148
+ :arith-conflicts         15
+E:
+ :assert-diseq            22
+ :assert-lower            368
+ :assert-upper            276
+ :binary-propagations     806
+ :bound-prop              76
+ :conflicts               37
+ :decisions               60
+ :del-clause              3202
+ :eliminated-applications 1
+ :eq-adapter              230
+ :fixed-eqs               205
+ :max-generation          4
+ :max-memory              3.63
+ :memory                  1.72
+ :minimized-lits          23
+ :mk-clause               3485
+ :num-allocs              1916571.00
+ :offset-eqs              66
+ :pivots                  231
+ :propagations            1709
+ :quant-instantiations    336
+ :rlimit-count            43707
+ :time                    0.48
+ :total-time              0.49)
+
+Run ended
+Z3runtime: AVLTree.AVLTree.init.start.1                                 - 4   
+Running Z3 done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.start.orig.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.start.orig.smt2
+Running....
+unsat
+(:add-rows                912
+ :added-eqs               800
+E:
+ :arith-conflicts         11
+ :assert-diseq            16
+ :assert-lower            254
+ :assert-upper            187
+ :binary-propagations     999
+ :bound-prop              75
+ :conflicts               36
+ :decisions               466
+ :del-clause              2548
+ :eliminated-applications 10
+ :eq-adapter              170
+ :fixed-eqs               125
+ :max-generation          4
+ :max-memory              3.74
+ :memory                  1.75
+ :minimized-lits          20
+ :mk-clause               2835
+ :num-allocs              2090111.00
+ :offset-eqs              44
+ :pivots                  184
+ :propagations            1715
+ :quant-instantiations    235
+ :rlimit-count            57575
+ :time                    0.05
+ :total-time              0.06)
+
+Run ended
+Z3runtime: AVLTree.AVLTree.init.start.orig                              - 0   
+Running Z3 done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.start.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.AVLTree.init.start.smt2
+Running....
+unsat
+(:add-rows                953
+ :added-eqs               1292
+ :arith-conflicts         20
+ :assert-diseq            22
+ :assert-lower            420
+E:
+ :assert-upper            322
+ :binary-propagations     892
+ :bound-prop              106
+ :conflicts               40
+ :decisions               58
+ :del-clause              3397
+ :eliminated-applications 1
+ :eq-adapter              258
+ :fixed-eqs               218
+ :max-generation          4
+ :max-memory              3.56
+ :memory                  1.70
+ :minimized-lits          28
+ :mk-clause               3717
+ :num-allocs              1683361.00
+ :offset-eqs              73
+ :pivots                  274
+ :propagations            1979
+ :quant-instantiations    368
+ :rlimit-count            41234
+ :time                    0.44
+ :total-time              0.45)
+
+Run ended
+Z3runtime: AVLTree.AVLTree.init.start                                   - 4   
+Running Z3 done
+Running Z3 on C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.init.boogie.smt2
+Executing:
+ ExecEXE: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+ ExecArgs: -smt2 -st -v:1 C:\work\Slicer\test\Collection\AVLTree.Chalice\run-AVLTree.bpl_AVLTree.init_20160717-200715\AVLTree.init.boogie.smt2
+Running....
+unsat
+(:add-rows             436
+ :added-eqs            1548
+ :arith-conflicts      7
+ :assert-diseq         8
+E:
+ :assert-lower         223
+ :assert-upper         161
+ :binary-propagations  240
+ :bound-prop           95
+ :conflicts            29
+ :decisions            38
+ :del-clause           2728
+ :eq-adapter           151
+ :fixed-eqs            97
+ :max-generation       4
+ :max-memory           4.82
+ :memory               4.73
+ :minimized-lits       42
+ :mk-clause            2739
+ :num-allocs           791811.00
+ :num-checks           1
+ :offset-eqs           36
+ :pivots               150
+ :propagations         1139
+ :quant-instantiations 525
+ :rlimit-count         13195
+ :time                 0.02
+ :total-time           0.04)
+
+Run ended
+Z3runtime: AVLTree.init.boogie                                          - 0   
+Running Z3 done

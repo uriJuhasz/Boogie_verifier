@@ -1,0 +1,254 @@
+\DeclareMathOperator*\bigforall{%
+  \vphantom\sum
+  \mathchoice{\Scale{2}{\forall}}{\Scale{1.4}{\forall}}{\Scale{1}{\forall}}{\Scale{0.75}{\forall}}} 
+	
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\renewcommand{\thechapter}{\arabic{chapter}}
+\renewcommand{\thesection}{\thechapter.\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
+
+\newcommand{\hcancel}[1]{%
+    \tikz[baseline=(tocancel.base)]{
+        \node[inner sep=0pt,outer sep=0pt] (tocancel) {\normalsize $#1$};
+        \draw[black] (tocancel.south west) -- (tocancel.north east);
+    }%
+}%
+
+\newcommand*\newdef[1]{\textcolor{blue}{#1}}
+
+\newcommand{\m}[1] {\ensuremath{\mathrm{#1}}}
+\newcommand{\s}[1] {\ensuremath{\left\{\mathrm{#1}\right\}}}
+
+\newcommand{\term}[1]{\ensuremath{\mathrm{#1}}}
+\newcommand{\terms}[1]{\ensuremath{\mathbf{terms}(\mathrm{#1})}}
+\newcommand{\termsp}[1] {\ensuremath{\mathbf{terms'}(\mathrm{#1})}}
+\newcommand{\tuples}[1] {\ensuremath{\mathbf{tuples}(\mathrm{#1})}}
+\newcommand{\node}[1] {\ensuremath{\mathrm{#1}}}
+
+\newcommand{\clause}[1] {\ensuremath{\mathsf{#1}}}
+\newcommand{\clauses}[1] {\ensuremath{\mathbf{C}_{\node{#1}}}}
+\newcommand{\clauseseq}[1] {\ensuremath{\Eqs{\clauses{#1}}}}
+\newcommand{\pc}[1] {\ensuremath{\mathbf{pc}(\node{#1})}}
+\newcommand{\lpc}[1] {\ensuremath{\mathbf{lpc}(\node{#1})}}
+\newcommand{\rpc}[2] {\ensuremath{\mathbf{rpc}(\node{#1},\node{#2})}}
+
+\newcommand{\function}[1] {\ensuremath{\mathrm{#1}}}
+\newcommand{\true}{\ensuremath{\mathbf{true}}}
+\newcommand{\false}{\ensuremath{\mathbf{false}}}
+
+
+%Graph structure
+\newcommand{\succs}[1] {\ensuremath{\mathbf{succ}(\node{#1})}}
+\newcommand{\succst}[1] {\ensuremath{\mathbf{succ*}(\node{#1})}}
+\newcommand{\succsto}[1] {\ensuremath{\mathbf{succ}+(\node{#1})}}
+\newcommand{\preds}[1] {\ensuremath{\mathbf{ps}(\node{#1})}}
+\newcommand{\predst}[1] {\ensuremath{\mathbf{ps*}(\node{#1})}}
+\newcommand{\predsto}[1] {\ensuremath{\mathbf{ps+}(\node{#1})}}
+
+\newcommand{\svb}[2] {\ensuremath{\left\{\begin{matrix}\term{#1}\\\term{#2}\end{matrix}\right\}}}
+\newcommand{\stackB}[2] {\m{\begin{matrix}\m{#1}\\\m{#2}\end{matrix}}}
+
+\newcommand{\stackC}[3] {\m{\begin{matrix}\m{#1}\\\m{#2}\\\m{#3}\\\end{matrix}}}
+
+\newcommand{\faB}[3] {\m{#1\left(\begin{matrix}\m{#2}\\\m{#3}\end{matrix}\right)}}
+
+\newcommand{\func}[1] {\ensuremath{\mathrm{#1}}}
+
+\newcommand{\funcs}[1]{\ifthenelse{\equal{#1}{}}{\ensuremath{\mathbf{F_\Sigma}}}{\ensuremath{\mathbf{F_{#1}}}}}
+
+\newcommand{\consts}[1]{\ifthenelse{\equal{#1}{}}{\ensuremath{\mathbf{C_\Sigma}}}{\ensuremath{\mathbf{C_{#1}}}}}
+
+\newcommand{\arity}[1] {\ensuremath{\mathbf{arity}(\func{#1})}}
+
+\newcommand{\paths}[2]{\ifthenelse{\equal{#2}{}}{\ensuremath{\m{\mathbf{paths}(#1)}}}{\ensuremath{\m{\mathbf{paths}(#1,#2)}}}}
+
+\newcommand{\sources}[3] {\m{\mathbf{sources_{#1}^{#2}}(#3)}}
+\newcommand{\sourcesA}[1] {\m{\mathbf{sources(#1)}}}
+\newcommand{\sourcesInv}[3] {\ensuremath{\m{\mathbf{{sources_{#1}^{#2}}^{-1}}}(#3)}}
+\newcommand{\sourcesB}[2] {\ensuremath{\m{\mathbf{sources_{#1}}(#2)}}}
+\newcommand{\sourcesInvB}[2] {\ensuremath{\m{\mathbf{{sources_{#1}}^{-1}}(#2)}}}
+
+\newcommand{\den}[2] {\ensuremath{\llbracket \term{#1} \rrbracket_{\mathbf{#2}}}}
+\newcommand{\sig}[1]{\ifthenelse{\equal{#1}{}}{\ensuremath{\mathbf{\Sigma}}}{\ensuremath{\mathbf{\Sigma}_{#1}}}}
+
+\newcommand{\tup}[1] {\ensuremath{\mathrm{\overline{#1}}}}
+\newcommand{\tupAt}[2] {\ensuremath{\mathrm{#1}_{\mathrm{#2}}}}
+\newcommand{\tupRepAt}[3] {\funcRepAt{\tup{#1}}{#2}{#3}}
+\newcommand{\fa}[2] {\ensuremath{\function{#1}(\tup{#2})}}
+\newcommand{\fau}[2] {\ensuremath{\function{#1}(\term{#2})}}
+\newcommand{\emptySeq} {\ensuremath{\epsilon}}
+\newcommand{\emptyClause}{\ensuremath{\square}}
+
+
+\newcommand{\tupL}[1]{\ensuremath{\left|\tup{#1}\right|}}
+\newcommand{\termAt}[2]{\ensuremath{\left.\term{#1}\right|_{\mathrm{#2}}}}
+\newcommand{\termRepAt}[3]{\ensuremath{\term{#1}\left[\term{#2}\right]_{\mathrm{#3}}}}
+\newcommand{\seqAt}[2]{\ensuremath{\term{#1}\left[#2\right]}}
+\newcommand{\funcRepAt}[3]{\ensuremath{\term{#1}\left[\mathrm{#2} \mapsto #3 \right]}}
+
+
+\newcommand{\Fs}[1]{\ensuremath{\mathbf{F}_{\mathrm{#1}}}}
+\newcommand{\Ps}[1]{\ensuremath{\mathbf{P}_{\mathrm{#1}}}}
+\newcommand{\Vs}[1]{\ensuremath{\mathbf{X}_{\mathrm{#1}}}}
+\newcommand{\Ts}[1]{\ensuremath{\mathbf{T}\left(\mathrm{#1}\right)}}
+\newcommand{\As}[1]{\ensuremath{\mathbf{A}\left(\mathrm{#1}\right)}}
+\newcommand{\Ls}[1]{\ensuremath{\mathbf{L}\left(\mathrm{#1}\right)}}
+\newcommand{\Cs}[1]{\ensuremath{\mathbf{C}\left(\mathrm{#1}\right)}}
+
+
+\newcommand{\AECs}[1]{\ensuremath{\mathbf{AECs}(\m{#1})}}
+\newcommand{\AEC}[0]{\ensuremath{\mathbf{AECs}}}
+
+\newcommand{\GT}{GT}
+\newcommand{\GTs}{GTs}
+\newcommand{\GFA}{GFA}
+\newcommand{\RGFA}{RGFA}
+\newcommand{\GFAs}{GFAs}
+\newcommand{\RGFAs}{RGFAs}
+\newcommand{\gfa}{\GFA}
+\newcommand{\gfasA}[1]{\m{\mathbf{gfas}({#1})}}
+
+\newcommand{\gfas}[1]{\m{\mathbf{gfas}_{#1}}}
+\newcommand{\rgfas}[1]{\m{\mathbf{rgfas}_{#1}}}
+\newcommand{\rgfa}{\m{\mathbf{rgfa}}}
+
+\newcommand{\rgtt}{\ensuremath{\mathbf{rgtt}}}
+\newcommand{\rgtts}[1]{\m{\mathbf{rgtts}\ifthenelse{\equal{#1}{}}{}{(#1)}}}
+
+
+\newcommand{\Fn}[1]{\ensuremath{\mathbf{F_{#1}}}}
+\newcommand{\ECs}[1]{\m{\mathbf{EC}_{#1}}}
+
+\newcommand{\eqs}[1]{\m{\mathbf{eqs}({#1})}}
+\newcommand{\eqsS}[1]{\m{\mathbf{eqs_{\prec}}({#1})}}
+
+\newcommand{\Eqsp}[1] {\ensuremath{\mathbf{eqs'}(\mathrm{#1})}}
+\newcommand{\Eqs}[1]{\m{{#1}_{=}}}
+
+\newcommand{\Eqst}[1]{\m{\mathbf{Eqs^{\ast}}_{#1}}}
+
+\newcommand{\GTTECs}[1]{\ensuremath{\mathbf{GTTECs_{#1}}}}
+\newcommand{\CCA}[0]{\ensuremath{\mathbf{CC}}}
+\newcommand{\CC}[1]{\ensuremath{\mathbf{CC}(\m{#1})}}
+\newcommand{\CCR}[1]{\ensuremath{\mathbf{CC_R}(\m{#1})}}
+\newcommand{\CCRA}[1]{\ensuremath{\mathbf{CC_R}}}
+\newcommand{\SPU}[0]{\ensuremath{\mathbf{SP_{gu}}}}
+\newcommand{\SPG}[0]{\ensuremath{\mathbf{SP_{g}}}}
+
+\newcommand{\restrict}[2]{\m{\left.#1\right|_{\m{#2}}}}
+
+
+\newcommand\Scale[2]{\vcenter{\hbox{\scalefont{#1}$#2$}}}
+
+\newcommand{\ranCO}[2]{\ensuremath{\left[\mathrm{#1}..\mathrm{#2}\right)}}
+
+\newcommand{\size}[1]{\ensuremath{\left|\mathrm{#1}\right|}}
+
+\newcommand{\equivdef}{\ensuremath{\buildrel \triangle \over \Leftrightarrow}}
+
+\newcommand{\ite}[3]{\m{\mathbf{if} ~ (#1) ~ \mathbf{then} ~ #2 ~ \mathbf{else} ~ #3}}
+
+\newcommand{\ords}[0]{\ensuremath{\mathcal{O}}}
+\newcommand{\Vars}[1]{\ensuremath{\mathrm{FV}(\m{#1})}}
+\newcommand{\poss}[1]{\m{\mathbf{pos}(#1)}}
+\newcommand{\subs}[1]{\m{\mathbf{subs}(#1)}}
+\newcommand{\posss}[2]{\m{\mathbf{pos}(#1,#2)}}
+\newcommand{\disj}[2]{\m{#1 \mathbf{~disj~} #2}}
+
+\newcommand{\ECOf}[2]{\ensuremath{\left[\m{#1}\right]_\m{#2}}}
+
+\newcommand{\gtpa}[2] {\m{\left[#1,#2\right\rangle}}
+\newcommand{\gtpb}[2] {\m{\left\langle#1,#2\right]}}
+\newcommand{\fgtps}[2] {\m{\mathbf{fgtps}_{#1}^{#2}}}
+\newcommand{\gtps}[2] {\m{\mathbf{gtps}_{#1}^{#2}}}
+\newcommand{\pgtps}[2] {\m{\mathbf{gtps}_{#1}^{#2}}}
+
+\newcommand{\gta}[2] {\m{\left[#1,#2\right]}}
+\newcommand{\gtas}[1] {\m{\mathbf{gtas}_{#1}}}
+\newcommand{\prgtas}[1] {\m{\mathbf{rgtas}_{#1}}}
+\newcommand{\feasible}[1] {\m{\mathbf{feasible}(#1)}}
+\newcommand{\fsps}[1] {\m{\mathbf{fgtas_{#1}}}}
+\newcommand{\rt}[2] {\m{\mathbf{rt_{#1}^{#2}}}}
+\newcommand{\rtA}[1] {\m{rt_{#1}}}
+\newcommand{\eqNI}[3] {\m{#2 =_{n}^{#1} #3}}
+\newcommand{\eqI}[3] {\m{#2 =^{#1} #3}}
+
+\newcommand{\pgts}[1] {\m{\mathbf{pg}_{#1}}}
+
+\newcommand{\powset}[1]{\m{\mathcal{P}(#1)}}
+
+
+\newcommand{\cfg}[0]{\m{cfg}}
+\newcommand{\cfgs}[0]{\m{cfgs}}
+
+\newcommand{\bigO}[1]{\ensuremath{O\left(#1 \right)}}
+\newcommand{\bigTheta}[1]{\ensuremath{\Theta\left(#1 \right)}}
+
+\newcommand{\QED}[0]{\ensuremath{\blacksquare}}
+
+\newcommand{\succsep}[0]{\ensuremath{\succ\mid}}
+
+\newcommand{\del}[1]{\sout{\m{#1}}}
+
+\newcommand{\jrep}[2]{\m{\textbf{jrep}_{#1}(#2)}}
+\newcommand{\rep}[1]{\m{\textbf{rep}(#1)}}
+\newcommand{\repgfa}[1]{\m{\textbf{repgfa}(#1)}}
+\newcommand{\nonrepgfas}[1]{\m{\textbf{nrepgfas}(#1)}}
+\newcommand{\repstc}[1]{\m{\textbf{repstc}(#1)}}
+
+\newcommand{\stc}[1]{\m{\textbf{stc}(#1)}}
+
+
+\newcommand{\repS}[1]{\m{\mathbf{rep_{\prec}}(#1)}}
+\newcommand{\repgfaS}[1]{\m{\mathbf{repgfa_{\prec}}(#1)}}
+\newcommand{\nonrepgfasS}[1]{\m{\mathbf{nrepgfas_{\prec}}(#1)}}
+\newcommand{\repstcS}[1]{\m{\mathbf{repstc_{\prec}}(#1)}}
+
+
+\newcommand{\red}[2]{\m{\mathbf{red}(#1,#2)}}
+
+\newcommand{\maxTerm}[1]{\m{\mathbf{maxterm}(#1)}}
+
+\newcommand{\maxTerms}[1]{\m{\mathbf{maxterms}(#1)}}
+\newcommand{\maxTermi}[1]{\m{\mathbf{maxterm_i}(#1)}}
+\newcommand{\maxTermip}[1]{\m{\mathbf{maxterm_i^{+}}(#1)}}
+
+\newcommand{\maxTermsi}[1]{\m{\mathbf{maxterms_i}(#1)}}
+\newcommand{\maxTermsip}[1]{\m{\mathbf{maxterms_i^{+}}(#1)}}
+
+
+
+\newcommand*\sci[1]{(\romannumeral #1)}
+\newcommand*\sciscisci[1]{%
+	\tikz[baseline=(char.base)]{%
+  \node[shape=circle,draw,inner sep=2pt] (char) {#1};}%
+}
+\newcommand*\scisci[1]{\scriptstyle\textcircled{#1}}
+\newcommand*\sct[1]{\framebox{#1}}
+
+\newcommand*\idas[3]{\m{\textbf{idas}_{#1}(#2,#3)}}
+\newcommand*\idasg[2]{\idas{\Gamma}{#1}{#2}}
+\newcommand*\idasgs[2]{\m{\textbf{idass}_{\Gamma}(#1,#2)}}
+\newcommand*\inidasg[3]{\m{#1 \in \idasg{#2}{#3}}}
+\newcommand*\eqg{\ensuremath{=_{\Gamma}}}
+
+\newcommand*\lang[1]{\ensuremath{\mathfrak{L}_{#1}}}
+\newcommand*\langt{\ensuremath{\mathfrak{L}^{\m{t}}}}
+\newcommand*\langb{\ensuremath{\mathfrak{L}^{\m{b}}}}
+\newcommand*\langI{\ensuremath{\mathfrak{L}^{\m{I}}}}
+\newcommand*\langtp{\ensuremath{\mathfrak{L}^{\m{t+}}}}
+\newcommand*\langbp{\ensuremath{\mathfrak{L}^{\m{b+}}}}
+
+
+\newcommand{\leqdot}{\ensuremath{\leq\kern-6pt\raisebox{1pt}{$\cdot$}\kern2pt}}
+\newcommand*\pv[1]{\text{\lstinline{#1}}}
+\newcommand\comm[1]{\textcolor{gray}{#1}}
+
+
+\newcommand*\ran[1]{\m{\mathbf{ran}(#1)}}
+\newcommand*\dom[1]{\m{\mathbf{dom}(#1)}}

@@ -1,0 +1,86 @@
+digraph CFG {
+	graph [center=true  ];
+	node [ shape = box, style=rounded, fontsize=5 ];
+	edge [ tailport=s, headport=n ];
+
+	"$start" [ label=< 
+		<FONT face="Arial Unicode MS">
+		<FONT face="Arial Bold">$start</FONT>  <BR ALIGN="CENTER"/>
+		</FONT>
+	>];
+	"$exit" [ label=< 
+		<FONT face="Arial Unicode MS">
+		<FONT face="Arial Bold">$exit</FONT>  <BR ALIGN="CENTER"/>
+		</FONT>
+	>];
+	"anon0" [ label=< 
+		<FONT face="Arial Unicode MS">
+		<FONT face="Arial Bold">anon0</FONT>  <BR ALIGN="CENTER"/>
+		n := head <BR ALIGN="LEFT"/>
+		result := 7 <BR ALIGN="LEFT"/>
+		p := null <BR ALIGN="LEFT"/>
+		</FONT>
+	>];
+
+	"$start" -> "anon0" [ label=<>]; 
+	"anon0" -> "$loopHead_0" [ label=<>]; 
+
+	subgraph cluster_loop_0 {
+		label="loop_0"
+		"$loopHead_0" [ label=< 
+			<FONT face="Arial Unicode MS">
+			<FONT face="Arial Bold">$loopHead_0</FONT>  <BR ALIGN="CENTER"/>
+			$t_0 := n &ne; null &and; heap[n,Node.value] &gt; 5 <BR ALIGN="LEFT"/>
+			</FONT>
+		>];
+		"anon5_LoopBody" [ label=< 
+			<FONT face="Arial Unicode MS">
+			<FONT face="Arial Bold">anon5_LoopBody</FONT>  <BR ALIGN="CENTER"/>
+			n := heap[n,Node.next] <BR ALIGN="LEFT"/>
+			n2 := n <BR ALIGN="LEFT"/>
+			</FONT>
+		>];
+		"anon4" [ label=< 
+			<FONT face="Arial Unicode MS">
+			<FONT face="Arial Bold">anon4</FONT>  <BR ALIGN="CENTER"/>
+			p := n2 <BR ALIGN="LEFT"/>
+			</FONT>
+		>];
+
+		"$loopHead_0" -> "anon5_LoopBody" [ label=<$t_0>]; 
+		"anon5_LoopBody" -> "$loopHead_1" [ label=<>]; 
+		"anon4" -> "$loopHead_0" [ label=<>,constraint=false]; 
+
+		subgraph cluster_loop_1 {
+			label="loop_1"
+			"$loopHead_1" [ label=< 
+				<FONT face="Arial Unicode MS">
+				<FONT face="Arial Bold">$loopHead_1</FONT>  <BR ALIGN="CENTER"/>
+				$t_1 := n2 &ne; null &and; heap[n2,Node.value] &lt; 5 <BR ALIGN="LEFT"/>
+				</FONT>
+			>];
+			"anon6_LoopBody" [ label=< 
+				<FONT face="Arial Unicode MS">
+				<FONT face="Arial Bold">anon6_LoopBody</FONT>  <BR ALIGN="CENTER"/>
+				n2 := heap[n2,Node.next] <BR ALIGN="LEFT"/>
+				$t_2 := heap[n2,Node.value] &gt; result <BR ALIGN="LEFT"/>
+				</FONT>
+			>];
+			"anon7_Then" [ label=< 
+				<FONT face="Arial Unicode MS">
+				<FONT face="Arial Bold">anon7_Then</FONT>  <BR ALIGN="CENTER"/>
+				result := heap[n2,Node.value] <BR ALIGN="LEFT"/>
+				</FONT>
+			>];
+
+			"$loopHead_1" -> "anon6_LoopBody" [ label=<$t_1>]; 
+			"anon6_LoopBody" -> "anon7_Then" [ label=<$t_2>]; 
+			"anon6_LoopBody" -> "$loopHead_1" [ label=<!$t_2>]; 
+			"anon7_Then" -> "$loopHead_1" [ label=<>]; 
+
+			}
+		"$loopHead_1" -> "anon4" [ label=<!$t_1>]; 
+		}
+	"$loopHead_0" -> "$exit" [ label=<!$t_0>]; 
+
+}

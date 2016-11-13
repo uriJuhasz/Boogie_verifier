@@ -1,0 +1,11 @@
+Running B4 - B4.bpl - Map.Remove
+  Boogie: c:\work\slicer\src\Binaries\Boogie.exe
+  Boogie params: /slice /noProver
+  Z3: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+  Z3 params: -smt2 -st -v:1
+SlicerTime: Map.Remove.start                                             - 1
+SlicerTime: Map.Remove.build                                             - 3
+SlicerTime: Map.Remove.maps                                              - 3
+SlicerTime: Map.Remove.end                                               - 3
+Z3runtime: B4.Map.Remove.build.fw.orig                                  - 9   
+Z3runtime: B4.Map.Remove.build.fw                                       - 9   

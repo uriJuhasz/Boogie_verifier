@@ -1,0 +1,746 @@
+usage: \Users\uri\Downloads\provers\cvc4-2016-07-06-win32-opt [options] [input-file]
+
+Without an input file, or with `-', CVC4 reads from standard input.
+
+CVC4 options:
+Most commonly-used CVC4 options:
+  --lang=LANG | -L LANG  force input language (default is "auto"; see --lang
+                         help)
+  --output-lang=LANG     force output language (default is "auto"; see
+                         --output-lang help)
+  --verbose | -v         increase verbosity (may be repeated)
+  --quiet | -q           decrease verbosity (may be repeated)
+  --stats                give statistics on exit [*]
+  --version | -V         identify this CVC4 binary
+  --help | -h            full command line reference
+  --show-config          show CVC4 static configuration
+  --strict-parsing       be less tolerant of non-conforming inputs [*]
+  --dump=MODE            dump preprocessed assertions, etc., see --dump=help
+  --dump-to=FILE         all dumping goes to FILE (instead of stdout)
+  --produce-models | -m  support the get-value and get-model commands [*]
+  --produce-assertions   keep an assertions list (enables get-assertions
+                         command) [*]
+  --incremental | -i     enable incremental solving [*]
+  --tlimit=MS            enable time limiting (give milliseconds)
+  --tlimit-per=MS        enable time limiting per query (give milliseconds)
+  --rlimit=N             enable resource limiting (currently, roughly the
+                         number of SAT conflicts)
+  --rlimit-per=N         enable resource limiting per query
+  --hard-limit           the resource limit is hard potentially leaving the
+                         smtEngine in an unsafe state (should be destroyed and
+                         rebuild after resourcing out) [*]
+  --cpu-time             measures CPU time if set to true and wall time if
+                         false (default false) [*]
+
+Additional CVC4 options:
+
+From the Arithmetic theory module:
+  --unate-lemmas=MODE    determines which lemmas to add before solving
+                         (default is 'all', see --unate-lemmas=help)
+  --arith-prop=MODE      turns on arithmetic propagation (default is 'old',
+                         see --arith-prop=help)
+  --heuristic-pivots=N   the number of times to apply the heuristic pivot
+                         rule; if N < 0, this defaults to the number of
+                         variables; if this is unset, this is tuned by the
+                         logic selection
+  --standard-effort-variable-order-pivots=N
+                         limits the number of pivots in a single invocation of
+                         check() at a non-full effort level using Bland's
+                         pivot rule (EXPERTS only)
+  --error-selection-rule=RULE
+                         change the pivot rule for the basic variable (default
+                         is 'min', see --pivot-rule help)
+  --simplex-check-period=N
+                         the number of pivots to do in simplex before
+                         rechecking for a conflict on all variables
+  --pivot-threshold=N    sets the number of pivots using --pivot-rule per
+                         basic variable per simplex instance before using
+                         variable order
+  --prop-row-length=N    sets the maximum row length to be used in propagation
+  --enable-dio-solver    turns on Linear Diophantine Equation solver (Griggio,
+                         JSAT 2012)
+  --disable-dio-solver   turns off Linear Diophantine Equation solver
+                         (Griggio, JSAT 2012)
+  --enable-arith-rewrite-equalities
+                         turns on the preprocessing rewrite turning equalities
+                         into a conjunction of inequalities
+  --disable-arith-rewrite-equalities
+                         turns off the preprocessing rewrite turning
+                         equalities into a conjunction of inequalities
+  --enable-miplib-trick  turns on the preprocessing step of attempting to
+                         infer bounds on miplib problems
+  --disable-miplib-trick turns off the preprocessing step of attempting to
+                         infer bounds on miplib problems
+  --miplib-trick-subs=N  do substitution for miplib 'tmp' vars if defined in
+                         <= N eliminated vars
+  --cut-all-bounded      turns on the integer solving step of periodically
+                         cutting all integer variables that have both upper
+                         and lower bounds [*]
+  --no-cut-all-bounded   turns off the integer solving step of periodically
+                         cutting all integer variables that have both upper
+                         and lower bounds
+  --maxCutsInContext     maximum cuts in a given context before signalling a
+                         restart
+  --revert-arith-models-on-unsat
+                         revert the arithmetic model to a known safe model on
+                         unsat if one is cached [*]
+  --fc-penalties         turns on degenerate pivot penalties [*]
+  --no-fc-penalties      turns off degenerate pivot penalties
+  --use-fcsimplex        use focusing and converging simplex (FMCAD 2013
+                         submission) [*]
+  --use-soi              use sum of infeasibility simplex (FMCAD 2013
+                         submission) [*]
+  --restrict-pivots      have a pivot cap for simplex at effort levels below
+                         fullEffort [*]
+  --collect-pivot-stats  collect the pivot history [*]
+  --use-approx           attempt to use an approximate solver [*]
+  --approx-branch-depth  maximum branch depth the approximate solver is
+                         allowed to take
+  --dio-decomps          let skolem variables for integer divisibility
+                         constraints leak from the dio solver [*]
+  --new-prop             use the new row propagation system [*]
+  --arith-prop-clauses   rows shorter than this are propagated as clauses
+  --soi-qe               use quick explain to minimize the sum of
+                         infeasibility conflicts [*]
+  --rewrite-divk         rewrite division and mod when by a constant into
+                         linear terms [*]
+  --se-solve-int         attempt to use the approximate solve integer method
+                         on standard effort [*]
+  --lemmas-on-replay-failure
+                         attempt to use external lemmas if approximate solve
+                         integer failed [*]
+  --dio-turns            turns in a row dio solver cutting gets
+  --rr-turns             round robin turn
+  --dio-repeat           handle dio solver constraints in mass or one at a
+                         time [*]
+  --replay-early-close-depth
+                         multiples of the depths to try to close the approx
+                         log eagerly
+  --replay-failure-penalty
+                         number of solve integer attempts to skips after a
+                         numeric failure
+  --replay-num-err-penalty
+                         number of solve integer attempts to skips after a
+                         numeric failure
+  --replay-reject-cut    maximum complexity of any coefficient while replaying
+                         cuts
+  --replay-lemma-reject-cut
+                         maximum complexity of any coefficient while outputing
+                         replaying cut lemmas
+  --replay-soi-major-threshold
+                         threshold for a major tolerance failure by the
+                         approximate solver
+  --replay-soi-major-threshold-pen
+                         threshold for a major tolerance failure by the
+                         approximate solver
+  --replay-soi-minor-threshold
+                         threshold for a minor tolerance failure by the
+                         approximate solver
+  --replay-soi-minor-threshold-pen
+                         threshold for a minor tolerance failure by the
+                         approximate solver
+  --pp-assert-max-sub-size
+                         threshold for substituting an equality in ppAssert
+  --max-replay-tree      threshold for attempting to replay a tree
+  --pb-rewrites          apply pseudo boolean rewrites [*]
+  --pb-rewrite-threshold threshold of number of pseudoboolean variables to
+                         have before doing rewrites
+  --snorm-infer-eq       infer equalities based on Shostak normalization [*]
+
+From the Arrays theory module:
+  --arrays-optimize-linear
+                         turn on optimization for linear array terms (see de
+                         Moura FMCAD 09 arrays paper) [*]
+  --arrays-lazy-rintro1  turn on optimization to only perform RIntro1 rule
+                         lazily (see Jovanovic/Barrett 2012: Being Careful
+                         with Theory Combination) [*]
+  --arrays-weak-equiv    use algorithm from Christ/Hoenicke (SMT 2014) [*]
+  --arrays-model-based   turn on model-based array solver [*]
+  --arrays-eager-index   turn on eager index splitting for generated array
+                         lemmas [*]
+  --arrays-eager-lemmas  turn on eager lemma generation for arrays [*]
+  --arrays-config        set different array option configurations - for
+                         developers only
+  --arrays-reduce-sharing
+                         use model information to reduce size of care graph
+                         for arrays [*]
+  --arrays-prop          propagation effort for arrays: 0 is none, 1 is some,
+                         2 is full
+
+From the Base module:
+  --stats-every-query    in incremental mode, print stats after every
+                         satisfiability or validity query [*]
+  --stats-hide-zeros     hide statistics which are zero
+  --stats-show-zeros     show statistics even when they are zero (default)
+  --parse-only           exit after parsing input [*]
+  --preprocess-only      exit after preprocessing input [*]
+  --trace=TAG | -t TAG   trace something (e.g. -t pushpop), can repeat
+  --debug=TAG | -d TAG   debug something (e.g. -d arith), can repeat
+  --print-success        print the "success" output required of SMT-LIBv2 [*]
+  --smtlib-strict        SMT-LIBv2 compliance mode (implies other options)
+
+From the Boolean theory module:
+  --boolean-term-conversion-mode=MODE
+                         policy for converting Boolean terms
+
+From the Bitvector theory module:
+  --bv-sat-solver=MODE   choose which sat solver to use, see
+                         --bv-sat-solver=help (EXPERTS only)
+  --bitblast=MODE        choose bitblasting mode, see --bitblast=help
+  --bitblast-aig         bitblast by first converting to AIG (implies
+                         --bitblast=eager) [*]
+  --bv-aig-simp=COMMAND  abc command to run AIG simplifications (implies
+                         --bitblast-aig, default is "balance;drw") (EXPERTS
+                         only)
+  --bv-propagate         use bit-vector propagation in the bit-blaster [*]
+  --bv-eq-solver         use the equality engine for the bit-vector theory
+                         (only if --bitblast=lazy) [*]
+  --bv-eq-slicer=MODE    turn on the slicing equality solver for the
+                         bit-vector theory (only if --bitblast=lazy)
+  --bv-inequality-solver turn on the inequality solver for the bit-vector
+                         theory (only if --bitblast=lazy) [*]
+  --bv-algebraic-solver  turn on the algebraic solver for the bit-vector
+                         theory (only if --bitblast=lazy) [*]
+  --bv-algebraic-budget  the budget allowed for the algebraic solver in number
+                         of SAT conflicts (EXPERTS only)
+  --bv-to-bool           lift bit-vectors of size 1 to booleans when possible
+                         [*]
+  --bv-div-zero-const    always return -1 on division by zero [*]
+  --bv-extract-arith     enable rewrite pushing extract [i:0] over arithmetic
+                         operations (can blow up) (EXPERTS only) [*]
+  --bv-abstraction       mcm benchmark abstraction (EXPERTS only) [*]
+  --bv-skolemize         skolemize arguments for bv abstraction (only does
+                         something if --bv-abstraction is on) (EXPERTS only)
+                         [*]
+  --bv-num-func=NUM      number of function symbols in conflicts that are
+                         generalized (EXPERTS only)
+  --bv-eager-explanations
+                         compute bit-blasting propagation explanations eagerly
+                         (EXPERTS only) [*]
+  --bv-quick-xplain      minimize bv conflicts using the QuickXplain algorithm
+                         (EXPERTS only) [*]
+  --bv-intro-pow2        introduce bitvector powers of two as a preprocessing
+                         pass (EXPERTS only) [*]
+
+From the Datatypes theory module:
+  --dt-rewrite-error-sel rewrite incorrectly applied selectors to arbitrary
+                         ground term (EXPERTS only) [*]
+  --dt-force-assignment  force the datatypes solver to give specific values to
+                         all datatypes terms before answering sat [*]
+  --dt-binary-split      do binary splits for datatype constructor types [*]
+  --dt-ref-sk-intro      introduce reference skolems for shorter explanations
+                         [*]
+  --dt-use-testers       do not preprocess away tester predicates [*]
+  --cdt-bisimilar        do bisimilarity check for co-datatypes [*]
+  --dt-cyclic            do cyclicity check for datatypes [*]
+  --dt-infer-as-lemmas   always send lemmas out instead of making internal
+                         inferences [*]
+  --dt-blast-splits      when applicable, blast splitting lemmas for all
+                         variables at once [*]
+
+From the Decision heuristics module:
+  --decision=MODE        choose decision mode, see --decision=help
+  --decision-threshold=N ignore all nodes greater than threshold in first
+                         attempt to pick decision (EXPERTS only)
+  --decision-use-weight  use the weight nodes (locally, by looking at
+                         children) to direct recursive search (EXPERTS only)
+                         [*]
+  --decision-random-weight=N
+                         assign random weights to nodes between 0 and N-1 (0:
+                         disable) (EXPERTS only)
+  --decision-weight-internal=HOW
+                         computer weights of internal nodes using children:
+                         off, max, sum, usr1 (meaning evolving) (EXPERTS only)
+
+From the Expression package module:
+  --default-expr-depth=N print exprs to depth N (0 == default, -1 == no limit)
+  --default-dag-thresh=N dagify common subexprs appearing > N times (1 ==
+                         default, 0 == don't dagify)
+  --print-expr-types     print types with variables when printing exprs [*]
+  --eager-type-checking  type check expressions immediately on creation (debug
+                         builds only)
+  --lazy-type-checking   type check expressions only when necessary (default)
+  --biased-ites          try the new remove ite pass that is biased against
+                         term ites appearing [*]
+
+From the Idl module:
+  --enable-idl-rewrite-equalities
+                         enable rewriting equalities into two inequalities in
+                         IDL solver (default is disabled)
+  --disable-idl-rewrite-equalities
+                         disable rewriting equalities into two inequalities in
+                         IDL solver (default is disabled)
+
+From the Driver module:
+  --show-debug-tags      show all available tags for debugging
+  --show-trace-tags      show all available tags for tracing
+  --early-exit           do not run destructors at exit; default on except in
+                         debug builds (EXPERTS only) [*]
+  --threads=N            Total number of threads for portfolio
+  --threadN=string       configures portfolio thread N (0..#threads-1)
+  --thread-stack=N       stack size for worker threads in MB (0 means use
+                         Boost/thread lib default)
+  --filter-lemma-length=N
+                         don't share (among portfolio threads) lemmas strictly
+                         longer than N
+  --fallback-sequential  Switch to sequential mode (instead of printing an
+                         error) if it can't be solved in portfolio mode [*]
+  --incremental-parallel Use parallel solver even in incremental mode (may
+                         print 'unknown's at times) [*]
+  --interactive          force interactive/non-interactive mode [*]
+  --continued-execution  continue executing commands, even on error
+  --segv-spin            spin on segfault/other crash waiting for gdb [*]
+  --tear-down-incremental=N
+                         implement PUSH/POP/multi-query by destroying and
+                         recreating SmtEngine every N queries (EXPERTS only)
+  --wait-to-join         wait for other threads to join before quitting
+                         (EXPERTS only) [*]
+
+From the Parser module:
+  --mmap                 memory map file input [*]
+
+From the Printing module:
+  --model-format=MODE    print format mode for models, see --model-format=help
+  --inst-format=MODE     print format mode for instantiations, see
+                         --inst-format=help
+
+From the Proof module:
+  --lfsc-letification    turns on global letification in LFSC proofs [*]
+
+From the SAT layer module:
+  --random-freq=P        sets the frequency of random decisions in the sat
+                         solver (P=0.0 by default)
+  --random-seed=S        sets the random seed for the sat solver
+  --restart-int-base=N   sets the base restart interval for the sat solver
+                         (N=25 by default)
+  --restart-int-inc=F    sets the restart interval increase factor for the sat
+                         solver (F=3.0 by default)
+  --refine-conflicts     refine theory conflict clauses (default false) [*]
+  --minisat-elimination  use Minisat elimination [*]
+  --minisat-dump-dimacs  instead of solving minisat dumps the asserted clauses
+                         in Dimacs format [*]
+
+From the Quantifiers module:
+  --miniscope-quant      miniscope quantifiers [*]
+  --miniscope-quant-fv   miniscope quantifiers for ground subformulas [*]
+  --quant-split          apply splitting to quantified formulas based on
+                         variable disjoint disjuncts [*]
+  --prenex-quant=MODE    prenex mode for quantified formulas
+  --var-elim-quant       enable simple variable elimination for quantified
+                         formulas [*]
+  --dt-var-exp-quant     expand datatype variables bound to one constructor in
+                         quantifiers [*]
+  --ite-lift-quant=MODE  ite lifting mode for quantified formulas
+  --cond-var-split-quant split quantified formulas that lead to variable
+                         eliminations [*]
+  --cond-var-split-agg-quant
+                         aggressive split quantified formulas that lead to
+                         variable eliminations [*]
+  --ite-dtt-split-quant  split ites with dt testers as conditions [*]
+  --pre-skolem-quant     apply skolemization eagerly to bodies of quantified
+                         formulas [*]
+  --pre-skolem-quant-nested
+                         apply skolemization to nested quantified formulass
+                         [*]
+  --pre-skolem-quant-agg apply skolemization to quantified formulas
+                         aggressively [*]
+  --ag-miniscope-quant   perform aggressive miniscoping for quantifiers [*]
+  --elim-taut-quant      eliminate tautological disjuncts of quantified
+                         formulas [*]
+  --purify-quant         purify quantified formulas [*]
+  --elim-ext-arith-quant eliminate extended arithmetic symbols in quantified
+                         formulas [*]
+  --cond-rewrite-quant   conditional rewriting of quantified formulas [*]
+  --e-matching           whether to do heuristic E-matching [*]
+  --term-db-mode         which ground terms to consider for instantiation
+  --register-quant-body-terms
+                         consider ground terms within bodies of quantified
+                         formulas for matching [*]
+  --infer-arith-trigger-eq
+                         infer equalities for trigger terms based on solving
+                         arithmetic equalities [*]
+  --infer-arith-trigger-eq-exp
+                         record explanations for inferArithTriggerEq [*]
+  --strict-triggers      only instantiate quantifiers with user patterns based
+                         on triggers [*]
+  --relevant-triggers    prefer triggers that are more relevant based on SInE
+                         style analysis [*]
+  --relational-triggers  choose relational triggers such as x = f(y), x >=
+                         f(y) [*]
+  --purify-triggers      purify triggers, e.g. f( x+1 ) becomes f( y ), x
+                         mapsto y-1 [*]
+  --purify-dt-triggers   purify dt triggers, match all constructors of correct
+                         form instead of selectors [*]
+  --pure-th-triggers     use pure theory terms as single triggers [*]
+  --partial-triggers     use triggers that do not contain all free variables
+                         [*]
+  --multi-trigger-when-single
+                         select multi triggers when single triggers exist [*]
+  --multi-trigger-priority
+                         only try multi triggers if single triggers give no
+                         instantiations [*]
+  --trigger-sel          selection mode for triggers
+  --trigger-active-sel   selection mode to activate triggers
+  --user-pat=MODE        policy for handling user-provided patterns for
+                         quantifier instantiation
+  --increment-triggers   generate additional triggers as needed during search
+                         [*]
+  --inst-when=MODE       when to apply instantiation
+  --inst-when-strict-interleave
+                         ensure theory combination and standard quantifier
+                         effort strategies take turns  [*]
+  --inst-when-phase=N    instantiation rounds quantifiers takes (>=1) before
+                         allowing theory combination to happen
+  --inst-when-tc-first   allow theory combination to happen once initially,
+                         before quantifier strategies are run [*]
+  --inst-max-level=N     maximum inst level of terms used to instantiate
+                         quantified formulas with (-1 == no limit, default)
+  --inst-level-input-only
+                         only input terms are assigned instantiation level
+                         zero [*]
+  --quant-rep-mode=MODE  selection mode for representatives in quantifiers
+                         engine
+  --inst-rlv-cond        add relevancy conditions for instantiations [*]
+  --eager-inst-quant     apply quantifier instantiation eagerly [*]
+  --full-saturate-quant  when all other quantifier instantiation strategies
+                         fail, instantiate with ground terms from relevant
+                         domain, then arbitrary ground terms before answering
+                         unknown [*]
+  --full-saturate-quant-rd
+                         whether to use relevant domain first for full
+                         saturation instantiation strategy [*]
+  --fs-inst              interleave full saturate instantiation with other
+                         techniques [*]
+  --literal-matching=MODE
+                         choose literal matching mode
+  --finite-model-find    use finite model finding heuristic for quantifier
+                         instantiation [*]
+  --quant-fun-wd         assume that function defined by quantifiers are well
+                         defined [*]
+  --fmf-fun              find models for recursively defined functions,
+                         assumes functions are admissible [*]
+  --fmf-fun-rlv          find models for recursively defined functions,
+                         assumes functions are admissible, allows empty type
+                         when function is irrelevant [*]
+  --fmf-empty-sorts      allow finite model finding to assume sorts that do
+                         not occur in ground assertions are empty [*]
+  --mbqi=MODE            choose mode for model-based quantifier instantiation
+  --mbqi-one-inst-per-round
+                         only add one instantiation per quantifier per round
+                         for mbqi [*]
+  --mbqi-one-quant-per-round
+                         only add instantiations for one quantifier per round
+                         for mbqi [*]
+  --fmf-inst-engine      use instantiation engine in conjunction with finite
+                         model finding [*]
+  --fmf-inst-gen         enable Inst-Gen instantiation techniques for finite
+                         model finding  [*]
+  --fmf-inst-gen-one-quant-per-round
+                         only perform Inst-Gen instantiation techniques on one
+                         quantifier per round [*]
+  --fmf-fresh-dc         use fresh distinguished representative when applying
+                         Inst-Gen techniques [*]
+  --fmf-fmc-simple       simple models in full model check for finite model
+                         finding [*]
+  --fmf-bound-int        finite model finding on bounded integer
+                         quantification [*]
+  --fmf-bound-int-lazy   enforce bounds for bounded integer quantification
+                         lazily via use of proxy variables [*]
+  --quant-cf             enable conflict find mechanism for quantifiers [*]
+  --quant-cf-mode=MODE   what effort to apply conflict find mechanism
+  --quant-cf-when=MODE   when to invoke conflict find mechanism for
+                         quantifiers
+  --qcf-tconstraint      enable entailment checks for t-constraints in qcf
+                         algorithm [*]
+  --qcf-all-conflict     add all available conflicting instances during
+                         conflict-based instantiation [*]
+  --qcf-nested-conflict  consider conflicts for nested quantifiers [*]
+  --qcf-vo-exp           qcf experimental variable ordering [*]
+  --inst-no-entail       do not consider instances of quantified formulas that
+                         are currently entailed [*]
+  --inst-prop            internal propagation for instantiations for selecting
+                         relevant instances [*]
+  --qcf-eager-test       optimization, test qcf instances eagerly [*]
+  --qcf-skip-rd          optimization, skip instances based on possibly
+                         irrelevant portions of quantified formulas [*]
+  --rewrite-rules        use rewrite rules module [*]
+  --rr-one-inst-per-round
+                         add one instance of rewrite rule per round [*]
+  --quant-ind            use all available techniques for inductive reasoning
+                         [*]
+  --dt-stc-ind           apply strengthening for existential quantification
+                         over datatypes based on structural induction [*]
+  --int-wf-ind           apply strengthening for integers based on
+                         well-founded induction [*]
+  --conjecture-gen       generate candidate conjectures for inductive proofs
+                         [*]
+  --conjecture-gen-per-round=N
+                         number of conjectures to generate per instantiation
+                         round 
+  --conjecture-no-filter do not filter conjectures [*]
+  --conjecture-filter-active-terms
+                         filter based on active terms [*]
+  --conjecture-filter-canonical
+                         filter based on canonicity [*]
+  --conjecture-filter-model
+                         filter based on model [*]
+  --conjecture-gen-gt-enum=N
+                         number of ground terms to generate for model
+                         filtering
+  --conjecture-gen-uee-intro
+                         more aggressive merging for universal equality
+                         engine, introduces terms [*]
+  --conjecture-gen-max-depth=N
+                         maximum depth of terms to consider for conjectures
+  --cegqi                 counterexample-guided quantifier instantiation [*]
+  --cegqi-fair=MODE       if and how to apply fairness for cegqi
+  --cegqi-si=MODE         mode for processing single invocation synthesis
+                         conjectures
+  --cegqi-si-partial      combined techniques for synthesis conjectures that
+                         are partially single invocation  [*]
+  --cegqi-si-reconstruct  reconstruct solutions for single invocation
+                         conjectures in original grammar [*]
+  --cegqi-si-reconstruct-const
+                          include constants when reconstruct solutions for
+                         single invocation conjectures in original grammar [*]
+  --cegqi-si-abort        abort if synthesis conjecture is not single
+                         invocation [*]
+  --sygus-nf              only search for sygus builtin terms that are in
+                         normal form [*]
+  --sygus-nf-arg          account for relationship between arguments of
+                         operations in sygus normal form [*]
+  --sygus-nf-sym          narrow sygus search space based on global state of
+                         current candidate program [*]
+  --sygus-nf-sym-gen      generalize lemmas for global search space narrowing
+                         [*]
+  --sygus-nf-sym-arg      generalize based on arguments in global search space
+                         narrowing [*]
+  --sygus-nf-sym-content  generalize based on content in global search space
+                         narrowing [*]
+  --sygus-inv-templ=MODE  template mode for sygus invariant synthesis
+  --sygus-direct-eval     direct unfolding of evaluation functions [*]
+  --cbqi-splx            turns on old implementation of counterexample-based
+                         quantifier instantiation [*]
+  --cbqi                 turns on counterexample-based quantifier
+                         instantiation [*]
+  --cbqi-recurse         turns on recursive counterexample-based quantifier
+                         instantiation [*]
+  --cbqi-sat             answer sat when quantifiers are asserted with
+                         counterexample-based quantifier instantiation [*]
+  --cbqi-model           guide instantiations by model values for
+                         counterexample-based quantifier instantiation [*]
+  --cbqi-all             apply counterexample-based instantiation to all
+                         quantified formulas [*]
+  --cbqi-use-inf-int     use integer infinity for vts in counterexample-based
+                         quantifier instantiation [*]
+  --cbqi-use-inf-real    use real infinity for vts in counterexample-based
+                         quantifier instantiation [*]
+  --cbqi-prereg-inst      preregister ground instantiations in
+                         counterexample-based quantifier instantiation [*]
+  --cbqi-min-bounds       use minimally constrained lower/upper bound for
+                         counterexample-based quantifier instantiation [*]
+  --cbqi-sym-lia          use symbolic integer division in substitutions for
+                         counterexample-based quantifier instantiation [*]
+  --cbqi-round-up-lia     round up integer lower bounds in substitutions for
+                         counterexample-based quantifier instantiation [*]
+  --cbqi-midpoint         choose substitutions based on midpoints of lower and
+                         upper bounds for counterexample-based quantifier
+                         instantiation [*]
+  --cbqi-nopt             non-optimal bounds for counterexample-based
+                         quantifier instantiation [*]
+  --local-t-ext           do instantiation based on local theory extensions
+                         [*]
+  --lte-partial-inst      partially instantiate local theory quantifiers [*]
+  --lte-restrict-inst-closure
+                          treat arguments of inst closure as restricted terms
+                         for instantiation [*]
+  --quant-alpha-equiv     infer alpha equivalence between quantified formulas
+                         [*]
+  --macros-quant         perform quantifiers macro expansion [*]
+  --macros-quant-mode=MODE
+                         mode for quantifiers macro expansion
+  --quant-dsplit-mode=MODE
+                         mode for dynamic quantifiers splitting
+  --quant-anti-skolem    perform anti-skolemization for quantified formulas
+                         [*]
+  --quant-ee              maintain congrunce closure over universal equalities
+                         [*]
+
+From the Sep module:
+  --sep-check-neg        check negated spatial assertions [*]
+  --sep-exp              experimental flag for sep [*]
+  --sep-min-refine       only add refinement lemmas for minimal (innermost)
+                         assertions [*]
+  --sep-prec-bound       calculate precise bounds for labels [*]
+  --sep-deq-c            assume cardinality elements are distinct [*]
+
+From the Sets module:
+  --sets-propagate       determines whether to propagate learnt facts to
+                         Theory Engine / SAT solver [*]
+  --sets-eager-lemmas    add lemmas even at regular effort [*]
+  --sets-care1           generate one lemma at a time for care graph (EXPERTS
+                         only) [*]
+  --sets-prop-full       additional propagation at full effort [*]
+  --sets-agg-rewrite     aggressive sets rewriting [*]
+  --sets-guess-empty     when to guess leaf nodes being empty (0...2 : most
+                         aggressive..least aggressive)
+
+From the SMT layer module:
+  --force-logic=LOGIC    set the logic, and override all further user attempts
+                         to change it (EXPERTS only)
+  --simplification=MODE  choose simplification mode, see --simplification=help
+  --no-simplification    turn off all simplification (same as
+                         --simplification=none)
+  --static-learning      use static learning (on by default) [*]
+  --check-models         after SAT/INVALID/UNKNOWN, check that the generated
+                         model satisfies user assertions [*]
+  --dump-models          output models after every SAT/INVALID/UNKNOWN
+                         response [*]
+  --omit-dont-cares      When producing a model, omit variables whose value
+                         does not matter [*]
+  --proof                turn on proof generation [*]
+  --check-proofs         after UNSAT/VALID, machine-check the generated proof
+                         [*]
+  --dump-proofs          output proofs after every UNSAT/VALID response [*]
+  --dump-instantiations  output instantiations of quantified formulas after
+                         every UNSAT/VALID response [*]
+  --dump-synth           output solution for synthesis conjectures after every
+                         UNSAT/VALID response [*]
+  --produce-unsat-cores  turn on unsat core generation [*]
+  --check-unsat-cores    after UNSAT/VALID, produce and check an unsat core
+                         (expensive) [*]
+  --dump-unsat-cores     output unsat cores after every UNSAT/VALID response
+                         [*]
+  --produce-assignments  support the get-assignment command [*]
+  --ite-simp             turn on ite simplification (Kim (and Somenzi) et al.,
+                         SAT 2009) [*]
+  --on-repeat-ite-simp   do the ite simplification pass again if repeating
+                         simplification [*]
+  --simp-with-care       enables simplifyWithCare in ite simplificiation [*]
+  --simp-ite-compress    enables compressing ites after ite simplification [*]
+  --unconstrained-simp   turn on unconstrained simplification (see
+                         Bruttomesso/Brummayer PhD thesis) [*]
+  --repeat-simp          make multiple passes with nonclausal simplifier [*]
+  --simp-ite-hunt-zombies
+                         post ite compression enables zombie removal while the
+                         number of nodes is above this threshold
+  --sort-inference       calculate sort inference of input problem, convert
+                         the input based on monotonic sorts [*]
+  --abstract-values      in models, output arrays (and in future, maybe
+                         others) using abstract values, as required by the
+                         SMT-LIB standard [*]
+  --model-u-dt-enum      in models, output uninterpreted sorts as datatype
+                         enumerations [*]
+  --rewrite-step         ammount of resources spent for each rewrite step
+                         (EXPERTS only)
+  --theory-check-step    ammount of resources spent for each theory check call
+                         (EXPERTS only)
+  --decision-step        ammount of getNext decision calls in the decision
+                         engine (EXPERTS only)
+  --bitblast-step        ammount of resources spent for each bitblast step
+                         (EXPERTS only)
+  --parse-step           ammount of resources spent for each
+                         command/expression parsing (EXPERTS only)
+  --lemma-step           ammount of resources spent when adding lemmas
+                         (EXPERTS only)
+  --restart-step         ammount of resources spent for each theory restart
+                         (EXPERTS only)
+  --cnf-step             ammount of resources spent for each call to cnf
+                         conversion (EXPERTS only)
+  --preprocess-step      ammount of resources spent for each preprocessing
+                         step in SmtEngine (EXPERTS only)
+  --quantifier-step      ammount of resources spent for quantifier
+                         instantiations (EXPERTS only)
+  --sat-conflict-step    ammount of resources spent for each sat conflict
+                         (main sat solver) (EXPERTS only)
+  --bv-sat-conflict-step ammount of resources spent for each sat conflict
+                         (bitvectors) (EXPERTS only)
+  --rewrite-apply-to-const
+                         eliminate function applications, rewriting e.g. f(5)
+                         to a new symbol f_5 (EXPERTS only) [*]
+  --force-no-limit-cpu-while-dump
+                         Force no CPU limit when dumping models and proofs [*]
+
+From the Strings theory module:
+  --strings-exp          experimental features in the theory of strings [*]
+  --strings-lb=N         the strategy of LB rule application: 0-lazy, 1-eager,
+                         2-no
+  --strings-std-ascii    the alphabet contains only characters from the
+                         standard ASCII or the extended one [*]
+  --strings-fmf          the finite model finding used by the theory of
+                         strings [*]
+  --strings-eager        strings eager check [*]
+  --strings-eit          the eager intersection used by the theory of strings
+                         [*]
+  --strings-opt1         internal option1 for strings: normal form [*]
+  --strings-opt2         internal option2 for strings: constant regexp
+                         splitting [*]
+  --strings-inm          internal for strings: ignore negative membership
+                         constraints (fragment checking is needed, left to
+                         users for now) [*]
+  --strings-lazy-pp      perform string preprocessing lazily upon assertion
+                         [*]
+  --strings-lazy-pp2     perform string preprocessing lazily upon failure to
+                         reduce  [*]
+  --strings-len-geqz     strings length greater than zero lemmas [*]
+  --strings-len-norm     strings length normalization lemma [*]
+  --strings-sp-emp       strings split on empty string [*]
+  --strings-infer-sym    strings split on empty string [*]
+  --strings-eager-len    strings eager length lemmas [*]
+  --strings-check-entail-len
+                         check entailment between length terms to reduce
+                         splitting [*]
+  --strings-process-loop reduce looping word equations to regular expressions
+                         [*]
+  --strings-abort-loop   abort when a looping word equation is encountered [*]
+  --strings-infer-as-lemmas
+                         always send lemmas out instead of making internal
+                         inferences [*]
+  --strings-rexplain-lemmas
+                         regression explanations for string lemmas [*]
+  --strings-min-prefix-explain
+                         minimize explanations for prefix of normal forms in
+                         strings [*]
+
+From the Theory layer module:
+  --theoryof-mode=MODE   mode for Theory::theoryof() (EXPERTS only)
+  --use-theory=NAME      use alternate theory implementation NAME
+                         (--use-theory=help for a list). This option may be
+                         repeated or a comma separated list.
+
+From the Uninterpreted functions theory module:
+  --symmetry-breaker     use UF symmetry breaker (Deharbe et al., CADE 2011)
+                         [*]
+  --condense-function-values
+                         condense models for functions rather than explicitly
+                         representing them [*]
+  --uf-ss-regions        disable region-based method for discovering cliques
+                         and splits in uf strong solver [*]
+  --uf-ss-eager-split    add splits eagerly for uf strong solver [*]
+  --uf-ss-totality       always use totality axioms for enforcing cardinality
+                         constraints [*]
+  --uf-ss-totality-limited=N
+                         apply totality axioms, but only up to cardinality N
+                         (-1 == do not apply totality axioms, default)
+  --uf-ss-totality-sym-break
+                         apply symmetry breaking for totality axioms [*]
+  --uf-ss-abort-card=N   tells the uf strong solver a cardinality to abort at
+                         (-1 == no limit, default)
+  --uf-ss-explained-cliques
+                         use explained clique lemmas for uf strong solver [*]
+  --uf-ss-simple-cliques always use simple clique lemmas for uf strong solver
+                         [*]
+  --uf-ss-deq-prop       eagerly propagate disequalities for uf strong solver
+                         [*]
+  --uf-ss=MODE           mode of operation for uf strong solver.
+  --uf-ss-clique-splits  use cliques instead of splitting on demand to shrink
+                         model [*]
+  --uf-ss-sym-break      finite model finding symmetry breaking techniques [*]
+  --uf-ss-fair           use fair strategy for finite model finding multiple
+                         sorts [*]
+  --uf-ss-fair-monotone  group monotone sorts when enforcing fairness for
+                         finite model finding [*]
+
+[*] Each of these options has a --no-OPTIONNAME variant, which reverses the
+    sense of the option.
+

@@ -1,0 +1,47 @@
+
+***Preprocessing clauses         [0] start  - g/n 140/ 293  c/a  1355/ 22161
+   CNF Conversion
+   CNF Conversion - expressions: 3891+139
+   **Done - clauses: 6906,atoms: 17455
+***Preprocessing clauses         [0] end    - g/n 140/ 293  c/a  6747/ 13650 - proved   0 - time [     4s]/[     6s]
+   [ 140]
+   [   4]
+   [  PC]
+
+***Extracting CFG                [0] start  - g/n 139/ 292  c/a  6747/ 13650
+   Correlating branches
++++PP refuted goal anon46@1_assertion
++++PP refuted goal anon46@3_assertion
++++PP refuted goal anon46@4_assertion
++++PP refuted goal anon46@9_assertion
++++PP refuted goal anon46@16_assertion
++++PP refuted goal anon00_Then@3_assertion
++++PP refuted goal anon00_Then@9_assertion
++++PP refuted goal anon01_Else@4_assertion
++++PP refuted goal anon02_Then_assertion
++++PP refuted goal anon02_Then@2_assertion
++++PP refuted goal anon02_Else@3_assertion
++++PP refuted goal anon02_Else@2_assertion
++++PP refuted goal anon02_Then@3_assertion
++++PP refuted goal anon45@1_assertion
++++PP refuted goal anon48@5_assertion
++++PP refuted goal anon48@12_assertion
++++PP refuted goal anon48@22_assertion
++++PP refuted goal anon48@24_assertion
++++PP refuted goal anon48@25_assertion
++++PP refuted goal anon48@30_assertion
++++PP refuted goal anon48@31_assertion
++++PP refuted goal anon48@34_assertion
++++PP refuted goal anon48@36_assertion
++++PP refuted goal anon48@37_assertion
++++PP refuted goal anon48@40_assertion
+   Compressing blocks
+   Calculating branch conditions
+   Calculating variable forward scope
+   Calculating live variables
+   Calculating variable scope
+   Calculating extra terms
+   Calculating DSA pass 1
+   Calculating DSA pass 2
+   Calculating Key Nodes
+   Calculating variable order

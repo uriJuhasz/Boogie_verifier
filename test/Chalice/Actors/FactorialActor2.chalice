@@ -1,0 +1,954 @@
+
+
+//To make this work with minimum of subtyping problems it is here assumed that it is 
+//FactorialCont actors that send Value messages
+
+channel Channel(msg:Message) where msg!=null  && rd(msg.type) && msg.inv
+	
+
+channel Queue(msg:Message) where msg!=null && rd(msg.type) && 
+	(msg.type==1 ==> msg.invValue) &&
+	(msg.type==2 ==> msg.invResult1) &&
+	(msg.type==3 ==> msg.invResult2) &&
+	(msg.type==4 ==> msg.invFinalResult)
+	
+/*
+Channel Contract: FactorialActor mailbox;
+state start{
+		Value!-> start
+}
+*/
+class FactorialActorChannelExpEP{
+	var state:int;
+	var ch:FactorialActorChannel;
+	var expch:Channel;
+	
+	predicate valid{
+		  rd(expch,this) && rd(ch,this) && ch!=null && 
+		  rd(ch.imp,this) && ch.imp!=null && rd(ch.exp,this) && ch.exp!=null &&
+		  rd(ch.imp.impch,this) && ch.imp.impch!=null&& 
+		  rd(ch.exp.expch,this) && ch.exp.expch!=null &&
+		  rd(ch.imp.impch.mu,this) && rd(ch.exp.expch.mu,this)
+	}
+	method sendValue(m:Message)
+	requires acc(state) && rd(m.type,this) && rd(m.type,this) && m.type==1 && m.invValue;
+	requires valid;
+	requires state==0;
+	ensures acc(state) && valid && (old(state)==0 ==> state==0)
+	{
+		unfold valid;
+		if(state==0){
+			fold m.inv;
+			state:=0;
+			var c:Channel:=ch.imp.impch;
+			fold valid;
+			send c(m);
+		}
+		else{
+			assert false;
+		}
+	}
+	method receiveValue() returns (m:Message)
+	requires false;
+	{
+		assert false;
+	}
+	
+	method fail(m:Message)
+	requires acc(state) && rd(m.type,this) &&  m.type==1 && m.inv;
+	requires valid;
+	requires state!=0;
+	ensures acc(state) && valid;
+	{
+		if(state==0){
+			assert false;
+		}
+		else{
+			assume false;
+		}
+	}
+}
+
+class FactorialActorChannelImpEP{
+	var state:int;
+	var ch:FactorialActorChannel;
+	var impch:Channel;
+	
+	predicate valid{
+		  rd(impch,this) && rd(ch,this) && ch!=null && 
+		  rd(ch.imp,this) && ch.imp!=null && rd(ch.exp,this) && ch.exp!=null &&
+		  rd(ch.imp.impch,this) && ch.imp.impch!=null&& 
+		  rd(ch.exp.expch,this) && ch.exp.expch!=null &&
+		  rd(ch.imp.impch.mu,this) && rd(ch.exp.expch.mu,this)
+	}
+	
+	method sendValue(m:Message)
+	requires acc(state) && rd(m.type,this) &&  m.type==1 && m.invValue;
+	requires valid;
+	requires false;
+	ensures acc(state) && valid && (old(state)==0 ==> state==0)
+	{
+		assert false;
+	}
+	//encoding to make things work
+	method receiveValue(mi:Message) returns (mo:Message)
+	requires acc(state) && mi!=null && rd(mi.type,this) && mi.type==1 && mi.inv;
+	requires state==0;
+	ensures acc(state) && state==0 && rd(mo.type,this) && mo.type==1 && mi==mo && mo.invValue;
+	{
+		unfold mi.inv;
+		if(state==0){
+			state:=0;
+			//assume mi.invValue;
+		}
+		else{
+			assert false;
+		}
+		mo:=mi;
+	}
+	
+	method fail(m:Message)
+	requires acc(state) && rd(m.type,this) && m.type==1 && m.inv;
+	requires valid;
+	requires state!=0;
+	ensures acc(state) && valid && state!=0;
+	{
+		if(state==0){
+			assert false;
+		}
+		else{
+			assume false;
+		}
+	}
+}
+
+class FactorialActorChannel{
+	var imp: FactorialActorChannelImpEP;
+	var exp: FactorialActorChannelExpEP;
+	
+	predicate valid{
+		rd(imp,this) && rd(exp,this) && rd(imp.ch,this) && rd(exp.ch,this) && 
+		imp!=null && exp!=null && imp.valid && exp.valid && imp.ch==this&& exp.ch==this
+	}
+	
+	predicate initImpState{
+		rd(imp,this) && acc(imp.state) && imp.state==0 
+	}
+
+	predicate initExpState{
+		rd(exp,this) && acc(exp.state) && exp.state==0
+	}
+	
+	method init(i:FactorialActorChannelImpEP,e: FactorialActorChannelExpEP)
+	requires acc(imp) && acc(i.ch) && acc(exp) && acc(e.ch) && acc(i.impch) && acc(e.expch) && acc(i.state) && acc(e.state); 
+	ensures	valid && valid &&
+	rd(imp,this) && imp!=null &&
+	rd(exp,this) && exp!=null &&
+	rd(imp.impch,this) && imp.impch!=null &&
+	rd(exp.expch,this) && exp.expch!=null &&
+	initImpState && initExpState;
+	{
+		imp:=i;
+		exp:=e;
+		imp.ch:=this;
+		exp.ch:=this;
+		imp.impch:=new Channel;
+		exp.expch:=new Channel;
+		fold imp.valid;
+		fold exp.valid;
+		fold imp.valid;
+		fold exp.valid;
+		fold valid;
+		fold valid;
+		
+		imp.state:=0;
+		exp.state:=0;
+		fold initImpState;
+		fold initExpState;
+	}
+}
+
+
+/*
+Channel contract: FactorialCont mailbox:
+state start{
+	Result!-> end;
+	Result2!-> end
+}
+state end{
+}
+*/
+class FactorialContChannelExpEP{
+	var state:int;
+	var ch:FactorialContChannel;
+	var expch:Channel;
+	
+	predicate valid{
+		  rd(expch,this) && rd(ch,this) && ch!=null && 
+		  rd(ch.imp,this) && ch.imp!=null && rd(ch.exp,this) && ch.exp!=null &&
+		  rd(ch.imp.impch,this) && ch.imp.impch!=null&& 
+		  rd(ch.exp.expch,this) && ch.exp.expch!=null &&
+		  rd(ch.imp.impch.mu,this) && rd(ch.exp.expch.mu,this)
+	}
+	
+	method sendResult1(m:Message)
+	requires acc(state) && rd(m.type,this) && rd(m.type,this) && m.type==2 && m.invResult1;
+	requires valid;
+	requires state==0;
+	ensures acc(state) && valid && (old(state)==0 ==> state==1)
+	{
+		unfold valid;
+		if(state==0){
+			fold m.inv;
+			state:=1;
+			var c:Channel:=ch.imp.impch;
+			fold valid
+			send c(m);
+		}
+		else{
+			assert false;
+		}
+	}
+	
+	method sendResult2(m:Message)
+	requires acc(state) && rd(m.type,this) && rd(m.type,this) && m.type==3 && m.invResult2;
+	requires  valid;
+	requires state==0;
+	ensures acc(state) && valid && (old(state)==0 ==> state==1)
+	{
+		unfold valid;
+		if(state==0){
+			fold m.inv;
+			state:=1;
+			var c:Channel:=ch.imp.impch;
+			fold valid;
+			send c(m);
+		}
+		else{
+			assert false;
+		}
+	}
+	method receiveResult1() returns (m:Message)
+	requires false;
+	{
+		assert false;
+	}
+	method receiveResult2() returns (m:Message)
+	requires false;
+	{
+		assert false;
+	}
+	
+	method fail(m:Message)
+	requires acc(state) && rd(m.type,this) &&  (m.type==2 || m.type==3);
+	requires valid;
+	requires state!=0;
+	ensures  acc(state) && valid;
+	{
+		if(state==0){
+			assert false;
+		}
+		else{
+			assume false;
+		}
+	}
+}
+class FactorialContChannelImpEP{
+	var state:int;
+	var ch:FactorialContChannel;
+	var impch:Channel;
+	
+	predicate valid{
+		  rd(impch,this) && rd(ch,this) && ch!=null && 
+		  rd(ch.imp,this) && ch.imp!=null && rd(ch.exp,this) && ch.exp!=null &&
+		  rd(ch.imp.impch,this) && ch.imp.impch!=null&& 
+		  rd(ch.exp.expch,this) && ch.exp.expch!=null &&
+		  rd(ch.imp.impch.mu,this) && rd(ch.exp.expch.mu,this)
+	}
+	
+	method sendResult1(m:Message)
+	requires acc(state) && rd(m.type,this) &&  m.type==2 && m.invResult1;
+	requires valid
+	requires false;
+	ensures acc(state) && valid 
+	{
+		assert false;
+	}
+	method sendResult2(m:Message)
+	requires acc(state) && rd(m.type,this) &&  m.type==3 && m.invResult2;
+	requires valid
+	requires false;
+	ensures acc(state) && valid 
+	{
+		assert false;
+	}
+	
+	
+	//encoding to make things work
+	method receiveResult1(mi:Message) returns (mo:Message)
+	requires acc(state) && mi!=null && rd(mi.type,this) && mi.type==2 && mi.inv;
+	requires state==0;
+	ensures acc(state) && state==1 && rd(mo.type,this) && mo==mi &&  mo.type==2 && mo.invResult1;
+	{
+		unfold mi.inv;
+		if(state==0){
+			state:=1;
+			//assume mi.invResult1;
+		}
+		else{
+			assert false;
+		}
+		mo:=mi;
+	}
+	
+	//encoding to make things work
+	method receiveResult2(mi:Message) returns (mo:Message)
+	requires acc(state) && mi!=null && rd(mi.type,this) && mi.type==3 && mi.inv;
+	requires state==0;
+	ensures acc(state) && state==1 && rd(mo.type,this) && mo==mi &&  mo.type==3 && mo.invResult2;
+	{
+		unfold mi.inv;
+		if(state==0){
+			state:=1;
+			//assume mi.invResult2;
+		}
+		else{
+			assert false;
+		}
+		mo:=mi;
+	}
+	
+	method fail(m:Message)
+	requires acc(state) && rd(m.type,this) && (m.type==2 || m.type==3);
+	requires valid;
+	requires state!=0;
+	ensures acc(state) && valid;
+	{
+		if(state==0){
+			assert false;
+		}
+		else{
+			assume false;
+		}
+	}
+}
+
+class FactorialContChannel{
+	var imp: FactorialContChannelImpEP;
+	var exp: FactorialContChannelExpEP;
+	
+	predicate valid{
+		rd(imp,this) && rd(exp,this) && rd(imp.ch,this) && rd(exp.ch,this) && 
+		imp!=null && exp!=null && imp.valid && exp.valid && imp.ch==this&& exp.ch==this
+	}
+	
+	predicate initImpState{
+		rd(imp,this) && acc(imp.state) && imp.state==0 
+	}
+	predicate initExpState{
+		rd(exp,this) && acc(exp.state) && exp.state==0
+	}
+	
+	method init(i:FactorialContChannelImpEP,e: FactorialContChannelExpEP)
+	requires acc(imp) && acc(i.ch) && acc(exp) && acc(e.ch) && acc(e.expch) && acc(i.impch) && acc(i.state) && acc(e.state);
+	ensures	valid  && valid && rd(exp,this) && rd(imp,this) && rd(exp.expch,this) && rd(imp.impch,this) 
+		&& rd(exp,this) && rd(imp,this) && rd(exp.expch,this) && rd(imp.impch,this)&& exp.expch!=null && imp.impch!=null && 
+		initImpState && initExpState;
+	{
+		imp:=i;
+		exp:=e;
+		imp.ch:=this;
+		exp.ch:=this;
+		imp.impch:=new Channel;
+		exp.expch:=new Channel;
+		fold imp.valid;
+		fold exp.valid;
+		fold imp.valid;
+		fold exp.valid;
+		fold valid;
+		fold valid;
+		
+		imp.state:=0;
+		exp.state:=0;
+		fold initExpState;
+		fold initImpState;
+	}
+}
+
+/*
+Channel contract: Future mailbox:
+state start{
+	FinalResult!-> end;
+}
+state end{
+}
+*/
+class FutureChannelExpEP{
+	var state:int;
+	var ch:FutureChannel;
+	var expch:Channel;
+	
+	predicate valid{
+		  rd(expch,this) && rd(ch,this) && ch!=null && 
+		  rd(ch.imp,this) && ch.imp!=null && rd(ch.exp,this) && ch.exp!=null &&
+		  rd(ch.imp.impch,this) && ch.imp.impch!=null&& 
+		  rd(ch.exp.expch,this) && ch.exp.expch!=null &&
+		  rd(ch.imp.impch.mu,this) && rd(ch.exp.expch.mu,this)
+	}
+	
+	method sendFinalResult(m:Message)
+	requires acc(state) && rd(m.type,this) && rd(m.type,this) && m.type==4 && m.invFinalResult;
+	requires valid;
+	requires state==0;
+	ensures acc(state) && valid && (old(state)==0 ==> state==1)
+	{
+		unfold valid;
+		if(state==0){
+			fold m.inv;
+			state:=1;
+			var c:Channel:=ch.imp.impch;
+			fold valid
+			send c(m);
+		}
+		else{
+			assert false;
+		}
+	}
+	
+
+	method receiveFinalResult() returns (m:Message)
+	requires false;
+	{
+		assert false;
+	}
+	
+	
+	method fail(m:Message)
+	requires acc(state) && rd(m.type,this) &&  m.type==4 ;
+	requires valid;
+	requires state!=0;
+	ensures  acc(state) && valid;
+	{
+		if(state==0){
+			assert false;
+		}
+		else{
+			assume false;
+		}
+	}
+}
+class FutureChannelImpEP{
+	var state:int;
+	var ch:FutureChannel;
+	var impch:Channel;
+	
+	predicate valid{
+		rd(impch,this) && rd(ch,this) && ch!=null && 
+		rd(ch.imp,this) && ch.imp!=null && rd(ch.exp,this) && ch.exp!=null &&
+		rd(ch.imp.impch,this) && ch.imp.impch!=null&& 
+		rd(ch.exp.expch,this) && ch.exp.expch!=null &&
+		rd(ch.imp.impch.mu,this) && rd(ch.exp.expch.mu,this)
+	}
+	
+	method sendFinalResult(m:Message)
+	requires acc(state) && rd(m.type,this) &&  m.type==4 && m.invFinalResult;
+	requires valid
+	requires false;
+	ensures acc(state) && valid 
+	{
+		assert false;
+	}
+
+	
+	
+	//encoding to make things work
+	method receiveFinalResult(mi:Message) returns (mo:Message)
+	requires acc(state) && mi!=null && rd(mi.type,this) && mi.type==4 && mi.inv;
+	requires state==0;
+	ensures acc(state) && state==1 && rd(mo.type,this) && mo==mi && mo.type==4 && mo.invFinalResult;
+	{
+		if(state==0){
+			unfold mi.inv;
+			state:=1;
+			//assume mi.invResult1;
+		}
+		else{
+			assert false;
+		}
+		mo:=mi;
+	}
+	
+	
+	method fail(m:Message)
+	requires acc(state) && rd(m.type,this) && m.type==4;
+	requires valid;
+	requires state!=0;
+	ensures acc(state) && valid;
+	{
+		if(state==0){
+			assert false;
+		}
+		else{
+			assume false;
+		}
+	}
+}
+
+class FutureChannel{
+	var imp: FutureChannelImpEP;
+	var exp: FutureChannelExpEP;
+	
+	predicate valid{
+		rd(imp,this) && rd(exp,this) && rd(imp.ch,this) && rd(exp.ch,this) && 
+		imp!=null && exp!=null && imp.valid && exp.valid && imp.ch==this&& exp.ch==this
+	}
+	
+	predicate initImpState{
+		rd(imp,this) && acc(imp.state) && imp.state==0 
+	}
+	predicate initExpState{
+		rd(exp,this) && acc(exp.state) && exp.state==0
+	}
+	
+	
+	method init(i:FutureChannelImpEP,e: FutureChannelExpEP)
+	requires acc(imp) && acc(i.ch) && acc(exp) && acc(e.ch) && acc(e.expch) && acc(i.impch) && acc(i.state) && acc(e.state);
+	ensures	valid && valid && rd(exp,this) && rd(imp,this) && rd(exp.expch,this) && rd(imp.impch,this) 
+		&& rd(exp,this) && rd(imp,this) && rd(exp.expch,this) && rd(imp.impch,this) && initImpState && initExpState;
+	{
+		imp:=i;
+		exp:=e;
+		imp.ch:=this;
+		exp.ch:=this;
+		imp.impch:=new Channel;
+		exp.expch:=new Channel;
+		fold imp.valid;
+		fold exp.valid;
+		fold imp.valid;
+		fold exp.valid;
+		fold valid;
+		fold valid;
+		
+		imp.state:=0;
+		exp.state:=0;
+		fold initImpState;
+		fold initExpState;
+	}
+}
+
+
+
+
+
+//Statically typed future
+class Future{
+	ghost var sent:Message; //type Value
+	var value:Message; //type FinalResult
+	var q:FutureChannel;
+	
+	method init()
+	requires acc(q) && acc(value) 
+	ensures rd(q,this) && acc(value) && q!=null;
+	ensures q.valid && q.initExpState && q.initImpState && value==null;
+	{
+		var imp:FutureChannelImpEP:=new FutureChannelImpEP;
+		var exp:FutureChannelExpEP:=new FutureChannelExpEP;
+		q:=new FutureChannel;
+		call q.init(imp,exp);
+		value:=null;
+		
+	}
+	
+	method get() returns (m:Message)
+	requires acc(value) && rd(sent,this) && rd(sent.type,this)  && sent.type==1 && rd(sent.vo1,this)  && sent.vo1>=0 &&
+		rd(value.type,this) && rd(q,this) && q!=null && sent!=null  && q.valid;
+	requires (value!=null ==> 
+		(value.type==4 && value.invFinalResult &&  rd(value.vr3,this) && value.vr3==sent.factorial(sent.vo1) ));
+	requires (value==null ==>(credit(q.imp.impch,1) && waitlevel<<q.imp.impch.mu ));
+	ensures acc(value) && rd(sent,this) && rd(sent.type,this)  && sent.type==1 && rd(sent.vo1,this) &&  sent.vo1>=0 &&
+		rd(value.vr3,this) && rd(value.type,this) && rd(q,this) && value!=null &&  m==value && 
+		(value.type==4 &&  value.invFinalResult && value.vr3==sent.factorial(sent.vo1))
+	{
+		if(value==null){
+			unfold q.valid;
+			unfold q.imp.valid;
+			var v:Message;
+			receive v:=q.imp.impch;
+			if(v.type==4){
+				call value:=q.imp.receiveFinalResult(v);
+				//assume value.vr3==sent.factorial(sent.vo1);
+			}else{
+				assume false;
+			}
+		}
+		m:=value;
+		//The post condition cannot possibly hold
+	}
+	
+	function getQ():FutureChannel
+	requires rd(q,this) && q!=null && q.valid
+	{
+		q
+	}
+}
+
+
+//Message type: 1=Value1, 2=Result, 3=Result2, 4=FinalResult
+class Message{
+	var type:int;
+	var sender1:Future;
+	var sender3:Future;
+	var sender2:Future;
+	var sender4:FactorialCont;
+	var receiver1:FactorialActor;
+	var receiver2:FactorialCont;
+	var receiver3:FactorialCont;
+	var receiver4:Future;
+	var v1:int;
+	var vo1:int;
+	var cust1:FactorialCont;
+	var vr1:int;
+	var old1:FactorialActor;
+	var vr2:int;
+	var old2:FactorialCont;
+	var vr3:int;
+	
+	unlimited function factorial(v:int) :int
+	requires v>=0;
+	ensures v==0 ==> factorial(v)==1;
+	ensures v>0 ==> factorial(v)==v*factorial(v-1);
+	{
+		(v==0) ? 1 : v*factorial(v-1)
+		
+	}
+	
+	predicate invValue{
+		rd(sender1) && rd(receiver1) && rd(cust1) && rd(v1) && rd(vo1) &&
+		sender1!=null && rd(sender1.q) && sender1.q!=null && sender1.q.valid && sender1.q.initExpState && v1>=0 && vo1>=0
+		&& (cust1==null ==> v1==vo1) && (cust1!=null ==> (rd(cust1.q) && cust1.q!=null && 
+		cust1.q.valid && cust1.q.initExpState && rd(cust1.q.imp) && rd(cust1.q.imp.impch) && cust1.q.imp.impch!=null && rd(cust1.v)  &&  rd(cust1.vo)  && v1==cust1.v-1 && vo1==cust1.vo ))
+	}
+	
+	predicate invResult1{
+		rd(sender2) && rd(receiver2) && rd(vr1) && rd(old1) && 
+		(sender2!=null && rd(sender2.q) && sender2.q!=null && sender2.q.valid  && sender2.q.initExpState && vr1==factorial(0) && rd(receiver2.v) && receiver2!=null && receiver2.v==1)
+	}
+	
+	predicate invResult2{
+		rd(sender3) && rd(receiver3) && rd(vr2) && rd(old2) &&
+		(sender3!=null && rd(sender3.q) && sender3.q!=null && sender3.q.valid  && sender3.q.initExpState  &&
+		rd(old2.v)&& rd(old2.vo)&& rd(old2.cust) && 
+		old2.v>=0 && old2.vo >=0 && vr2==factorial(old2.v) && old2.cust==receiver3)
+	}
+	
+	predicate invFinalResult{
+		rd(sender4) && rd(receiver4) && rd(vr3)
+	}
+	
+	predicate inv{
+		rd(type) &&
+		(type==1 ==> invValue) &&
+		(type==2 ==> invResult1) &&
+		(type==3 ==> invResult2) &&
+		(type==4 ==> invFinalResult)
+	}
+	
+	
+	
+	method setValue(v:int, vo:int,cust:FactorialCont, receiver:FactorialActor)
+	requires acc(type) && acc(sender1) && acc(receiver1) && 
+		acc(v1) && acc(vo1) && acc(cust1) &&
+		sender1!=null && rd(sender1.q,this) && sender1.q!=null && 
+		sender1.q.valid && sender1.q.initExpState && v>=0 && vo>=0 && 
+		(cust==null ==> v==vo) && (cust!=null ==> 
+		(rd(cust.q,this) && cust.q!=null && cust.q.valid && cust.q.initExpState && 
+		rd(cust.q.imp,this) && rd(cust.q.imp.impch,this) && cust.q.imp.impch!=null && rd(cust.v,this) && 
+		rd(cust.vo,this) && v==cust.v-1 && vo==cust.vo))
+		
+	ensures invValue  && rd(type,this) && rd(type,this) && type==1 && rd(vo1,this) && vo1>=0 && vo1==vo;
+	{
+		type:=1;
+		v1:=v;
+		vo1:=vo;
+		cust1:=cust;
+		receiver1:=receiver;
+		fold invValue;
+	}
+	
+	method setResult1(v:int, oldv:FactorialActor, receiver:FactorialCont)
+	requires acc(type) &&  acc(sender2) && acc(receiver2) &&   
+		acc(vr1) && acc(old1)  &&
+		(sender2!=null &&  rd(sender2.q,this) && sender2.q!=null && sender2.q.valid && sender2.q.initExpState && 
+		v==factorial(0) && rd(receiver.v,this) && receiver!=null  && receiver.v==1)
+	ensures invResult1 && rd(type,this) && rd(type,this) && type==2 && rd(receiver2,this) && receiver2==receiver 
+	{
+		type:=2;
+		vr1:=v;
+		old1:=oldv;
+		receiver2:=receiver;
+		fold invResult1;
+	}
+	
+	method setResult2(v:int,oldv:FactorialCont,receiver:FactorialCont)
+	requires acc(type) &&  acc(sender3) && acc(receiver3)  && 
+		acc(vr2) && acc(old2) && oldv!=null && rd(oldv.v) && rd(oldv.cust) && 
+		rd(oldv.cust.vo) && rd(receiver.vo) &&
+		(sender3!=null && rd(sender3.q,this) && sender3.q!=null && sender3.q.valid  && sender3.q.initExpState  &&
+		rd(oldv.v,this) &&  rd(oldv.vo,this) && 
+		rd(oldv.cust,this) && oldv.v>=0 && oldv.vo>=0 && v==factorial(oldv.v) && oldv.cust==receiver)
+	ensures invResult2 && rd(type,this) && rd(type,this) && type==3
+	{
+		type:=3;
+		vr2:=v;
+		old2:=oldv;
+		receiver3:=receiver;
+		fold invResult2;
+	}
+	
+	method setFinalResult(vr:int,receiver:Future)
+	requires acc(type) && acc(sender4) && acc(receiver4) && acc(vr3) &&
+		(sender4!=null ==> (rd(sender4.q,this) && sender4.q!=null)) //Sender null used sometimes for simplicity
+	ensures invFinalResult && rd(type,this) && rd(type,this) && type==4 && rd(vr3,this) && vr3==vr
+	{
+		type:=4;
+		vr3:=vr;
+		receiver4:=receiver;
+		fold invFinalResult;
+	}
+}
+
+
+class FactorialActor {
+	var q:FactorialActorChannel
+
+	method init()
+	requires acc(q)
+	ensures acc(q,50) && q!=null && q.valid && q.valid && q.initImpState && q.initExpState && rd(q.imp,this) && 
+	q.imp!=null && rd(q.exp,this) && rd(q.imp.impch,this) && q.imp.impch!=null && rd(q.exp.expch,this) && q.exp.expch!=null;
+	{
+		q:=new FactorialActorChannel;
+		var exp:FactorialActorChannelExpEP:=new FactorialActorChannelExpEP;
+		var imp:FactorialActorChannelImpEP:=new FactorialActorChannelImpEP;
+		call q.init(imp,exp);
+	}
+	method act()
+	requires rd(q,this) && q!=null && q.valid && q.initImpState && q.initExpState && rd(q.imp,this) && q.imp!=null && rd(q.imp.impch,this) && q.imp.impch!=null;
+	requires  credit(q.imp.impch,1);
+	{
+		unfold q.valid;
+		unfold q.imp.valid;
+		unfold q.initImpState;
+		unfold q.initExpState;
+		while(true)
+		invariant rd(q,this) && q!=null && rd(q.imp,this) && rd(q.imp.impch,this) && rd(q.imp.impch.mu,this) && rd(q.imp.ch,this);
+		invariant q==q.imp.ch && q.imp!=null && q.imp.impch!=null;
+		invariant rd(q.exp,this) && q.exp!=null && q.exp.valid;
+		invariant acc(q.exp.state) && q.exp.state==0;
+		invariant acc(q.imp.state) && q.imp.state==0;
+		invariant credit(q.imp.impch,1); 
+		{
+			var current:Message:=null;
+			receive current:=q.imp.impch;
+			if(current.type==1){
+				call current:=q.imp.receiveValue(current);
+				unfold current.invValue;
+				assume current.receiver1==this;
+				if(current.v1==0){
+					if (current.cust1==null){
+						//begin reply(FinalResult(1,this))
+						var m:=new Message;
+						m.sender4:=null; //Cheating should be this
+						call m.setFinalResult(1,current.sender1); 
+						//send obligation
+						assert m.vr3==m.factorial(current.vo1) //assert send obligation of old message
+						unfold current.sender1.q.valid;
+						unfold current.sender1.q.initExpState;
+						call current.sender1.q.exp.sendFinalResult(m);
+						//end reply(FinalResult(1,this));
+					}
+					else{
+						//begin cust1.forward(Result(1,this))
+						var m:=new Message;
+						m.sender2:=current.sender1;
+						call m.setResult1(1,this,current.cust1);
+						unfold current.cust1.q.valid;
+						unfold current.cust1.q.initExpState;
+						call current.cust1.q.exp.sendResult1(m);
+						//send obligation
+						var r:Message:=new Message;
+						r.type:=4;
+						assert r.vr3==r.factorial(current.cust1.vo) ==>r.vr3==r.factorial(current.vo1); //check send obligation of new message)
+						//end cust1.forward(Result(1,this))
+					}
+				}else{
+					var cont:=new FactorialCont;
+					assert acc(cont.v);
+					
+					call cont.init(current.v1,current.vo1,current.cust1);
+					fork cont.act();
+					//begin forward(Value(v1-1,cont)
+					var m:=new Message;
+					m.sender1:=current.sender1;
+					call m.setValue(current.v1-1,current.vo1,cont,this);
+					call q.exp.sendValue(m);
+					//send obligation
+					var r:Message:=new Message;
+					r.type:=4;
+					assert r.vr3==m.factorial(m.vo1) ==> r.vr3==m.factorial(current.vo1) //assert send obligation of new message
+					//end forward(Value(v1-1,cont)
+				}
+			}else{
+				assume false
+			}
+	  		
+	  	}
+	}
+	
+	function getQ():FactorialActorChannel
+	requires rd(q) && q!=null && rd(q.valid)
+	{
+		q
+	}
+
+}
+
+  
+
+class FactorialCont{
+	var q:FactorialContChannel;
+	var v:int;
+	var vo:int;
+	var cust:FactorialCont;
+	
+	method init(vp:int, vop:int,custp:FactorialCont)
+	requires acc(v) &&acc(vo) && acc(cust) && acc(q) && vp>=0 &&  vop>=0 && 
+		(custp!=null ==>	(rd(custp.q,this) && custp.q!=null && custp.q.valid && custp.q.initExpState && rd(custp.vo,this) && vop==custp.vo && rd(custp.v,this) && custp.v==vp+1))
+	ensures acc(v,50) && acc(vo,50) && acc(cust,50) && acc(q,50) && q!=null && 
+		q.valid && q.valid && q.initImpState && q.initExpState && rd(q.imp,this) && rd(q.imp.impch,this) && rd(q.imp,this) && rd(q.imp.impch,this) && q.imp.impch!=null && rd(q.exp,this) && rd(q.exp.expch,this) && v>=0 && vo>=0 &&
+		vp==v && vop==vo && 
+		(cust!=null  ==> (rd(cust.q,this) && cust.q!=null && cust.q.valid && cust.q.initExpState && rd(cust.vo,this) && cust.vo==vo && rd(cust.v,this) && cust.v==v+1 ) )
+	{
+		v:=vp;
+		vo:=vop;
+		cust:=custp;
+		var imp:FactorialContChannelImpEP:=new FactorialContChannelImpEP;
+		var exp:FactorialContChannelExpEP:=new FactorialContChannelExpEP;
+		q:=new FactorialContChannel;
+		call q.init(imp,exp);
+	}
+	
+	method act()
+	requires rd(q,this) && rd(v,this) && rd(vo,this) && q!=null  && q.valid && q.initImpState && rd(q.imp,this) && rd(q.imp.impch,this) && q.imp.impch!=null && v>=0 && vo>=0;
+	requires rd(cust,this) && (cust !=null ==> (rd(cust.q,this) && cust.q!=null && cust.q.valid && cust.q.initExpState && rd(cust.vo,this) && cust.vo==vo && rd(cust.v,this) && cust.v==v+1));
+	requires credit(q.imp.impch,1) 
+	{
+		unfold q.valid;
+		unfold q.imp.valid;
+		unfold q.initImpState;
+		var current:Message:=null;
+		receive current:=q.imp.impch;
+		//Result(vr1,old1)
+		if(current.type==2){
+			call current:= q.imp.receiveResult1(current);
+			unfold current.invResult1;
+			assume current.receiver2==this;
+			if(cust==null){
+				//begin reply(FinalResult(vr1*v,this))
+				var m:=new Message;
+				m.sender4:=this;
+				//Receiver is a future so ignore the receiver for simplicty
+				call m.setFinalResult(current.vr1*v, current.sender2); 
+				unfold m.invFinalResult;
+				//send obligation
+				assert m.vr3==m.factorial(this.vo); //assert send obligation of old message
+				fold m.invFinalResult;
+				unfold current.sender2.q.initExpState;
+				call current.sender2.q.exp.sendFinalResult(m);
+				//end reply(FinalResult(v*vr,this))
+			}
+			else{
+				//begin cust.forward(Result(v*vr1,this))
+				var m:=new Message;
+				m.sender3:=current.sender2;
+				call m.setResult2(current.vr1*v, this, cust);
+				unfold cust.q.initExpState;
+				call cust.q.exp.sendResult2(m);
+				//send obligation
+				var r:Message:=new Message;
+				r.type:=4;
+				assert r.vr3==m.factorial(cust.vo) ==> r.vr3==m.factorial(this.vo); //check send obligation of new message)
+				//end cust.forward(Result(v*vr1,this))
+			}
+		}else
+			//Result(vr2,old2)
+			if(current.type==3){
+			call current:=q.imp.receiveResult2(current);
+			unfold current.invResult2;
+			assume current.receiver3==this;
+			var m:=new Message;
+			if(cust==null){
+				//begin reply(FinalResult(v*vr2,this))
+				m.sender4:=this
+				//Receiver is a future so ignore the receiver for simplicty
+				call m.setFinalResult(current.vr2*v, current.sender3);
+				unfold m.invFinalResult;
+				//send obligation
+				assert m.vr3==m.factorial(this.vo); //assert send obligation of old message
+				fold m.invFinalResult;
+				unfold current.sender2.q.initExpState;
+				call current.sender3.q.exp.sendFinalResult(m);
+				//end reply(FinalResult(v*vr2,this))
+			}
+			else{
+				//begin cust.forward(Result(v*vr2,this))
+				m.sender3:=current.sender3;
+				//requires current.vr2*v==m.factorial(this.v) -> current.vr2=m.factorial(this.v-1)
+				call m.setResult2(current.vr2*v, this,cust);
+				unfold cust.q.initExpState;
+				call cust.q.exp.sendResult2(m);
+				//send obligation
+				var r:Message:=new Message;
+				r.type:=4;
+				assert r.vr3==m.factorial(cust.vo) ==>  r.vr3==m.factorial(this.vo); //check send obligation of new message)
+				//end cust.forward(Result(v*vr2,this))
+			}
+		}
+		else{
+			assume false;
+		}
+    }
+	
+	function getQ():FactorialContChannel
+	requires rd(q) && q!=null && q.valid
+	{
+		q
+	}
+	
+	method main(){
+	
+		var actor:FactorialActor:=new FactorialActor;
+		call actor.init();
+		
+		
+		var m:Message:=new Message;
+		var f:Future:=new Future;
+		call f.init();
+		unfold actor.q.valid;
+		unfold actor.q.initExpState;
+		m.sender1:=f;
+		f.sent:=m;
+		call m.setValue(5,5,null,actor);
+		call actor.q.exp.sendValue(m);
+		fold actor.q.initExpState;
+		
+		//Need to do this after send to have permission to the exporting endpoint
+		fork actor.act(); 
+		
+		var res:Message:=null;
+		call res:=f.get();
+		
+		assert res.vr3==m.factorial(5);
+	}
+}
+
+

@@ -1,0 +1,124 @@
+\select@language {english}
+\select@language {english}
+\select@language {english}
+\select@language {italian}
+\select@language {english}
+\select@language {german}
+\select@language {english}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Architecture overview of a modern smartphone}}{10}{figure.caption.8}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Android software components}}{13}{figure.caption.9}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces iOS software components}}{14}{figure.caption.10}
+\contentsline {figure}{\numberline {2.4}{\ignorespaces The permission dialog for both Android and iOS shown to the user}}{18}{figure.caption.15}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {}}}{18}{figure.caption.15}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {}}}{18}{figure.caption.15}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Web login without 2FA and with 2FA enabled}}{26}{figure.caption.20}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Block diagram of the function that computes the similarity score between two samples}}{43}{figure.caption.32}
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Sound-Proof authentication overview}}{44}{figure.caption.33}
+\contentsline {figure}{\numberline {5.3}{\ignorespaces False Rejection Rate and False Acceptance Rate as a function of the threshold $\tau _C$ for $B=[50\text {Hz}-4\text {kHz}]$}}{49}{figure.caption.43}
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Minimizing $f=\alpha \cdot FRR+\beta \cdot FAR$, for $\alpha \in [0.1,\ldots ,0.9]$ and $\beta =1-\alpha $}}{50}{figure.caption.44}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {False Rejection Rate and False Acceptance Rate when usability and security have different weights.}}}{50}{figure.caption.44}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {One-third octave bands and similarity score threshold.}}}{50}{figure.caption.44}
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Impact of the environment on the False Rejection Rate}}{51}{figure.caption.45}
+\contentsline {figure}{\numberline {5.6}{\ignorespaces Impact of user activity, phone position, phone model, and computer model on the False Rejection Rate}}{53}{figure.caption.46}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {User Activity}}}{53}{figure.caption.46}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Phone position}}}{53}{figure.caption.46}
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {Phone model}}}{53}{figure.caption.46}
+\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {Computer}}}{53}{figure.caption.46}
+\contentsline {figure}{\numberline {5.7}{\ignorespaces Distribution of the answers by the participants of the user study}}{57}{figure.caption.55}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {SUS answers for Sound-Proof}}}{57}{figure.caption.55}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {SUS answers for Google 2SV}}}{57}{figure.caption.55}
+\contentsline {figure}{\numberline {5.8}{\ignorespaces Distribution of the answers to the Post-test questionnaire}}{58}{figure.caption.59}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Architecture overview of a TrustZone-enabled device}}{72}{figure.caption.77}
+\contentsline {figure}{\numberline {6.2}{\ignorespaces TrustZone-enabled SoC cores in Non-secure and Secure states}}{73}{figure.caption.78}
+\contentsline {figure}{\numberline {6.3}{\ignorespaces TrustZone-aware components in an example ARM system design}}{74}{figure.caption.79}
+\contentsline {figure}{\numberline {6.4}{\ignorespaces Adversarial models for a TrustZone-enabled smartphone}}{75}{figure.caption.80}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Victim's device}}}{75}{figure.caption.80}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Adversary's device}}}{75}{figure.caption.80}
+\contentsline {figure}{\numberline {6.5}{\ignorespaces Overview of location-based two-factor authentication for payments at point of sale}}{77}{figure.caption.81}
+\contentsline {figure}{\numberline {6.6}{\ignorespaces Signed-IMSI enrollment scheme}}{78}{figure.caption.83}
+\contentsline {figure}{\numberline {6.7}{\ignorespaces Baseband-assisted enrollment scheme}}{80}{figure.caption.85}
+\contentsline {figure}{\numberline {6.8}{\ignorespaces Location verification is a challenge-response protocol using the service key established during enrollment}}{81}{figure.caption.86}
+\contentsline {figure}{\numberline {6.9}{\ignorespaces Completion time for 100 location verifications}}{90}{figure.caption.90}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {}}}{90}{figure.caption.90}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {}}}{90}{figure.caption.90}
+\contentsline {figure}{\numberline {6.10}{\ignorespaces Average time and standard deviation required to complete a location verification}}{90}{figure.caption.91}
+\contentsline {figure}{\numberline {6.11}{\ignorespaces Integration of the location verification protocol within the EMV payment standards}}{92}{figure.caption.93}
+\contentsline {figure}{\numberline {6.12}{\ignorespaces Smartphone as an authentication token replacement}}{96}{figure.caption.96}
+\contentsline {figure}{\numberline {6.13}{\ignorespaces Smartphone as a user confirmation device}}{97}{figure.caption.97}
+\contentsline {figure}{\numberline {6.14}{\ignorespaces Smartphone as a distance verification device}}{98}{figure.caption.98}
+\contentsline {figure}{\numberline {6.15}{\ignorespaces Commonly suggested user enrollment schemes}}{100}{figure.caption.103}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {9.1}{\ignorespaces SecBank application for the control group and the three experimental groups}}{124}{figure.caption.126}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {}}}{124}{figure.caption.126}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {}}}{124}{figure.caption.126}
+\contentsline {figure}{\numberline {9.2}{\ignorespaces Different attacks presented to the three experimental groups}}{126}{figure.caption.128}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {}}}{126}{figure.caption.128}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {}}}{126}{figure.caption.128}
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {}}}{126}{figure.caption.128}
+\contentsline {figure}{\numberline {9.3}{\ignorespaces Distribution of the time spent by participants setting up the personalized indicator and logging into the SecBank application}}{131}{figure.caption.137}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Personal indicator setup}}}{131}{figure.caption.137}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Login screen}}}{131}{figure.caption.137}
+\contentsline {figure}{\numberline {9.4}{\ignorespaces Answers to the post-test questionnaire}}{132}{figure.caption.138}
+\contentsline {figure}{\numberline {9.5}{\ignorespaces System model overview}}{139}{figure.caption.149}
+\contentsline {figure}{\numberline {9.6}{\ignorespaces The personalized indicator setup protocol}}{142}{figure.caption.150}
+\contentsline {figure}{\numberline {9.7}{\ignorespaces Broker{} and the Banking application started by it}}{144}{figure.caption.152}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {}}}{144}{figure.caption.152}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {}}}{144}{figure.caption.152}
+\contentsline {figure}{\numberline {9.8}{\ignorespaces Answers to the post-test questionnaire for the user study on the indicator setup protocol}}{147}{figure.caption.157}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {10.1}{\ignorespaces Examples of overt and covert channels}}{153}{figure.caption.161}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {}}}{153}{figure.caption.161}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {}}}{153}{figure.caption.161}
+\contentsline {figure}{\numberline {10.2}{\ignorespaces Schematic rise of the value $\tau _F$ over time}}{159}{figure.caption.164}
+\contentsline {figure}{\numberline {10.3}{\ignorespaces Trade-off between throughput and accuracy}}{160}{figure.caption.165}
+\contentsline {figure}{\numberline {10.4}{\ignorespaces Measurements taken by the \emph {sink} application to infer information sent over a Timing Channel}}{161}{figure.caption.166}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {A.1}{\ignorespaces FRR and FAR as a function of the threshold $\tau _C$ for bands in the $B=[50\text {Hz}-[630\text {Hz}-4\text {kHz}]]$ range}}{177}{figure.caption.170}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {$B={[50\text {Hz}-630\text {Hz}]}$}}}{177}{figure.caption.170}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {$B={[50\text {Hz}-800\text {Hz}]}$}}}{177}{figure.caption.170}
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {$B={[50\text {Hz}-1000\text {Hz}]}$}}}{177}{figure.caption.170}
+\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {$B={[50\text {Hz}-1250\text {Hz}]}$}}}{177}{figure.caption.170}
+\contentsline {subfigure}{\numberline {(e)}{\ignorespaces {$B={[50\text {Hz}-1600\text {Hz}]}$}}}{177}{figure.caption.170}
+\contentsline {subfigure}{\numberline {(f)}{\ignorespaces {$B={[50\text {Hz}-2000\text {Hz}]}$}}}{177}{figure.caption.170}
+\contentsline {subfigure}{\numberline {(g)}{\ignorespaces {$B={[50\text {Hz}-2500\text {Hz}]}$}}}{177}{figure.caption.170}
+\contentsline {subfigure}{\numberline {(h)}{\ignorespaces {$B={[50\text {Hz}-3150\text {Hz}]}$}}}{177}{figure.caption.170}
+\contentsline {subfigure}{\numberline {(i)}{\ignorespaces {$B={[50\text {Hz}-4000\text {Hz}]}$}}}{177}{figure.caption.170}
+\contentsline {figure}{\numberline {A.2}{\ignorespaces FRR and FAR as a function of the threshold $\tau _C$ for bands in the $B=[63\text {Hz}-[630\text {Hz}-4\text {kHz}]]$ range}}{178}{figure.caption.171}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {$B={[63\text {Hz}-630\text {Hz}]}$}}}{178}{figure.caption.171}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {$B={[63\text {Hz}-800\text {Hz}]}$}}}{178}{figure.caption.171}
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {$B={[63\text {Hz}-1000\text {Hz}]}$}}}{178}{figure.caption.171}
+\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {$B={[63\text {Hz}-1250\text {Hz}]}$}}}{178}{figure.caption.171}
+\contentsline {subfigure}{\numberline {(e)}{\ignorespaces {$B={[63\text {Hz}-1600\text {Hz}]}$}}}{178}{figure.caption.171}
+\contentsline {subfigure}{\numberline {(f)}{\ignorespaces {$B={[63\text {Hz}-2000\text {Hz}]}$}}}{178}{figure.caption.171}
+\contentsline {subfigure}{\numberline {(g)}{\ignorespaces {$B={[63\text {Hz}-2500\text {Hz}]}$}}}{178}{figure.caption.171}
+\contentsline {subfigure}{\numberline {(h)}{\ignorespaces {$B={[63\text {Hz}-3150\text {Hz}]}$}}}{178}{figure.caption.171}
+\contentsline {subfigure}{\numberline {(i)}{\ignorespaces {$B={[63\text {Hz}-4000\text {Hz}]}$}}}{178}{figure.caption.171}
+\contentsline {figure}{\numberline {A.3}{\ignorespaces FRR and FAR as a function of the threshold $\tau _C$ for bands in the $B=[80\text {Hz}-[630\text {Hz}-4\text {kHz}]]$ range}}{179}{figure.caption.172}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {$B={[80\text {Hz}-630\text {Hz}]}$}}}{179}{figure.caption.172}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {$B={[80\text {Hz}-800\text {Hz}]}$}}}{179}{figure.caption.172}
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {$B={[80\text {Hz}-1000\text {Hz}]}$}}}{179}{figure.caption.172}
+\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {$B={[80\text {Hz}-1250\text {Hz}]}$}}}{179}{figure.caption.172}
+\contentsline {subfigure}{\numberline {(e)}{\ignorespaces {$B={[80\text {Hz}-1600\text {Hz}]}$}}}{179}{figure.caption.172}
+\contentsline {subfigure}{\numberline {(f)}{\ignorespaces {$B={[80\text {Hz}-2000\text {Hz}]}$}}}{179}{figure.caption.172}
+\contentsline {subfigure}{\numberline {(g)}{\ignorespaces {$B={[80\text {Hz}-2500\text {Hz}]}$}}}{179}{figure.caption.172}
+\contentsline {subfigure}{\numberline {(h)}{\ignorespaces {$B={[80\text {Hz}-3150\text {Hz}]}$}}}{179}{figure.caption.172}
+\contentsline {subfigure}{\numberline {(i)}{\ignorespaces {$B={[80\text {Hz}-4000\text {Hz}]}$}}}{179}{figure.caption.172}
+\contentsline {figure}{\numberline {A.4}{\ignorespaces FRR and FAR as a function of the threshold $\tau _C$ for bands in the $B=[100\text {Hz}-[630\text {Hz}-4\text {kHz}]]$ range}}{180}{figure.caption.173}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {$B={[100\text {Hz}-630\text {Hz}]}$}}}{180}{figure.caption.173}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {$B={[100\text {Hz}-800\text {Hz}]}$}}}{180}{figure.caption.173}
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {$B={[100\text {Hz}-1000\text {Hz}]}$}}}{180}{figure.caption.173}
+\contentsline {subfigure}{\numberline {(d)}{\ignorespaces {$B={[100\text {Hz}-1250\text {Hz}]}$}}}{180}{figure.caption.173}
+\contentsline {subfigure}{\numberline {(e)}{\ignorespaces {$B={[100\text {Hz}-1600\text {Hz}]}$}}}{180}{figure.caption.173}
+\contentsline {subfigure}{\numberline {(f)}{\ignorespaces {$B={[100\text {Hz}-2000\text {Hz}]}$}}}{180}{figure.caption.173}
+\contentsline {subfigure}{\numberline {(g)}{\ignorespaces {$B={[100\text {Hz}-2500\text {Hz}]}$}}}{180}{figure.caption.173}
+\contentsline {subfigure}{\numberline {(h)}{\ignorespaces {$B={[100\text {Hz}-3150\text {Hz}]}$}}}{180}{figure.caption.173}
+\contentsline {subfigure}{\numberline {(i)}{\ignorespaces {$B={[100\text {Hz}-4000\text {Hz}]}$}}}{180}{figure.caption.173}

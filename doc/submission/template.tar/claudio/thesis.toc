@@ -1,0 +1,246 @@
+\select@language {english}
+\select@language {english}
+\select@language {english}
+\select@language {italian}
+\select@language {english}
+\select@language {german}
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}Part I: Securing Applications Using Smartphones}{2}{section.1.1}
+\contentsline {section}{\numberline {1.2}Part II: Smartphone Attacks and Countermeasures}{4}{section.1.2}
+\contentsline {section}{\numberline {1.3}Related Publications}{5}{section.1.3}
+\contentsline {section}{\numberline {1.4}Thesis Outline}{6}{section.1.4}
+\contentsline {chapter}{\numberline {2}Background on Smartphones}{9}{chapter.2}
+\contentsline {section}{\numberline {2.1}Smartphone Hardware}{10}{section.2.1}
+\contentsline {section}{\numberline {2.2}Smartphone Software}{11}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}Security Features}{15}{subsection.2.2.1}
+\contentsline {paragraph}{Secure Boot.}{15}{paragraph*.11}
+\contentsline {paragraph}{Application Sandboxing.}{15}{paragraph*.12}
+\contentsline {paragraph}{Storage Isolation.}{16}{paragraph*.13}
+\contentsline {paragraph}{Permission-based Architecture.}{16}{paragraph*.14}
+\contentsline {paragraph}{Application Signatures.}{18}{paragraph*.16}
+\contentsline {paragraph}{Trusted Execution Environments.}{19}{paragraph*.17}
+\contentsline {paragraph}{Secure Peripherals.}{19}{paragraph*.18}
+\contentsline {section}{\numberline {2.3}Distribution Markets}{20}{section.2.3}
+\contentsline {paragraph}{Sideloading.}{21}{paragraph*.19}
+\contentsline {section}{\numberline {2.4}Summary}{22}{section.2.4}
+\contentsline {part}{I\hspace {1em}Securing Applications Using Smartphones}{23}{part.1}
+\contentsline {chapter}{\numberline {3}Introduction}{25}{chapter.3}
+\contentsline {chapter}{\numberline {4}Related Work}{29}{chapter.4}
+\contentsline {section}{\numberline {4.1}Two-Factor Authentication for the Web}{29}{section.4.1}
+\contentsline {paragraph}{Hardware Tokens.}{29}{paragraph*.21}
+\contentsline {paragraph}{Software Tokens.}{30}{paragraph*.22}
+\contentsline {subsection}{\numberline {4.1.1}Reduced-Interaction 2FA}{30}{subsection.4.1.1}
+\contentsline {paragraph}{Short-range Radio Communication.}{31}{paragraph*.23}
+\contentsline {paragraph}{Location Information.}{32}{paragraph*.24}
+\contentsline {paragraph}{Near-ultrasound.}{33}{paragraph*.25}
+\contentsline {paragraph}{Other Sensors.}{33}{paragraph*.26}
+\contentsline {section}{\numberline {4.2}Two-Factor Authentication for Payments}{33}{section.4.2}
+\contentsline {section}{\numberline {4.3}Complementary Research Topics}{34}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}Biometrics}{34}{subsection.4.3.1}
+\contentsline {subsection}{\numberline {4.3.2}Security of Passwords}{35}{subsection.4.3.2}
+\contentsline {section}{\numberline {4.4}Summary}{36}{section.4.4}
+\contentsline {chapter}{\numberline {5}Sound-Proof: Usable 2FA Based on Ambient Sound}{37}{chapter.5}
+\contentsline {section}{\numberline {5.1}Introduction}{37}{section.5.1}
+\contentsline {section}{\numberline {5.2}Assumptions and Goals}{38}{section.5.2}
+\contentsline {paragraph}{System Model.}{38}{paragraph*.27}
+\contentsline {paragraph}{Threat Model.}{39}{paragraph*.28}
+\contentsline {paragraph}{Design Goals.}{40}{paragraph*.29}
+\contentsline {section}{\numberline {5.3}Background on Sound Similarity}{40}{section.5.3}
+\contentsline {paragraph}{One-third Octave Bands.}{41}{paragraph*.30}
+\contentsline {paragraph}{Cross-correlation.}{41}{paragraph*.31}
+\contentsline {section}{\numberline {5.4}Sound-Proof Architecture}{42}{section.5.4}
+\contentsline {subsection}{\numberline {5.4.1}Similarity Score}{42}{subsection.5.4.1}
+\contentsline {subsection}{\numberline {5.4.2}Enrollment and Login}{42}{subsection.5.4.2}
+\contentsline {subsection}{\numberline {5.4.3}Security Analysis}{44}{subsection.5.4.3}
+\contentsline {paragraph}{Remote Attacks.}{44}{paragraph*.34}
+\contentsline {paragraph}{Co-located Attacks.}{45}{paragraph*.35}
+\contentsline {section}{\numberline {5.5}Prototype Implementation}{45}{section.5.5}
+\contentsline {paragraph}{Web Server and Browser.}{45}{paragraph*.36}
+\contentsline {paragraph}{Software Token.}{46}{paragraph*.37}
+\contentsline {paragraph}{Time Synchronization.}{46}{paragraph*.38}
+\contentsline {paragraph}{Run-time Overhead.}{46}{paragraph*.39}
+\contentsline {section}{\numberline {5.6}Evaluation}{47}{section.5.6}
+\contentsline {paragraph}{Data Collection.}{47}{paragraph*.41}
+\contentsline {subsection}{\numberline {5.6.1}Analysis}{48}{subsection.5.6.1}
+\contentsline {paragraph}{System Parameters.}{48}{paragraph*.42}
+\contentsline {subsection}{\numberline {5.6.2}False Rejection Rate}{51}{subsection.5.6.2}
+\contentsline {paragraph}{Distance Between Phone and Computer.}{52}{paragraph*.47}
+\contentsline {paragraph}{Discussion.}{52}{paragraph*.48}
+\contentsline {subsection}{\numberline {5.6.3}Advanced Attack Scenarios}{53}{subsection.5.6.3}
+\contentsline {paragraph}{Similar Environment Attack.}{54}{paragraph*.50}
+\contentsline {paragraph}{Same Media Attack.}{54}{paragraph*.51}
+\contentsline {section}{\numberline {5.7}User Study}{55}{section.5.7}
+\contentsline {subsection}{\numberline {5.7.1}Procedure}{55}{subsection.5.7.1}
+\contentsline {paragraph}{Recruitment.}{55}{paragraph*.52}
+\contentsline {paragraph}{Experiment.}{56}{paragraph*.53}
+\contentsline {subsection}{\numberline {5.7.2}Results}{56}{subsection.5.7.2}
+\contentsline {paragraph}{Demographics.}{56}{paragraph*.54}
+\contentsline {paragraph}{SUS Scores.}{56}{paragraph*.56}
+\contentsline {paragraph}{Login Time.}{58}{paragraph*.57}
+\contentsline {paragraph}{Failure Rates.}{58}{paragraph*.58}
+\contentsline {paragraph}{Post-test Questionnaire.}{59}{paragraph*.60}
+\contentsline {section}{\numberline {5.8}Discussion}{59}{section.5.8}
+\contentsline {paragraph}{Software and Hardware Requirements.}{59}{paragraph*.61}
+\contentsline {paragraph}{Other Browsers.}{60}{paragraph*.62}
+\contentsline {paragraph}{Privacy.}{60}{paragraph*.63}
+\contentsline {paragraph}{Quiet Environments.}{60}{paragraph*.64}
+\contentsline {paragraph}{Fallback to Code-based 2FA.}{61}{paragraph*.65}
+\contentsline {paragraph}{Failed Login Attempts and Throttling.}{61}{paragraph*.66}
+\contentsline {paragraph}{Login Evidence.}{61}{paragraph*.67}
+\contentsline {paragraph}{Continuous Authentication.}{61}{paragraph*.68}
+\contentsline {paragraph}{Alternative Devices.}{61}{paragraph*.69}
+\contentsline {paragraph}{Logins from the Phone.}{62}{paragraph*.70}
+\contentsline {paragraph}{Comparative Analysis.}{62}{paragraph*.71}
+\contentsline {section}{\numberline {5.9}Related Work}{65}{section.5.9}
+\contentsline {section}{\numberline {5.10}Summary and Future Work}{66}{section.5.10}
+\contentsline {subsection}{\numberline {5.10.1}Future Work}{66}{subsection.5.10.1}
+\contentsline {paragraph}{Audio Comparison.}{66}{paragraph*.73}
+\contentsline {paragraph}{Feature Extraction.}{67}{paragraph*.74}
+\contentsline {paragraph}{Security Guarantees.}{67}{paragraph*.75}
+\contentsline {paragraph}{User Studies.}{67}{paragraph*.76}
+\contentsline {chapter}{\numberline {6}Practical and Secure Location Verification for Payments}{69}{chapter.6}
+\contentsline {section}{\numberline {6.1}Introduction}{69}{section.6.1}
+\contentsline {section}{\numberline {6.2}Problem Statement}{71}{section.6.2}
+\contentsline {section}{\numberline {6.3}Background on TrustZone-enabled Smartphones}{71}{section.6.3}
+\contentsline {section}{\numberline {6.4}Adversarial Model}{74}{section.6.4}
+\contentsline {section}{\numberline {6.5}Our Solution}{76}{section.6.5}
+\contentsline {subsection}{\numberline {6.5.1}User Enrollment}{77}{subsection.6.5.1}
+\contentsline {paragraph}{Signed-IMSI enrollment.}{78}{paragraph*.82}
+\contentsline {paragraph}{Baseband-assisted Enrollment.}{79}{paragraph*.84}
+\contentsline {subsection}{\numberline {6.5.2}Location Verification}{80}{subsection.6.5.2}
+\contentsline {subsection}{\numberline {6.5.3}Device Migration}{82}{subsection.6.5.3}
+\contentsline {section}{\numberline {6.6}Security Analysis}{82}{section.6.6}
+\contentsline {subsection}{\numberline {6.6.1}Signed-IMSI enrollment}{83}{subsection.6.6.1}
+\contentsline {subsection}{\numberline {6.6.2}Baseband-assisted Enrollment}{83}{subsection.6.6.2}
+\contentsline {subsection}{\numberline {6.6.3}Location Verification}{84}{subsection.6.6.3}
+\contentsline {section}{\numberline {6.7}Implementation}{84}{section.6.7}
+\contentsline {subsection}{\numberline {6.7.1}Baseband Implementation}{84}{subsection.6.7.1}
+\contentsline {subsection}{\numberline {6.7.2}Trusted Application Implementation}{85}{subsection.6.7.2}
+\contentsline {paragraph}{Location Verification.}{86}{paragraph*.87}
+\contentsline {paragraph}{Enrollment.}{86}{paragraph*.88}
+\contentsline {subsection}{\numberline {6.7.3}Client-Server Implementation}{87}{subsection.6.7.3}
+\contentsline {section}{\numberline {6.8}Experimental Evaluation}{88}{section.6.8}
+\contentsline {subsection}{\numberline {6.8.1}Static Tests}{89}{subsection.6.8.1}
+\contentsline {subsection}{\numberline {6.8.2}Field Study}{89}{subsection.6.8.2}
+\contentsline {section}{\numberline {6.9}Discussion}{91}{section.6.9}
+\contentsline {subsection}{\numberline {6.9.1}Integration with Payment Systems}{91}{subsection.6.9.1}
+\contentsline {subsection}{\numberline {6.9.2}Deployment Considerations}{93}{subsection.6.9.2}
+\contentsline {subsection}{\numberline {6.9.3}Privacy Considerations}{94}{subsection.6.9.3}
+\contentsline {subsection}{\numberline {6.9.4}Other Application Scenarios}{94}{subsection.6.9.4}
+\contentsline {section}{\numberline {6.10}Alternative Approaches}{95}{section.6.10}
+\contentsline {subsection}{\numberline {6.10.1}Two-factor Authentication Approaches}{96}{subsection.6.10.1}
+\contentsline {subsection}{\numberline {6.10.2}Common Enrollment Solutions}{98}{subsection.6.10.2}
+\contentsline {paragraph}{Device Identifier Enrollment.}{98}{paragraph*.99}
+\contentsline {paragraph}{Password Enrollment.}{98}{paragraph*.100}
+\contentsline {paragraph}{SMS Enrollment.}{99}{paragraph*.101}
+\contentsline {paragraph}{Enrollment Using Initialization Secrets.}{100}{paragraph*.102}
+\contentsline {subsection}{\numberline {6.10.3}Alternative Trusted Execution Environments}{100}{subsection.6.10.3}
+\contentsline {section}{\numberline {6.11}Related Work}{101}{section.6.11}
+\contentsline {section}{\numberline {6.12}Summary and Future Work}{103}{section.6.12}
+\contentsline {subsection}{\numberline {6.12.1}Future Work}{103}{subsection.6.12.1}
+\contentsline {paragraph}{TrustZone Implementation.}{103}{paragraph*.104}
+\contentsline {paragraph}{Terminals Location.}{104}{paragraph*.105}
+\contentsline {part}{II\hspace {1em}Smartphone Attacks and Countermeasures}{105}{part.2}
+\contentsline {chapter}{\numberline {7}Introduction}{107}{chapter.7}
+\contentsline {chapter}{\numberline {8}Related Work}{111}{chapter.8}
+\contentsline {section}{\numberline {8.1}Smartphone Malware Attacks}{111}{section.8.1}
+\contentsline {subsection}{\numberline {8.1.1}Sophisticated Attacks}{112}{subsection.8.1.1}
+\contentsline {paragraph}{Application Phishing.}{112}{paragraph*.106}
+\contentsline {paragraph}{Application Collusion.}{113}{paragraph*.107}
+\contentsline {paragraph}{Side Channels.}{113}{paragraph*.108}
+\contentsline {paragraph}{Root Exploits.}{114}{paragraph*.109}
+\contentsline {section}{\numberline {8.2}Smartphone Malware Countermeasures}{114}{section.8.2}
+\contentsline {paragraph}{Permission-Based Security.}{114}{paragraph*.110}
+\contentsline {paragraph}{Information Leakage.}{115}{paragraph*.111}
+\contentsline {paragraph}{Control Flow.}{116}{paragraph*.112}
+\contentsline {section}{\numberline {8.3}Summary}{116}{section.8.3}
+\contentsline {chapter}{\numberline {9}Personalized Indicators against Phishing on Smartphone Applications}{117}{chapter.9}
+\contentsline {section}{\numberline {9.1}Introduction}{117}{section.9.1}
+\contentsline {section}{\numberline {9.2}Phishing Attacks and Countermeasures}{119}{section.9.2}
+\contentsline {subsection}{\numberline {9.2.1}Phishing Attacks}{119}{subsection.9.2.1}
+\contentsline {paragraph}{Similarity attack}{119}{paragraph*.113}
+\contentsline {paragraph}{Forwarding attack}{119}{paragraph*.114}
+\contentsline {paragraph}{Background attack}{119}{paragraph*.115}
+\contentsline {paragraph}{Notification attack}{119}{paragraph*.116}
+\contentsline {paragraph}{Floating attack}{119}{paragraph*.117}
+\contentsline {subsection}{\numberline {9.2.2}Phishing Countermeasures}{120}{subsection.9.2.2}
+\contentsline {paragraph}{Signature-based detection}{120}{paragraph*.118}
+\contentsline {paragraph}{Name similarity}{120}{paragraph*.119}
+\contentsline {paragraph}{Visual similarity}{122}{paragraph*.121}
+\contentsline {paragraph}{Limited multi-tasking}{122}{paragraph*.122}
+\contentsline {paragraph}{Application name}{122}{paragraph*.123}
+\contentsline {paragraph}{Personalized indicator}{122}{paragraph*.124}
+\contentsline {paragraph}{Summary}{123}{paragraph*.125}
+\contentsline {section}{\numberline {9.3}User Study}{123}{section.9.3}
+\contentsline {paragraph}{Ethical guidelines}{125}{paragraph*.127}
+\contentsline {subsection}{\numberline {9.3.1}Procedure}{125}{subsection.9.3.1}
+\contentsline {paragraph}{Recruitment and group assignment}{125}{paragraph*.129}
+\contentsline {paragraph}{Tasks}{127}{paragraph*.130}
+\contentsline {subsection}{\numberline {9.3.2}Results}{128}{subsection.9.3.2}
+\contentsline {paragraph}{Indicator effectiveness}{129}{paragraph*.134}
+\contentsline {paragraph}{Difference between attacks}{129}{paragraph*.135}
+\contentsline {paragraph}{Other factors}{130}{paragraph*.136}
+\contentsline {subsection}{\numberline {9.3.3}Post-test questionnaire}{131}{subsection.9.3.3}
+\contentsline {section}{\numberline {9.4}Discussion}{134}{section.9.4}
+\contentsline {paragraph}{Mobile application context}{134}{paragraph*.139}
+\contentsline {paragraph}{Role-playing}{134}{paragraph*.140}
+\contentsline {paragraph}{Duration and security priming}{135}{paragraph*.141}
+\contentsline {paragraph}{Population sample}{135}{paragraph*.142}
+\contentsline {paragraph}{Application deployment}{135}{paragraph*.143}
+\contentsline {paragraph}{Recruitment and task perception}{136}{paragraph*.144}
+\contentsline {paragraph}{Attack implementation}{136}{paragraph*.145}
+\contentsline {paragraph}{Indicator placement and size}{137}{paragraph*.146}
+\contentsline {section}{\numberline {9.5}Deployment}{137}{section.9.5}
+\contentsline {paragraph}{Application and infrastructure changes}{137}{paragraph*.147}
+\contentsline {paragraph}{Indicator choice and reuse}{137}{paragraph*.148}
+\contentsline {section}{\numberline {9.6}Secure Setup of Application Indicators}{138}{section.9.6}
+\contentsline {subsection}{\numberline {9.6.1}System and Adversary Model}{138}{subsection.9.6.1}
+\contentsline {subsection}{\numberline {9.6.2}Secure Indicator Setup Protocol}{140}{subsection.9.6.2}
+\contentsline {paragraph}{Security Analysis.}{142}{paragraph*.151}
+\contentsline {subsection}{\numberline {9.6.3}Implementation}{143}{subsection.9.6.3}
+\contentsline {paragraph}{Evaluation.}{144}{paragraph*.153}
+\contentsline {subsection}{\numberline {9.6.4}Usability}{145}{subsection.9.6.4}
+\contentsline {paragraph}{Procedure.}{145}{paragraph*.155}
+\contentsline {paragraph}{Results.}{146}{paragraph*.156}
+\contentsline {section}{\numberline {9.7}Related Work}{147}{section.9.7}
+\contentsline {section}{\numberline {9.8}Summary and Future Work}{148}{section.9.8}
+\contentsline {subsection}{\numberline {9.8.1}Future Work}{149}{subsection.9.8.1}
+\contentsline {paragraph}{Bank Deployment.}{149}{paragraph*.158}
+\contentsline {paragraph}{Personalized Security Indicators.}{149}{paragraph*.159}
+\contentsline {paragraph}{User Perception.}{150}{paragraph*.160}
+\contentsline {chapter}{\numberline {10}Communication Channels between Colluding Applications}{151}{chapter.10}
+\contentsline {section}{\numberline {10.1}Introduction}{151}{section.10.1}
+\contentsline {section}{\numberline {10.2}Problem Statement}{153}{section.10.2}
+\contentsline {subsection}{\numberline {10.2.1}Channels Classification}{154}{subsection.10.2.1}
+\contentsline {section}{\numberline {10.3}Overt and Covert Channels in Android}{155}{section.10.3}
+\contentsline {subsection}{\numberline {10.3.1}Overt Channels}{155}{subsection.10.3.1}
+\contentsline {subsection}{\numberline {10.3.2}Covert Channels}{156}{subsection.10.3.2}
+\contentsline {subsection}{\numberline {10.3.3}Communication Channel With External Agents}{162}{subsection.10.3.3}
+\contentsline {subsection}{\numberline {10.3.4}Results of the Analysis}{162}{subsection.10.3.4}
+\contentsline {section}{\numberline {10.4}Analysis of Existing Tools}{163}{section.10.4}
+\contentsline {subsection}{\numberline {10.4.1}TaintDroid}{163}{subsection.10.4.1}
+\contentsline {subsection}{\numberline {10.4.2}XManDroid}{165}{subsection.10.4.2}
+\contentsline {section}{\numberline {10.5}Mitigation Techniques and Limitations}{166}{section.10.5}
+\contentsline {subsection}{\numberline {10.5.1}Design Time Mitigation Techniques}{167}{subsection.10.5.1}
+\contentsline {subsection}{\numberline {10.5.2}Application Analysis Techniques}{168}{subsection.10.5.2}
+\contentsline {section}{\numberline {10.6}Related Work}{169}{section.10.6}
+\contentsline {section}{\numberline {10.7}Summary and Future Work}{170}{section.10.7}
+\contentsline {subsection}{\numberline {10.7.1}Future Work}{171}{subsection.10.7.1}
+\contentsline {paragraph}{Clock-based Detection.}{171}{paragraph*.167}
+\contentsline {paragraph}{Channels Extensions.}{171}{paragraph*.168}
+\contentsline {chapter}{\numberline {11}Closing Remarks}{173}{chapter.11}
+\contentsline {chapter}{Appendices}{177}{appendix*.169}
+\contentsline {section}{\numberline {A}Other Bands}{177}{section.Alph0.1}
+\contentsline {section}{\numberline {B}System Usability Scale}{180}{section.Alph0.2}
+\contentsline {section}{\numberline {C}Post-test Questionnaire}{181}{section.Alph0.3}
+\contentsline {section}{\numberline {D}User Comments}{181}{section.Alph0.4}
+\contentsline {section}{\numberline {E}Emails}{182}{section.Alph0.5}
+\contentsline {subsection}{\numberline {E.1}Advertising Email}{182}{subsection.Alph0.5.1}
+\contentsline {subsection}{\numberline {E.2}Email to Selected Participants}{183}{subsection.Alph0.5.2}
+\contentsline {subsection}{\numberline {E.3}Task Email}{183}{subsection.Alph0.5.3}
+\contentsline {section}{\numberline {F}Instructions for participants in the experimental groups.}{184}{section.Alph0.6}
+\contentsline {section}{\numberline {G}Post-test Questionnaire: Secure Setup of Indicators}{184}{section.Alph0.7}
+\contentsline {section}{\numberline {H}Bank Letter}{185}{section.Alph0.8}
+\contentsline {chapter}{Bibliography}{186}{Item.14}
+\contentsline {chapter}{Resume}{214}{appendix*.174}

@@ -1,0 +1,15 @@
+class C{
+	var n : C;
+	var x : int;
+	
+	invariant forall c : C :: ( c!=null );
+	predicate valid { rd(x) && x>0 }
+	
+	method f(s : seq<C>)
+	//		requires forall c : C :: ( c!=null );//==> ( c.n == c ) );
+		requires forall c in s :: ( c!=null ); //==> c.valid );
+		requires forall c in s :: ( c.valid );
+	{
+		assert (|s|>5 ==> s[3].valid);
+	}
+}

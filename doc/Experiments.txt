@@ -1,0 +1,68 @@
+Ingredients:
+Base : Ground unit (GU) (dis)equalities.
+
+* Builtin heap
+* Maximal term depth
+* Maximal clause width
+
+Instantiation
+* Safe unit clause instantiation
+* Ground instantiation for non-unit clauses
+* Frame rule detection and instantiation
+
+Superposition - different frequencies
+* Ground superposition
+* Superposition ground term (eqs) x ground/non-ground clause
+* ground x non-ground superposition
+* non-ground x non-ground superposition
+
+Clause join
+* Ground clause join
+* non-ground clause join
+
+Order of Evaluation
+* Saturate GU fragment after every step of other fragments
+	* Saturate GU only after assertion nodes
+* Saturate GU after one pass of the whole CFG
+
+Garbage collection
+* Collect recursive garbage after every node / assertion
+* Collect recursive garbage after whole CFG pass
+
+Experiments:
+1. Only unit ground (dis)equalities
+2. GU (dis)equalities + builtin heap
+3. Various frequencies of SP sub-fragments
+4. Clause-join vs no-join vs import-only-common
+5. Order of Evaluation:
+	a. Forward (root-to-leaves) passes
+	b. Forward - backward - forward
+	c. Saturate sub-DAG after each assertion
+
+
+
+
+Test:
+	Chalice
+	1. AVLTree:
+		- several long running methods
+	2. COWTree
+	3. DLL
+	4. FactorialActor
+	
+	Dafny
+	1.AVLTree - partial
+	2.FloydCycleDetect
+	3.BFS
+	4.TreeBarrier
+	
+	Spec#
+	1. Windows Card
+	
+	VCC
+	1. Test suite
+	
+	Frozen objects
+	Stereotypes
+	Bytecode Translation
+		

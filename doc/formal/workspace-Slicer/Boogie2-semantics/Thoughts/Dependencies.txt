@@ -1,0 +1,38 @@
+
+* Property of type D (D any set):
+	p : States -> D
+
+* A predicate is a boolean property as:
+	f_P(s) = if (s |= P) then 1 else 0
+	
+* Order relation on properties (refinement):
+	p <= q iff there is a function f s.t. f*p=q
+	 
+* 2 properties p,q are independent iff
+	forall x : p(q(x)) == q(p(x))
+
+* Propagation of properties
+	forall s,s' \in \Sigma : 
+		s =_p s' ==> S[s] =_q S[s'] 
+
+	* p,q - property at prestate, poststate
+	* \Sigma, \Sigma'  - statespace at prestate, poststate
+	* S - statement
+	
+	Optimal - s =_p s' <==> S[s] =_q S[s']
+		
+* Simplification of statements:
+	To simplify S to S' with relevant property p:
+		forall s \in \Sigma: 
+			S[s] =_q S'[s]	
+			
+			
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* For our statements:
+	* Post property: p
+	* Set of prestates (or overapproximation) \Sigma
+
+	* Statement: assume e
+		- poststates : \Sigma' = { s \in \Sigma : e[s] }
+		- q : \Sigma -> ran(e) x ran(p) 
+			q(s) = (e(s),p(s))    

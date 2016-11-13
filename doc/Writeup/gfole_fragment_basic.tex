@@ -1,0 +1,1174 @@
+\section{The fragment of GFOLE}\label{section:gfole_basic}
+In this section our language is as described in the preliminaries:\\
+The signature is \m{\Sigma=\Fs{\Sigma} \cup \Ps{\Sigma} \cup \Vs{\Sigma}},\\
+where \m{\Fs{\Sigma}} is the set of function symbols (including constants), \Ps{\Sigma} is the set of predicate symbols and \Vs{\Sigma} is the set of free variables - which is empty in this section.
+Initially we assume that \Ps{\Sigma} is also empty so that the only predicate is the (interpreted) equality predicate.
+We also use nullary predicates for branch conditions and later discuss the benefits of using general predicate symbols.
+We base our handling of non-unit ground predicates on the ground superposition calculus shown in figure \ref{superposition_calculus.1}.
+The reason we choose superposition as the basis is twofold - ground superposition can be extended naturally to full superposition for a complete calculus for FOLE, as opposed to most SMT based approaches, and superposition (and any saturation based method) admits incremental fragments of increasing strength (e.g. by bounding derivation depth), while SMT based method require a conflict in order to progress.
+
+\begin{figure}
+$
+\begin{array}[c]{llll}
+\\
+\vspace{10pt}
+\mathrm{res_{=}} &\vcenter{\infer[]{\m{C       }                               }{\m{C \lor \underline{s\neq s}}                   }} & 
+\\
+\vspace{10pt}
+\mathrm{sup_{=}} &\vcenter{
+	\infer[]
+		{\m{C \lor \termRepAt{s}{r}{p} = t \lor D}}
+		{
+			\m{C \lor \underline{l}=r} & 
+			\m{\underline{s} = t \lor D}
+		}
+	} & 
+\parbox[c][2cm]{3cm}{\m{l = \termAt{s}{p}}\\\m{l \succ r,l=r \succ C}\\\m{s \succ t,s=t \succ D}\\\m{s=t \succ l=r}}\\
+\vspace{10pt}
+\mathrm{sup_{\neq}} &\vcenter{
+	\infer[]
+		{\m{C \lor \termRepAt{s}{r}{p} \neq t \lor D}}
+		{
+			\m{C \lor \underline{l}=r} & 
+			\m{\underline{s} \neq t \lor D}
+		}
+} & 
+\parbox[c][2cm]{3cm}{\m{l = \termAt{s}{p}}\\\m{l \succ r,l=r \succ C}\\\m{s \succ t,s \neq t \succ D}}\\
+\vspace{10pt}
+\mathrm{fact_{=}} & \vcenter{
+	\infer[]
+	{\m{C \lor t \neq r \lor l = t}}
+	{\m{C \lor l=t      \lor \underline{l} = r}}
+}
+	& 
+\parbox[c][2cm]{3cm}{\m{l \succ r,r \succ t}\\\m{l=r \succ C}}\\
+\end{array}
+$
+\caption{Ground superposition calculus - \SPG\\
+Clauses are sets of literals (rather than sequences or multi-sets).\\
+The ordering $\succ$ is any reduction ordering.\\
+The rule \m{res_{=}} eliminates a false literal.\\
+The rules \m{sup_{=},sup_{\neq}} perform conditional rewriting of the maximal term in the second premise.\\
+The rule \m{fact_{=}} is an instance of factoring required because superposition only targets the maximal term.
+}
+\label{superposition_calculus.1}
+\end{figure}
+
+This calculus is based on conditional rewriting - the superposition rules rewrite l to r under the condition C - essentially a case-split - if C does not hold, then l=r holds and hence we can replace l by r. \\
+This calculus is complete for refutation - the empty clause is derivable from a set of clauses iff that set is inconsistent.
+The superposition calculus admits a strong form of redundancy elimination.
+We give some examples in section \ref{section:preliminaries:superposition}.
+Our technique is not tightly bound to superposition, and can be instantiated with other calculi, under some restrictions. 
+
+\subsection*{Program VCs and proofs}
+Given a program CFG where all clauses at all CFG-nodes are ground clauses, we can use the above calculus in several ways in order to verify the program.
+We assume here we have calculated, for each CFG-node, a set of clauses that represents the statements (transition relation in DSA form) at that CFG-node, 
+and that assertions have been negated before being converted to a set of clauses, as described in section \ref{section:preliminaries_programs}.
+
+As before, we denote by \clauses{n} the set of clauses at the node n obtained from translating the statements at that node.
+Several encodings have been proposed for generating VCs for programs (e.g. \cite{Leino:2005:EWP:1066417.1710882}). 
+In general, if one VC is produced for the entire program, information about the CFG structure has to be encoded into the VC to prevent exponential explosion - weakest preconditions duplicate a part of the formula at each branch. We do not consider VCs with loops here, but assume loops have been removed as discussed in section \ref{section:preliminaries_programs}.
+In order to present some of the difficulties faced by a saturation based theorem prover that are particular for program VCs, we consider here two opposing approaches to generating VCs - both use the DSA form of a program:
+\begin{itemize}
+	\item Generate a flat VC of the program (a logical formula), where a model is a trace of the program in which an assertion fails. We use a path-literal - a nullary predicate \m{P_n} - for each CFG node, which, when true in a model, means that the trace represented by the model includes the node n. The flat VC is comprised of three parts, each a set of CNF clauses (this encoding is somewhat similar to the one used in \cite{DBLP:conf/nfm/GurfinkelCS11}):
+	\begin{itemize}
+		\item The program location each clause holds: \\
+		\m{\bigwedge\limits_{\substack{\m{n \in cfg}\\ \m{\clause{c} \in \clauses{n}}}}(P_n \rightarrow \clause{c})}
+		\item The structure of the CFG: (\preds{n} are the direct predecessors of n) - if a trace reaches a node n, it must have reached one of n's predecessors \\
+		\m{\bigwedge\limits_{\m{n \in cfg \setminus \s{root}}} (P_n \rightarrow \bigvee\limits_{p \in \preds{n}} P_p)}
+		\item The verification condition - each assertion must hold (negated - a model is a trace for one failed assertion): \\
+			\m{\bigvee\limits_{n \in assertions} P_n}
+	\end{itemize}
+	The program flow is encoded backwards - if a trace includes a CFG-node n it must include one of its predecessors. A failing trace is one in which one of the assertion path conditions holds. 
+	Each clause is attached the relevant path-literal, and we add an implication from each node to a disjunction of its predecessors. \\
+	There are two common alternatives on the above encoding, one alternative is similar but encodes the program flow forward - that is, the second part is replaced with each path literal implying a disjunction of its successors, and the third part is replaced by simply the root path literal. Another common encoding (used e.g. by Boogie, and geared more towards SMT solvers) is, instead of path literals, to use a literal, per CFG-node, that encodes that the program is correct from that point on (this encoding is closer to the original weakest preconditions). For our purposes there is little difference between the encodings, as in all of them essentially clauses describe the transition relation of each statement or basic block is guarded by some propositional literals that encode program flow. 
+	We note only that for lazy CNF-conversion SMT solvers the shape of the actual formula produced is very important for performance, 
+	while solvers that perform eager CNF conversion are less sensitive (superposition is sensitive to the ordering chosen, though).
+	\item We can generate a VC per-path from the root to a leaf, and the program VC is then the disjunction of these VCs
+	(that is, a model is the assignment to each program variable that brings to at least one failing trace)
+	
+	\bigskip
+	
+		\noindent
+		\m{\bigvee\limits_{\substack{\m{n \in assertions}\\\m{{P \in \paths{n}{}}}}} \bigwedge \clauses{P}}
+
+	\bigskip
+
+		\noindent
+		The encoding is a disjunction of conjunctions of clauses, where each conjunction is consistent iff the assertion at the end of the path does not hold on that path. Hence, if we derive the empty clause on each disjunct, we have shown that all assertions hold in the program.\\
+		The advantage is that we do not need to encode path conditions at all, and we can evaluate every disjunct independently (a disjunction is false iff all disjuncts are false).
+		The disadvantage is that we can have an exponential number of paths (and hence disjuncts).\\
+		Obviously, this is not a practical encoding in most cases, and implies a lot of duplication, 
+		we include it here to emphasize the price of the encoding of the CFG structure, but also because, in a sense, 
+		an SMT solver always sees (part of a) single trace, hence this encoding shows some of the reason that SMT solvers have more success in program verification applications.
+\end{itemize}
+
+We show now an example comparing the two approaches and discuss the differences. In the rest of this chapter we describe an algorithm that aims to answer the challenges posed by this problem. Consider the program in figure \ref{snippet4.1.1}.
+
+\begin{figure}
+\begin{lstlisting}
+$\node{n_0}:$
+if (c1)
+	$\node{n_1}:$
+	assume A
+else	
+	$\node{n_2}:$
+	assume B
+	$\node{a_2}:$
+	assert $\m{A_1}$
+$\node{n_3}:$
+if (c2)
+	$\node{n_4}:$
+	assume C
+else	
+	$\node{n_5}:$
+	assume D
+	$\node{a_5}:$
+	assert $\m{A_2}$
+$\node{a_6}:$
+assert $\m{A_3}$
+\end{lstlisting}
+\caption{Example program for simple VC comparison}
+\label{snippet4.1.1}
+\end{figure}
+
+
+The first encoding produces (a formula in CNF):\\
+\m{n_1 \rightarrow A}\\
+\m{n_2 \rightarrow B}\\
+\m{a_2 \rightarrow n_2}\\
+\m{a_2 \rightarrow \lnot A_1}\\
+\m{n_3 \rightarrow n_1 \lor n_2}\\
+\m{n_4 \rightarrow n_3}\\
+\m{n_4 \rightarrow C}\\
+\m{n_5 \rightarrow n_3}\\
+\m{n_5 \rightarrow D}\\
+\m{a_5 \rightarrow n_5}\\
+\m{a_5 \rightarrow \lnot A_2}\\
+\m{a_6 \rightarrow n_4 \lor n_5}\\
+\m{a_6 \rightarrow \lnot A_3}\\
+\m{a_6 \lor a_3 \lor a_2}
+
+\bigskip
+
+And the third encoding produces (a formula in DNF):\\
+\m{(B \land \lnot A_1) \lor}\\
+\m{(A \land D \land \lnot A_2) \lor }\\
+\m{(B \land D \land \lnot A_2) \lor}\\
+\m{(A \land C \land \lnot A_3) \lor }\\
+\m{(A \land D \land \lnot A_3) \lor }\\
+\m{(B \land C \land \lnot A_3) \lor }\\
+\m{(B \land D \land \lnot A_3)}
+
+In each case, if we convert the formulae to CNF form and saturate the set of CNF clauses that we get w.r.t. the calculus \SPG, we derive the empty clause iff the program is correct - every assertion in the program is satisfied by all traces of the program.
+
+In the second encoding (per-path VC), we could instead convert each disjunct separately to CNF, 
+and saturate separately each such set of CNF clauses - if we have derived the empty clause from the set of CNF clauses converted from one of the disjuncts, it means that on the path that disjunct represents, the assertion at the end of the path holds. 
+If we had derived the empty clause in each CNF set converted from a disjunct, then the program is verified - all assertions hold on all paths leading to them. 
+In this case we have many more VCs than in the first two cases (the \emph{flat VCs}), but each VC is much simpler than the VCs for the first two cases.
+
+The important point is that we do not need any derivation between clauses in parallel branches (e.g. between A and B) in order to ensure completeness, as evidenced by the per-path VC.
+However, as we have seen, \emph{joining} clauses from parallel branches can be beneficial, sometimes reducing the minimal proof size exponentially.
+
+Our verification algorithm can be seen as compromise between the two approaches presented above - on the one hand we integrate knowledge of the CFG in order to block derivations that are not needed for the proof (e.g. between clauses in parallel branches), as in the per-path VC.
+On the other hand we perform joins and maintain one set of clauses per CFG-node rather than per-path, so as to avoid an exponential explosion in the number of sets of clauses that need to be saturated.
+
+\subsection{Basic clause propagation}\label{section_basic_clause_propagation}
+We repeat here in figure \ref{verification_algorithm_v_3} the simple verification algorithm from \ref{verification_algorithm_v2} for the ground non-unit fragment that forms the basis for later improvements, with a slight modification (deatiled below).
+The algorithm is presented in a modular way and later sections refine and improve certain parts of the algorithm.
+
+
+The algorithm maintains two sets of clauses per CFG-node n - \lstinline|done| and \lstinline|todo| (we write \lstinline|done$_\m{n}$| to distinguish these sets for different CFG nodes where appropriate). 
+The set \lstinline{done} is inter-saturated w.r.t. \SPG, and a clause can be moved from \lstinline{todo} to \lstinline{done} once all conclusions of inferences between it and other clauses in \m{done_n} are added to \m{todo_n}. We say that a node n is saturated iff \m{todo_n = \emptyset}.\\
+The algorithm traverses the CFG-nodes in topological order, and saturates the set of clauses at each node. 
+Saturation includes, in addition to saturation w.r.t. SP, also saturation w.r.t. the propagation of all relevant clauses from predecessors.
+We propagate a clause D from a node p to a transitive successor n (that is, we add \m{P \lor D} to \lstinline|done$_{\m{m}}$|, where P is a path prefix described later) iff there is a valid inference between D and a clause C \lstinline|$\in$ todo$_{\m{n}}$|. We do not add the clause to \lstinline|todo$_{\m{n}}$| as any inference between two propagated clauses is not needed at the node, as we show below). \\
+We say that \textcolor{blue}{an inference happens at a node} when the inference is between two clauses, one in \lstinline|todo| and the other in \lstinline|done|. Our algorithm ensures that any valid inference along a path P in the CFG happens at the earliest node n where both clauses occur (or are derived) in the prefix of P up to n.
+When an inference happens at a node n, we add the result of the inference to \lstinline|todo|, so it can participate in further inferences at the node and also can be propagated to later nodes as per requests (once it is added to \lstinline|done|).
+A node is moved from \lstinline|todo| to \lstinline|done| once all possible inferences and propagation have been performed on it.
+We also perform several simplifications on clauses before they are allowed to participate in inferences or propagation, described below.
+
+The difference in the algorithm is that we import relevant clauses for the entire queue of clauses \lstinline|todo| waiting for processing, rather than for each clause separately - this allows us to reduce the number of CFG traversals. We process the entire \lstinline|todo| queue before enqueing any new clauses, so that each iteration performs inferences of a certain derivation depth.
+
+\begin{figure}
+\begin{lstlisting}
+CFG.verify() : Set of unverified assertions
+	foreach node n in topological order
+		n.verify()
+		if (!n.isInfeasible and n.isLeaf)
+			result.add(n)
+
+Node.verify()
+	todo.enqueue( $\clauses{n}$ )
+	while !todo.isEmpty
+		importRelevantClauses(todo)
+		var ncs := new Queue
+		foreach (c $\in$ todo)
+			done.add(c)
+			foreach (d $\in$ inferences(c,done))
+				if (d $\notin$ done)
+					ncs.add(d)
+		todo := ncs
+\end{lstlisting}
+\caption{Verification algorithm with lazy propagation.\\
+\lstinline|inferences(c,done)| returns all possible inference rule instances from \SPG{} between the clause \lstinline|c| and clauses in \lstinline|done|.\\
+The difference from the version in \ref{verification_algorithm_v2} is that we import clauses for the entire \lstinline|todo| queue in one call, rather than repeated calls per clause.
+}
+\label{verification_algorithm_v_3}
+\end{figure}
+
+
+%\begin{figure}
+%\begin{lstlisting}
+%CFG.verify() : Set[Node] //returns unverified assertions
+	%Foreach node n in topological order
+		%n.verify()
+		%if ($\emptyClause\notin$n.done and n is a leaf)
+			%result.add(n)
+%
+%class Node
+	%done : Set[Clause] := new $\emptyset$
+	%todo : Queue[Clause] := new 
+	%
+%Node.verify()
+	%remove all direct predecessors p 
+		%where $\emptyClause\in$p.done
+	%
+	%if we are not root and have no predecessors
+		%add $\emptyClause$ to done //this node is infeasible
+		%return
+%
+	%todo.enqueue($\clauses{n}$)
+	%while !todo.isEmpty
+		%importRelevantClauses(todo)
+		%nc := $\emptyset$
+		%foreach (C in todo)
+			%done.add(C)
+			%for R$\in$inferences(C,done)
+				%if R$\notin$done
+					%nc.add(R)
+		%todo := nc
+		%
+%\end{lstlisting}
+%\caption{Basic verification algorithm\\
+%\lstinline|inferences(C,S)| returns all possible inferences in SP between the clause C and elements of the set of clauses S}
+%\label{verification_algorithm_v_3}
+%\end{figure}
+
+The \lstinline|importRelevantClauses| method, shown in figure \ref{basic_verification.4.recursiveImport}, receives a set of clauses and propagates all relevant clauses from the transitive predecessors of the node to the current node. The definition for relevance is an extension of the definition we have seen for unit superposition in section \ref{section:superposition_based_propagation} - essentially a clause is relevant for another clause if there is an inference rule instance in \SPG{} where both are premises. 
+For example, for the clause \m{C \lor \underline{f(b)}=a} (\m{f(b)} maximal), the clauses \m{D \lor \underline{b}=a,\underline{g(f(b))}\neq c \lor D} are relevant, but \m{D \lor f(b)=b \lor \underline{g(c)}=c} is not.
+We describe the relevance function for \SPG{} in detail below.
+
+The \lstinline|importRelevantClauses| uses the method \lstinline|travevrseBF| from figure \ref{fig_traverseBF} to traverse the CFG backwards from n and propagate a request, where a request is propagated if it is not covered by the cache at the node (detailed below).
+The algorithm then traverses the CFG in reverse order and propagates the relevant clauses up in topological order.
+The method first constructs a propagation request (detailed in figure \ref{basic_verification.4.request}), which is essentially two sets of terms, and traverses the CFG first in reverse-topological order (using the method \lstinline|travevrseBF| from figure \ref{fig_traverseBF}), where each node traversed transforms the request for its direct predecessors (e.g. filtering out cached requests) - this is described in figure ~\ref{basic_verification.4.recursiveImport}).
+
+A CFG-node with more than one successor receives a request that is a join (by \lstinline|Request.add| (described in figure \ref{basic_verification.4.request}) of the requests of all its successors) - without joining we would be traversing the CFG as a tree rather than a DAG and so traversal could take exponential time.
+Once the request reaches a dead-end on all paths (e.g. reaching the root or a node where the request is already cached), we traverse the CFG in topological order from each such dead-end node, propagating clauses forward. The propagated clauses are \emph{relativized} using the branch literals - so that when a clause is propagated to a node n from a transitive predecessor p, it is propagated as a disjunction of the original clause with the relative path condition of n and p - this allows us to minimize the overhead of path conditions in the proof to the necessary minimum (discussed later). Each CFG-node maintains a cache of requests, and does not propagate a request if it is included in the cache - all clauses that were imported to answer a request are added to the \lstinline|done| set.
+
+In order to present the algorithm modularly, we define the methods \\
+\lstinline|importBW| and \lstinline|importFW| which define the transformation of the request and the clauses performed at each node.
+These transformations include caching, clause simplification and more, and are detailed in the rest of this chapter.
+The basic version for these two visitor methods is presented in figure \ref{basic_verification.4.recursiveImport} - these are unchanged from the version we have seen in figure \ref{clause_import_global}.
+
+
+\begin{figure}
+\begin{lstlisting}
+Node.importRelevantClauses(cs : Set[Clause])
+	requestMap := new Map[Node,Request]
+	
+	requestMap[this] := makeRequest(cs)
+		
+	traverseBF(this, importBW, importFW)
+
+importBW(n : CFGNode) : Set[CFGNode]
+	var r := requestMap[n]
+	r.subtract(n.requestCache)
+	if (!r.isEmpty && n!=root)
+		foreach (p $\in$ $\preds{n}$)
+			requestMap[p].add(r)
+		return predecessors
+	else
+		return $\emptyset$
+
+importFW(n : CFGNode)
+	r := requestMap[n]
+	n.requestCache.add(r)
+	foreach (p $\in$ $\preds{n}$)
+		foreach (pc $\in$ p.done)
+			c := relativize(p,n,pc)
+			if (isRelevant(r,c))
+				n.done.add(c)
+\end{lstlisting}
+\caption{Basic recursive import\\
+The implementation uses the method \lstinline|traverseBF| to traverse the CFG first backwards and then forwards starting at the current node, calling the visitors \lstinline|importBW|,\lstinline|importFW| respectively.\\
+The backward visitor propagates the request backwards except for cached requests and the forward visitor propagates clauses forward.
+}
+\label{basic_verification.4.recursiveImport}
+\end{figure}
+
+\bigskip
+
+\noindent
+\textbf{Superposition requests:}\\
+We repeat here briefly the structure of a superposition request from section \ref{section:superposition_based_propagation} - it is unchanged for from the ground unit fragment - a basic request for superposition is simply two sets of terms.
+The first set, \lstinline|ts$_{\m{lhs}}$| is the set of all strictly maximal terms in clauses that appear in positive equalities and so can instantiate l for clauses that serve as the left premise of a superposition inference (\m{sup_=} or \m{sup_{\neq}}).
+Similarly, \lstinline|ts$_{\m{rhs}}$| is the set of terms that are strictly maximal terms in clauses at the node, and their sub-terms, so exactly the terms that can instantiate l for both superposition inference rules for the right premise.
+Essentially, for clauses C,D, there is an instance of a superposition inference between C and D with C as the left premise and D as the right premise iff \m{lhs(C)\cap rhs(D)\neq\emptyset} (for positive superposition inferences it might be the case that C is the right premise - the condition \m{s=t \succ l=r} is not encoded in our request).
+This request mechanism can be generalized to other calculi that depend on maximal terms and literals, as long as we can encode a join of requests - in our simple case a join for requests is simply a union of the sets of left and right hand sides.
+
+\begin{figure}
+\begin{lstlisting}
+Request(Cs : Set[Clause])
+	ts$_{\m{lhs}}$:=  $\cup$ {lhs(C) $\mid$ C$\in$Cs}
+	ts$_{\m{rhs}}$:= $\cup$ {rhs(C) $\mid$ C$\in$Cs}
+	
+lhs(C:Clause) : Set[Term]
+	return 
+		if (maxLiteral(C) is a positive equality) 
+			then {maxTerm(C)}
+			else $\emptyset$
+
+rhs(C:Clause) : Set[Term]
+	return subTermClosure(maxTerm(C)) 
+	
+Request.add(other : Request)
+	ts$_{\m{lhs}}$ $\cup$:= other.ts$_{\m{lhs}}$
+	ts$_{\m{rhs}}$ $\cup$:= other.ts$_{\m{rhs}}$
+	
+Request.subtract(other : Request)
+	ts$_{\m{lhs}}$ $\setminus$:= other.ts$_{\m{lhs}}$
+	ts$_{\m{rhs}}$ $\setminus$:= other.ts$_{\m{rhs}}$
+
+isRelevant(r : Request, C : Clause)
+	return 
+		lhs(C)$\cap$ts$_{\m{rhs}}$ $\neq$ $\emptyset$
+			$\lor$
+		rhs(C)$\cap$ts$_{\m{lhs}}$ $\neq$ $\emptyset$
+\end{lstlisting}
+\caption{Basic recursive import - Request\\
+A request consists of left- and right-hand-side maximal terms.\\
+Adding and removing requests are the standard set operations.
+}
+\label{basic_verification.4.request}
+\end{figure}
+
+%\bigskip
+%\noindent
+%\textbf{An example for propagation:}\\
+%We use the program in figure \ref{gc_propagation_example} to show the working of our propagation mechanism for clauses.
+%We describe a request as an ordered pair \m{(ts_{lhs},ts_{rhs})} where \m{ts_{lhs}} is a set of maximal positive terms and \m{ts_{rhs}} is a set of the sub-term closure of maximal terms.\\
+%When the \lstinline|verify| method reaches $\m{n_1}$:\\
+%\m{n_1} sends a request for \m{(\s{b},\s{b,c,f(c)})},\\
+%receives the clause $\m{C \lor \underline{f(b)}=a}$ adds to the cache \m{(\s{b},\s{b,c,f(c)})}, and derives \m{C \lor B \lor f(a)=a}.\\
+%\m{n_2} sends a request for \m{(\s{f(c)},\s{b,c,f(c)})}, \\
+%receives no clause in response and adds to the cache \m{(\s{f(c)},\s{b,c,f(c)})}.\\
+%Now the cache at \m{n_b} contains \m{(\s{b,f(c)},\s{b,c,f(c)})}
+%\m{n_3} sends a request for \m{(\s{b},\s{b})}, \\
+%The request is blocked at \m{n_1}, but \m{n_2} propgates it to \m{n_b} where it is blocked, and the clause \m{C \lor \underline{f(b)}=a} is propagated.\\
+%The clauses added to \m{n_3} are the relativized versions:\\
+%\m{\{\lnot P_b \lor C \lor \underline{f(b)}=a, P_b \lor C \lor \underline{f(b)}=a}\\
+%\m{\lnot P_b \lor B \lor \underline{b}=a, P_b \lor \underline{b}\neq a\}}\\
+%And the cache at \m{n_3} contains now \m{(\s{b},\s{b})}\\
+%\m{n_4} sends a request for \m{(\s{f(c)},\s{c,f(c)})}, \\
+%This request is propagated as-is from \m{n_3}.\\
+%At \m{n_2} the request is blocked, but at \m{n_1} the request is reduced to \m{(\s{f(c)},\emptyset)} so it is propagated to \m{n_0} - the requests are joined at \m{n_b} where it is blocked.\\
+%\m{n_3} adds the following clauses:\\
+%\m{\{\lnot P_b \lor  \underline{f(c)} \neq b, P_b \lor \underline{f(c)}=b\}}\\
+%Which are then passed to \m{n_4}.
+%
+%
+%\begin{figure}
+%\begin{lstlisting}
+%n$_0$: 
+%assume $\m{C \lor \underline{f(b)}=a}$
+%....
+%
+%n$_b$: 
+%if ($\m{P_b}$)
+	%n$_1$: 
+	%assume $\m{B \lor \underline{b}=a}$
+	%assume $\m{\underline{f(c)}\neq b}$
+%else	
+	%n$_2$: 
+	%assume $\m{\lnot B}$
+	%assume $\m{\underline{b} \neq a}$
+	%assume $\m{\underline{f(c)}=b}$
+%n$_3$: 
+%assume $\m{\underline{b} = d}$
+%n$_4$: 
+%assume $\m{\underline{f(c)} \neq d}$
+%\end{lstlisting}
+%\caption{Example for clause propagation}
+%\label{gc_propagation_example}
+%\end{figure}
+
+
+
+\subsubsection*{Comparison with flat VCs}
+In this sub-section we show the rationale in the above algorithm by comparing its operation with that of a verifier working on the flat VC we have defined above (the first encoding). We show how our algorithm avoids some of the inferences performed by a superposition prover on a flat VC, by exploiting the CFG structure to avoid inferences on clauses in opposing branch sides.
+Clauses derived from premises in opposing branch sides cannot participate in a refutation, and hence completeness is not compromised by avoiding such inferences. This is one of the main motivations for our algorithm.
+
+Our algorithm saturates the set of clauses at each node, propagating clauses forward as necessary between nodes, but ensuring that each instance of an inference occurs only once and at a specific node - the later (in topological order) of the two nodes where the clauses appear.
+This means that two clauses that appear in nodes that do not share any path (e.g. on different sides of a branch) will never participate in the same instance of an inference rule.
+
+Roughly, the semantics of a clause C appearing at a node n is that \m{P_n \rightarrow C} holds where \m{P_n} is the path-condition of the node n (regardless of how path conditions are encoded) - a model is a trace of the program and \m{P_n} holds for each model where n is reached. 
+Taking the model view we see that for each pair of clauses C at node n and D at node m where m,n do not share any path, 
+for any model we can set either \m{P_n} to false or \m{P_m} to false (or both) - hence the result of any derivation between \m{\lnot P_n \lor C} and \m{\lnot P_m \lor D} where the maximal terms are at C,D respectively, will have a model iff there is any model to the set of clauses solely because \m{\lnot P_n \lor \lnot P_m} is satisfiable.
+
+If we compare the above algorithm to the flat VC case, we have avoided some derivations, namely derivations between clauses that do not share a path, and our clauses carry less "baggage" of path conditions, as we only encode the relative path condition for each clause, rather than the absolute one.
+
+\begin{figure}
+\begin{lstlisting}
+$\node{n_0}:$
+assume g(f(e))=T
+if (c1)
+	$\node{n_1}:$
+	assume e = b
+else	
+	$\node{n_2}:$
+	if (c2)
+		$\node{n_3}:$
+		assume f(e)=f(c)
+	else	
+		$\node{n_4}:$
+		assume g(f(e))=g(f(d))
+	$\node{n_5}:$
+$\node{n_6}:$
+assume b=u
+assume c=u
+assume d=u
+assert g(f(u))=T
+\end{lstlisting}
+\caption{Example program for VC verification comparison\\
+The ordering is \m{e \succ d \succ c \succ b \succ a \succ u \succ T}\\
+The node \m{n_5} was added to ensure all joins are binary
+}
+\label{snippet4.1.2}
+\end{figure}
+
+\begin{figure}
+\begin{enumerate}
+	\item \m{\lnot n_0 \lor \underline{g(f(e))}=T}
+\bigskip
+	\item \m{\underline{\lnot n_1} \lor n_0 }
+%	\item \m{\underline{\lnot n_1} \lor c_1}
+	\item \m{\lnot n_1 \lor \underline{e}=b}
+\bigskip
+	\item \m{\underline{\lnot n_2} \lor n_0}
+%	\item \m{\underline{\lnot n_2} \lor \lnot c_1}
+\bigskip
+	\item \m{\underline{\lnot n_3} \lor n_2}
+%	\item \m{\lnot n_3 \lor c_2}
+	\item \m{\lnot n_3 \lor \underline{f(e)}=f(c)}
+\bigskip
+	\item \m{\underline{\lnot n_4} \lor n_2}
+%	\item \m{\lnot n_4 \lor \lnot c_2}
+	\item \m{\lnot n_4 \lor \underline{g(f(e))}=g(f(d))}
+\bigskip
+	\item \m{\underline{\lnot n_5} \lor n_3 \lor n_4}
+\bigskip
+	\item \m{\underline{\lnot n_6} \lor n_1 \lor n_5}
+	\item \m{\lnot n_6 \lor \underline{b}=u}
+	\item \m{\lnot n_6 \lor \underline{c}=u}
+	\item \m{\lnot n_6 \lor \underline{d}=u}
+	\item \m{\lnot n_6 \lor \underline{g(f(u))} \neq T}
+	\item \m{n_6}
+\end{enumerate}
+\caption{Simple flat VC for figure ~\ref{snippet4.1.2}\\
+maximal terms are underlined \\
+We use the literal ordering:\\
+\m{n_5 \succ n_4 \succ n_3 \succ n_2 \succ n_1 \succ n_0 \succ c_0 \succ c_1}\\
+Where all path literals are smaller than all equality literals
+}
+\label{snippet4.1.2_flatvc}
+\end{figure}
+
+\noindent
+
+Consider the code in figure \ref{snippet4.1.2} with the flat-VC in figure \ref{snippet4.1.2_flatvc}. In figure ~\ref{snippet4.1.2_flatvc}, we can perform superposition inferences between any pair of the set of clause \s{1,3,6,8} - 6 possible inferences in total.
+Only the inferences between 1 and \s{3,6,8} (3 in total) are relevant to the proof, as all other inferences occur between clauses on parallel paths in the CFG and any clause that is the result of such an inference is trivially true in any model - for example,
+if we superpose 3 and 6:
+
+\bigskip
+
+\noindent
+$\infer[]
+{\m{\lnot n_1 \lor \lnot n_3 \lor f(b)=f(c)}}
+{
+	\m{\lnot n_1 \lor \underline{e}=b}
+		&
+	\m{\lnot n_3 \lor \underline{f(e)}=f(c)}
+}
+$
+
+\noindent
+The conclusion is redundant.
+
+\bigskip
+
+\noindent
+\textbf{Example algorithm run:}\\
+We represents requests as ordered pairs, (\lstinline|ts$_{\m{lhs}}$|,\lstinline|ts$_{\m{lhs}}$|) - the left- and right-hand-side of requests. The run goes as follows:
+\begin{itemize}
+\item \m{n_0} Nothing to be done.\\
+	\lstinline|done$_0$|\m{= \s{g(f(e))=T}}
+\item \m{n_1} sends the request \m{(\s{e},\s{e})} and receives the response \s{\underline{g(f(e))}=T}\\
+which allows it to derive \m{\underline{g(f(b))}=T}\\
+The request (\s{g(f(b))},\s{b,f(b),g(f(b))}) returns nothing.\\
+	\lstinline|done$_1$|\m{= \s{\underline{e}=b,\underline{g(f(b))}=T,\underline{g(f(e))}=T}}\\
+	\lstinline|cache$_1$|\m{= (\s{e,g(f(b))},\s{e,b,f(b),g(f(b))})}
+	
+\item \m{n_2} has nothing to do.\\
+	\lstinline|done$_2$|\m{= \emptyset}\\
+	\lstinline|cache$_2$|\m{= \emptyset}
+	
+\item \m{n_3} sends the request \m{(\s{f(e)},\s{e,f(e)})} and receives the response \\
+\s{\underline{g(f(e))}=T}\\
+which allows it to derive \m{\underline{g(f(c))}=T}\\
+The request (\s{g(f(c))},\s{c,f(c),g(f(c))}) returns nothing.\\
+	\lstinline|done$_3$|\m{= \s{\underline{f(e)}=f(c),\underline{g(f(e))}=T,\underline{g(f(c))}=T}}\\
+	\lstinline|cache$_3$|\m{= (\s{f(e),g(f(c))},\s{e,f(e),c,f(c),g(f(c))})}\\
+	\lstinline|done$_2$|\m{= \s{\underline{g(f(e))}=T}}\\
+	\lstinline|cache$_2$|\m{= (\s{f(e),g(f(c))},\s{e,f(e),c,f(c),g(f(c))})}
+
+\item \m{n_4} sends the request \m{(\s{g(f(e))},\s{e,f(e),g(f(e))})},\\
+The request is propagated as \m{\s{g(f(e))},\s{g(f(e))}} from \m{n_2} as the rest is cached.\\
+The response is as before (cached) \s{\underline{g(f(e))}=T}\\
+which allows us to derive \m{\underline{g(f(d))}=T}\\
+The request (\s{g(f(d))},\s{d,f(d),g(f(d))}) returns nothing.\\
+	\lstinline|done$_4$|\m{= \s{\underline{g(f(e))}=f(d),\underline{g(f(e))}=T,\underline{g(f(d))}=T}}\\
+	\lstinline|cache$_4$|\m{= (\s{g(f(e)),g(f(d))},\s{e,f(e),d,f(d),g(f(d))})}\\
+	\lstinline|done$_2$|\m{= \s{\underline{g(f(e))}=T}}\\
+	\lstinline|cache$_2$|\m{= (\s{f(e),g(f(c)),g(f(d))},\s{e,f(e),c,f(c),g(f(c)),d,f(d),g(f(d))})}
+	
+\item \m{n_5} has nothing to be done.\\
+	\lstinline|done$_5$|\m{= \emptyset}
+
+\item \m{n_6} requests \m{\s{b,c,d},\s{b,c,d,u,f(u),g(f(u))}} and receives (after relativisation):\\
+\s{ \lnot c_1 \lor \underline{g(f(b))}=T, 
+c_1 \lor \lnot c_2 \lor \underline{g(f(c))}=T, 
+c_1 \lor c_2 \lor \underline{g(f(d))}=T}\\
+It then derives \\
+\s{ \lnot c_1 \lor \underline{g(f(u))}=T, 
+c_1 \lor \lnot c_2 \lor \underline{g(f(u))}=T, 
+c_1 \lor c_2 \lor \underline{g(f(u))}=T}\\
+Superposing all three with \m{\underline{g(f(u))} \neq T} would give us:\\
+\s{ \underline {\lnot c_1}, c_1 \lor \underline{\lnot c_2}, c_1 \lor \underline{c_2}}\\
+From which we derive \emptyClause{} using resolution.
+\end{itemize}
+
+\bigskip
+\noindent
+\textbf{Observations:}
+The proof is comparable to the flat VC superposition proof, but the search space is smaller - 
+we have avoided several redundant inferences. The overvhead of requests is significant, and we can see that many requests return an empty response. The use of scoping would be useful to reduce the number of requests - we can avoid requests with the sub-term u from \m{n_6} as 
+u does not occur at all in any predecessor, and similarly requests for super-terms of b,c,d could be blocked where they are out of scope, 
+thus reducing the cache at \m{n_2} to be, for a saturated CFG:\\
+	\m{cache_2 = (\s{f(e),g(f(e))},\s{e,f(e),g(f(e))})}\\
+Rather than:\\
+	\m{cache_2 = (\s{f(e),b,c,d,g(f(u)),g(f(c)),g(f(d))},}\\
+	\m{\s{e,f(e),g(f(e)),c,f(c),g(f(c)),d,f(d),g(f(d)),u,f(u),g(f(u))})}\\
+	We discuss scoping in chapter \ref{chapter:scoping}
+
+
+In the above example there was no opportunity for a join, 
+although, if we were to apply our simplification inferences, we would replace (at \m{n_6}):\\
+\s{ \lnot c_1 \lor \underline{g(f(u))}=T, 
+c_1 \lor \lnot c_2 \lor \underline{g(f(u))}=T, 
+c_1 \lor c_2 \lor \underline{g(f(u))}=T}\\
+With (by the rules \m{simp_{res},simp_{res2}})\\
+\s{\underline{g(f(u))}=T}\\
+Which is essentially a join that reduces the number of superposition inference in the proof - 
+we only superpose the simplified clause with \m{g(f(u)) \neq T} once, rather than the three superposition derivations above.
+
+\bigskip
+\noindent
+\textbf{Modular proofs:}
+We represent the above modular proof in a table form, which we use for further examples below. 
+The modular proof for our example is in figure \ref{snippet4.1.2_modular_proof}.
+In the proof, the first column is the clause index (local to the CFG-node, in order of derivation). The second column is the clause.
+The third column lists the premises used to derive the clause - no premises means the clause is part of the original program,
+two parenthesized premises mean the clause is the result of a superposition inference, one parenthesized premise means the clause is the result of equality resolution or equality factoring inferences and a bracketed premise means the clause has been propagated to the current CFG-node as the result of a request, where the requested term is inside the brackets.
+The fourth and fifth columns are related to simplifications and described in the next section.
+Each node performs the proof locally, where the only interaction are requests and propagated clauses.
+
+\begin{figure}
+\begin{tabular}{l|l|l|l|l}
+idx  & clause  & premises  & simplified & subsumes \phantom{aaaaaaaaa}\\
+     &         & [request] & by         & \\
+\hline
+\m{\mathbf{n_0}}\\
+( 1)&\m{\underline{g(f(e))}=T}                              \\
+\hline
+\m{\mathbf{n_1}}                                           & (\m{\mathbf{n_0}})\\
+( 1)&\m{c_1}                                                \\
+( 2)&\m{\underline{g(f(e))}=T}                              & \textcolor{cyan}{[e]}  &      &\\
+\hline
+\m{\mathbf{n_2}}                                           & (\m{\mathbf{n_0}})\\
+( 1)&\m{\lnot c_1}                                    \\
+( 2)&\m{\underline{g(f(e))}=T}                        				& \textcolor{cyan}{[e]}&        &    \\
+\hline
+\m{\mathbf{n_3}}                                           & (\m{\mathbf{n_2}})\\
+( 1)&\m{c_2}                                    \\
+( 2)&\m{\underline{f(e)}=f(c)} \\
+( 3)&\m{\underline{g(f(e))}=T}                        				& \textcolor{blue}{[e]}&        &    \\
+( 4)&\m{\underline{g(f(c))}=T}                        				& (2)(3)               &        &    \\
+\hline
+\m{\mathbf{n_4}}                                           & (\m{\mathbf{n_2}})\\
+( 1)&\m{\lnot c_2} \\
+( 2)&\m{\underline{g(f(e))}=g(f(d))}\\
+( 3)&\m{\underline{g(f(e))}=T}                        				& \textcolor{blue}{[e]}&        &    \\
+( 4)&\m{\underline{g(f(d))}=T}                        				& (2)(3)               &        &    \\
+\hline
+\m{\mathbf{n_5}}                                           & (\m{\mathbf{n_3},\mathbf{n_4}})\\
+( 1)&\m{\underline{g(f(c))}=T}                        				& \textcolor{cyan}{[c]}&        &    \\
+( 2)&\m{\underline{g(f(d))}=T}                        				& \textcolor{cyan}{[d]}&        &    \\
+\hline
+\m{\mathbf{n_6}}                                           	& (\m{\mathbf{n_1},\mathbf{n_5}})\\
+( 1)&\m{\underline{b} = u}                                   \\
+( 2)&\m{\underline{c} = u}                                   \\
+( 3)&\m{\underline{d} = u}                                   \\
+( 4)&\m{\underline{g(f(u))} \neq T}                          \\
+( 5)&\m{\lnot c_1 \lor \underline{g(f(b))}=T}                & \textcolor{blue}{[b]}&        &    \\
+( 6)&\m{c_1 \lor \lnot c_2 \lor \underline{g(f(c))}=T}       & \textcolor{blue}{[c]}&        &    \\
+( 7)&\m{c_1 \lor c_2 \lor \underline{g(f(d))}=T}             & \textcolor{blue}{[d]}&        &    \\
+( 8)&\m{\lnot c_1 \lor \underline{g(f(u))}=T}                & (1)(5)&        &    \\
+( 9)&\m{c_1 \lor \lnot c_2 \lor \underline{g(f(u))}=T}       & (2)(6)&        &    \\
+(10)&\m{c_1 \lor c_2 \lor \underline{g(f(u))}=T}             & (3)(7)&        &    \\
+(11)&\m{\lnot c_1}                													 & (4)(8)&        &    \\
+(12)&\m{c_1 \lor \underline{\lnot c_2}}       							 & (4)(9)&        &    \\
+(13)&\m{c_1 \lor \underline{c_2}}             							 & (4)(10)&        &    \\
+(14)&\m{c_1}             							 											 & (12)(13)&        &    \\
+(15)&\m{\bot}             							 										 & (11)(14)&        &    \\
+\end{tabular}
+\caption{Modular proof for figure ~\ref{snippet4.1.2}\\
+Each node number is followed by the set of predecessors.\\
+The literal ordering is \m{e \succ d \succ c \succ b \succ a \succ u}.\\
+We do not distinguish the lhs and rhs of requests for simplicity.\\
+\textcolor{blue}{Blue premises in square brakcets are imported by a local request}\\
+\textcolor{cyan}{Cyan premises in square brackets are imported by a successor request}\\
+Parenthesized numbers are premises for an inference\\
+}
+\label{snippet4.1.2_modular_proof}
+\end{figure}
+
+
+\subsection{Redundancy elimination}
+In this section we show how our algorithm can benefit from redundancy elimination and simplification inferences more than the flat VC.
+We will also compare to the per-path VC. 
+There are two main points:
+The first idea is that we have more chances to apply unit propagation and simplification as our clauses carry less baggage of path conditions.
+The second idea is that, for a pair of clauses \m{C,D} that share a path (C being earlier on the path) and have a valid inference, 
+if there is a clause E on the path between C and D, that either subsumes or simplifies C so that it is no longer relevant for D, then we can avoid the inference, while a prover running on a flat VC cannot take advantage of these simplifications without allowing path literals to be maximal - which essentially amounts to enumerating execution paths. For the per-path VC we can see that more simplifications can be performed, as it can treat the clauses on a path as a set and hence also subsume clauses regardless of the location of the subsuming clause in the execution order - which helps explain, to some degree, the success of lazy-CNF SMT solvers in proving VCs that are encoded directing the solver to explore paths.
+
+\begin{figure}
+$
+\begin{array}[c]{llll}
+%\vspace{10pt}
+\m{unit} & \vcenter{\infer[]{\m{C}                            }{\m{\lnot A}  & \cancel{\m{C \lor A}}}} & \parbox[c][1.0cm]{3cm}{}\\
+%\vspace{10pt}
+\m{taut} & \vcenter{\infer[]{\m{}                             }{\cancel{\m{C \lor A \lor \lnot A}}}} & \parbox[c][1.0cm]{3cm}{}\\
+%\vspace{10pt}
+\m{taut_{=}} & \vcenter{\infer[]{\m{}                             }{\cancel{\m{C \lor s=s}}}} & \parbox[c][1.0cm]{3cm}{}\\
+%\vspace{10pt}
+\m{sub} & \vcenter{\infer[]  {\m{}                             }{\m{C} & \cancel{\m{C \lor D}}}} & \parbox[c][1.0cm]{3cm}{}\\
+%\vspace{10pt}
+\m{simp_{res}} & \vcenter{\infer[]{\m{C}                      }{\cancel{\m{C \lor A }} & \cancel{\m{C \lor \lnot A}}}} & \parbox[c][1.2cm]{3cm}{}\\
+%\vspace{10pt}
+\m{simp_{res2}} & \vcenter{\infer[]{\m{C \lor D}              }{\m{C \lor A } & \cancel{\m{C \lor D \lor \lnot A}}}} & \parbox[c][1.2cm]{3cm}{}\\
+\m{simp_{=}} & \vcenter{\infer[]{\m{\termRepAt{C}{r}{p}}}{\m{l=r} & \cancel{\m{C}}}}   &
+\parbox[c][1.2cm]{3cm}{\m{l=\termAt{C}{p}}\\\m{l \succ r}\\\m{C \succ l=r}}\\
+\end{array}
+$
+\caption{simplification rules\\
+$\cancel{\m{C}}$ denotes that the premise $\m{C}$ is redundant after the addition of the conclusion to the clause-set and hence can be removed.
+}
+\label{simp_rules.1}
+\end{figure}
+
+In order to demonstrate the differences we use only the simplification inferences depicted in \ref{simp_rules.1} , applying them eagerly.
+We have omitted some of the rules for simplicity of presentation, but the principles remain the same.
+Specifically, we have omitted rewriting by unit ground equalities (demodulation) - as it would be handled by EC-graphs in our technique (detailed in a later sub-section) - 
+including demodulation would give our technique an even more significant advantage.
+In our algorithm, we simplify each term w.r.t. \lstinline|todo$\m{_n}$| $\cup$ \lstinline|done$\m{_n}$| before it is added to one of these sets,
+except for simplifications that modify the maximal literal.
+
+
+\begin{figure}
+\begin{lstlisting}
+$\node{n_0}:$
+assume g(f(e))=T
+if (c1)
+	$\node{n_1}:$	
+	assume b$=$a$\lor$f(e)$=$f(c)
+	assume b$\neq$a$\lor$f(e)$=$f(d)
+else	
+	$\node{n_2}:$
+	assume e$=$c
+$\node{n_3}:$
+assume b$=$a
+if (c2)
+	$\node{n_4}:$
+	assume c$=$u
+	assume d$=$u
+	assert g(f(u))$=$T
+else	
+	$\node{n_5}:$
+	assert g(a)$\neq$g(b)
+\end{lstlisting}
+\caption{Simple example for VC comparison with simplification\\
+The ordering is \m{e \succ d \succ c \succ b \succ a \succ u \succ T}.\\
+The node \m{n_5} was added to ensure all joins are binary.
+}
+\label{snippet4.1.2.1}
+\end{figure}
+
+
+
+In figure ~\ref{snippet4.1.2.1} we present a small example program. 
+The program has six program points, \m{n_0} to \m{n_5}, of which \m{n_4,n_5} are assertion (goal) nodes.
+In figure \ref{snippet4.1.2.1_flatvc.2} we show the proof in our technique:
+
+\begin{figure}
+\begin{tabular}{l|l|l|l|l}
+idx  & clause  & premises  & simplified & subsumes\\
+     &         & [request] & by         & \\
+\hline
+\m{\mathbf{n_0}}\\
+(1)&\m{\underline{g(f(e))}=T}                              \\
+\hline
+\m{\mathbf{n_1}} & \m{(\mathbf{n_0})}\\
+(1)&\m{c_1}                                                \\
+(2)&\m{b=a \lor \underline{f(e)}=f(c)}                     \\
+(3)&\m{b\neq a \lor \underline{f(e)}=f(d)}                 \\
+(4)&\sout{\m{b\neq a \lor b=a \lor \underline{f(d)}=f(c)}} & (2)(3) & taut &\\
+(5)&\m{\underline{g(f(e))}=T}           & \textcolor{blue}{[f(e)]}  &      &\\
+(6)&\m{b=a \lor \underline{g(f(c))}=T}                     & (2)(5) &      &\\
+(7)&\m{b\neq a \lor \underline{g(f(d))}=T}                 & (3)(5) &      &\\
+\hline
+\m{\mathbf{n_2}} & \m{(\mathbf{n_0})}\\
+(1)&\m{\lnot c_1}                                    \\
+(2)&\m{\underline{e}=c}                              \\
+(3)&\m{\underline{g(f(e))}=T}                        & \textcolor{blue}{[e]}&        &    \\
+(4)&\m{\underline{g(f(c))}=T}                   & (2)(3)&        &\\
+\hline
+\m{\mathbf{n_3}}  & \m{(\mathbf{n_1},\mathbf{n_2})}\\
+(1)&\m{\underline{b}=a} \\
+(2)&\del{\m{\lnot c1 \lor~ \boxed{\m{b=a}}~\lor~\underline{g(f(c))}=T}}                   & \textcolor{cyan}{[c]} & (1) sub &\\
+(3)&\m{c1 \lor~ \underline{g(f(c))}=T}                                                    & \textcolor{cyan}{[c]} & & \\
+(4)&\m{\lnot c1~ \lor} \del{\m{b\neq a~\lor}} \m{\underline{g(f(d))}=T}                   & \textcolor{cyan}{[d]} & (1)&\\
+\hline
+\m{\mathbf{n_4}}& \m{(\mathbf{n_3})}\\
+(1)&\m{c_2} \\
+(2)&\m{\underline{c}=u}\\
+(3)&\m{\underline{d}=u}\\
+(4)&\m{\underline{g(f(u))} \neq T}\\
+(5)&\m{~~~c1~~ }\m{\lor~ \underline{g(f(c))}=T}     & \textcolor{blue}{[c]} & &\\
+(6)&\m{~\lnot c1~~ }\m{\lor~ \underline{g(f(d))}=T} &\textcolor{blue}{ [d]} & &\\
+(7)&\m{~~~c1~}\del{\lor ~\underline{g(f(u))}=T}                    & (2)(5) & (4)&\\
+(8)&\del{\lnot c1}\del{\lor ~\underline{g(f(u))}=T}               & (3)(6) & (4)(7)&\\
+(9)&\m{\bot}                                                      & (8)& &\\
+\hline
+\m{\mathbf{n_5}}& \m{(\mathbf{n_3})}\\
+(1)&\m{\lnot c_2}\\
+(2)&\m{\underline{g(b)} \neq g(a)}\\
+(3)&\m{\underline{b}=a}                    & \textcolor{blue}{[b]}   & & \\
+(4)&\m{\underline{g(a)} \neq g(a)}         & (2)(3) & &\\
+(5)&\m{\bot}                               & (4) & &\\
+\end{tabular}
+\caption{Modular VC for figure ~\ref{snippet4.1.2.1} with simplifications\\
+maximal terms are underlined \\
+The literal ordering is \m{e \succ d \succ c \succ b \succ a \succ u \succ T}
+}
+\label{snippet4.1.2.1_flatvc.2}
+\end{figure}
+
+The fourth column lists clauses used to simplify the result of the inference - in this example either by unit subsumption or unit propagation.
+The fifth column lists earlier clauses that are subsumed by the clause.
+
+The useless inferences are \m{n_1.(4)} and \m{n_1.(6)}, as \m{n_1.(4)} is a tautology and \m{n_1.(6)} is subsumed when propagated to \m{n_3} - as \m{n_3.(2)}.
+At \m{n_3} we were able to subsume one clause - \m{n_3.(2)} - by the unit clause \m{n_3.(1)}, and simplify another clause \m{n_3.(4)} by unit propagation.
+The set of clauses in each node is saturated with respect to the calculus and to requests, so no further derivations are possible.
+We compare our proof to the proof of a flat VC of the above program, depicted in figure ~\ref{snippet4.1.2.1_flatvc.1}
+\begin{figure}[H]
+\begin{subfigure}[t]{0.5\textwidth}
+	\begin{tabular}{llll}
+		( 1) &\m{\lnot n_0 \lor \underline{g(f(e))}=T}\\
+		( 2) &\m{\underline{\lnot n_1} \lor n_0}\\
+		( 3) &\m{\lnot n_1 \lor b=a \lor \underline{f(e)}=f(c)}\\
+		( 4) &\m{\lnot n_1 \lor b\neq a \lor \underline{f(e)}=f(d)}\\
+		\\
+		( 5) &\m{\underline{\lnot n_2} \lor n_0}\\
+		( 6) &\m{\lnot n_2 \lor \underline{e}=c}\\
+		\\
+		( 7) &\m{\underline{\lnot n_3} \lor n_1 \lor n_2}\\
+		( 8) &\m{\lnot n_3 \lor \underline{b}=a}\\
+		\\
+		( 9) &\m{\underline{\lnot n_4} \lor n_3}\\
+		(10) &\m{\lnot n_4 \lor \underline{c}=u}\\
+		(11) &\m{\lnot n_4 \lor \underline{d}=u}\\
+		(12) &\m{\lnot n_4 \lor \underline{g(f(u))} \neq T}\\
+		\\
+		(13) &\m{\underline{\lnot n_5} \lor n_3}\\
+		(14) &\m{\lnot n_5 \lor \underline{g(b)} \neq g(a)}\\
+		\\
+		(15) &\m{n_4 \lor \underline{n_5}}\\
+	\end{tabular}
+\end{subfigure}
+\caption{Simple flat VC for figure ~\ref{snippet4.1.2.1}\\
+maximal terms are underlined 
+}
+\label{snippet4.1.2.1_flatvc.1}
+\end{figure}
+
+The proof steps are given in figure ~\ref{snippet4.1.2.1_flatvc.1a}.
+The proof performs the inference steps in the order of the premises - essentially we saturate every clause with inferences with all its predecessors.
+Simplifications we perform eagerly, so a unit clause is often followed by several simplified versions of clauses.
+Clauses deleted by subsumption are listed in the last column.
+This choice of proof order is derived from the naive implementation of a theorem prover, and is not meant to represent the state of the art, 
+rather we wanted to represent here the much larger search space of a flat VC proof vs. a local proof, 
+and also the larger clauses that participate in such a proof.
+
+We have used alphabetically suffixed clause indices to indicate a simplified version of an earlier clause.
+Evidently, the flat proof is much larger than the sum of local proofs above (although the local proof has the overhead of propagation).
+We have marked the useful (part of the refutation) inferences with blue indices, and we can see that there are many more redundant inferences than in the local case:
+\begin{itemize}
+	\item Clause (16) is the equivalent to \m{n_1.(6)}, and so is not blocked also in our local proof, and similarly clause (18)
+	\item Clauses (20) and (21) are blocked in the local proof as the premises come from the parallel sides of a branch as we have seen in the previous section - 
+	note that (21) is subsumed later (at (26a)) once one of the parallel paths has been eliminated
+	\item Clause (16) is prevented from participating in any further inferences as it is subsumed by (\m{n_3.(1)}) in the local proof, hence blocking the derivation of the clauses (24) and (27)
+	\item Similarly, (28) and (29) are not even considered in the local proof as (21) is blocked
+\end{itemize}
+Clause (31) signifies that every path must pass through \m{n_3} - which we derived a-priori in the local proof from the DAG structure.
+
+
+\begin{figure}
+\small
+\def\arraystretch{0.5}
+\setlength{\tabcolsep}{1pt}
+	\begin{tabular}{p{0.8cm}|l|l|p{1.75cm}|p{1.8cm}}
+		idx  & clause  & premises & simplified & subsumes\\
+		     &         &          & by         & \\
+		\hline
+		( 1) &\m{\lnot n_0 \lor \underline{g(f(e))}=T}\\
+		( 2) &\m{\underline{\lnot n_1} \lor n_0}\\
+		( 3) &\m{\lnot n_1 \lor b=a \lor \underline{f(e)}=f(c)}\\
+		( 4) &\m{\lnot n_1 \lor b\neq a \lor \underline{f(e)}=f(d)}\\
+		&\\
+		( 5) &\m{\underline{\lnot n_2} \lor n_0}\\
+		( 6) &\m{\lnot n_2 \lor \underline{e}=c}\\
+		&\\
+		( 7) &\m{\underline{\lnot n_3} \lor n_1 \lor n_2}\\
+		( 8) &\m{\lnot n_3 \lor \underline{b}=a}\\
+		&\\
+		( 9) &\m{\underline{\lnot n_4} \lor n_3}\\
+		(10) &\m{\lnot n_4 \lor \underline{c}=u}\\
+		(11) &\m{\lnot n_4 \lor \underline{d}=u}\\
+		(12) &\m{\lnot n_4 \lor \underline{g(f(u))} \neq T}\\
+		&\\
+		(13) &\m{\underline{\lnot n_5} \lor n_3}\\
+		(14) &\m{\lnot n_5 \lor \underline{g(b)} \neq g(a)}\\
+		&\\
+		(15) &\m{n_4 \lor \underline{n_5}}\\
+		&\\
+		(16)&\m{\lnot n_0 \lor \lnot n_1 \lor b=a \lor \underline{g(f(c))}=T}                        & (1)   (3) & &\\
+		\textcolor{blue}{(17)}  &\m{\lnot n_0 \lor \lnot n_1 \lor b\neq a \lor \underline{g(f(d))}=T}& (1)   (4) & &\\
+		(18)&\del{\m{\lnot n_1 \lor b=a \lor b \neq a \lor f(d)=f(c)}}                               & (3)   (4) & \m{taut} &\\
+		\textcolor{blue}{(19)}  &\m{\lnot n_2 \lor \underline{g(f(c))}=T}                            & (1)   (6) & &\\
+		(20)  &\del{\m{\lnot n_1 \lor \lnot n_2 \lor b=a \lor f(c)=f(c)}}                            & (3)   (6) & \m{taut_=}&\\
+		(21)  &\m{\lnot n_1 \lor \lnot n_2 \lor b\neq a \lor \underline{f(d)}=f(c)}                  & (4)   (6) &  &\\
+		\textcolor{blue}{(22)}  &\m{\lnot n_3 \lor \underline{\lnot n_5}}\del{\lor~ g(a) \neq g(a)}  & (8)  (14) & \m{res_=} &\\
+		\textcolor{blue}{(23)}  &\m{n_3 \lor \underline{n_4}}                                        & (13) (15) & &\\
+		                        &                                                                    &           & &\\
+		(24)  &\m{\lnot n_0 \lor \lnot n_1 \lor \lnot n_4 \lor b=a      \lor \underline{g(f(u))}=T}  & (10) (16) & &\\
+		\textcolor{blue}{(25)}  &\m{\lnot n_0 \lor \lnot n_1 \lor \lnot n_4}\del{\lor~ b \neq a}\m{\lor~ \underline{g(f(u))}=T} &
+		(11)(17) &(24)\m{simp_{res}} & (24)\\
+		\textcolor{blue}{(26)}  &\m{\lnot n_2 \lor \lnot n_4 \lor \underline{g(f(u))}=T}              & (10) (19) & &\\
+		(27)  &\del{\lnot n_0 \lor \lnot n_1 \lor \lnot n_2 \lor b=a \lor T=T}                        & (16) (19) & \m{taut_=} &\\
+		(28)  &\m{\lnot n_1 \lor \lnot n_2 \lor \lnot n_4 \lor b\neq a \lor \underline{f(c)}=f(u)}    & (11) (21) & &\\
+		(29)  &\del{\lnot n_0 \lor \lnot n_1 \lor \lnot n_2 \lor b\neq a \lor \underline{g(f(c))}=T}  & (17) (21) & (19)sub &\\
+		\textcolor{blue}{(30)}  &\m{\lnot n_3 \lor n_4}                                               & (22)(15)  &      &\\
+		\textcolor{blue}{(31)}  &\m{n_3 }                                                             & (23)(9) & & (9)(23)\\
+		\textcolor{blue}{( 7a)} &\m{n_1 \lor \underline{n_2}}                                         & (7)  & (31)  & (7)\\
+		( 8a) &\m{\underline{b}=a}                                                                    & (8)  & (31)  & (3)(8)(16)\\
+		(22a) &\m{\underline{\lnot n_5}}                                                              & (22)  & (31)  & (13)(14)\\
+		      &                                                                                       &       &       & (22)\\
+		\textcolor{blue}{(30a)} &\m{\underline{n_4}}                                                  & (30)  & (31)  & (15)(30)\\
+		( 4a) &\m{\lnot n_1 \lor \underline{f(e)}=f(d)}                                               & (4)  & (8a)  & (4)\\
+		(17a) &\m{\lnot n_0 \lor \lnot n_1 \lor \underline{g(f(d))}=T}                                & (17)  & (8a) & (17)\\
+		(10a) &\m{\underline{c}=u}                                                                    & (10)  & (30a) & (10)\\
+		(11a) &\m{\underline{d}=u}                                                                    & (11)  & (30a) & (11)\\
+		\textcolor{blue}{(12a)} &\m{\underline{g(f(u))} \neq T}                                       & (12)  & (30a) & (12)\\
+		\textcolor{blue}{(25a)} &\m{\lnot n_0 \lor \lnot n_1}                                         & (25)  & (30a)(12a) & (25)\\
+		\textcolor{blue}{(26a)} &\m{\lnot n_2}                                                        & (26)  & (30a)(12a) & (5) (6) (19) \\
+		      &                                                                                       &       &       & (21)(26)(28)\\
+		\textcolor{blue}{( 7b)} &\m{\underline{n_1}}                                                  & (7a) & (26a)  & (7a)\\
+		\textcolor{blue}{( 2a)} &\m{\underline{n_0}}                                                  & (2)  & (7b)  & (2)\\
+%		( 1a) &\m{\underline{g(f(e))}=T}                                                              & ( 1)  & ( 2a) & ( 1)\\
+		( 4b) &\m{\underline{f(e)}=f(d)}                                                              & (4a) & (7b)  & (4a)\\
+		(17b) &\m{\underline{g(f(d))}=T}                                                              & (17a)  & (2a)(7b) & (17a)\\
+		\textcolor{blue}{(25b)} &$\bot$                                                                                 & (25a)  & (2a)(7b)
+	\end{tabular}
+\caption{Proof for flat VC of figure ~\ref{snippet4.1.2.1}\\
+Maximal terms are underlined.\\
+\textcolor{blue}{Blue indices} are clauses used in the proof.\\
+}
+\label{snippet4.1.2.1_flatvc.1a}
+\end{figure}
+
+We can see that the flat proof is significantly larger even for such a small program, mostly because it does not take advantage of existing information about the CFG structure, and also because it misses many options for simplifying inferences. 
+This difference in proof size usually grows with the program.
+The overhead for local proofs is the request mechanism. 
+The term-indexing overhead is usually smaller than in the flat proof as indices can be maintained for each CFG-node separately. 
+A request in a large CFG from a deep leaf to the root can incur a lot of overhead not present in the flat proof, and hence we try to minimize this overhead by caching requests and responses, overapproximating requests and joining, so that each node propagates each request at most once. 
+As described before, scoping can also reduce the request overhead dramatically.
+
+
+\subsubsection*{Comparison with per-path VCs}
+We compare now the efficiency of our local proof to a VC generated for each possible root-to-assertion path in the program.
+The reason for discussing this comparison is that it factors away the CFG part of the problem and hence shows a proof that is, in a sense, pure.
+A per-path VC is also closely related to the set of sub-problems faced by an SMT solver or a solver such as \cite{Voronkov14} 
+based on a SAT solver for the propositional part of the problem, and a superposition solver for each propositionally satisfying assignment.
+
+As is, a per-path VC is not a practically scalable VC as the number of paths is potentially exponential in the size of the CFG, 
+however it represents, in a sense, the opposite side of the spectrum to the flat VC, as it allows short simple proofs for each path, 
+but no opportunity for sharing of work between the proofs of different paths.\\
+SMT solvers mitigate this problem mostly using the extension of CDCL (\cite{GRASP}) to GFOLE - 
+essentially generalizing a conclusion learned in the proof of one path so that it can be used on other paths.\\
+However, as has been shown in e.g. \cite{DPLLJoin} and have been discussed in chapter \ref{chapter:ugfole}, 
+CDCL is somewhat limited in the clauses it can learn in GFOLE.
+
+\begin{figure}
+\begin{tabular}{l|l|l|l|l}
+idx  & clause  & premises & simplified & subsumes\\
+     &         &          & by         & \\
+\hline
+&\m{\mathbf{n_0.n_1.n_3.n_4}}\\
+(1)&\m{\underline{g(f(e))}=T}               & & &\\
+(2)&\m{b=a \lor \underline{f(e)}=f(c)}      & & &\\
+(3)&\m{b\neq a \lor \underline{f(e)}=f(d)}  & & &\\
+(4)&\m{\underline{b}=a}                     & & & (2) \\
+(5)&\m{\underline{c}=u}                     & & &\\
+(6)&\m{\underline{d}=u}                     & & &\\
+(7)&\m{\underline{g(f(u))} \neq T}          & & &\\
+   &                                        & & &\\
+(3a)&\m{\underline{f(e)}=f(d)}              & (3)    & (4) & (3) \\
+(8)&\m{\underline{g(f(d))}\neq T}           & (3a)(1)&     \\
+(9)&\del{\underline{g(f(u))}= T}            & (6)(8) & (7) \\
+\hline
+&\m{\mathbf{n_0.n_2.n_3.n_4}}\\
+(1)&\m{\underline{g(f(e))}=T}               & & &\\
+(2)&\m{\underline{e}=c}                     & & &\\
+(3)&\m{\underline{b}=a}                     & & &\\
+(4)&\m{\underline{c}=u}                     & & &\\
+(5)&\m{\underline{d}=u}                     & & &\\
+(6)&\m{\underline{g(f(u))} \neq T}          & & &\\
+   &                                        & & &\\
+(7)&\m{\underline{g(f(c))}=T}               & (1)(2)    & \\
+(8)&\del{g(f(u))=T}                         & (7)(4)    & (6)\\
+\hline
+&\m{\mathbf{n_0.n_1.n_3.n_5}}\\
+(1)&\m{\underline{g(f(e))}=T}               & & &\\
+(2)&\m{b=a \lor \underline{f(e)}=f(c)}      & & &\\
+(3)&\m{b\neq a \lor \underline{f(e)}=f(d)}  & & &\\
+(4)&\m{\underline{b}=a}                     &    &    & (2)\\
+(5)&\m{\underline{g(b)} \neq g(a)}          & & &\\
+   &                                        & & &\\
+(3a)&\m{\underline{f(e)}=f(d)}              & (3) & (4) & (3) \\
+(6)&\m{\underline{g(f(d))}\neq T}           & (3a)(1)&     &\\
+(7)&\del{g(a) \neq g(a)}                    & (4)(5) & \m{res_=} \\
+\hline
+&\m{\mathbf{n_0.n_2.n_3.n_5}}\\
+(1)&\m{\underline{g(f(e))}=T}               & & &\\
+(2)&\m{\underline{e}=c}                     & & &\\
+(3)&\m{\underline{b}=a}                     & & &\\
+(4)&\m{\underline{g(b)} \neq g(a)}          & & &\\
+   &                                        & & &\\
+(5)&\m{\underline{g(f(c))}=T}               &(1)(2)& &\\
+(6)&\del{g(a) \neq g(a)}                    &(3)(4) & &\\
+\end{tabular}
+\caption{Simple per-path VC proof for figure ~\ref{snippet4.1.2.1}\\
+The proof is shown separately for each path.
+}
+\label{snippet4.1.2.1_pathvc}
+\end{figure}
+
+\noindent
+As can be seen in figure \ref{snippet4.1.2.1_pathvc}, in the per-path VC the clause \m{b=a} that appears on all paths was able to block the unnecessary derivations that our local derivations could not, by subsuming the clause \m{b=a \lor \underline{f(e)}=f(c)}.
+Also, there is no need for path conditions, as each path is considered separately.
+
+The disadvantage of this approach is apparent in the proof of the path \m{\mathbf{n_0.n_1.n_3.n_5}} - here derivations (3a) and (6) are useless, and they are duplicated from the proof of \m{\mathbf{n_0.n_1.n_3.n_4}}, where they are not useless (so a CDCL solver that first tries \m{\mathbf{n_0.n_1.n_3.n_5}} will effectively not learn from the equivalent of the derivation - operation on the CC graph). In a larger program the amount of duplication could grow exponentially with the number of non-nested branches. In our local proof we were able to factor these derivations so that they are performed only once - each derivation is assigned to a specific node and guaranteed not to be performed in any other node (as long as the premises do not occur more than once in the program).
+
+Another disadvantage of the per-path VC approach (and hence also \\SAT/SMT based approaches) is that few non-propositional joins can be performed, and hence a lot of duplication of effort can happen, this is not evident in the above example, but is discussed in the next sub-section. Techniques such as CDCL can mitigate a lot of the duplication, but mostly propositional duplication.
+
+However, the main reason that we do not follow the per-path approach is that it is essentially a DFS proof-search, 
+and hence does not extend readily to the non-ground case. In order to generalize a clause learned in the proof of one path, 
+CDCL requires a conflict (i.e. a proof) on that path. 
+Even if this requirement can be relaxed, it is not clear how a path-based approach can be extended to gradual verification using incrementally stronger fragments, as the verification algorithm will have to either remember the state of an exponential number of not-yet-verified paths, or reevaluate each path with a stronger fragment, duplicating much work. 
+Our objective is to be able to search for proofs in fragments of increasing strength, without losing the results of previous fragments. Our proof-search is, in a sense, of the BFS approach, as we are not required to reach a refutation on any branch in order to ensure progress - progress is achieved by moving a clause to the \lstinline|done| set.
+
+\textbf{Comparison Summary:}\\
+The table below compares the statistics for the proofs above:\\
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+                     & \textbf{Flat} & \textbf{Modular} & \textbf{Per-path}\\
+\hline
+Total VC clauses     & 15   & 13   & 22\\
+\hline
+Total inferences     & 32   & 17   & 14\\
+\hline
+Useful inferences    & 16   & 14   & 10\\
+\hline
+\% unused inferences & 50\% & 18\% & 28\%\\
+\hline
+Expensive inferences & 16   & 7   & 8\\
+\hline
+Useful expensive inferences    & 8   & 5   & 6\\
+\hline
+\% unused expensive inferences       & 50\% & 28\% & 25\%\\
+\hline
+\end{tabular}\\
+We counted the number of clauses and inferences in the proof produced by each technique, 
+and the proportion of useless inferences. 
+We also counted the number of expensive inferences, which are the binary inferences that are not simplifications.
+Obviously this table only applies for the specific program and instance of each technique, but we believe it shows some trends that are valid also for the general case. Mainly, we can see that the per-path VC is larger, but can avoid some inferences that the flat VC cannot. 
+The flat VC is, on the other hand, smaller, but produces many useless clauses. The VC for our technique is about the same size as the flat one, but we were able to avoid several expensive inferences.
+Obviously, this table does not take into account the cost of requests and clause-propagation.
+
+Our local VC is an attempt to combine the advantages of both extremes we have seen - allowing smaller and simpler local VCs while avoiding the duplicate effort and exponential explosion of the per-path or SAT based techniques.
+
+\subsection{Improvements to the base algorithm}
+\subsubsection*{Simplification requests}
+As we have seen in the example above, early subsumption and other deletion and simplification inferences are a powerful tool in reducing the proof search space.\\
+However, we did not yet show a mechanism to propagate unit-clauses that can simplify or delete clauses in later CFG-nodes - for example, if we were to modify our previous example by moving \m{b=a} to the beginning (and removing one assertion) - depicted in figure \ref{snippet4.1.2.2}.
+
+\begin{figure}
+\begin{lstlisting}
+$\node{n_0}:$
+assume g(f(e))=T
+assume b$=$a
+if (c1)
+	$\node{n_1}:$	
+	assume b$=$a$\lor$f(e)$=$f(c)
+	assume b$\neq$a$\lor$f(e)$=$f(d)
+else	
+	$\node{n_2}:$
+	assume e$=$c
+$\node{n_3}:$
+assume c$=$u
+assume d$=$u
+assert g(f(u))$=$T
+\end{lstlisting}
+\caption{Example for forward propagation of unit clauses for simplification\\
+}
+\label{snippet4.1.2.2}
+\end{figure}
+
+In figure \ref{snippet4.1.2.2} our local proof is not be able to subsume
+\m{b=a\lor f(e)=f(c)} and simplify \m{b\neq a\lor f(e)=f(d)} at \m{n_1} as the unit clause \m{b=a} is not available there, and is not propagated as its maximal literal b is not requested by any successor.
+In order to benefit from such cases, we add \textcolor{blue}{atom requests} to the maximal term requests we have seen before.
+Each node, when requesting the maximal term in a clause, also adds to the request the set of atoms of non-maximal literals.
+The reason we request the atom and not the literal is that both polarities of the atom are helpful as a unit clause - one polarity could subsume the clause and the other could simplify it by unit propagation.
+The response to this query adds only unit clauses that include an atom from the requested set. 
+At join points we only propagate such a unit clause if it is found in the response of both join sides - described in section \ref{section:gfole:joins}.
+
+\begin{figure}
+\begin{lstlisting}
+Request(Cs : Set[Clause])
+	...
+	As:= $\cup_{\m{C\in Cs}}$ atoms(C)
+	
+Request.add(other : Request)
+	...
+	As $\cup$:= other.As
+	
+Request.remove(other : Request)
+	...
+	As $\setminus$:= other.As
+
+isRelevant(r:Request,C : Clause)
+	return 
+		...
+			$\lor$
+		$\m{\size{C}}$ = 1 $\land$ atoms(C)$\subseteq$r.As
+			
+atoms(C : Clause)
+	return {A $\mid$ A$\in$C $\lor$ $\lnot$A$\in$C}
+\end{lstlisting}
+\caption{Recursive import request including literals.\\
+A request consists of equality and inequality maximal terms, and a set of atoms \lstinline|As|.\\
+A clause matches a request if there is a valid inference in the calculus,
+and in addition if there is a unit clause that can be used in a simplifying inference.\\
+}
+\label{basic_verification.4.request_literals}
+\end{figure}
+
+The modified request code is shown in figure \ref{basic_verification.4.request_literals}.
+As can be seen, we can mostly use the existing request mechanism. 
+Also, as before, no derivations are performed between two imported clauses (as they are sent directly to the \lstinline|done| set), and hence we do not cause any duplication of effort. We do, however, incur some overhead in requesting more propagations - in our experiments we have found this feature to be largely beneficial. Note that we only propagate unit clauses forward for simplification, we never propagate a clause so it can be simplified.
+
+\subsubsection*{Reverse propagation}
+In the example in figure \ref{snippet4.1.2.1}, in the local proof, we have seen that a clause \m{b=a} at the node \m{n_3} was able to subsume a clause at \m{n_2} and so prevent some useless inferences, but was not able to prevent inferences between clauses at \m{n_2}, although \emph{every path from the root to an assertion that includes \m{n_2} includes also \m{n_3}}.
+In our setting, there are two fundamental ways in which to allow this subsumption to take place - either propagate the clause to be subsumed forward or reverse-propagated the subsuming unit clause backward. 
+Note that in our example the clause that was subsumed - \m{b=a \lor \underline{f(e)}=f(c)} - was not eligible to be propagated forward as its maximal term is not relevant to any transitive successor, only the result of an inference where the clause is a premise - \m{b=a \lor \underline{g(f(c))}=T} - is eligible to forward propagation. 
+
+As a VC transformation, propagating a clause backwards is sound and complete if the clause holds in \emph{all} direct successors of the node to which it is propagated, but it is not a conservative transformation - if the user wants to add a property (for debugging etc.) at a node, we add another successor for the node, where the clause might not hold - hence we cannot check the property incrementally.
+We have not experimented with reverse propagation. 
+
+\subsubsection*{Predicate symbols}
+It is sometimes preferable to use predicate symbols rather than encoding them as Boolean functions. The additional inference rules for predicates are the standard ordered resolution and a rule similar to negative superposition as shown in figure \ref{GSP_Predicate}.
+Adding predicate symbols requires that we can send requests for maximal predicates.
+These requests are similar to simplification requests, except that we only request one polarity of a literal.
+In addition, a maximal predicate literal includes in its rhs set all its top terms.
+
+\begin{figure}
+$
+\begin{array}[c]{llll}
+\vspace{10pt}
+\mathrm{sup_{P}} &\vcenter{
+	\infer[]
+		{\m{C \lor P(\termRepAt{\tup{s}}{r}{p}) \lor D}}
+		{
+			\m{C \lor \underline{l}=r} & 
+			\m{\fa{P}{s} \lor D}
+		}
+} & 
+\parbox[c][2cm]{3cm}{\m{l = \termAt{\tup{s}}{p}}\\\m{l \succ r,l=r \succ C}\\\m{\fa{P}{s} \succ D}}\\
+\vspace{10pt}
+\mathrm{res_{P}} &\vcenter{
+	\infer[]
+		{\m{C \lor D}}
+		{
+			\m{C \lor \underline{\fa{P}{s}}} & 
+			\m{\lnot \underline{\fa{P}{s}} \lor D}
+		}
+} & 
+\parbox[c][2cm]{3cm}{\m{\fa{P}{s} \succ C}\\\m{\lnot \fa{P}{s} \succ D}}\\
+\end{array}
+$
+\caption{Ground superposition for predicates}
+\label{GSP_Predicate}
+\end{figure}
+
+
+\begin{figure}
+\begin{lstlisting}
+$\node{n_0}:$
+assume C$\lor$P(c)
+...
+$\node{n_1}:$
+assume D$\lor$P(c)
+\end{lstlisting}
+\caption{Example for predicate symbols
+}
+\label{snippet4.1.2.3}
+\end{figure}
+
+Consider the following example in figure \ref{snippet4.1.2.3}.
+There is no possible derivation between the two clauses.
+If we were to use the function encoding we would get:
+\s{C \lor \underline{f_{P}(c)}=T,D \lor \underline{f_P(c)}=T}. 
+Although we cannot derive the tautology \m{C \lor D \lor T=T} because of the side conditions of positive superposition, the earlier clause will still be propagated needlessly.
+Using predicate symbols, the request we send is includes both the predicate symbol and the polarity, hence the clause \m{C \lor P(c)} won't be propagated. It is also possible to find, sometimes, that a certain predicate only occurs in one polarity, and eliminate all clauses that include it (pure literal elimination).
+We can calculate, at each CFG-node, a set of predicate polarity pairs that occur in any transitive predecessor and similarly for any transitive successor, and eliminate any clause that contains a literal for which there is no opposite literal.

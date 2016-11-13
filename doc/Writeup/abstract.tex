@@ -1,0 +1,37 @@
+\begin{abstract}
+%In this thesis we develop a verification technique that embeds theorem proving deeply into the verifier, 
+%rather than using an ATP or SMT-solver as a back-end. 
+%The overall aim is to increase the reach of verification tools to non-experts by making them perform more predictably - our technique works incrementally, applying increasingly stronger logical fragments, 
+%where each such fragment has predictable performance. 
+
+Many current verification tools use a logical reasoning engine as a back-end, mostly SMT-solvers.
+While SMT-solvers are efficient and relatively predictable for quantifier free problems, 
+they are not, in general, complete for problems with quantifiers, and tend to show unpredictable performance in the presence of quantifiers, often requiring expert attention for verification to succeed. 
+More advanced software verification goals require the use of quantifiers in order to model concepts for which no decision procedure is implemented in the solver, such as modeling ownership or permissions on the heap.
+
+Automated theorem provers (ATPs) based on the superposition calculus perform significantly better when reasoning with quantifiers, but are weaker for problems with large propositional parts - which many program verification problems contain - and for problems that include significant theory reasoning, such as linear integer arithmetic. 
+A major difference between ATPs and SMT-solvers is that ATPs perform small steps that guarantee progress (generating new clauses), while SMT-solvers must find a conflict (a contradiction) in order to progress, and the number of steps to reach a contradiction is not bounded for problems with quantifiers - hence progress cannot be guaranteed for any number of steps.
+
+In this thesis we develop a verification technique that embeds theorem proving deeply in the verifier.
+Our technique maintains a superposition-based theorem prover at each program point, 
+and allows these provers to communicate relevant information in order to build a proof for the whole program.
+Our technique takes advantage of some properties of programs, such as the control flow structure and lexical scope,
+to restrict the proof search space. Each prover works incrementally in logical fragments of increasing strength and predictable worst-case performance.
+We define a hierarchy of logical fragments based on size measures of clauses and the derivation depth of clauses in the calculus. In our technique, each prover handles a much smaller problem than the verification of the entire program, and much of the control flow is handled directly, reducing the propositional part of the problem significantly.
+
+We prove that our technique is complete for FOL without theories, and a weaker completeness result when lexical scoping is enforced. We have implemented our technique and, while we cannot prove many programs because of the lack of arithmetic support, our implementation can be used as a pre-processing step before an SMT-solver to reduce the overall proving time. Our implementation applies successively stronger logical fragments, each with predictable worst case run-time, and intermediate results (such as proven assertions) can be extracted at any time.
+
+\end{abstract}
+
+\renewcommand{\abstractname}{Sommario}
+\begin{abstract}
+
+Molti degli attuali software di verifica utilizzano uno strumento di ragionamento logico come back-end, per lo più dei risolutori SMT. Sebbene questi siano efficienti e relativamente prevedibili per formule senza quantificatori, in generale, non sono completi per formule con quantificatori e tendono ad avere prestazioni imprevedibili in loro presenza, il che spesso richiede l'attenzione di un esperto perché la verifica di un programma abbia successo.
+
+I dimostratori automatici di teoremi basati sul superposition calculus danno risultati significativamente migliori in presenza di quantificatori, ma risultano più deboli per problemi che contengono in larga parte formule proposizionali - il che è il caso per molti problemi di verifica di programmi - e per problemi che richiedono la risoluzione modulo una teoria, come l'aritmetica lineare intera. Un'importante differenza tra i dimostratori automatici di teoremi e i risolutori SMT è che i dimostratori automatici di teoremi eseguono piccoli passi che garantiscono di compiere progresso (generando nuove clausole), mentre i risolutori SMT devono trovare una contraddizione al fine di progredire, e il numero di passi per raggiungere una contraddizione è illimitato in presenza di quantificatori - non è possibile garantire di compiere progresso per qualsiasi numero di passi.
+
+In questa tesi sviluppiamo una tecnica di verifica che incorpora la dimostraz- ione automatica di teoremi nel software di verifica. La nostra tecnica associa ad ogni punto di controllo di un programma un dimostratore automatico di teoremi basato sul superposition calculus, e permette a questi dimostratori di comunicare informazioni rilevanti al fine di costruire una prova per l'intero programma. La nostra tecnica, per limitare lo spazio di ricerca di una soluzione, si avvale di alcune proprietà dei programmi, come la struttura del flusso di controllo e la visibilità delle variabili. Ogni dimostratore opera in modo incrementale in frammenti logici di crescente espressività e con prevedibile tempo di esecuzione nel caso peggiore. Definiamo una gerarchia di frammenti logici basati sulla misura della dimensione delle clausole e della profondità di derivazione di clausole nel calcolo. Nella nostra tecnica, ciascun dimostratore gestisce un problema molto più ristretto della verifica dell'intero programma, e gran parte del flusso di controllo viene gestito direttamente, riducendo significativamente la componente proposizionale del problema.
+
+Dimostriamo che la nostra tecnica è completa per la logica del prim'ordine senza teorie, e dimostriamo un risultato di completezza più debole quando la visibilità delle variabili è presa in considerazione. Abbiamo implementato la nostra tecnica e, sebbene non possa verificare molti programmi a causa della mancanza di supporto per l'aritmetica lineare, la nostra implementazione può essere utilizzata in fase di pre-elaborazione prima dell'invocazione un risolutore SMT per ridurre il tempo complessivo necessario per la verifica. La nostra implementazione utilizza frammenti logici sempre più espressivi, ciascuno con prevedibile tempo di esecuzione nel caso peggiore, e i risultati intermedi (come le asserzioni provate) possono essere estratti in qualsiasi momento.
+
+\end{abstract}

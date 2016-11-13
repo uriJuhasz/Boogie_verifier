@@ -1,0 +1,207 @@
+\chapter{Scoping DSA and Measures}
+
+\subsection{Scoping, Orderings and size}
+
+Two other issues that interact with this mechanism are term-radius limitations and scoping.\\
+As has been done in e.g. (~\cite{McMillan08},~\cite{BachmairGanzingerWaldmann92},~\cite{KovacsVoronkov09}), we can use a separating ordering to make sure that the above works with scoping at least for the (not necessarily unit) ground case which supports interpolation. 
+As opposed to ~\cite{McMillan08}, we would want to have ground interpolants for ground terms.
+Also, as opposed to ~\cite{KovacsVoronkov09}, where in the interpolation between \m{A,B} terms unique to the language of one side of the interpolant (called dirty or later coloured terms) are larger (in the ordering) than common terms, we would want an ordering where all theory and interpreted symbols are at the bottom of the ordering (including, as we'll see later, path predicates and some of the artifacts of CNF conversion), and for a node \node{n} with a direct predecessor \node{p}, 
+if \m{a \in scope(p) \setminus scope(n)} and \m{b \in scope(p) \cap scope(n)}, then \m{b \succ a}.
+This requirement is trivially satisfiable in a linear program, where it defines a completable ordering.\\
+In a tree shaped program we would need some modification to support this requirement, as the scope of two symbols can end in a different order on different sides of a branch.
+For a DAG we would need some extra modifications on top of those for a tree - all cases will be discussed in the non-unit section. 
+
+For term radius we would usually use, for each equivalence class, the minimum of the radii of its members.
+
+
+\section{Scoping and DSA}
+We will try to generalize this notion somewhat in order to account for scoping and handle equalities.
+For scoping, consider the following program:
+\begin{lstlisting}[caption=scoping heap read property,label=snippet3.5.1]
+assume a!=null
+b := a
+assume b.f>0
+c := b.f
+if (c0)
+	assert c>0
+\end{lstlisting}
+
+Here the variable \variable{b} is out of scope at the assertion and hence also the expression \expression{b.f}, 
+so we would like to refrain from propagating \clause{b.f>0} to the assertion node.
+Note that the variable \variable{a} is in scope at the assertion (as it is a necessary constant), so we could propagate the clauses \clause{a.f>0} and \clause{c=a.f} - this ensures that a clause always has a version that can be propagated.
+Instead, we would rather propagate \clause{y>0} to the assertion node.
+Under a set of unit ground equalities, each clause can have several versions (even infinite - for example under the unit ground equality \expression{a=f(a)} the clause \clause{P(a)} has also the versions \clause{P(f(a))}, \clause{P(f(f(a)))}, etc.
+This example suggests that we may be interested in propagating some version of a clause, obtained by rewriting using unit ground equalities, that is in scope at the successor. This implies that we should also check the potential usefulness of a clause relative to the known unit ground equalities. For example, the following program is annotated with the clauses we would like to propagate:
+
+\begin{lstlisting}[caption=Hoare proof scoping,label=snippet3.5.2]
+assume P(a) $\lor$ Q()
+{ P(a) $\lor$ Q() } scope={a}
+b := a
+{ P(b) $\lor$ Q() } scope={b}
+if (c1)
+	{ P(b) $\lor$ Q() } scope={b}
+	assume !Q()
+	{ P(b) }            scope={b}
+	c:=b
+	{ P(c) }            scope={c}
+	if (c2)
+		{ P(c) }            scope={c}
+		assert P(c)
+	else
+		{ P(c) }            scope={c}
+		assert P(c) $\lor$ $\lnot$c2
+\end{lstlisting}
+
+Note that at line 7 we applied unit propagation.
+We could of course propagate both the clause $\clause{P(c) \lor Q()}$ and \clause{\lnot Q()}, but we prefer to perform the unit propagation as early as possible, both because it strictly simplifies the propagated clauses and because at line 15 we also need to perform this unit propagation, and so it is more efficient to perform it only once.
+
+Let's now consider propagating clauses over joins:
+\begin{lstlisting}[caption=scoping join,label=snippet3.5.3]
+if (c1)
+	assume P(a)
+else
+  b:=a
+	assume P(b)
+assert P(a)
+\end{lstlisting}
+
+The default propagation annotation for this program might be:
+\begin{lstlisting}[caption=Hoare scoping join ,label=snippet3.5.4]
+{}
+if (c1)
+	{}
+	assume P(a)
+	{P(a)}
+else
+	{}
+	b:=a
+	{b=a}
+	assume P(b)
+	{b=a, P(b)}
+{$\lnot$c1 $\lor$ P(a), c1 $\lor$ a=b, c1 $\lor$ P(b)}
+assert P(a)
+\end{lstlisting}
+
+This encoding of the join is complete, but we could consider some other alternatives:
+\begin{enumerate}
+	\item {P(a)}
+	\item {P(a), c1 $\lor$ P(b)}
+	\item {P(a), c1 $\lor$ a=b}
+	\item {P(a), c1 $\lor$ P(b), c1 $\lor$ a=b}
+\end{enumerate}
+
+All alternatives are sufficient in order to prove the assertion.
+The last two alternatives are also complete (i.e. equivalent to the strongest postcondition).
+Looking at a slightly more involved example (annotated):
+\begin{lstlisting}[caption=Hoare scoping join 2,label=snippet3.5.5]
+if (c1)
+	c:=a
+	assume P(a)
+else
+  c:=b
+	assume P(b)
+if (c2)
+	assert P(c)
+else
+	if (c!=b)
+		assert P(a)
+\end{lstlisting}
+
+We propose a the following annotation:
+\begin{lstlisting}[caption=Hoare scoping join 2,label=snippet3.5.5a]
+{}
+if (c1)
+	c:=a
+	assume P(a)
+	{P(a), a=c}
+else
+	c:=b
+	assume P(b)
+	{P(b), b=c}
+{P(c),$\lnot$c1 $\lor$ a=c, c1 $\lor$ b=c}
+if (c2)
+	{P(c)}
+	assert P(c)
+else
+	{P(c),$\lnot$c1 $\lor$ a=c, c1 $\lor$ b=c}
+	if (c3)
+		assume b!=c
+		{P(c),$\lnot$c1 $\lor$ a=c, c1 $\lor$ b=c}
+		$\models$
+		{P(c), c1, a=c}
+		assert P(a)
+\end{lstlisting}
+
+Or the alternative:
+\begin{lstlisting}[caption=Hoare scoping join 2,label=snippet3.5.5b]
+{}
+if (c1)
+	c:=a
+	assume P(a)
+	{P(a), a=c}
+else
+	c:=b
+	assume P(b)
+	{P(b), b=c}
+{P(c),$\lnot$c1 $\lor$ P(a), c1 $\lor$ b=c}
+if (c2)
+	{P(c)}
+	assert P(c)
+else
+	{$\lnot$c1 $\lor$ P(a), c1 $\lor$ b=c}
+	if (c3)
+		{$\lnot$c1 $\lor$ P(a), c1 $\lor$ b=c}
+		assume b!=c
+		{$\lnot$c1 $\lor$ P(a), c1 $\lor$ b=c, b!=c}
+		$\models$ (unit propagation)
+		{P(a), c1}
+		assert P(a)
+\end{lstlisting}
+
+
+%====================================================================================================================
+%====================================================================================================================
+\subsection{DSA}
+
+Often, a DSA version of a variable \variableDSA{v}{n} is assigned an expression that may depend on the old value of \variable{v} (and possibly other variables and constants) e.g. \variable{v}\lstinline{:=}\variable{v}\lstinline{+1} which would become \variableDSA{v}{n}\lstinline{:=}\variableDSA{v}{n-1}\lstinline{+1}.
+In this case, when \variableDSA{v}{n} goes out of scope, we could keep \variableDSA{v}{n-1} in scope and lose no information. If \variableDSA{v}{n-1} is itself a function of earlier variables we could keep only those earlier variables all the way up to an uninitialized variable or the \node{root} node.
+
+In a general Boogie program any variable can be uninitialized before first use, but in most computer programs we would try to avoid this. Specification constructs are sometimes modeled as uninitialized variables, including:
+\begin{itemize}
+	\item Initial values of program/procedure inputs
+	\item \lstinline{havoc}ed variables in a loop body
+	\item Modeling of non deterministic choice
+	\item Return values of a method call
+\end{itemize}
+
+Another case of note is join points: when a variable is assigned potentially different values on two branch sides, using DSA encoding we assign the join version of the variable a different value on each side. For example:
+\begin{lstlisting}[caption=DSA conversion,label=snippet3.5.6]
+assume abs(x)>1
+if (c)
+	x := x+1
+else
+	x := x-1
+x := x*2
+assert (x!=0)
+\end{lstlisting}
+
+This will become:
+\begin{lstlisting}[caption=DSA conversion,label=snippet3.5.6a]
+$\m{l0}$: assume abs(x0)>1
+$\m{lb}$: if (c)
+   lt: x1 := x0+1
+else
+	 le: x1 := x0-1
+$\m{lj}$: x2:=x1*2
+$\m{la}$: assert (x1!=0)
+\end{lstlisting}
+
+Here we could, for \lstinline{lj}, add the clause $\variableDSA{x}{1}=\variableDSA{x}{0}+1 \lor \variableDSA{x}{1}=\variableDSA{x}{0}-1$, or more accurately the clauses $abs(\variableDSA{x}{0})>0$, $\lnot \variable{c} \lor \variableDSA{x}{1}=\variableDSA{x}{0}+1$ and $ \variable{c} \lor \variableDSA{x}{1}=\variableDSA{x}{0}+1$.
+These would translate, in \node{la} to: $abs(\variableDSA{x}{0})>0$, $\lnot \variable{c} \lor \variableDSA{x}{2}=\variableDSA{x}{0}+1$ and $ \variable{c} \lor \variableDSA{x}{2}=\variableDSA{x}{0}+1$.
+However, if \variableDSA{x}{1} is assigned to more than one variable, this set of clauses could grow.
+In this case it might be more efficient to keep \variableDSA{x}{1} in scope wherever its alive, and, on demand, propagate the above clauses along with any clause that includes a variable assigned from \variableDSA{x}{1}.
+
+For each node we collect all variables whose scope ends at the node but that cannot be represented by other variables that remain in scope in the node's successors (resolving cycles arbitrarily), and add them to the scope of all successors. We call these variables the \emph{key constants} of the node (and transitive successors).
+
+
+

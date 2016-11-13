@@ -1,0 +1,59 @@
+	\tikzset{every picture/.style = semithick,node distance=1.5cm}
+	\tikzstyle{hist}     = [gray,text=gray,densely dotted]
+	\tikzstyle{rejected} = [gray,text=gray]
+	\tikzstyle{missing}  = [red,text=red,dashed]
+	\tikzstyle{potential}= [gray,text=gray,dashed]
+	\tikzstyle{joinee}    = [green,text=green]
+
+  \tikzstyle{every node}=[text=black,font=\tiny]
+  \tikzstyle{gtn}  =[draw,ellipse,  text=black,font=\scriptsize,align=center,inner sep=1pt]
+  \tikzstyle{rgtn} =[gtn,rejected]
+  \tikzstyle{mgtn} =[gtn,missing]
+  \tikzstyle{hgtn} =[gtn,hist]
+  \tikzstyle{pgtn} =[gtn,potential]
+  \tikzstyle{jgtn} =[gtn,joinee]
+  
+	\tikzstyle{gttn} =[draw,rectangle,text=black,font=\scriptsize,align=center,inner sep=1pt]
+  \tikzstyle{rgttn}=[gttn,rejected]
+	\tikzstyle{mgttn}=[gttn,missing]
+	\tikzstyle{hgttn}=[gttn,hist]
+	\tikzstyle{pgttn}=[gttn,potential]
+	\tikzstyle{jgttn}=[gttn,joinee]
+  
+	\tikzstyle{el}   =[font=\tiny,pos=0.5,anchor=east] %,anchor=south east]
+  \tikzstyle{rl}   =[el,rejected]
+  \tikzstyle{ml}   =[el,missing]
+  \tikzstyle{hl}   =[el,hist]
+  \tikzstyle{pl}   =[el,potential]
+  \tikzstyle{jl}   =[el,joinee]
+  
+	\tikzstyle{gl}   =[text=black,font=\small]
+
+	\tikzstyle{gfa}   =[->,>=stealth] %,out=-90,in=90]
+	\tikzstyle{rgfa}  =[gfa,rejected]
+	\tikzstyle{mgfa}  =[gfa,missing]
+	\tikzstyle{hgfa}  =[gfa,hist]
+	\tikzstyle{pgfa}  =[gfa,potential]
+	\tikzstyle{jgfa}  =[gfa,joinee]
+  
+	\tikzstyle{sgtt} =[->,>=stealth,double] %,out=-90,in=90]
+  \tikzstyle{rgtt} =[sgtt,rejected]
+  \tikzstyle{msgtt}=[sgtt,missing]
+  \tikzstyle{hsgtt}=[sgtt,hist]
+  \tikzstyle{psgtt}=[sgtt,potential]
+  \tikzstyle{jsgtt}=[sgtt,joinee]
+  
+	\tikzstyle{ie}   =[<->,dashed,font=\tiny]
+
+  \tikzstyle{ee}   =[->,dashed,dash pattern = on 2pt off 1pt,out=180,in=0]
+  \tikzstyle{se}   =[ee,color=blue]
+  \tikzstyle{hse}  =[ee,hist]
+  \tikzstyle{re}   =[ee,rejected]
+  \tikzstyle{me}   =[ee,missing]
+  \tikzstyle{pe}   =[ee,potential]
+  \tikzstyle{je}   =[ee,joinee]
+
+	\tikzstyle{he}   =[->,hist]
+
+	\tikzstyle{separator} = [dashed,color=gray,very thin,dash pattern=on \pgflinewidth off \pgflinewidth]
+	\lstset{tabsize=3}

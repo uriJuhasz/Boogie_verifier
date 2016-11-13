@@ -1,0 +1,5 @@
+anon3_correct      == P_join => (x>2)
+anon4_else_correct == P_else => (x>5 => anon3_correct)
+anon4_then_correct == P_then => (x>3 => anon3_correct)
+anon0_correct      == P_branch => (anon4_else_correct /\ anon4_then_correct)
+ 

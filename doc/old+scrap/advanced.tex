@@ -1,0 +1,35 @@
+\chapter{Advanced}
+
+\section{Theories}
+
+\noindent
+\textbf{Interaction with other fragments:}\\
+Another aspect of the choice of communicating terms has to do with the interaction with other fragments.\\
+Consider the following example:
+\begin{figure}[H]
+\begin{lstlisting}
+$\node{n_1}:$ 
+assume $\m{f\neq g}$
+assume $\m{h\neq g}$
+// x.f := 5
+assume $\m{mr(h_0,x,f)=5}$
+$\node{n_2}:$ 
+// y.g := 6
+assume $\m{h_1 = mw(h_0,y,g,6)}$
+$\node{n_3}:$ 
+// assert x.f := 5
+assert $\m{mr(h_1,x,f)=5}$
+  //negated $\m{\textcolor{gray}{mr(h_1,x,f)\neq 5}}$
+\end{lstlisting}
+\caption{sources fragment interaction}
+\label{snippet3.16i}
+\end{figure}
+Here \m{mr} is the map-read function, \m{mw} is the map-write function, and \m{h_0,h_1} are DSA version of the heap.\\
+As we will describe in the next chapter, we can handle this program either with a dedicated procedure for the map theory, 
+or by axiomatizing the map theory and using superposition or quantifier instantiation.\\
+\textbf{Dedicated procedure:}\\
+For heaps it would suffice to use a non-extensional theory for updateable maps which rewrites read-over-write terms to earlier DSA versions (somewhat in the spirit of ~\cite{ChangLeino2005}) -  
+so that \m{mr(mw(h,x,f,v),y,g)} is rewritten to \m{mr(h,y,g)} if we have established \m{x\neq y} or \m{f \neq g}.\\
+Here, we are allowed by the invariant to have, at \m{g_{n_2}}, \m{mr(h_1,x,f)} either as a \gfa in the graph or as an \rgfa, as it cannot, in itself, communicate any equality information.\\
+However, our procedure would need to ....
+

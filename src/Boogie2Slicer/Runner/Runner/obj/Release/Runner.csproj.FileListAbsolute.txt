@@ -1,0 +1,6 @@
+C:\work\Slicer\src\Boogie2Slicer\Runner\Runner\bin\Release\Runner.exe.config
+C:\work\Slicer\src\Boogie2Slicer\Runner\Runner\bin\Release\Runner.exe
+C:\work\Slicer\src\Boogie2Slicer\Runner\Runner\bin\Release\Runner.pdb
+C:\work\Slicer\src\Boogie2Slicer\Runner\Runner\obj\Release\Runner.exe
+C:\work\Slicer\src\Boogie2Slicer\Runner\Runner\obj\Release\Runner.pdb
+C:\work\Slicer\src\Boogie2Slicer\Runner\Runner\obj\Release\Runner.csprojResolveAssemblyReference.cache

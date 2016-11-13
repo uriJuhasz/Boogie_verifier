@@ -1,0 +1,297 @@
+Simplified Abstract Syntax:
+	
+-------------------------------------------------------------------------------------------------------------
+program :=
+	declaration*
+
+declaration :=
+	  type_declaration
+	| constant_declaration
+	| function_declaration
+	| axiom_declaration
+	| variable_declaration
+	| procedure_declaration
+	| implementation_declaration
+
+-------------------------------------------------------------------------------------------------------------
+symbol :=
+	name
+	attributes
+	
+-------------------------------------------------------------------------------------------------------------
+type_declaration < symbol :=
+	definition : type_defitinion
+
+constant_declaration < symbol :=
+	type
+	unique : boolean
+	order_specification
+
+function_declaration < symbol :=
+	type_parameters
+	parameters : function_parameter* 
+	result     : function_parameter
+	[body      : expression]
+
+axiom_declaration < symbol :=                                  //TODO: no name
+	expression
+
+variable_declaration < symbol :=  
+	type 
+	where : expression
+
+procedure_declaration < symbol :=
+	type_parameters
+	parameters    : variable_declaration*                      //TODO: no attributes
+	result        : variable_declaration*                      //TODO: no attributes
+	specification : procedure_specification
+	[body : block]
+
+implementation_declaration < symbol :=
+	type_parameters
+	parameters : variable_declaration*                         //TODO: no where clause, no attributes
+	result     : variable_declaration*                         //TODO: no where clause, no attributes
+	bodies     : block*
+
+-------------------------------------------------------------------------------------------------------------
+type_definition :=
+	type_parameters
+
+type_constructor_definition < type_definition :=
+	finite : boolean
+
+type_alias_definition < type_definition :=
+	type
+
+-------------------------------------------------------------------------------------------------------------
+type_parameters :=
+	type_parameter*
+
+type_parameter :=
+	name
+
+-------------------------------------------------------------------------------------------------------------
+type :=
+	  atomic_type
+	| map_type
+	| constructor_type
+	
+atomic_type :=
+	  bool
+	| int
+	| ( bit_vector_type )
+
+bit_vector_type:
+	width : nonegative_integer
+
+map_type :=
+	type_parameters
+	range  : type* 
+	domain : type
+
+constructor_type :=
+	name 
+	arguments : type*
+
+-------------------------------------------------------------------------------------------------------------
+function_parameter :=
+	name 
+	type
+
+-------------------------------------------------------------------------------------------------------------
+procedure_specification :=
+	precoditions   : specification_clause*
+	postconditions : specification_clause*
+	modifies       : modifies_clause*
+
+specification_clause :=
+	free : boolean
+	expression
+
+modifies_clause:
+	free : boolean
+	name
+
+-------------------------------------------------------------------------------------------------------------
+block :=
+	locals     : variable_declaration* 
+	statements : labeled_statement*
+
+labeled_statement := 
+	label
+	statement
+
+-------------------------------------------------------------------------------------------------------------
+expression :=
+	  unary_expression
+	| binary_expression
+	| map_indexing_expression
+	| function_application_expression
+	| old_expression
+	| quantifier_expression
+	| literal_expression
+	| variable_expression
+
+unary_expression :=
+	operator : unary_operator
+	operand  : expression
+
+binary_expression :=
+	operator    : binary_operator
+	left, right : expression
+
+map_indexing_expression :=
+	map     : expression 
+	indices : expression*                                   //TODO: number : number
+	value   : expression
+
+variable_expression :=
+	variable : name
+
+function_application_expression :=
+	function  : name
+	arguments : expression*
+
+old_expression :=
+	expression
+
+quantifier_expression :=                                    //TODO:quantify groups or singles?
+	quantifier
+	name
+	type
+	type_arguments
+	attributes
+	triggers
+
+literal_expression :=
+	  true
+	| false
+	| integer
+	| bit_vector_literal
+
+unary_operator :=
+	  not
+	| -
+
+binary_operator :=
+	  <==>
+	| ==>
+	| ||
+	| &&
+	| ==
+	| !=
+	| <
+	| >
+	| <=
+	| >=
+	| <:
+	| ++
+	| +
+	| -
+	| *
+	| /
+	| %
+
+quantifier :=
+	  forall
+	| exists
+
+bit_vector_literal :=
+	width : nonegative_integer
+	value : nonegative_integer
+
+-------------------------------------------------------------------------------------------------------------
+statement :=
+	  assert_statement
+	| assume_statement
+
+assert_statement :=
+	expression
+
+assume_statement :=
+	expression
+
+havoc_statement :=
+	name
+
+assignment_statement :=
+	destination : lhs
+	source      : expression
+
+call_statement :=
+	procedure : name
+	arguments : expression*
+	returns   : name*                       
+
+call_forall_statement :=
+	procedure : name
+	arguments : wildcard_or_expression*
+	
+conditional_statement :=
+	condition : wildcard_or_expression
+	then_branch : block
+	else_branch : block
+
+while_statement :=
+	condition       : wildcard_or_expression
+	loop_invariants : specification_expression
+
+break_statement :=
+	enclosing : label*
+
+return_statement :=
+	
+goto_statement :=
+	targets : label*
+
+wildcard_or_expression :=
+	  expression
+	| wildcard
+	
+lhs :=
+	  simple_lhs
+	| map_lhs
+	
+simple_lhs :=
+	name
+	
+map_lhs :=
+	map     : name
+	indices : expression*                                   //TODO: number : number
+
+-------------------------------------------------------------------------------------------------------------
+order_specification :=
+	complete_parents  : boolean
+	complete_children : boolean
+	parents           : order_edge*
+
+order_edge :=
+	name
+	unique : boolean
+
+-------------------------------------------------------------------------------------------------------------
+name :=
+	identifier
+
+label :=
+	identifier
+
+-------------------------------------------------------------------------------------------------------------
+attributes :=
+	attribute*
+
+attribute :=
+	name
+	arguments : attribute_argument*
+
+attribute_argument :=
+	  expression 	
+	| string_literal
+
+-------------------------------------------------------------------------------------------------------------
+triggers :=
+	trigger*
+
+trigger :=
+	expression
+

@@ -1,0 +1,499 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{01E21645-3B3A-4F9D-830A-7E5F1A68AE2F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Slicer</RootNamespace>
+    <AssemblyName>Slicer</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;LOG1</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>True</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>True</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>True</CodeContractsArithmeticObligations>
+    <CodeContractsContainerAnalysis>False</CodeContractsContainerAnalysis>
+    <CodeContractsRedundantAssumptions>True</CodeContractsRedundantAssumptions>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>True</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>True</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsEnumObligations>True</CodeContractsEnumObligations>
+    <CodeContractsInferRequires>True</CodeContractsInferRequires>
+    <CodeContractsInferEnsures>True</CodeContractsInferEnsures>
+    <CodeContractsInferObjectInvariants>True</CodeContractsInferObjectInvariants>
+    <CodeContractsSuggestAssumptions>True</CodeContractsSuggestAssumptions>
+    <CodeContractsSuggestRequires>True</CodeContractsSuggestRequires>
+    <CodeContractsSuggestEnsures>True</CodeContractsSuggestEnsures>
+    <CodeContractsSuggestObjectInvariants>True</CodeContractsSuggestObjectInvariants>
+    <CodeContractsDisjunctiveRequires>True</CodeContractsDisjunctiveRequires>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;DLOG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeContractsEnableRuntimeChecking>False</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>True</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>True</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>True</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>True</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>True</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>True</CodeContractsRedundantAssumptions>
+    <CodeContractsAssertsToContractsCheckBox>True</CodeContractsAssertsToContractsCheckBox>
+    <CodeContractsRedundantTests>True</CodeContractsRedundantTests>
+    <CodeContractsMissingPublicRequiresAsWarnings>True</CodeContractsMissingPublicRequiresAsWarnings>
+    <CodeContractsMissingPublicEnsuresAsWarnings>False</CodeContractsMissingPublicEnsuresAsWarnings>
+    <CodeContractsInferRequires>True</CodeContractsInferRequires>
+    <CodeContractsInferEnsures>False</CodeContractsInferEnsures>
+    <CodeContractsInferEnsuresAutoProperties>True</CodeContractsInferEnsuresAutoProperties>
+    <CodeContractsInferObjectInvariants>False</CodeContractsInferObjectInvariants>
+    <CodeContractsSuggestAssumptions>False</CodeContractsSuggestAssumptions>
+    <CodeContractsSuggestAssumptionsForCallees>False</CodeContractsSuggestAssumptionsForCallees>
+    <CodeContractsSuggestRequires>False</CodeContractsSuggestRequires>
+    <CodeContractsNecessaryEnsures>True</CodeContractsNecessaryEnsures>
+    <CodeContractsSuggestObjectInvariants>False</CodeContractsSuggestObjectInvariants>
+    <CodeContractsSuggestReadonly>True</CodeContractsSuggestReadonly>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>True</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsSQLServerOption />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>True</CodeContractsCacheAnalysisResults>
+    <CodeContractsSkipAnalysisIfCannotConnectToCache>False</CodeContractsSkipAnalysisIfCannotConnectToCache>
+    <CodeContractsFailBuildOnWarnings>False</CodeContractsFailBuildOnWarnings>
+    <CodeContractsBeingOptimisticOnExternal>True</CodeContractsBeingOptimisticOnExternal>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>InterimKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>True</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>True</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>True</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>True</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>True</CodeContractsRedundantAssumptions>
+    <CodeContractsInferRequires>True</CodeContractsInferRequires>
+    <CodeContractsInferEnsures>True</CodeContractsInferEnsures>
+    <CodeContractsInferObjectInvariants>True</CodeContractsInferObjectInvariants>
+    <CodeContractsSuggestAssumptions>True</CodeContractsSuggestAssumptions>
+    <CodeContractsSuggestRequires>True</CodeContractsSuggestRequires>
+    <CodeContractsSuggestEnsures>True</CodeContractsSuggestEnsures>
+    <CodeContractsSuggestObjectInvariants>True</CodeContractsSuggestObjectInvariants>
+    <CodeContractsDisjunctiveRequires>True</CodeContractsDisjunctiveRequires>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>True</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>True</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\GTPos.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\IU.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\JSourceStructure.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\RSourceStructure.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\RMergeTemplateMaker.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\SSourceStructure.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\USourceStructure.cs" />
+    <Compile Include="Analyzers\FOLConverter\ControlFlowGraph\HistoryRecorder.cs" />
+    <Compile Include="Analyzers\PreprocessAnalyzers\AdjacentBlockMerger.cs" />
+    <Compile Include="Analyzers\PreprocessAnalyzers\BranchConditionAssignmentConsolidator.cs" />
+    <Compile Include="Analyzers\PreprocessAnalyzers\BranchDeterminizer.cs" />
+    <Compile Include="Analyzers\EqualityAnalyzer\LazyUnionSet.cs" />
+    <Compile Include="Analyzers\PreprocessAnalyzers\ExpressionSymbolCounter.cs" />
+    <Compile Include="Analyzers\PreprocessAnalyzers\FlatSingleAssertionSymbolSlicer.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\AtomTriggers.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\SMergeTemplateMaker.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\SImportTemplateMaker.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\SSyncTemplateMaker.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\STemplateMaker.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\JImportTemplateMaker.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\JMergeTemplateMaker.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\JSyncTemplateMaker.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\JTemplateMaker.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\SaturationQueues.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\Revision.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\TemplateMaker.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\TermRepository.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\GroundSubstitutionEC.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\HashableArray.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\SU.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\JU.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\TermStructureTemplate.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\Universe.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\CClauseEC.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\FreeClauseEC.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\GroundClauseEC.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\IClauseEC.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\RU.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\SubstitutionEC.cs" />
+    <Compile Include="Analyzers\FOLConverter\CanonicalForms\TermTriggers.cs" />
+    <Compile Include="Analyzers\FOLConverter\Clauses\LogicElement.cs" />
+    <Compile Include="Analyzers\FOLConverter\ControlFlowGraph\CFG.cs" />
+    <Compile Include="Analyzers\FOLConverter\ControlFlowGraph\SMTDumperEC.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae2Clauses\CNFConverter.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\And.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\Operator.cs" />
+    <Compile Include="Analyzers\FOLConverter\Contexts\AbsoluteTermInstance.cs" />
+    <Compile Include="Analyzers\FOLConverter\Clauses\Atom.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\IAtomicFormula.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\BinaryConnective.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\BinaryConnectiveC.cs" />
+    <Compile Include="Analyzers\FOLConverter\Clauses\Clause.cs" />
+    <Compile Include="Analyzers\FOLConverter\Clauses\ClauseSet.cs" />
+    <Compile Include="Analyzers\FOLConverter\Clauses\ClauseSetMutatingVisitorMods.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae2Clauses\CNF2State.cs" />
+    <Compile Include="Analyzers\FOLConverter\Critter.cs" />
+    <Compile Include="Analyzers\FOLConverter\Contexts\ClauseTermContextIndex.cs" />
+    <Compile Include="Analyzers\FOLConverter\Contexts\ClauseTermIndex.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\EqualityFormula.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\Equality.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\Equivalence.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\Exists.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\False.cs" />
+    <Compile Include="Analyzers\FOLConverter\Contexts\FunctionInstance.cs" />
+    <Compile Include="Analyzers\FOLConverter\FileUtilities.cs" />
+    <Compile Include="Analyzers\FOLConverter\Contexts\FunctionInstances.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\Forall.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\Formula.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\FormulaVisitor.cs" />
+    <Compile Include="Analyzers\FOLConverter\Contexts\FunctionTypeContext.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\Function.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\FunctionApplication.cs" />
+    <Compile Include="Analyzers\FOLConverter\Contexts\FunctionArgument.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\Implication.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\OperatorApplication.cs" />
+    <Compile Include="Analyzers\FOLConverter\IPredicateEliminationCriterion.cs" />
+    <Compile Include="Analyzers\FOLConverter\ISRS.cs" />
+    <Compile Include="Analyzers\FOLConverter\Contexts\ITypeContext.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\LiteralFormula.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\LiteralFormulaC.cs" />
+    <Compile Include="Analyzers\FOLConverter\MapLookupCollector.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae2Clauses\MiniScopeVisitor.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae2Clauses\NNFVisitor.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae2Clauses\NNFVisitorN.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\Not.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\Or.cs" />
+    <Compile Include="Analyzers\FOLConverter\Contexts\PAInstance.cs" />
+    <Compile Include="Analyzers\FOLConverter\Contexts\PredicateInstance.cs" />
+    <Compile Include="Analyzers\FOLConverter\Contexts\PredicateInstances.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\Predicate.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\PredicateApplication.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\Quantifier.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\QuantifierC.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae2Clauses\SimplifyVisitor.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae2Clauses\SkolemizationVisitor.cs" />
+    <Compile Include="Analyzers\FOLConverter\Backends\SMTLibDumperFormulae.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\IPredicate.cs" />
+    <Compile Include="Analyzers\FOLConverter\Contexts\SPredicateTypeContext.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\Substitution.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\LVar.cs" />
+    <Compile Include="Analyzers\FOLConverter\Contexts\TypeEqualityInstance.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\ITerm.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\ITermVisitor.cs" />
+    <Compile Include="Analyzers\FOLConverter\Contexts\TypeFunctionApplicationInstance.cs" />
+    <Compile Include="Analyzers\FOLConverter\Contexts\TypeInstances.cs" />
+    <Compile Include="Analyzers\FOLConverter\Contexts\TypePredicateInstance.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\True.cs" />
+    <Compile Include="Analyzers\FOLConverter\Contexts\TypeTermInstance.cs" />
+    <Compile Include="Analyzers\FOLConverter\Contexts\TypeVariableInstance.cs" />
+    <Compile Include="Analyzers\FOLConverter\Formulae\Variable.cs" />
+    <Compile Include="Analyzers\FOLConverter\utilities\Utilities.cs" />
+    <Compile Include="Analyzers\PreprocessAnalyzers\MapWriteRemover.cs" />
+    <Compile Include="Analyzers\PreprocessAnalyzers\QuantifiedTypeCollector.cs" />
+    <Compile Include="Analyzers\FOLConverter\Slicer.cs" />
+    <Compile Include="Analyzers\PreprocessAnalyzers\TypeInstanceCollector.cs" />
+    <Compile Include="Analyzers\PreprocessAnalyzers\TypeQuantificationRemover.cs" />
+    <Compile Include="Analyzers\PreprocessAnalyzers\FunctionInliner.cs" />
+    <Compile Include="Analyzers\PreprocessAnalyzers\SubexpressionCounter.cs" />
+    <Compile Include="Analyzers\PreprocessAnalyzers\SubexpressionEliminator.cs" />
+    <Compile Include="Analyzers\Tools\Analyzer.cs" />
+    <Compile Include="Analyzers\Tools\BackwardEvaluator.cs" />
+    <Compile Include="Analyzers\PreprocessAnalyzers\BranchConditionMerger.cs" />
+    <Compile Include="Analyzers\PreprocessAnalyzers\DeadCodeEliminator.cs" />
+    <Compile Include="Analyzers\EqualityAnalyzer\EqualityAnalyzer.cs" />
+    <Compile Include="Analyzers\EqualityAnalyzer\EqualityDatabase.cs" />
+    <Compile Include="Analyzers\Tools\Evaluator.cs" />
+    <Compile Include="Analyzers\Tools\EvaluatorInformation.cs" />
+    <Compile Include="Analyzers\Tools\ForwardEvaluator.cs" />
+    <Compile Include="Analyzers\PreprocessAnalyzers\InitializedVariables.cs" />
+    <Compile Include="Analyzers\Tools\AVisitor.cs" />
+    <Compile Include="Analyzers\PreprocessAnalyzers\UnusedSymbolRemover.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Programs\Expressions\Basic\BasicBoundVariableExpression.cs" />
+    <Compile Include="Programs\Expressions\Basic\BasicQuantifiedExpression.cs" />
+    <Compile Include="Programs\Expressions\Basic\BasicQuantifiedTypeExpression.cs" />
+    <Compile Include="Programs\Expressions\Boogie\BoogieBoundVariableExpression.cs" />
+    <Compile Include="Programs\Expressions\BoundVariableExpression.cs" />
+    <Compile Include="Programs\Expressions\ExpressionSubstitution.cs" />
+    <Compile Include="Programs\Expressions\FreeAtomicExpression.cs" />
+    <Compile Include="Programs\Expressions\ProgramVariableExpression.cs" />
+    <Compile Include="Programs\TypeSynonym.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StateSpace\Functions\Basic\BasicFunctionSignature.cs" />
+    <Compile Include="StateSpace\Functions\Basic\BasicFunctionTemplate.cs" />
+    <Compile Include="StateSpace\Functions\Basic\BasicFunctionTemplateInstance.cs" />
+    <Compile Include="StateSpace\Functions\Boogie\BoogieBitVectorConcatenationFunction.cs" />
+    <Compile Include="StateSpace\Functions\Boogie\BoogieBitVectorExtractorFunction.cs" />
+    <Compile Include="Programs\Expressions\Basic\BasicLiteralExpression.cs" />
+    <Compile Include="StateSpace\Functions\Basic\BasicMapWrite.cs" />
+    <Compile Include="StateSpace\Functions\FunctionBody.cs" />
+    <Compile Include="StateSpace\Functions\FunctionSignature.cs" />
+    <Compile Include="StateSpace\Functions\FunctionTemplate.cs" />
+    <Compile Include="StateSpace\Functions\FunctionTemplateInstance.cs" />
+    <Compile Include="StateSpace\Functions\TypeParameterInstantiation.cs" />
+    <Compile Include="StateSpace\Types\RealType.cs" />
+    <Compile Include="StateSpace\Types\Utilities\TypeVisitor.cs" />
+    <Compile Include="StateSpace\Variables\Quantification\Basic\BasicExists.cs" />
+    <Compile Include="StateSpace\Functions\Basic\BasicMapRead.cs" />
+    <Compile Include="StateSpace\Variables\Quantification\Basic\BasicBoundVariable.cs" />
+    <Compile Include="StateSpace\Types\Quantification\Boogie\BoogieTypeVariable.cs" />
+    <Compile Include="StateSpace\Functions\MapWrite.cs" />
+    <Compile Include="StateSpace\Functions\MapRead.cs" />
+    <Compile Include="StateSpace\Types\Quantification\TypeForall.cs" />
+    <Compile Include="StateSpace\Types\Quantification\TypeExists.cs" />
+    <Compile Include="StateSpace\Variables\Quantification\Forall.cs" />
+    <Compile Include="StateSpace\Functions\Function.cs" />
+    <Compile Include="StateSpace\Functions\Basic\BasicFunction.cs" />
+    <Compile Include="StateSpace\Types\Quantification\TypeVariable.cs" />
+    <Compile Include="StateSpace\Variables\Quantification\BoundVariable.cs" />
+    <Compile Include="Analyzers\EqualityAnalyzer\MapAnalyzer\JoinMapIncarnation.cs" />
+    <Compile Include="Analyzers\EqualityAnalyzer\MapAnalyzer\FieldWriteMapIncarnation.cs" />
+    <Compile Include="Analyzers\EqualityAnalyzer\MapAnalyzer\IncarnationAndInequalityMap.cs" />
+    <Compile Include="Analyzers\EqualityAnalyzer\MapAnalyzer\InitialMapIncarnation.cs" />
+    <Compile Include="Analyzers\EqualityAnalyzer\MapAnalyzer\MapIncarnation.cs" />
+    <Compile Include="Programs\Procedures\BasicEdge.cs" />
+    <Compile Include="Programs\CFG\CFGEdge.cs" />
+    <Compile Include="Programs\CFG\CFGNode.cs" />
+    <Compile Include="Programs\Conditions\PropositionalFormula.cs" />
+    <Compile Include="Programs\Expressions\Basic\BasicFunctionApplicationExpression.cs" />
+    <Compile Include="Programs\Expressions\Basic\BasicProgramVariableExpression.cs" />
+    <Compile Include="Programs\Expressions\Boogie\BoogieLiteralExpression.cs" />
+    <Compile Include="Programs\Expressions\FunctionApplicationExpression.cs" />
+    <Compile Include="Programs\Expressions\LiteralExpression.cs" />
+    <Compile Include="Programs\Expressions\utilities\AList.cs" />
+    <Compile Include="Programs\Expressions\Boogie\BoogieProgramVariableExpression.cs" />
+    <Compile Include="Programs\Expressions\QuantifiedExpression.cs" />
+    <Compile Include="Programs\Expressions\QuantifiedTypeExpression.cs" />
+    <Compile Include="Transformations\BoogieDumper.cs" />
+    <Compile Include="Transformations\CFGDotDumper.cs" />
+    <Compile Include="Programs\Expressions\Boogie\BoogieQuantifiedTypeExpression.cs" />
+    <Compile Include="Programs\Expressions\Expression.cs" />
+    <Compile Include="Programs\Expressions\utilities\ExpressionFactory.cs" />
+    <Compile Include="Programs\Expressions\utilities\ExpressionList.cs" />
+    <Compile Include="Programs\Expressions\Boogie\BoogieFunctionApplicationExpression.cs" />
+    <Compile Include="StateSpace\Types\Quantification\Basic\BasicTypeVariable.cs" />
+    <Compile Include="StateSpace\Variables\Quantification\Exists.cs" />
+    <Compile Include="StateSpace\Types\Quantification\Basic\BasicTypeExists.cs" />
+    <Compile Include="StateSpace\Variables\Quantification\Basic\BasicForall.cs" />
+    <Compile Include="StateSpace\Types\Quantification\Basic\BasicTypeForall.cs" />
+    <Compile Include="StateSpace\Types\Quantification\TypeQuantifier.cs" />
+    <Compile Include="StateSpace\Variables\Quantification\Boogie\BoogieBoundVariable.cs" />
+    <Compile Include="Programs\Expressions\Boogie\BoogieQuantifiedExpression.cs" />
+    <Compile Include="StateSpace\Variables\Quantification\Quantifier.cs" />
+    <Compile Include="Programs\Expressions\AtomicExpression.cs" />
+    <Compile Include="Programs\Expressions\utilities\ExpressionVisitor.cs" />
+    <Compile Include="Programs\Procedures\Procedure.cs" />
+    <Compile Include="Programs\ProgramFactory.cs" />
+    <Compile Include="Programs\Statements\Assume.cs" />
+    <Compile Include="Programs\Statements\Assert.cs" />
+    <Compile Include="Programs\Statements\Block.cs" />
+    <Compile Include="Programs\Statements\StatementImp.cs" />
+    <Compile Include="Programs\Statements\UnconditionalBranch.cs" />
+    <Compile Include="Programs\Statements\StatementVisitor.cs" />
+    <Compile Include="StateSpace\Variables\Constant.cs" />
+    <Compile Include="StateSpace\Types\AtomicType.cs" />
+    <Compile Include="StateSpace\Types\BooleanType.cs" />
+    <Compile Include="StateSpace\Types\BitVectorType.cs" />
+    <Compile Include="StateSpace\Types\IntegerType.cs" />
+    <Compile Include="StateSpace\Types\MapType.cs" />
+    <Compile Include="StateSpace\Types\DataType.cs" />
+    <Compile Include="StateSpace\Types\TypeConstructor.cs" />
+    <Compile Include="StateSpace\Types\TypeConstructorInstantiation.cs" />
+    <Compile Include="StateSpace\Types\Utilities\TypeFactory.cs" />
+    <Compile Include="StateSpace\Types\VariableType.cs" />
+    <Compile Include="StateSpace\Values\BooleanValue.cs" />
+    <Compile Include="StateSpace\Values\IntegerValue.cs" />
+    <Compile Include="StateSpace\Values\Value.cs" />
+    <Compile Include="StateSpace\Variables\Variable.cs" />
+    <Compile Include="StateSpace\Variables\Utilities\VariableList.cs" />
+    <Compile Include="Transformations\SingleAssertionCFGExtractor.cs" />
+    <Compile Include="Transformations\StructuredProgramToCFG.cs" />
+    <Compile Include="Programs\Procedures\BasicBlock.cs" />
+    <Compile Include="Programs\CFG\CFG.cs" />
+    <Compile Include="Programs\Procedures\StatementId.cs" />
+    <Compile Include="Programs\Procedures\StatementIdImp.cs" />
+    <Compile Include="Programs\Statements\ControlStatement.cs" />
+    <Compile Include="Programs\Program.cs" />
+    <Compile Include="Programs\Scope.cs" />
+    <Compile Include="Programs\Procedures\ProcedureImp.cs" />
+    <Compile Include="main\SemanticSlicer.cs" />
+    <Compile Include="Programs\ScopeImp.cs" />
+    <Compile Include="Programs\Statements\Boogie\Assume.cs" />
+    <Compile Include="Programs\Statements\Boogie\Assert.cs" />
+    <Compile Include="Programs\Statements\ConditionalBranch.cs" />
+    <Compile Include="Programs\Statements\Predicate.cs" />
+    <Compile Include="main\StateSpaceAnalyzer.cs" />
+    <Compile Include="Programs\Statements\Statement.cs" />
+    <Compile Include="StateSpace\StateInformation.cs" />
+    <Compile Include="StateSpace\Variables\ProgramVariable.cs" />
+    <Compile Include="StateSpace\Variables\Utilities\VariableSet.cs" />
+    <Compile Include="Utilities\Utilities.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="InterimKey.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="tests\test1.bpl" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Numerics" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\boogie\Source\Basetypes\Basetypes.csproj">
+      <Project>{43DFAD18-3E35-4558-9BE2-CAFF6B5BA8A0}</Project>
+      <Name>Basetypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Boogie\Source\Core\Core.csproj">
+      <Project>{b230a69c-c466-4065-b9c1-84d80e76d802}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

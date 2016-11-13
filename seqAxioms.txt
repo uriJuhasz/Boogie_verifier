@@ -1,0 +1,88 @@
+   0,1 {!$NP@72(v0,v1,v2,v3),!v0 = @sk_31(v3,v2,v1,v0)}
+   0,1 {!(@sk_35(v0,v1,v2)<v2),!Seq@Contains$Int$(Seq@Drop$Int$(v1,v2),v0)}
+     0 {!Seq@Contains$Int$(Seq@Singleton$Int$(v0),v1),@bf_25 = @bf_46(v0,v1)}
+     0 {!Seq@Equal$Int$(v0,v1),@bf_25 = @bf_44(v0,v1)}
+     0 {!Seq@Contains$Int$(Seq@Drop$Int$(v0,v1),v2),@bf_25 = @bf_42(v0,v1,v2)}
+     0 {!Seq@Contains$Int$(Seq@Take$Int$(v0,v1),v2),@bf_25 = @bf_40(v0,v1,v2)}
+     0 {!Seq@Contains$Int$(Seq@Build$Int$(v0,v1,v2,v3),v4),@bf_25 = @bf_38(v0,v1,v2,v3,v4)}
+     0 {!Seq@Contains$Int$(Seq@Append$Int$(v0,v1),v2),@bf_25 = @bf_36(v0,v1,v2)}
+     0 {!Seq@Contains$Int$(v0,v1),@bf_25 = @bf_33(v0,v1)}
+     0 {!Seq@Contains$Int$(Seq@Build$Int$(v0,v1,v2,v3),v4),$NP@72(v1,v3,v0,v4),$NP@73(v1,v3,v2,v4)}
+   0,1 {!Seq@Contains$Int$(v0,v1),(@sk_29(v1,v0)<Seq@Length$Int$(v0))}
+   0,1 {!$NP@72(v0,v1,v2,v3),(@sk_31(v3,v2,v1,v0)<Seq@Length$Int$(v2))}
+   0,1 {!$NP@72(v0,v1,v2,v3),(@sk_31(v3,v2,v1,v0)<v1)}
+   0,1 {!Seq@Contains$Int$(Seq@Take$Int$(v0,v1),v2),(@sk_33(v2,v0,v1)<Seq@Length$Int$(v0))}
+   0,1 {!Seq@Contains$Int$(Seq@Take$Int$(v0,v1),v2),(@sk_33(v2,v0,v1)<v1)}
+   0,1 {!Seq@Contains$Int$(Seq@Drop$Int$(v0,v1),v2),(@sk_35(v2,v0,v1)<Seq@Length$Int$(v0))}
+   1,2 {!Seq@Length$Int$(v0) = Seq@Length$Int$(v1),(@sk_37(v1,v0)<Seq@Length$Int$(v1)),Seq@Equal$Int$(v1,v0)}
+     1 {!@bf_25 = @bf_44(v0,v1),Seq@Equal$Int$(v0,v1)}
+     1 {!@bf_25 = @bf_33(v0,v1),Seq@Contains$Int$(v0,v1)}
+     1 {!@bf_25 = @bf_40(v0,v1,v2),Seq@Contains$Int$(Seq@Take$Int$(v0,v1),v2)}
+     1 {!@bf_25 = @bf_46(v0,v1),Seq@Contains$Int$(Seq@Singleton$Int$(v0),v1)}
+     1 {!@bf_25 = @bf_42(v0,v1,v2),Seq@Contains$Int$(Seq@Drop$Int$(v0,v1),v2)}
+     1 {!@bf_25 = @bf_38(v0,v1,v2,v3,v4),Seq@Contains$Int$(Seq@Build$Int$(v0,v1,v2,v3),v4)}
+     1 {!@bf_25 = @bf_36(v0,v1,v2),Seq@Contains$Int$(Seq@Append$Int$(v0,v1),v2)}
+     0 {!$NP@72(v0,v1,v2,v3),!(@sk_31(v3,v2,v1,v0)<0)}
+     0 {!$NP@73(v0,v1,v2,v3),!(v0<0)}
+     1 {!(@sk_29(v0,v1)<0),!Seq@Contains$Int$(v1,v0)}
+     1 {!(@sk_33(v0,v1,v2)<0),!Seq@Contains$Int$(Seq@Take$Int$(v1,v2),v0)}
+     0 {!(Seq@Length$Int$(v0)<0)}
+     1 {!(v0<0),!Seq@Contains$Int$(Seq@Drop$Int$(v1,v0),v2)}
+     1 {(v0<Seq@Length$Int$(v1)),Seq@Index$Int$(v2,(v0+(-1*Seq@Length$Int$(v1)))) = Seq@Index$Int$(Seq@Append$Int$(v1,v2),v0)}
+     0 {!$NP@73(v0,v1,v2,v3),(v0<v1)}
+     2 {(v0<0),(Seq@Length$Int$(v1)<v0),Seq@Length$Int$(Seq@Drop$Int$(v1,v0)) = (Seq@Length$Int$(v1)+(-1*v0))}
+     2 {(v0<0),(Seq@Length$Int$(v1)<v0),v0 = Seq@Length$Int$(Seq@Take$Int$(v1,v0))}
+     3 {!(v0<(Seq@Length$Int$(v1)+(-1*v2))),(v0<0),(v2<0),Seq@Index$Int$(v1,(v0+v2)) = Seq@Index$Int$(Seq@Drop$Int$(v1,v2),v0)}
+     2 {!(v0<v1),(v0<0),Seq@Contains$Int$(Seq@Build$Int$(v2,v0,v3,v1),v3)}
+     4 {!(v0<v1),!(v0<Seq@Length$Int$(v2)),(v0<0),v0 = v3,Seq@Contains$Int$(Seq@Build$Int$(v2,v3,v4,v1),Seq@Index$Int$(v2,v0))}
+     3 {!(v0<v1),!(v0<Seq@Length$Int$(v2)),(v0<0),Seq@Contains$Int$(Seq@Take$Int$(v2,v1),Seq@Index$Int$(v2,v0))}
+     2 {!(v0<Seq@Length$Int$(v1)),(v0<0),Seq@Contains$Int$(v1,Seq@Index$Int$(v1,v0))}
+     0 {v0 = Seq@Index$Int$(Seq@Singleton$Int$(v0),0)}
+0,2,3,5 {!(@sk_31(v0,v1,v2,v3)<v2),!(@sk_31(v0,v1,v2,v3)<Seq@Length$Int$(v1)),!v0 = Seq@Index$Int$(v1,@sk_31(v0,v1,v2,v3)),$NP@72(v3,v2,v1,v0),(@sk_31(v0,v1,v2,v3)<0),v3 = @sk_31(v
+0,v1,v2,v3)}
+     1 {!(v0<v1),$NP@73(v0,v1,v2,v2),(v0<0)}
+     1 {!Seq@Contains$Int$(v0,v1),Seq@Contains$Int$(Seq@Append$Int$(v0,v2),v1)}
+     1 {!Seq@Contains$Int$(v0,v1),Seq@Contains$Int$(Seq@Append$Int$(v2,v0),v1)}
+     2 {!(v0<(v1+(-1*v2))),(v0<0),Seq@Index$Int$(Seq@Range(v2,v1),v0) = (v2+v0)}
+     3 {!(v0<v1),!(v0<Seq@Length$Int$(v2)),(v0<0),Seq@Index$Int$(v2,v0) = Seq@Index$Int$(Seq@Take$Int$(v2,v1),v0)}
+   1,3 {!(v0<Seq@Length$Int$(v1)),!Seq@Equal$Int$(v1,v2),(v0<0),Seq@Index$Int$(v2,v0) = Seq@Index$Int$(v1,v0)}
+     0 {Seq@Contains$Int$(Seq@Singleton$Int$(v0),v0)}
+     2 {!(Seq@Length$Int$(v0)<v1),(v1<0),Seq@Length$Int$(Seq@Drop$Int$(v0,v1)) = 0}
+     0 {!Seq@Contains$Int$(Seq@Append$Int$(v0,v1),v2),Seq@Contains$Int$(v0,v2),Seq@Contains$Int$(v1,v2)}
+     2 {!(Seq@Length$Int$(v0)<v1),(v1<0),Seq@Length$Int$(v0) = Seq@Length$Int$(Seq@Take$Int$(v0,v1))}
+     1 {(v0<0),v0 = Seq@Length$Int$(Seq@Build$Int$(v1,v2,v3,v0))}
+     3 {!(v0<v1),(v0<0),v0 = v2,Seq@Index$Int$(v3,v0) = Seq@Index$Int$(Seq@Build$Int$(v3,v2,v4,v1),v0)}
+   0,2 {!Seq@Index$Int$(v0,@sk_37(v1,v0)) = Seq@Index$Int$(v1,@sk_37(v1,v0)),!Seq@Length$Int$(v0) = Seq@Length$Int$(v1),Seq@Equal$Int$(v1,v0)}
+     2 {!(v0<v1),(v0<0),v2 = Seq@Index$Int$(Seq@Build$Int$(v3,v0,v2,v1),v0)}
+     1 {!(v0<Seq@Length$Int$(v1)),Seq@Index$Int$(v1,v0) = Seq@Index$Int$(Seq@Append$Int$(v1,v2),v0)}
+     0 {Seq@Length$Int$(Seq@Append$Int$(v0,v1)) = (Seq@Length$Int$(v0)+Seq@Length$Int$(v1))}
+     1 {!(v0<v1),Seq@Length$Int$(Seq@Range(v0,v1)) = (v1+(-1*v0))}
+     0 {Seq@Length$Int$(Seq@Singleton$Int$(v0)) = 1}
+     0 {!Seq@Equal$Int$(v0,v1),Seq@Length$Int$(v1) = Seq@Length$Int$(v0)}
+     3 {!(v0<Seq@Length$Int$(v1)),(v0<v2),(v2<0),Seq@Contains$Int$(Seq@Drop$Int$(v1,v2),Seq@Index$Int$(v1,v0))}
+     1 {(v0<v1),Seq@Length$Int$(Seq@Range(v0,v1)) = 0}
+     2 {!(@sk_37(v0,v1)<0),!Seq@Length$Int$(v1) = Seq@Length$Int$(v0),Seq@Equal$Int$(v0,v1)}
+     0 {v0 = Seq@Drop$Int$(Seq@Append$Int$(v1,v0),Seq@Length$Int$(v1))}
+   0,1 {!Seq@Contains$Int$(v0,v1),v1 = Seq@Index$Int$(v0,@sk_29(v1,v0))}
+   0,1 {!$NP@72(v0,v1,v2,v3),v3 = Seq@Index$Int$(v2,@sk_31(v3,v2,v1,v0))}
+   0,1 {!Seq@Contains$Int$(Seq@Take$Int$(v0,v1),v2),v2 = Seq@Index$Int$(v0,@sk_33(v2,v0,v1))}
+   0,1 {!Seq@Contains$Int$(Seq@Drop$Int$(v0,v1),v2),v2 = Seq@Index$Int$(v0,@sk_35(v2,v0,v1))}
+     0 {v0 = Seq@Take$Int$(Seq@Append$Int$(v0,v1),Seq@Length$Int$(v0))}
+     0 {!$NP@73(v0,v1,v2,v3),v3 = v2}
+     0 {!Seq@Contains$Int$(Seq@Singleton$Int$(v0),v1),v1 = v0}
+     0 {!Seq@Equal$Int$(v0,v1),v1 = v0}
+     1 {!Seq@Length$Int$(v0) = 0,v0 = Seq@Empty$Int$}
+
+	 
+{Seq@Contains$Int$(Seq@Singleton$Int$(k@8),k@8)}}
+{!(@sk_37(exhaleHeap@_236@0[this,AVLTreeNode.keys],Seq@Singleton$Int$(k@8))<0)}}
+{!(@sk_29(k@8,Seq@Singleton$Int$(k@8))<0)}}
+{{!(1<@sk_37(exhaleHeap@_236@0[this,AVLTreeNode.keys],Seq@Singleton$Int$(k@8)))}}
+{{!(1<@sk_37(Seq@Singleton$Int$(k@8),exhaleHeap@_236@0[this,AVLTreeNode.keys]))}}
+{(@sk_37(Seq@Singleton$Int$(k@8),exhaleHeap@_236@0[this,AVLTreeNode.keys])<1)}}
+{(@sk_37(exhaleHeap@_236@0[this,AVLTreeNode.keys],Seq@Singleton$Int$(k@8))<1)}}
+{(@sk_29(k@8,Seq@Singleton$Int$(k@8))<1)}}
+{!(1<@sk_29(k@8,Seq@Singleton$Int$(k@8)))}}
+{!(@sk_37(Seq@Singleton$Int$(k@8),exhaleHeap@_236@0[this,AVLTreeNode.keys])<0)}}
+{!Seq@Equal$Int$(Seq@Singleton$Int$(k@8),exhaleHeap@_236@0[this,AVLTreeNode.keys])}}
+{!Seq@Equal$Int$(exhaleHeap@_236@0[this,AVLTreeNode.keys],Seq@Singleton$Int$(k@8))}}

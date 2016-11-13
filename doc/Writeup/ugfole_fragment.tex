@@ -1,0 +1,79 @@
+\newpage
+\section{Complexity}
+In this section we present some known results about the complexity of the fragment of unit ground equalities.
+
+We consider programs where the CFG is a DAG with one root and each node has only statements of the form \lstinline{assume t$\bowtie$s}  where \m{t,s} are ground terms, and all leaf nodes are assertion nodes - so our objective is to show that each leaf node is infeasible (if it is).
+
+We consider here several complexity problems:
+\begin{itemize}
+	\item Flat CFG: Deciding satisfiability for a set of unit (dis)equalities, or equivalently a program with no branches - a linear program
+	\item Tree CFG: Deciding the validity of a tree-shaped program cfg where each node has only unit (in)equality assumptions - essentially deciding the satisfiability of the post-condition of each leaf node
+	\item DAG CFG: Deciding the validity of a general DAG-shaped program cfg with only unit (dis)equalities - two sub-problems:
+	\begin{itemize}
+		\item General validity - as in tree-shaped cfgs, deciding the satisfiability of the strongest post-conditions of each leaf node
+		\item Fragment validity - deciding the existence of a fragment interpolant for the program, for the fragment of unit ground equalities
+	\end{itemize}
+\end{itemize}
+In this section we only discuss the worst case space complexity of the above satisfiability problems (that is, the worst case size of the smallest proof), and not the incremental complexity of 
+finding a partial result (e.g. proving a subset of the assertions), and then extending this partial result using new information (e.g. from other fragments, quantifier instantiation) - we discuss these in the following sections.
+
+
+\textbf{Input size:} We measure the size of the input for this problem by the number \m{n} of occurrences of function symbols in the input, and the number e of edges in the program cfg - so, for example, a statement \lstinline[mathescape]{assume f(a)=g(b,b)} would have the size 5. \\
+Note that for a cfg with a bounded out degree the number of edges is linear in the number of nodes, and each node but the root has at least one incoming edge, so we can use these interchangeably for asymptotic complexity. Our programs have an out degree 2.\\
+We can bound the number of cfg edges to be at most linear in the number of function symbol occurrences by preprocessing the 
+cfg using semantics preserving transformations (detailed precisely in the appendix) that reduce the number of empty cfg nodes (those without any clauses) - essentially, 
+empty sequential nodes are merged with their predecessor,
+a diamond join of two empty nodes is reduced to the branch node, 
+and sequential joins both of which have one empty side are consolidated to have only one empty node.
+
+\subsection{Linear programs}
+
+\subsection{Tree-shaped CFG}
+For a program with no joins (a tree shaped \cfg) the time complexity is still \bigO{n\ log^2(n)} (using search trees), as we can verify a tree-shaped program as follows:
+\begin{figure}[H]
+\begin{lstlisting}
+proc verify(CFG cfg)
+	d := empty congruence closure data structure
+	n := cfg.root
+	e := 0   //next successor to explore
+	s := empty stack
+	do
+		add all (dis)equalities from n to d
+		if (n is a leaf) and (d.isConsistent)
+			return FAIL(n) //The assertion does not hold
+		if (!d.isConsistent) or (e==n.successors.count)
+			if (s.isEmpty) //done with all nodes
+				return PASS
+			else
+				(n,d,e) = s.pop //back-track to last branch
+		else //explore next successor of a branch
+			if (n.successors.count > 1)
+				s.push (n,d,e+1) //back-track point
+		n := n.successors[e] //select successor e
+		e := 0    //reset e for the next branch
+	end
+\end{lstlisting}
+\caption{Basic verification algorithm}
+\label{basic_verification_algorithm}
+\end{figure}
+
+This algorithm explores the cfg depth first, and stores back-tracking information on a stack at each branch which has not been fully explored.
+We have to evaluate only up to n equalities in total and we traverse each edge at most once, so the worst case time complexity is \bigO{n log^2(n)+e} with \m{e} the number of edges. 
+The space complexity is at most \bigO{n \times e} (worst case quadratic in the total input size) as we store the data structure at each branch, but some of the congruence closure implementations above support backtracking without asymptotically increasing the space, so the space complexity is reduced to \bigO{n + e}.
+
+As can be seen above, the operations needed on the congruence closure data structure are:
+\begin{itemize}
+	\item Assume an (in)equality and apply congruence closure
+	\item Check for conflict (inconsistency)
+	\item Potentially - forget an (in)equality, undoing the relevant implied (congruence and transitive closures) equalities - could replace pushing the whole state on the stack
+\end{itemize}
+
+\noindent
+\textbf{Efficiency:}\\
+A conjunction of positive equalities in our setting is always consistent, so it might be the case that only a fraction of the equalities are needed in order to show that a given inequality is inconsistent. The algorithms above are all eager in that they take all equalities into account and calculate the equivalence classes for all the terms that appear on the path, while it is sufficient to calculate equivalence classes only for terms that appear in inequalities - so it is sufficient, for each assertion,
+to only calculate the equivalence classes of each inequality on the path leading to this assertion.
+We will show how we exploit this property in the next section.\\
+Another possibility for reducing the set of terms considered at each assertion is using scoping - as ground first order logic with equality supports interpolation (although it is not complete for \emph{unit} interpolation), we can significantly reduce the set of terms considered at each node by using the variable scoping inherent in the program (where unit interpolation is supported), in addition to scoping implied by the DSA transformation (that is, at each node at most 2 DSA versions of a variable could be in scope).
+
+\subsection{DAG-shaped CFG}
+

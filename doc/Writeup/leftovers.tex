@@ -1,0 +1,41 @@
+Interestingly, if we were to define the function \lstinline|Array.contains| and axiomatize it, we would get the axiom (we omit the \lstinline|Array| prefix for functions and use the $\m{isIndex}(a,i)$ function to indicate that $i$ is a valid index for the array $a$):\\
+$\forall a, v \cdot (\m{contains}(a,v) \Leftrightarrow (\exists i \cdot \m{isIndex}(a,i) \land \m{at}(a,i)=v))$\\
+Which is converted to universal CNF as:\\
+$\forall a, v \cdot \lnot \m{contains}(a,v) \lor  \m{isIndex}(a,sk(a,v))$\\
+$\forall a, v \cdot \lnot \m{contains}(a,v) \lor  \m{at}(a,sk(a,v))=v$\\
+$\forall a, v \cdot \m{contains}(a,v) \lor  \lnot \m{isIndex}(a,sk(a,v)) \lor \lnot \m{at}(a,sk(a,v))=v$\\
+Where $sk(\_,\_)$ is a Skolem function that represents the witness to the existential.\\
+With this axiom in the background and the $\m{contains}$ function in global scope, we can have the universal CNF annotation\\
+\lstinline|contains(a,true)| at \lstinline|n$_1$|, which is sufficient to prove the assertion and is scoped.\\
+However, we are not aware of any method to determine a sufficient set of such Skolem functions, whether a-priori or during the proof process.
+
+
+
+
+\begin{figure}
+\begin{lstlisting}
+method m(n : Integer,b:Boolean)
+	requires n>0
+	
+	//new array initialized to all false
+	a := new Array[Boolean](n)
+	a[0]:=true
+	if (b)
+		a[0] := false
+		j := random(0,n)
+		a[j] := true
+n$_1$:
+	assert $\exists i \cdot 0\leq i < $length(a)$\land$a[$i$]=true
+\end{lstlisting}
+\caption{Example for the incompleteness of scoped annotation\\
+The \lstinline|random| function is specified as \lstinline|a$\leq$random(a,b)<b|\\
+A possible scoped annotation at \lstinline|n$_1$| that is sufficient to prove the assertion is \\
+\lstinline|$\exists i \cdot (0\leq i < $length(a)$ \land $a[$i$]=true)|\\
+However, this annotation is not in the fragment of universal CNF which is used by many provers, and into which there is a validty preserving conversion from FOLE.\\
+A possible non-scoped universal CNF annotation is\\
+\indent\lstinline|(b$\Rightarrow ($$0\leq$j$<$length(a) $\land$ a[j]=true)) $\land$ ($\lnot$b $\Rightarrow$ a[0]=true)|\\
+There is no scoped annotation for universal CNF
+}
+\label{snippet_1.4}
+\end{figure}
+

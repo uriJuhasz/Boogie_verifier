@@ -1,0 +1,76 @@
+	                      
+	                      
+WP Statement semantics:
+	wp( assert P, Q ) = P /\ Q
+	wp( assume P, Q ) = P => Q
+	wp( x := e  , Q ) = Q[x<-e]
+	//SSA wp( havoc x , Q ) = forall y : [T(x)] Q[x <- y]   //not needed with SSA
+	
+
+The program is a directed graph with statements at nodes.
+
+	
+TODO: understand definedness and unique minimal solution to semantics equations
+	
+Program:
+	Provability:
+		P , Q(v) |- forall v' in pred(v) * wp(v',Q(v))
+		--------------------------------------------
+		                  P |- Q(v)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Expression semantics:
+	Binary operator       : S[ e1 binop e2     ] = S[binop](S[e1],S[e2])		       | [binop] [e1] [e2] typecheck
+	Unary operator        : S[ unop e1         ] = S[unop](S[e1])                      | [unop] [e1] typecheck
+	Map lookup            : S[ em[e1..en]      ] = S[em] (S[e1]..S[en])                | [em] typechecks to map, [e1]..[en] typecheck to [em]s indices
+	Map substitution      : S[ em[e1..en := e] ] = S[em] [ (S[e1]..S[en])] |->  S[e] ] | [em] typechecks to map, [e1]..[en] typecheck to [em]s indices, [e] typechecks to [em]([e1]..[en])
+	Function Application  : S[ f(e1..en)       ] = S[f](S[e1]..S[en])                  | [e1]..[en] 
+	Old expression        : S[ old(e)          ] = S[ e[E<-OE] ] 
+	Literal_expression    : S[ e               ] = e
+	Variable_expression   : S[ x               ] = S.E(x)
+
+	Quantifier expression : S[ A x : T . e(x) ] = forall x in S[T] : S[e(x)]           | TODO: what happens with type arguments?
+	                      : S[ E x : T . e(x) ] = exists x in S[T] : S[e(x)]
+
+	Where:
+		e, ei, em  : expression
+		binop      : binary operator symbol ( [binop] - the actual operator as opposed to symbol )
+		unop       : unary operator symbol
+		f          : function symbol        ( [f] - definition expression of f )  //TODO: what to do with recursive definitions?
+		E          : environment
+		OE         : old environment
+		m[X |-> v] : map m with m[X] replaced by v
+		x          : variable
+		T          : type -                 ( [T] - set of values of type ) 
+		 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Small step operation semantics:
+	
+	      s[e]
+	-------------------
+	<assert e, s> -> s'
+
+	      ~s[e]
+	-------------------
+	<assert e, s> -> fail
+	
+	      s[e]
+	-------------------
+	<assume e, s> -> s'
+
+	   s'=s[x<-s[e]]
+	-------------------
+	<x := e,   s> -> s'
+	
+	 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Trace:
+	t in (SxV)* (including infinite)  //Sequence of state and program location 	
+	* where:
+		- foreach i < |t| : t[i+1].V in succ(t[i].V)
+		- foreach i < |t| : < t[i].V, t[i].S> -> t[i+1].S
+		- t[0] = start
+		
+		
+			                  

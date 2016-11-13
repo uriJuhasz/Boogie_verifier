@@ -1,0 +1,13 @@
+     1 {!$NP@27(v0),(v0[@sk_18(v0),@sk_19(v0)][perm$R]<0),NonPredicateField$Seq$Int$$(@sk_19(v0))}
+     7 {!$NP@14(v0,v1,v2,v3),$NP(v0,v1),$NP@1(v0,v1),$NP@10(v0,v1),$NP@11(v0,v1),$NP@4(v0,v1,v2,v3),$NP@5(v0,v1,v2,v3),CanRead$Seq$Int$$(v2,v3,@sk_8(v2,v3,v1,v0),@sk_9(v2,v3,v1,v0)
+)}
+     7 {!$NP@16(v0,v1,v2,v3),$NP(v0,v1),$NP@1(v0,v1),$NP@10(v0,v1),$NP@11(v0,v1),$NP@4(v0,v1,v2,v3),$NP@5(v0,v1,v2,v3),CanRead$Seq$Int$$(v2,v3,@sk_8(v2,v3,v1,v0),@sk_9(v2,v3,v1,v0)
+)}
+     0 {!CanRead$Seq$Int$$(v0,v1,@sk_8(v0,v1,v2,v3),@sk_9(v0,v1,v2,v3)),$NP@14(v3,v2,v0,v1)}
+     0 {!CanRead$Seq$Int$$(v0,v1,@sk_8(v0,v1,v2,v3),@sk_9(v0,v1,v2,v3)),$NP@16(v3,v2,v0,v1)}
+     0 {v0 = ite$Seq$ref$$(@bf_27,v1,v0)}
+     2 {!$NP@28(v0),!$NP@29(v0),!NonPredicateField$Seq$Int$$(@sk_19(v0)),$NP@24(v0)}
+     0 {v0 = ite$Seq$Int$$(@bf_27,v1,v0)}
+     0 {!NonPredicateField$Seq$Int$$(@sk_19(v0)),$NP@27(v0)}
+     0 {v0 = ite$Field$Seq$Int$$$(@bf_27,v1,v0)}
+ 0,2,4 {!CanRead$Seq$Int$$(v0,v1,v2,v3),(0<v0[v2,v3][perm$N]),(0<v0[v2,v3][perm$R]),(0<v1[v2,v3][perm$N]),(0<v1[v2,v3][perm$R])}

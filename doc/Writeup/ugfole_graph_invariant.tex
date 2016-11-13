@@ -1,0 +1,1455 @@
+\newpage
+\section{Local graph-based invariant}
+In this section we present a version of the source and propagation invariant which is local, 
+both in the cfg (relates a cfg-node only with its direct predecessors) 
+and in each EC-graph (relates an EC-node only with adjacent EC-nodes in the cfg-node and its direct predecessors).\\
+This invariant will form the basis for the algorithm that handles the unit ground equality fragment, 
+and will help understanding the complexity of information propagation between EC-graphs, 
+both standard complexity and incremental complexity.\\
+The invariant, being cfg-node and EC-node local, suggests for each broken conjunct an operation to fix it, 
+which can be adding a source edge, \GFA{} or rgfa, merging two EC-nodes, or some other operations we will describe in the following.
+We will show later that regardless of the order in which these operations are performed, we always end up in the same final state.
+This means that the invariant describes a family of algorithms that has two degrees of freedom - 
+the first is the order of evaluation, which we will discuss in the implementation chapter, 
+and the second is the choice between adding a \GFA{} or an \RGFA{} (weak source invariant, second part), 
+which we will discuss in the implementation chapter.\\
+We present first the invariant for sequential nodes, and later the weak and strong join.
+
+\subsection{Sequential nodes}
+
+\subsubsection{The sources invariant}
+The source invariant, for a sequential node \m{n} with a predecessor \m{p} is as before, simplified for one predecessor:
+\begin{figure}[H]
+\begin{enumerate}
+	\item \m{\forall \fa{f}{t} \in \gfasA{g_n}, \tup{s} \in \sources{n}{p}{\tup{t}} \cdot }\\
+		\m{\fa{f}{s} \in \gfasA{g_p} \Rightarrow [\fa{f}{s}]_{g_p} \in \sources{n}{p}{[\fa{f}{t}]_{g_n}}}
+	\item \m{\forall \fa{f}{t} \in \gfasA{g_n} \cup \rgfas{n}, \tup{s} \in \sources{n}{p}{\tup{t}} \cdot}\\
+		\m{ \fa{f}{s} \in \gfasA{g_p} \cup \rgfas{p}}
+	\item \m{\forall \tup{t} \in g_n, \tup{s} \in \sources{n}{p}{\tup{t}},\fa{f}{s} \in \gfasA{g_p} \cdot}\\
+		\m{\fa{f}{t} \notin \rgfas{n}} 
+\end{enumerate}
+\caption{Sequential graph based source invariant}
+\label{sequential_weak_source_invariant}
+\end{figure}
+\subsubsection{The propagation invariant}
+Remember that the \textbf{propagation invariant} was phrased as:\\
+\m{\forall n \in \cfg,t \in \terms{g_n}, s \in \Ts{\sig} \cdot} \\
+\m{s=t \in \sqcup_F(\eqs{g_n},\s{\eqs{g_p}}_{p \in \preds{n}}) \Rightarrow s \in \terms{[t]_{g_n}}}\\
+For a sequential node \node{n} with the predecessor \node{p} this simplifies to (with the strongest join):
+\begin{figure}[H]
+\m{\forall t \in \terms{g_n}, s \in \Ts{\sig} \cdot} \\
+\m{(\eqs{g_n} \cup \eqs{g_p}  \models s=t ) \Rightarrow s \in \terms{[t]_{g_n}}}
+\caption{Sequential propagation invariant}
+\end{figure}
+We will show that we can ensure the above (cfg-local but not EC-graph-local) invariant using a combination of the local source invariant above, and the following \emph{local propagation invariant}:
+\begin{figure}[H]
+\begin{enumerate}
+	\item The \textbf{first condition} ensures eager equality propagation:\\
+\m{\forall u,v \in g_n \cdot \sources{n}{p}{u} \cap \sources{n}{p}{v} \neq \emptyset \Rightarrow u = v }
+	\item The \textbf{second condition} ensures that each term-EC is complete - \emph{gfa completeness}:\\
+\m{\forall u \in g_n, v \in \sources{n}{p}{u}, \fa{f}{s} \in v \cdot}\\
+\m{\exists \fa{f}{t} \in u \cdot \tup{s} \in \sources{n}{p}{\tup{t}} }
+\end{enumerate}
+\caption{Sequential graph based propagation invariant}
+\end{figure}
+The first condition ensures that each predecessor EC node can be the source of at most one EC node at\node{n} - 
+we have seen that this was broken in ~\ref{snippet3.16a_graph3} as the EC node \s{f(a),g(b)} in \node{n_1} 
+is the source for both nodes \m{f(\s{a,b}),g(\s{a,b})} at \node{n_2}.\\
+It is important to emphasize the meaning of sources for tuple ECs:\\
+\m{\forall \tup{t} \in g_n,  \cdot \sources{n}{p}{\tup{t}} = \s{\tup{s} \in g_p \mid \bigwedge\limits_i s_i \in \sources{n}{p}{t_i} }}\\
+Where also for tuple ECs:\\
+\m{\forall \tup{s},\tup{t} \in g_n \cdot \sources{n}{p}{\tup{s}} \cap \sources{n}{p}{\tup{t}} \neq \emptyset \Rightarrow  \tup{s} = \tup{t}}
+
+This invariant is not broken in the above examples, but could be broken if the assertion at \node{n_3} was changed to 
+\m{f(b)=f(a)}, as shown in ~\ref{snippet3.16a_graph5}:
+\begin{figure}[H]
+\begin{tikzpicture}
+	\node[gttn] (1)              {$()$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_1}};
+
+	\node[gtn]  (2) [above left  = 0.6cm and 0.2cm of 1] {\s{a}};
+	\node[gtn]  (3) [above right = 0.6cm and 0.2cm of 1] {\s{b}};
+
+	\draw[gfa] (2) to node[el] {\m{a}} (1);
+	\draw[gfa] (3) to node[el,anchor=west] {\m{b}} (1);
+
+	\node[gttn] (4)  [above = 0.5cm of 2]    {\m{(a)}};
+	\node[gttn] (5)  [above = 0.5cm of 3]    {\m{(b)}};
+
+	\draw[sgtt] (4) to node[el] {0} (2);
+	\draw[sgtt] (5) to node[el] {0} (3);
+
+	\node[gtn]  (6)  [above = 2.5cm of 1] {\tiny$\svb{f(a)}{g(b)}$};
+	\draw[gfa]  (6) to node[el] {\m{f}} (4);
+	\draw[gfa]  (6) to node[el,anchor=west] {\m{g}} (5);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 3cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_2}};
+
+	\node[gtn]  (12) [above = 0.5cm of 11] {\s{a,b}};
+
+	\draw[gfa] (12) to[out=-110 ,in=110] node[el] {\m{a}} (11);
+	\draw[gfa] (12) to[out=- 70,in= 70] node[el,anchor=west] {\m{b}} (11);
+
+	\node[gttn,ultra thick] (14)  [above = 0.5cm of 12]    {\m{(\s{a,b})}};
+
+	\draw[sgtt] (14) to node[el] {0} (12);
+
+	\node[gtn,ultra thick]  (16)  [above = 2.5cm of 11] {\tiny $\faB{f}{a}{b},\faB{g}{a}{b}$};
+	\draw[gfa]              (16) to [out=-100, in= 100] node[el]             {\m{f}} (14);
+	\draw[gfa,ultra thick]  (16) to [out=-80 , in=  80] node[el,anchor=west] {\m{g}} (14);
+				
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\node[gttn] (21)  [right = 3.5cm of 11] {$()$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{n_3}};
+
+	\node[gtn]  (22) [above = 0.5cm of 21] {\s{a,b}};
+
+	\draw[gfa] (22)  to[out=-110,in=110] node[el]             {\m{a}} (21);
+	\draw[gfa] (22)  to[out=- 70,in= 70] node[el,anchor=west] {\m{b}} (21);
+
+	\node[gttn,ultra thick] (24)  [above = 0.5cm of 22]    {\m{(\s{a,b})}};
+
+	\draw[sgtt] (24) to node[el] {0} (22);
+
+	\node[gtn,ultra thick]  (26)  [above = 2.5cm of 21] {\tiny $\faB{f}{a}{b}$};
+
+	\draw[gfa]               (26) to [out=-100, in= 100] node[el]             {\m{f}} (24);
+	\draw[mgfa,ultra thick]  (26) to [out=-80 , in=  80] node[ml,anchor=west] {\m{g}} (24);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[se] (11) to ( 1);
+	\draw[se] (21) to  (11);
+
+	\node (12a) [left = 0.5cm of 12] {};
+	\node (3c) [above= 0.1cm of 3] {};
+	\draw[se] ( 12.180) to[out=180,in=0] (12a.0) to[out=180,in=0] (3c) to[out=180,in=0] (   2.0);
+	\draw[se] ( 12.180) to[out=180,in=0] (12a.0) to[out=180,in=0] (   3.0);
+
+	\draw[se] (22) to  (12);
+
+	\node (5c) [above= 0.1cm of 5] {};
+	\node (14a) [left = 0.7cm of 14] {};
+	\draw[se] (14.180) to[out=180,in=0] (14a.0) to[out=180,in=0] (5c) to[out=180,in=0]( 4.0);
+	\draw[se] (14.180) to[out=180,in=0] (14a.0) to[out=180,in=0]( 5.0);
+	\draw[se,ultra thick] (24) to (14);
+
+	\draw[se] (16) to  (6);
+	\draw[se,ultra thick] (26) to  (16);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (2.0cm,-0.7cm) to (2.0cm,3.5cm);
+	\draw[separator] (5.5cm,-0.7cm) to (5.5cm,3.5cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+The sources function\\
+gfa invariant broken
+}
+\label{snippet3.16a_graph5}
+\end{figure}
+\noindent
+At \node{n_3} the EC node \m{f(\s{a,b})} is missing the \GFA{} \m{g(\s{a,b})} which is implied by the \GFA{} completeness invariant, 
+as shown by the highlighted path.
+However, this invariant is not local - consider the following graph (irrelevant \textbf{sources} and \textbf{rgfas} omitted):
+\begin{figure}[H]
+\begin{tikzpicture}
+	\node[gttn,ultra thick] (1)              {$()$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_1}};
+
+	\node[gtn]              (2) [above left  = 0.6cm and 0.2cm of 1] {\s{a}};
+	\node[gtn,ultra thick]  (3) [above right = 0.6cm and 0.2cm of 1] {\s{b}};
+
+	\draw[gfa]             (2) to node[el] {\m{a}} (1);
+	\draw[gfa,ultra thick] (3) to node[el,anchor=west] {\m{\mathbf{b}}} (1);
+
+	\node[gttn]             (4)  [above = 0.5cm of 2]    {\m{(a)}};
+	\node[gttn,ultra thick] (5)  [above = 0.5cm of 3]    {\m{(b)}};
+
+	\draw[sgtt]             (4) to node[el] {0} (2);
+	\draw[sgtt,ultra thick] (5) to node[el] {\textbf{0}} (3);
+
+	\node[gtn,ultra thick]  (6)  [above = 2.5cm of 1] {\tiny$\svb{f(a)}{g(b)}$};
+	\draw[gfa]              (6) to node[el]             {\m{f}} (4);
+	\draw[gfa,ultra thick]  (6) to node[el,anchor=west] {\m{g}} (5);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn,ultra thick] (11)  [right = 3cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_2}};
+
+	\node[gtn]  (12) [above = 0.6cm of 11] {\s{a,c}};
+	\node[mgtn] (13) [above right = 0.65cm and 0.6cm of 11] {\s{b}};
+
+	\draw[gfa]  (12) to[bend right] node[el] {\m{a}} (11);
+	\draw[gfa]  (12) to[bend left]  node[el] {\m{c}} (11);
+	\draw[mgfa] (13) to node[ml,anchor=west] {\m{b}} (11);
+
+	\node[gttn]  (14)  [above = 0.5cm of 12]    {\m{(a,c)}};
+	\node[mgttn] (15)  [above = 0.5cm of 13]    {\m{(b)}};
+
+	\draw[sgtt]  (14) to node[el] {0} (12);
+	\draw[msgtt] (15) to node[ml] {0} (13);
+
+	\node[gtn,ultra thick]  (16)  [above = 0.76cm of 14] {\tiny$\m{f(\s{a,c})}$};
+	\draw[gfa]              (16) to node[el]             {\m{f}} (14);
+	\draw[mgfa]  (16) to node[ml,anchor=west] {\m{g}} (15);
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[se,ultra thick] (11) to  ( 1);
+
+	\node (12a) [left = 0.5cm of 12] {};
+	\node (3c) [above= 0.1cm of 3] {};
+	
+	\node (5c) [above= 0.1cm of 5] {};
+	\node (14a) [left = 0.7cm of 14] {};
+
+	\draw[se,ultra thick] (16) to  (6);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (2.0cm,-0.7cm) to (2.0cm,3.5cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+The sources function\\
+gfa invariant broken non-local
+}
+\label{snippet3.16a_graph6}
+\end{figure}
+In ~\ref{snippet3.16a_graph6} \node{n_2} is missing the whole path of \m{g(b)} in order to be complete, we will look now at how this can be detected.\\
+There are principally 3 pre-states and operations that can reach the above state:\\
+The \textbf{first} is when the last operation was \lstinline{adding} the term \m{f(a)} at \node{n_2}:
+\begin{figure}[H]
+\begin{tikzpicture}
+  \node[gttn] (1)              {$()$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_1}};
+
+  \node[gtn]  (2) [above left  = 0.6cm and 0.2cm of 1] {\s{a}};
+  \node[gtn]  (3) [above right = 0.6cm and 0.2cm of 1] {\s{b}};
+	
+	\draw[gfa]  (2) to node[el] {\m{a}} (1);
+  \draw[gfa]  (3) to node[el,anchor=west] {\m{\mathbf{b}}} (1);
+  
+	\node[gttn] (4)  [above = 0.5cm of 2]    {\m{(a)}};
+  \node[gttn] (5)  [above = 0.5cm of 3]    {\m{(b)}};
+
+	\draw[sgtt]             (4) to node[el] {0} (2);
+	\draw[sgtt] (5) to node[el] {\textbf{0}} (3);
+
+  \node[gtn]  (6)  [above = 2.5cm of 1] {\tiny$\svb{f(a)}{g(b)}$};
+	\draw[gfa]  (6) to node[el]             {\m{f}} (4);
+  \draw[gfa]  (6) to node[el,anchor=west] {\m{g}} (5);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [right = 3cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_2}};
+
+  \node[gtn]  (12) [above = 0.6cm of 11] {\s{a,c}};
+	
+	\draw[gfa]  (12) to[bend right] node[el] {\m{a}} (11);
+	\draw[gfa]  (12) to[bend left]  node[el,anchor=west] {\m{c}} (11);
+  
+	\node[gttn] (14)  [above = 0.5cm of 12]    {\m{(a,c)}};
+
+	\draw[sgtt] (14) to node[el] {0}          (12);
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[se] (11) to  ( 1);
+
+	\node (12a) [left = 0.5cm of 12] {};
+	\node  (3c) [above= 0.1cm of 3] {};
+	
+	\node  (5c) [above= 0.1cm of 5] {};
+	\node (14a) [left = 0.7cm of 14] {};
+
+	\draw[se] (14) to (14a) to (5c) to (4);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (2.0cm,-0.7cm) to (2.0cm,3.5cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+The sources function\\
+gfa invariant broken non-local\\
+pre-state for \lstinline|$n_2$.add(f(a))|%\lstinline[mathescape]{$n2$.add(f(a))}
+}
+\label{snippet3.16a_graph7}
+\end{figure}
+In ~\ref{snippet3.16a_graph7} there is not (and should not be) a node for \m{b} or \m{(b)} at \node{n_2}.\\
+The next step should create the whole chain of \m{g(b)}. 
+Instead of \m{g(b)}, this chain could have been arbitrarily deep and large, e.g. \m{g^6(b)} or \m{h(h(a,b),h(b,a))}.\\
+To do this incrementally and efficiently we need a way to determine that the nodes
+ \m{[b]_{n_1},[(b)]_{n_1}} and the corresponding \GFAs{} have become relevant.\\
+In order to determine which nodes have become relevant without traversing the whole of \m{g_{n_1}} (which could have had many other unrelated nodes) we need to walk \emph{down} the graph \m{g_{n_1}},
+starting at the new source node \m{[f(a)]_{n_1}}, traversing down each \gfa and stopping at EC-nodes that are already a source to some node in \m{n_2} (or the empty tuple).\\
+In our case the traversal would proceed to \m{[g(b)]_{n_1},[(b)]_{n_1},[b]_{n_1},[()]_{n_1}}.\\
+We could simply create an EC-node in \m{g_{n_2}} for each EC-node we traverse in \m{g_{n_1}} 
+and connect the corresponding \GFA{} edges, but we will show that for several reasons it is preferable
+first to mark each node of \m{g_{n_1}} as \emph{relevant} traversing top down as above, 
+and then add the corresponding nodes to \m{g_{n_2}} traversing bottom up.\\
+One intuitive reason for this is that we will want to use scoping - 
+we can only determine if a \GFA{} in \m{g_{n_1}} is in scope in \m{g_{n_2}} (that is, represents at least one term which is in scope in \m{n_2}) by traversing the downward closure of the \GFA{} bottom up. There are several other reasons that we will present in the following, and is a direct extension of our earlier verification algorithm for a subset of the axioms.\\
+After the relevant source nodes have been marked as relevant, we would expect the nodes to be added to \m{g_{n_2}} in the following order (with the corresponding \GFA{} edges):\\
+\m{[()]_{n_2},[b]_{n_2},[(b)]_{n_2}}.\\
+This process of marking source nodes top-down and then adding new nodes bottom-up will be the base for all of our join, meet and other EC graph manipulation algorithms.\\
+As can be seen, the inherent time (and space) complexity of this process (assuming that we maintain the relevant lookup tables) is proportional to the size of the difference between the result \m{g_{n_2}} and the pre-state of \m{g_{n_2}}.
+Unfortunately, this would not be exactly the case for joins, or when further restrictions, such as scoping and term radius, are enforced. We will, however, draw a complexity bound in all cases which is based on a worst case result size similar to the above.\\
+For example, if \m{b} was not in scope at \m{n_2}, we would still need to determine that \m{g(b)} is not in scope there, and hence we would mark the source nodes relevant as above, 
+but then determine that \m{[b]_{n_1}} is not \emph{feasible}, 
+meaning that it cannot be the source to any node in \m{g_{n_2}}.\\
+In order to avoid traversing the same source nodes for other super-terms of \m{b} in \m{g_{n_1}},
+we could cache in \m{g_{n_2}} the set of source nodes that we have determined infeasible.\\
+The complexity of the process is bounded by the difference in the size of the sub-graph (downward closure of gfa-edges) of the sources of the result and the size of the sub-graph of the sources
+before the operation, hence the incremental complexity is proportional approximately to the number of \GFAs{} in the final sub-graph of sources (approximately because \GFAs{} in the sub-graph that were merged could have been traversed twice) the complexity is loglinear in this factor as each node is traversed a constant number of times (2 in the above case), and the log factor comes from searching the lookup tables of e.g. \GFAs{}.\\
+The process described above stems directly from the \GFA{} completeness invariant above.\\
+\noindent
+The \textbf{second} possible pre-state is after we \lstinline{assumed f(a)=g(b)} at \node{n_1}, but before we have updated \node{n_2}:
+\begin{figure}[H]
+\begin{tikzpicture}
+  \node[gttn] (1)              {$()$};
+	\node[gl]  (1l) [below = 0 of 1] {\m{n_1}};
+
+  \node[gtn]  (2) [above left  = 0.6cm and 0.2cm of 1] {\s{a}};
+  \node[gtn]  (3) [above right = 0.6cm and 0.2cm of 1] {\s{b}};
+	
+	\draw[gfa]  (2) to node[el] {\m{a}} (1);
+  \draw[gfa]  (3) to node[el,anchor=west] {\m{\mathbf{b}}} (1);
+  
+	\node[gttn] (4) [above = 0.5cm of 2]    {\m{(a)}};
+  \node[gttn] (5) [above = 0.5cm of 3]    {\m{(b)}};
+
+	\draw[sgtt] (4) to node[el] {0} (2);
+	\draw[sgtt] (5) to node[el] {\textbf{0}} (3);
+
+  \node[gtn]  (6) [above = 2.5cm of 1] {\tiny$\svb{f(a)}{g(b)}$};
+	\draw[gfa]  (6) to node[el]             {\m{f}} (4);
+  \draw[gfa]  (6) to node[el,anchor=west] {\m{g}} (5);
+
+  \node[hgtn] (6a) [above = 1.5cm of 4] {\tiny$\s{f(\s{a})}$};
+%	\draw[hgfa] (6a) to node[hl]          {\m{f}} (4);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11) [right = 3cm of 1] {$()$};
+	\node[gl]  (11l) [below = 0 of 11]   {\m{n_2}};
+
+  \node[gtn]  (12) [above = 0.6cm of 11] {\s{a,c}};
+	
+	\draw[gfa]  (12) to[bend right] node[el,anchor=east] {\m{a}} (11);
+	\draw[gfa]  (12) to[bend left]  node[el,anchor=west] {\m{c}} (11);
+  
+	\node[gttn] (14) [above = 0.5cm of 12]    {\m{(a,c)}};
+
+	\draw[sgtt] (14) to node[el] {0}          (12);
+
+  \node[gtn]  (16) [above = 0.5cm of 14] {\tiny$\m{f\left(\svb{a}{c}\right)}$};
+	\draw[gfa]  (16) to node[el]             {\m{f}} (14);
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[se] (11) to  ( 1);
+
+	\node (12a) [left = 0.5cm of 12] {};
+	\node (3c) [above= 0.1cm of 3] {};
+	
+	\node (5c) [above= 0.1cm of 5] {};
+	\node (14a) [left = 0.7cm of 14] {};
+
+	\draw[se] (14) to (14a) to (5c) to (4);
+	\draw[hse] (16) to (6a);
+	\draw[he] (6a) to (6);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (2.0cm,-0.7cm) to (2.0cm,3.5cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+The sources function\\
+gfa invariant broken non-local\\
+post-state for \m{n_1.merge(f(a),g(b))}
+}
+\label{snippet3.16a_graph8}
+\end{figure}
+In ~\ref{snippet3.16a_graph8} the source edge of the EC-node \m{[f(a)]_{n_2}} has an out-of-date  version of the EC of \m{f(a)} at \m{g_{n_1}}.
+This old version points (dotted arrow) to the current version, so when we need to update \m{g_{n_2}}, we need to find all out-of-date sources, map them to the up-to-date versions, and then determine whether existing nodes need merging or new \GFA{} paths need to be added as in the previous case. We maintain enough history information at each EC graph to make this process efficient.
+
+\noindent
+The \textbf{third} possible pre-state is before we \lstinline{assume a=c} at \node{n_2}:
+\begin{figure}[H]
+\begin{tikzpicture}
+  \node[gttn] (1)              {$()$};
+	\node[gl]  (1l) [below = 0 of 1] {\m{n_1}};
+
+  \node[gtn]  (2) [above left  = 0.6cm and 0.2cm of 1] {\s{a}};
+  \node[gtn]  (3) [above right = 0.6cm and 0.2cm of 1] {\s{b}};
+	
+	\draw[gfa]  (2) to node[el] {\m{a}} (1);
+  \draw[gfa]  (3) to node[el,anchor=west] {\m{b}} (1);
+  
+	\node[gttn] (4) [above = 0.5cm of 2]    {\m{(a)}};
+  \node[gttn] (5) [above = 0.5cm of 3]    {\m{(b)}};
+
+	\draw[sgtt] (4) to node[el] {0} (2);
+	\draw[sgtt] (5) to node[el] {0} (3);
+
+  \node[gtn]  (6) [above = 2.5cm of 1] {\tiny$\svb{f(a)}{g(b)}$};
+	\draw[gfa]  (6) to node[el]             {\m{f}} (4);
+  \draw[gfa]  (6) to node[el,anchor=west] {\m{g}} (5);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11) [right = 2.5cm of 1] {$()$};
+	\node[gl]  (11l) [below = 0.0cm of 11]   {\m{n_2}};
+
+  \node[gtn]  (12) [above left = 0.6cm and 0.2 of 11] {\s{a}};
+  \node[gtn]  (13) [above right= 0.6cm and 0.2 of 11] {\s{c}};
+	
+	\draw[gfa]  (12) to node[el,anchor=east] {\m{a}} (11);
+	\draw[gfa]  (13) to node[el,anchor=west] {\m{c}} (11);
+  
+	\node[gttn] (15) [above = 0.5cm of 13]    {\m{(c)}};
+
+	\draw[sgtt] (15) to node[el] {0}          (13);
+
+  \node[gtn]  (16) [above = 0.5cm of 15] {\tiny$\s{f(c)}$};
+	\draw[gfa]  (16) to node[el]             {\m{f}} (15);
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\draw[se] (11) to  ( 1);
+
+	\node (12a) [left = 0.5cm of 12] {};
+	
+	\node (3c) [above= 0.1cm of 3] {};
+
+	\draw[se] (12) to (3c) to (2);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (1.4cm,-0.7cm) to (1.4cm,3.5cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+The sources function\\
+gfa invariant broken non-local\\
+pre-state for \m{n_2.assume(a=c)}
+}
+\label{snippet3.16a_graph9}
+\end{figure}
+In ~\ref{snippet3.16a_graph9}, at \m{g_{n_2}} we merge the nodes \m{[a]_{n_2}} and \m{[c]_{n_2}}, which propagates the change up until the node \m{[f(c)]_{n_2}} which becomes \m{[f(\s{a,c})]_{n_2}}, and updates the sources for each node on the way according to source and \GFA{} completeness. 
+When we reach \m{f(\s{a,c})}, we need to propagate down the \GFA{} \m{[g(b)]_{n_1}} from the sources and complete that path as in the first case.
+
+\noindent
+In all of the above cases, the final result is:
+\begin{figure}[H]
+\begin{tikzpicture}
+	\node[gttn] (1)              {$()$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_1}};
+
+	\node[gtn]  (2) [above left  = 0.6cm and 0.2cm of 1] {\s{a}};
+	\node[gtn]  (3) [above right = 0.6cm and 0.2cm of 1] {\s{b}};
+
+	\draw[gfa]  (2) to node[el,anchor=east] {\m{a}} (1);
+	\draw[gfa]  (3) to node[el,anchor=west] {\m{b}} (1);
+
+	\node[gttn] (4)  [above = 0.5cm of 2]    {\m{(a)}};
+	\node[gttn] (5)  [above = 0.5cm of 3]    {\m{(b)}};
+
+	\draw[sgtt] (4) to node[el] {0} (2);
+	\draw[sgtt] (5) to node[el] {0} (3);
+
+	\node[gtn]  (6)  [above = 2.5cm of 1] {\tiny$\svb{f(a)}{g(b)}$};
+	\draw[gfa]  (6) to node[el,anchor=east] {\m{f}} (4);
+	\draw[gfa]  (6) to node[el,anchor=west] {\m{g}} (5);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 3cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_2}};
+
+	\node[gtn]  (12) [above left  = 0.6cm and 0.2cm of 11] {\s{a,c}};
+	\node[gtn]  (13) [above right = 0.6cm and 0.6cm of 11] {\s{b}};
+
+	\draw[gfa] (12) to[bend right] node[el,anchor=east] {\m{a}} (11);
+	\draw[gfa] (12) to[bend left]  node[el,anchor=west] {\m{c}} (11);
+	\draw[gfa] (13) to             node[el,anchor=west] {\m{b}} (11);
+
+	\node[gttn] (14)  [above = 0.5cm of 12] {\m{(\s{a,c})}};
+	\node[gttn] (15)  [above = 0.5cm of 13] {\m{(b)}};
+
+	\draw[sgtt] (14) to node[el] {0} (12);
+	\draw[sgtt] (15) to node[el] {0} (13);
+
+	\node[gtn]  (16)  [above = 2.5cm of 11] {\tiny$\svb{f(\s{a,c})}{g(b)}$};
+	\draw[gfa]  (16) to node[el,anchor=east] {\m{f}} (14);
+	\draw[gfa]  (16) to node[el,anchor=west] {\m{g}} (15);
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[se] (16) to  (6);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (1.5cm,-0.7cm) to (1.5cm,3.5cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+The sources function\\
+gfa invariant non-local fixed
+}
+\label{snippet3.16a_graph10}
+\end{figure}
+Note that, as opposed to union-find based approaches, equivalent final results are identical.
+The three scenarios we have shown could all have been produced during different verifications of the same program, 
+if the order of evaluation of the cfg nodes, or the order of evaluation of verification fragments, were different.
+As the complexity in generating this result is proportional roughly to the (graph) size of the result, 
+we can analyze complexity almost regardless of the order of evaluation.
+We will see later that with joins it is harder to keep complexity independent of evaluation order, but we will show a weaker property regarding complexity in different evaluation orders.
+
+\noindent
+We will consider one more example for sequential nodes, before formalizing the invariant:
+\begin{figure}[H]
+\begin{tikzpicture}
+	\node[gttn] (1)              {$()$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_1}};
+
+	\node[gtn]  (2) [above left = 1.0cm and 1.8cm of 1] {\s{a}};
+	\node[gtn]  (3) [above left = 1.0cm and 0.4cm of 1] {\s{b}};
+	\node[gtn]  (4) [above right= 1.0cm and 0.4cm of 1] {\s{c}};
+	\node[gtn]  (5) [above right= 1.0cm and 1.8cm of 1] {\s{d}};
+
+	\draw[gfa]  (2) to node[el,anchor=east] {\m{a}} (1);
+	\draw[gfa]  (3) to node[el,anchor=east] {\m{b}} (1);
+	\draw[gfa]  (4) to node[el,anchor=west] {\m{c}} (1);
+	\draw[gfa]  (5) to node[el,anchor=west] {\m{d}} (1);
+
+	\node[gttn] (2a) [above = 1.0cm of 2]    {\m{(a)}};
+	\node[gttn] (3a) [above = 1.0cm of 3]    {\m{(b)}};
+	\node[gttn] (4a) [above = 1.0cm of 4]    {\m{(c)}};
+	\node[gttn] (5a) [above = 1.0cm of 5]    {\m{(d)}};
+
+	\draw[sgtt] (2a) to node[el] {0} (2);
+	\draw[sgtt] (3a) to node[el] {0} (3);
+	\draw[sgtt] (4a) to node[el] {0} (4);
+	\draw[sgtt] (5a) to node[el] {0} (5);
+
+	\node[gtn]  (6)  [above right = 1.0cm and 0.0cm of 2a] {\tiny$\svb{f(a)}{f(b)}$};
+	\draw[gfa]  (6) to node[el,anchor=east] {\m{f}} (2a);
+	\draw[gfa]  (6) to node[el,anchor=west] {\m{f}} (3a);
+
+	\node[gtn]  (7)  [above left = 1.0cm and 0.0cm of 5a] {\tiny$\svb{f(c)}{f(d)}$};
+	\draw[gfa]  (7) to node[el,anchor=east] {\m{f}} (4a);
+	\draw[gfa]  (7) to node[el,anchor=west] {\m{f}} (5a);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 6cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_2}};
+
+	\node[gtn]  (12) [above left  = 1.0cm and 0.4cm of 11] {\s{a}};
+	\node[gtn]  (13) [above right = 1.0cm and 0.4cm of 11] {\s{b,c}};
+
+	\draw[gfa] (12) to             node[el,anchor=east] {\m{a}} (11);
+	\draw[gfa] (13) to[bend right] node[el,anchor=east] {\m{b}} (11);
+	\draw[gfa] (13) to[bend left]  node[el,anchor=west] {\m{c}} (11);
+
+	\node[gttn] (12a)  [above = 1.0cm of 12] {\m{(a)}};
+	\draw[sgtt] (12a) to node[el] {0} (12);
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node (5au) [above = 0.2 of 5a] {};
+	\node (3au) [above = 0.2 of 3a] {};
+	\draw[se] (12a) to (5au) to (3au) to (2a);
+
+	\node (12u) [above = 0.2 of 12] {};
+	\node (5u) [above = 0.2 of 5] {};
+	\node (5d) [below = 0.2 of 5] {};
+	\node (4u) [above = 0.2 of 4] {};
+	\node (4d) [below = 0.2 of 4] {};
+
+	\draw[se] (13) to (12u) to (5u) to (4u) to (3);
+	\draw[se] (13) to (12u) to (5u) to (4);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (3.5cm,-0.7cm) to (3.5cm,5.5cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+The sources function\\
+multiple up-down propagations\\
+before \lstinline|$\m{n_1}$.add(f(a))|
+}
+\label{graph_sequential_multi_propagation_pre}
+\end{figure}
+\noindent
+In ~\ref{graph_sequential_multi_propagation_pre}, we show the relevant sources before adding the term \m{f(a)} to the \node{n_2}.\\
+We now show the post-state, with the propagation paths highlighted:
+\begin{figure}[H]
+\begin{tikzpicture}
+	\node[gttn] (1)              {$()$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_1}};
+
+	\node[gtn]              (2) [above left = 1.0cm and 1.8cm of 1] {\s{a}};
+	\node[gtn,ultra thick]  (3) [above left = 1.0cm and 0.3cm of 1] {\s{b}};
+	\node[gtn,ultra thick]  (4) [above right= 1.0cm and 0.3cm of 1] {\s{c}};
+	\node[gtn,ultra thick]  (5) [above right= 1.0cm and 1.8cm of 1] {\s{d}};
+
+	\draw[gfa]              (2) to node[el,anchor=east] {\m{a}} (1);
+	\draw[gfa]              (3) to node[el,anchor=east] {\m{b}} (1);
+	\draw[gfa]              (4) to node[el,anchor=west] {\m{c}} (1);
+	\draw[gfa,ultra thick]  (5) to node[el,anchor=west] {\m{d}} (1);
+
+	\node[gttn]             (2a) [above = 1.0cm of 2]    {\m{(a)}};
+	\node[gttn,ultra thick] (3a) [above = 1.0cm of 3]    {\m{(b)}};
+	\node[gttn,ultra thick] (4a) [above = 1.0cm of 4]    {\m{(c)}};
+	\node[gttn,ultra thick] (5a) [above = 1.0cm of 5]    {\m{(d)}};
+
+	\draw[sgtt] (2a) to node[el] {0} (2);
+	\draw[sgtt,ultra thick] (3a) to node[el] {0} (3);
+	\draw[sgtt,ultra thick] (4a) to node[el] {0} (4);
+	\draw[sgtt,ultra thick] (5a) to node[el] {0} (5);
+
+	\node[gtn,ultra thick]  (6)  [above right = 1.0cm and -0.1cm of 2a] {\tiny$\svb{f(a)}{f(b)}$};
+	\draw[gfa,ultra thick]  (6) to node[el,anchor=east] {\m{f}} (2a);
+	\draw[gfa,ultra thick]  (6) to node[el,anchor=west] {\m{f}} (3a);
+
+	\node[gtn,ultra thick]  (7)  [above left = 1.0cm and -0.1cm of 5a] {\tiny$\svb{f(c)}{f(d)}$};
+	\draw[gfa,ultra thick]  (7) to node[el,anchor=east] {\m{f}} (4a);
+	\draw[gfa,ultra thick]  (7) to node[el,anchor=west] {\m{f}} (5a);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 6cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_2}};
+
+	\node[gtn]              (12) [above left  = 1.0cm and 0.8cm of 11] {\s{a}};
+	\node[gtn,ultra thick]  (13) [above       = 0.9cm           of 11] {\s{b,c}};
+	\node[gtn]              (14) [above right = 1.0cm and 0.8cm of 11] {\s{d}};
+
+	\draw[gfa] (12) to             node[el,anchor=east] {\m{a}} (11);
+	\draw[gfa] (13) to[bend right] node[el,anchor=east] {\m{b}} (11);
+	\draw[gfa] (13) to[bend left]  node[el,anchor=west] {\m{c}} (11);
+	\draw[gfa] (14) to             node[el,anchor=west] {\m{d}} (11);
+
+	\node[gttn] (12a)  [above = 1.0cm of 12] {\m{(a)}};
+	\draw[sgtt] (12a) to node[el] {0} (12);
+
+	\node[gttn] (13a)  [above = 1.0cm of 13] {\m{(\s{b,c})}};
+	\draw[sgtt] (13a) to node[el] {0} (13);
+
+	\node[gttn] (14a)  [above = 1.0cm of 14] {\m{(d)}};
+	\draw[sgtt] (14a) to node[el] {0} (14);
+ 
+	\node[gtn]  (16)  [above = 1.0cm of 13a] {\tiny$\m{f(\s{a,b,c,d}}$};
+	\draw[gfa]  (16) to node[el,anchor=east] {\m{f}} (12a);
+	\draw[gfa]  (16) to node[el,anchor=east] {\m{f}} (13a);
+	\draw[gfa]  (16) to node[el,anchor=west] {\m{f}} (14a);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[se,ultra thick] (11) to (1);
+	\node (5au) [above = 0.2 of 5a] {};
+	\node (3au) [above = 0.2 of 3a] {};
+	\draw[se,ultra thick] (12a) to (5au) to (3au) to (2a);
+
+	\node (12u) [above = 0.2 of 12] {};
+	\node (5u) [above = 0.2 of 5] {};
+	\node (5d) [below = 0.2 of 5] {};
+	\node (4u) [above = 0.2 of 4] {};
+	\node (4d) [below = 0.2 of 4] {};
+
+	\draw[se,ultra thick] (13) to (12u) to (5u) to (4u) to (3);
+	\draw[se,ultra thick] (13) to (12u) to (5u) to (4);
+	
+	
+	\node (a1)  [left  = 0.2cm of  2a] {};
+	\node (a2)  [above = 0.2cm of  6 ] {};
+	\node (a3)  [right = 0.2cm of  3a] {};
+	\node (a4)  [above right = 0.0cm and 0.2cm of 3 ] {};
+	\node (a5)  [above = 0.0cm of  4u ] {};
+	\node (a6)  [above right = 0.0cm and 0.0cm of 12u ] {};
+	\node (a7)  [above right = 0.2cm and 0.2cm of 13.180] {};
+	\node (a8)  [above = 0.0cm of a7] {};
+	\node (a9)  [above = 0.0cm of a6] {};
+	\node (a10) [above = 0.0cm of a5] {};
+	\node (a11) [left  = 0.0cm of 4a] {};
+	\node (a12) [above = 0.2cm of 7] {};
+	\node (a13) [right = 0.2cm of 5a] {};
+	\node (a14) [right = 0.2cm of 5] {};
+	\node (a15) [right = 0.2cm of 1] {};
+
+	\draw[->,thin,green,out=90,in=-90] 
+		(a1) to[in=180] (a2) to[out=0,in=90] (a3) to[out=-90,in=180] (a4) to[out=0,in=180] (a5) to[out=0,in=180] (a6) to[out=0,in=180] (a7) 
+		to[out=0,in=0]  (a9) to[out=180,in=0] (a10) to[out=180,in=-90] (a11) to[out=90,in=180] (a12) 
+		to[out=0,in=90] (a13) to[out=-90,in=90] (a14) to[out=-90,in=45] (a15);
+		
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (4.0cm,-0.7cm) to (4.0cm,5.0cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+The sources function\\
+multiple up-down propagations\\
+after \lstinline{add(f(a))}
+}
+\label{graph_sequential_multi_propagation_post}
+\end{figure}
+The order of traversal would be as depicted by the green line in ~\ref{graph_sequential_multi_propagation_post}.
+
+We will now state the local invariant, including the set of relevant terms \rtA{n} for the node \m{n}:
+\begin{figure}[H]
+\begin{enumerate}
+	\item 
+		\m{\forall u,v \in g_n \cdot }\\
+		\m{\sources{n}{p}{u} \cap \sources{n}{p}{v} \neq \emptyset \Rightarrow u = v }
+	\item All sources are marked as relevant terms:\\
+		\m{\forall t \in g_n, s \in \sources{n}{p}{t} \cdot }\\
+		\m{s \in \rtA{n}}
+	\item All relevant terms are downward closed:\\
+		\m{\forall s \in \rtA{n}, \fa{f}{v} \in s, \cdot \tup{v} \in \rtA{n}}
+	\item Relevant terms are constructed bottom up:\\
+		\m{\forall s \in \rtA{n}, \fa{f}{v} \in s, \tup{u} \in \sourcesInv{n}{p}{\tup{v}} \cdot}\\
+		\m{\fa{f}{u} \in \gfasA{g_n}}
+\end{enumerate}
+\caption{Sequential graph based local propagation invariant}
+\end{figure}
+
+
+\subsubsection{Incremental complexity}
+In the sequential case, the EC-graph based definition of \GFA{} completeness directly hints at an algorithm to ensure it - the first conjunct forces us to merge nodes,
+the second and third add relevant source terms, and the fourth adds nodes in \m{g_n}.\\
+Each relevant term ends up as a source to an actual node in \m{g_n} and each node in \m{g_n} is
+a sub-term-node of a term-node that existed in the pre-state.\\
+Each source term is only traversed a constant number of times (at most - marked as relevant, then as source, and potentially becomes not up-to-date), and each of the rules that compare two \GFAs{} need only be evaluated a constant number of times, if, whenever a node performs an \lstinline{update} operation, it receives from the predecessor a list of changes.
+
+\newpage
+\subsection{Join completeness criteria}
+As opposed to the sequential case, we can define several different join completeness criteria.\\
+The spectrum runs between the weakest join:
+\begin{figure}[H]
+\m{\forall s \in \terms{g_n}, t \in \Ts{\sig} \cdot }\\
+\m{((\forall p \in \preds{n} \cdot (s \in \terms{g_p} \land [s]_{g_p} = [t]_{g_p})) \Rightarrow }\\
+\m{(t \in \terms{g_n} \land [s]_{g_n}=[t]_{g_n}))}
+\caption{Weak join completeness}
+\end{figure}
+
+Which is simply an extension of the sequential case, and the complete join:
+\begin{figure}[H]
+\m{\forall s \in \terms{g_n}, t \in \Ts{\sig} \cdot }\\
+\m{(\forall p \in \preds{n} \cdot \eqs{g_p} \cup \eqs{g_n} \models s=t) \Rightarrow}\\
+\m{ (t \in \terms{g_n} \land [s]_{g_n}=[t]_{g_n})}
+\caption{Strong join completeness}
+\end{figure}
+
+
+
+%
+%Remember that the \GFA{} completeness invariant for the sequential case was:
+%\m{\forall u \in g_n, v \in \sources{n}{p}{u}, \fa{f}{s} \in v \cdot}\\
+%\m{\exists \fa{f}{t} \in u \cdot \tup{s} \in \sources{n}{p}{\tup{t}} }
+%
+%Adapting the above to the join case requires, at the very least, that we match \GFAs{} in \emph{all} direct predecessors and only then force the join graph to have a corresponding gfa. Note that in the sequential case we matched the \GFA{} on the function symbol, and then on the source tuple EC. 
+%For a given EC term node \m{t \in g_n}, assuming we have a source node \m{s_p \in g_p} (\m{s_p \in \sources{n}{p}{t}}) for each predecessor \m{p},
+%and assuming we have a \GFA{} \m{\fa{f}{v_p} \in s_p} for each predecessor (with the same function symbol), 
+%then we would need a tuple EC \m{\tup{u} \in g_n} s.t. for each predecessor, \m{\tup{v_p} \in \sources{n}{p}{\tup{u}}},
+%if such a \tup{u} exists, then obviously \fa{f}{u} should be in \gfasA{t}, the question is when \emph{should} such a \tup{u} exist?
+We want to generalize the graph based local invariant for sequential nodes to binary join nodes, however, even for the weak join , the extension is not direct - consider, for example:\\
+\m{ \s{a=f(b)} \sqcup \s{a=g(b)}}\\
+Here, if we want to add the term a at the join, we would mark the EC-node for the term b as a relevant node in both joinees,
+and hence we would add an EC-node for b to the join, although it is not needed.\\
+We will now see how we solve this problem for the weak join, and later add the missing parts for the strong join.
+
+%As another example, consider, on the one hand:\\
+%\m{ \s{a=f(b)} \sqcup \s{a=f(c),b=c}}\\
+%and on the other hand:\\
+%\m{ \s{a=f(b)} \sqcup \s{a=f(c)}}\\
+%(we will use \m{p_0,p_1} for the predecessor \cfg nodes)\\
+%In the first case, the term EC node for \m{a} at the join node EC graph \m{g_n} would have a source with the \GFA{} \m{f([b]_{g_p})} at each predecessor, and we would expect a term EC node \m{[b]_{g_n}} for \m{b} to exist, 
+%and hence the term EC node for \m{a} at \m{g_n} to have the  corresponding \GFA{} - that is, \m{f([b]_{g_n}) \in [a]_{g_n}}.\\
+%In the second case, although the sources for \m{[a]_{g_n}} share a \GFA{} with the same function symbol \m{f}, 
+%we do not expect to have a node in \m{u \in g_n} s.t. \\
+%\m{[b]_{g_{p_0}} \in \sources{n}{p_0}{u}} and \m{[c]_{g_{p_1}} \in \sources{n}{p_1}{u}},
+%as such a node does not correspond to any term that is equal in the join
+%(unless we have \lstinline{assumed} at \m{n} that \m{b=c}).
+%We can observe locally that no such term EC node is expected because there is no \GFA{} with a common function symbol between 
+%\m{[b]_{g_{p_1}}} and \m{[c]_{g_{p_2}}}.
+
+\subsection{Weak join}
+In ~\ref{snippet3.16b}, we would need to add the terms \m{f(\s{a,b}),g(\s{a,b})} to \m{g_{p_0}} \\
+and \m{f(\s{b,c}),g(\s{b,c})} to \m{g_{p_1}}, as shown in figure ~\ref{snippet3.16b_graph1}:
+\begin{figure}[H]
+\begin{tikzpicture}
+	\node[gttn] (1)              {$()$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{s}};
+
+	\node[gtn]  (2) [above left  = 1cm and 0.5cm of 1] {\s{a}};
+	\node[gtn]  (3) [above right = 1cm and 0.5cm of 1] {\s{c}};
+
+	\draw[gfa] (2) to node[el] {\m{a}} (1);
+	\draw[gfa] (3) to node[el,anchor=west] {\m{c}} (1);
+
+	\node[gttn] (4)  [above = 1cm of 2]    {\m{(a)}};
+	\node[gttn] (5)  [above = 1cm of 3]    {\m{(c)}};
+
+	\draw[sgtt] (4) to node[el] {0} (2);
+	\draw[sgtt] (5) to node[el] {0} (3);
+
+	\node[gtn]  (6)  [above = 1cm of 4] {\tiny$\stackB{f(a)}{g(a)}$};
+	\draw[gfa]  (6) to[out=-110,in=110] node[el] {\m{f}} (4);
+	\draw[gfa]  (6) to[out=- 70,in= 70] node[el,anchor=west] {\m{g}} (4);
+
+	\node[gtn]  (7)  [above = 1cm of 5] {\tiny$\stackB{f(c)}{g(c)}$};
+	\draw[gfa]  (7) to[out=-110,in=110] node[el] {\m{f}} (5);
+	\draw[gfa]  (7) to[out=- 70,in= 70] node[el,anchor=west] {\m{g}} (5);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [above right = 2.5cm and 4.5cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+	\node[gtn]  (12) [above = 1cm of 11] {\s{a,b}};
+
+	\draw[gfa] (12) to[out=-110,in=110] node[el] {\m{a}} (11);
+	\draw[gfa] (12) to[out=- 70,in= 70] node[el,anchor=west] {\m{b}} (11);
+
+	\node[gttn] (14)  [above = 1cm of 12]    {\m{f(\s{a,b})}};
+
+	\draw[sgtt] (14) to node[el] {0} (12);
+
+	\node[gtn]  (16)  [above = 3.5cm of 11] {\tiny $\faB{f}{a}{b},\faB{g}{a}{b}$};
+	\draw[gfa]  (16) to[out=-100, in= 100] node[el] {\m{f}} (14);
+	\draw[gfa]  (16) to[out=- 80 ,in=  80] node[el,anchor=west] {\m{g}} (14);
+				
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (21)  [below right = 2.5cm and 4.5cm of 1] {$()$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+	\node[gtn]  (22) [above = 1cm of 21] {\s{b,c}};
+
+	\draw[gfa] (22) to[out=-110,in=110] node[el]             {\m{b}} (21);
+	\draw[gfa] (22) to[out=- 70,in= 70] node[el,anchor=west] {\m{c}} (21);
+
+	\node[gttn] (24)  [above = 1cm of 22]    {\m{f(\s{b,c})}};
+
+	\draw[sgtt] (24) to node[el] {0} (22);
+
+	\node[gtn]  (26)  [above = 3.5cm of 21] {\tiny $\faB{f}{b}{c},\faB{g}{b}{c}$};
+	\draw[gfa]  (26) to[out=-100,in=100] node[el]             {\m{f}} (24);
+	\draw[gfa]  (26) to[out=- 80,in= 80] node[el,anchor=west] {\m{g}} (24);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\node[gttn] (31)  [right = 9cm of 1] {$()$};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+%	\node (31jl)  [above left = -0.2cm and 0cm of 31] {$\sqcup$};
+
+	\node[gtn] (32) [above = 0.5cm of 31] {\m{b}};
+
+	\draw[gfa] (32) to node[el] {\m{b}} (31);
+
+	\node[gttn] (34)  [above = 0.5cm of 32]    {\m{(b)}};
+
+	\draw[sgtt] (34) to node[el] {0} (32);
+
+	\node[gtn]  (36)  [above = 2.5cm of 31] {\tiny $\stackB{f(b)}{g(b)}$};
+	\draw[gfa]  (36) to[out=-100 ,in=100] node[el] {\m{f}} (34);
+	\draw[gfa]  (36) to[out=- 80 ,in= 80] node[el,anchor=west] {\m{g}} (34);
+
+
+%	\node (31jl)  [above left = -0.2cm and 0cm of 31] {$\sqcup$};
+%	\node (32jl)  [above left = -0.2cm and 0cm of 32] {$\sqcup$};
+%	\node (34jl)  [above left = -0.2cm and 0cm of 34] {$\sqcup$};
+%	\node (36jl)  [above left = -0.2cm and 0cm of 36] {$\sqcup$};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node (11a) [left = 0.3cm of 11] {};
+	\draw[se] (11) to[out=180,in=0] (11a) to[out=180,in=0] (1);
+	\node (21a) [left = 0.3cm of 21] {};
+	\draw[se] (21) to[out=180,in=0] (21a) to[out=180,in=0] (1);
+
+	\node (3c) [above= 0.1cm of 3] {};
+	\node (12a) [left = 0.3cm of 12] {};
+	\draw[se] ( 12.180) to[out=180,in=0] (12a.0) to[out=180,in=0] (   2.0);
+	%  \draw[se] ( 12.180) to[out=180,in=0] (12a.0) to[out=180,in=0] (3c) to[out=180,in=0] (   2.0);
+
+
+	\node (5c) [above= 0.1cm of 5] {};
+	\node (14a) [left = 0.5cm of 14] {};
+	\draw[se] (14.180) to[out=180,in=0] (14a.0) to[out=180,in=0]( 4.0);
+	%  \draw[se] (14.180) to[out=180,in=0] (14a.0) to[out=180,in=0] (5c) to[out=180,in=0]( 4.0);
+	\draw[se] (16) to[out=180,in=0]  (6);
+
+	\node (3d) [below= 0.1cm of 3] {};
+	\node (22a) [left = 0.3cm of 22] {};
+	\draw[se] ( 22.180) to[out=180,in=0] (22a.0) to[out=180,in=0] (   3.0);
+
+	\node (5d) [below= 0.1cm of 5] {};
+	\node (24a) [left = 0.5cm of 24] {};
+	%  \draw[se] (24.180) to[out=180,in=0] (24a.0) to[out=180,in=0] (5d) to[out=180,in=0]( 4.0);
+	\draw[se] (24.180) to[out=180,in=0] (24a.0) to[out=180,in=0]( 5.0);
+	\draw[se] (26.180) to[out=180,in=0]  (7.0);
+
+	\draw[se] (31) to[out=180,in=0] (11);
+	\draw[se] (31) to[out=180,in=0] (21);
+
+	\draw[se] (32) to[out=180,in=0] (12);
+	\draw[se] (32) to[out=180,in=0] (22);
+	\draw[se] (34) to[out=180,in=0] (14);
+	\draw[se] (34) to[out=180,in=0] (24);
+	\draw[se] (36) to[out=180,in=0] (16);
+	\draw[se] (36) to[out=180,in=0] (26);
+
+	\draw[ie] (36) to[loop above] node[el,below] {\m{\neq}} (36);
+
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (2.5cm,-3.3cm) to (2.5cm,6.9cm);
+	\draw[separator] (6.5cm,-3.3cm) to (6.5cm,6.9cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+Join sources
+}
+\label{snippet3.16b_graph1}
+\end{figure}
+
+
+In ~\ref{snippet3.17a_graph} we have a join where some join nodes share a source in one joinee, 
+but not in both (irrelevant sources and rgfas are omitted):
+\begin{figure}[H]
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 2.5cm and 0cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+  \node[gtn]  (12) [above left  = 1cm and 1cm of 11] {\s{a,b}};
+  \node[gtn]  (14) [above right = 1cm and 1cm of 11] {\s{c}};
+	
+  \draw[gfa] (12)  to[bend right] node[el]             {\m{a}} (11);
+  \draw[gfa] (12)  to[bend left]  node[el,anchor=west] {\m{b}} (11);
+  \draw[gfa] (14)  to             node[el]             {\m{c}} (11);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (21)  [below right= 2.5cm and 0cm of 1] {$()$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+  \node[gtn]  (22) [above left  = 1.0cm and 1.0cm of 21] {\s{a}};
+  \node[gtn]  (23) [above right = 1.0cm and 1.0cm of 21] {\s{b,c}};
+	
+  \draw[gfa] (22) to             node[el,anchor=east] {\m{a}} (21);
+  \draw[gfa] (23) to[bend right] node[el,anchor=west] {\m{b}} (21);
+  \draw[gfa] (23) to[bend left]  node[el,anchor=west] {\m{c}} (21);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 6cm of 1] {$()$};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+%  \node (31jl)  [above left = -0.2cm and 0cm of 31] {$\sqcup$};
+
+  \node[gtn]  (32) [above left  = 1.0cm and 1.0cm of 31] {\m{a}};
+  \node[gtn]  (33) [above       = 0.9cm           of 31] {\m{b}};
+  \node[gtn]  (34) [above right = 1.0cm and 1.0cm of 31] {\m{c}};
+	
+  \draw[gfa]  (32)  to node[el,anchor=east] {\m{a}} (31);
+  \draw[gfa]  (33)  to node[el,anchor=west] {\m{b}} (31);
+  \draw[gfa]  (34)  to node[el,anchor=west] {\m{c}} (31);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\draw[se] (31) to[out=180,in=0] (11);
+%	\draw[se] (31) to[out=180,in=0] (21);
+
+	\node (12a) [right = 0.5cm of 12] {};
+	\node (23a) [right = 0.5cm of 23] {};
+	\draw[se] (32) to[out=180,in=0] (12a) to[out=180,in=0] (12);
+	\draw[se] (32) to[out=180,in=0] (22);
+	\draw[se] (33) to[out=180,in=0] (12a)  to[out=180,in=0] (12);
+	\draw[se] (33) to[out=180,in=0] (23a)  to[out=180,in=0] (23);
+	\draw[se] (34) to[out=180,in=0] (14);
+	\draw[se] (34) to[out=180,in=0] (23a) to[out=180,in=0] (23);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (3.5cm,-3.3cm) to (3.5cm,3.9cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+Join shared sources\\
+before \lstinline{n.assume(a=c)}
+}
+\label{snippet3.17a_graph}
+\end{figure}
+Here \m{[b]_n} shares the source \m{[\s{a,b}]_{p_0}} with \m{[a]_n}, and the source \m{[\s{b,c}]_{p_1}} with \m{[c]_n}.
+
+\noindent
+Now we show what happens to ~\ref{snippet3.17a_graph} if we try to \lstinline{assume a=c} at the join:
+\begin{figure}[H]
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 2.5cm and 0cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+  \node[gtn]  (12) [above left  = 1cm and 1cm of 11] {\s{a,b}};
+  \node[gtn]  (14) [above right = 1cm and 1cm of 11] {\s{c}};
+	
+  \draw[gfa] (12)  to[bend right] node[el]             {\m{a}} (11);
+  \draw[gfa] (12)  to[bend left]  node[el,anchor=west] {\m{b}} (11);
+  \draw[gfa] (14)  to             node[el]             {\m{c}} (11);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (21)  [below right= 2.5cm and 0cm of 1] {$()$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+  \node[gtn]  (22) [above left  = 1.0cm and 1.0cm of 21] {\s{a}};
+  \node[gtn]  (23) [above right = 1.0cm and 1.0cm of 21] {\s{b,c}};
+	
+  \draw[gfa] (22) to             node[el,anchor=east] {\m{a}} (21);
+  \draw[gfa] (23) to[bend right] node[el,anchor=west] {\m{b}} (21);
+  \draw[gfa] (23) to[bend left]  node[el,anchor=west] {\m{c}} (21);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 6cm of 1] {$()$};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+%  \node (31jl)  [above left = -0.2cm and 0cm of 31] {$\sqcup$};
+
+  \node[gtn]  (32) [above left  = 1.0cm and 1.0cm of 31] {\s{a,c}};
+  \node[gtn]  (33) [above right = 1.0cm and 1.0cm of 31] {\s{b}};
+	
+  \draw[gfa]  (32)  to[bend right] node[el,anchor=east] {\m{a}} (31);
+  \draw[gfa]  (32)  to[bend left]  node[el,anchor=east] {\m{c}} (31);
+  \draw[gfa]  (33)  to             node[el,anchor=west] {\m{b}} (31);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\draw[se] (31) to[out=180,in=0] (11);
+%	\draw[se] (31) to[out=180,in=0] (21);
+
+	\node (12a) [right = 0.5cm of 12] {};
+	\node (23a) [right = 0.5cm of 23] {};
+	\node (32b) [above left = 0.2cm and 1.0cm of 32] {};
+	\node (32c) [below left = 0.2cm and 1.0cm of 32] {};
+	\draw[se,ultra thick] (32) to[out=180,in=0] (32b) to[out=180,in=0] (12a) to[out=180,in=0] (12);
+	\draw[se] (32) to[out=180,in=0] (32c) to[out=180,in=0] (22);
+	\draw[se] (32) to[out=180,in=0] (32b) to[out=180,in=0] (14);
+	\draw[se,ultra thick] (32) to[out=180,in=0] (32c) to[out=180,in=0] (23a) to[out=180,in=0] (23);
+	\draw[se,ultra thick] (33) to[out=180,in=0] (12a) to[out=180,in=0] (12);
+	\draw[se,ultra thick] (33) to[out=180,in=0] (23a) to[out=180,in=0] (23);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (3.5cm,-3.3cm) to (3.5cm,3.9cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+Join shared sources\\
+after \lstinline{n.assume(a=c)} \\
+broken propagation invariant
+}
+\label{snippet3.17b_graph}
+\end{figure}
+In ~\ref{snippet3.17b_graph} we have highlighted the shared pair of sources for the nodes \m{[\s{a,c}]_n}, \m{[b]_n}  - 
+for joins this means that the first part of the propagation invariant is broken.
+The fixed graphs are shown in ~\ref{snippet3.17c_graph}
+\begin{figure}[H]
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 2.5cm and 0cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+  \node[gtn]  (12) [above left  = 1cm and 1cm of 11] {\s{a,b}};
+  \node[gtn]  (14) [above right = 1cm and 1cm of 11] {\s{c}};
+	
+  \draw[gfa] (12)  to[bend right] node[el]             {\m{a}} (11);
+  \draw[gfa] (12)  to[bend left]  node[el,anchor=west] {\m{b}} (11);
+  \draw[gfa] (14)  to             node[el]             {\m{c}} (11);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (21)  [below right= 2.5cm and 0cm of 1] {$()$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+  \node[gtn]  (22) [above left  = 1.0cm and 1.0cm of 21] {\s{a}};
+  \node[gtn]  (23) [above right = 1.0cm and 1.0cm of 21] {\s{b,c}};
+	
+  \draw[gfa] (22) to             node[el,anchor=east] {\m{a}} (21);
+  \draw[gfa] (23) to[bend right] node[el,anchor=west] {\m{b}} (21);
+  \draw[gfa] (23) to[bend left]  node[el,anchor=west] {\m{c}} (21);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 5cm of 1] {$()$};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+%  \node (31jl)  [above left = -0.2cm and 0cm of 31] {$\sqcup$};
+
+  \node[gtn]  (32) [above= 1.0cmof 31] {\s{a,b,c}};
+	
+  \draw[gfa]  (32)  to[bend right] node[el,anchor=east] {\m{a}} (31);
+  \draw[gfa]  (32)  to             node[el,anchor=west] {\m{b}} (31);
+  \draw[gfa]  (32)  to[bend left]  node[el,anchor=west] {\m{c}} (31);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\draw[se] (31) to[out=180,in=0] (11);
+%	\draw[se] (31) to[out=180,in=0] (21);
+
+	\node (12a) [right = 0.5cm of 12] {};
+	\node (23a) [right = 0.5cm of 23] {};
+	\node (32b) [above left = 0.2cm and 1.0cm of 32] {};
+	\node (32c) [below left = 0.2cm and 1.0cm of 32] {};
+	\draw[se] (32) to[out=180,in=0] (32b) to[out=180,in=0] (12a) to[out=180,in=0] (12);
+	\draw[se] (32) to[out=180,in=0] (32c) to[out=180,in=0] (22);
+	\draw[se] (32) to[out=180,in=0] (32b) to[out=180,in=0] (14);
+	\draw[se] (32) to[out=180,in=0] (32c) to[out=180,in=0] (23a) to[out=180,in=0] (23);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (4.0cm,-3.3cm) to (4.0cm,4.2cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+Join shared sources
+}
+\label{snippet3.17c_graph}
+\end{figure}
+
+The condition for propagation completeness is that separate nodes cannot share a source in all predecessors - this is a generalization of the rule for sequential nodes. We will soon show that this is insufficient, and formalize the complete version of the condition.
+
+\subsubsection{The sources invariant}
+Here we phrase the source invariant for the weak join for a cfg-node n:
+\begin{figure}[H]
+\begin{enumerate}
+\item The \textbf{first part} remains as in the sequential case, ensuring we are not missing sources edges:\\
+	\m{\forall p \in \preds{n},\fa{f}{t} \in \gfasA{g_n}, \tup{s} \in \sources{n}{p}{\tup{t}} \cdot }\\
+	\m{\fa{f}{s} \in \gfasA{g_p} \Rightarrow [\fa{f}{s}]_{g_p} \in \sources{n}{p}{[\fa{f}{t}]_{g_n}}}
+\item The \textbf{second part} also remains as in the sequential case, ensuring transitive propagation of equality information:\\
+	\m{\forall p \in \preds{n},\fa{f}{t} \in \gfasA{g_n} \cup \rgfas{n}, \tup{s} \in \sources{n}{p}{\tup{t}} \cdot}\\
+	\m{\fa{f}{s} \in \gfasA{g_p} \cup \rgfas{p}}
+\item The \textbf{third part} is slightly modified - we cannot have an rgfa only if \emph{all} predecessors have a gfa:\\
+	\m{\forall \tup{t} \in g_n,f \in \Fs{\sig} \cdot}\\
+	\m{(\forall p \in \preds{n} \cdot \exists \tup{s} \in \sources{n}{p}{\tup{t}}\cdot \fa{f}{s} \in \gfasA{g_p}) \Rightarrow \fa{f}{t} \notin \rgfas{n}} 
+\end{enumerate}
+\caption{Weak join local graph based source invariant}
+\label{weak_join_source_invariant}
+\end{figure}
+All the conditions are still local, and neither joinee can affect the other.
+
+\subsubsection{The propagation invariant}
+Remember the non-local \textbf{propagation invariant}:\\
+\m{\forall n \in \cfg,t \in \terms{g_n}, s \in \Ts{\sig} \cdot} \\
+\m{s=t \in \sqcup_F(\eqs{g_n},\s{\eqs{g_p}}_{p \in \preds{n}}) \Rightarrow s \in \terms{[t]_{g_n}}}\\
+For join nodes we will need some extra state in order to phrase these in terms of graphs, as hinted at before.
+
+\noindent
+The following example shows a join with the propagation invariant broken:
+\begin{figure}[H]
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 2.5cm and 0cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+	\node[gtn]  (12) [above left  = 1cm and 1cm of 11] {\s{a}};
+	\node[gtn]  (14) [above right = 1cm and 1cm of 11] {\s{b}};
+	
+	\draw[gfa] (12)  to node[el]  {\m{a}} (11);
+	\draw[gfa] (14)  to node[el]  {\m{b}} (11);
+
+	\node[gttn] (15)  [above = 1cm of 12]    {\m{(a)}};
+	\node[gttn,ultra thick] (17)  [above = 1cm of 14]    {\m{(b)}};
+
+	\draw[sgtt] (15) to node[el] {0} (12);
+	\draw[sgtt] (17) to node[el] {0} (14);
+
+	\node[gtn,ultra thick]  (18) [above = 3cm of 11] {\tiny$\faB{f}{a}{b}$};
+	\draw[gfa]  (18) to node[el] {\m{f}} (15);
+	\draw[gfa,ultra thick]  (18) to node[el,anchor=west] {\m{f}} (17);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (21)  [below right= 3.0cm and 0cm of 1] {$()$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+  \node[gtn]  (22) [above  = 1.0cm of 21] {\s{a,b}};
+	
+  \draw[gfa] (22) to[bend right] node[el,anchor=east] {\m{a}} (21);
+  \draw[gfa] (22) to[bend left]  node[el,anchor=west] {\m{b}} (21);
+
+	\node[gttn,ultra thick] (25)  [above = 1cm of 22]    {\m{(\s{a,b})}};
+
+	\draw[sgtt] (25) to node[el] {0} (22);
+
+  \node[gtn,ultra thick]  (28) [above = 1cm of 25] {\tiny$\faB{f}{a}{b}$};
+	\draw[gfa,ultra thick]  (28) to node[el] {\m{f}} (25);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 6cm of 1] {$()$};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+  \node[gtn]  (32) [above left  = 1cm and 1cm of 31] {\s{a}};
+  \node[gtn]  (34) [above right = 1cm and 1cm of 31] {\s{b}};
+
+  \draw[gfa]  (32)  to node[el,anchor=east]  {\m{a}} (31);
+  \draw[gfa]  (34)  to node[el,anchor=west]  {\m{b}} (31);
+
+	\node[gttn] (35)  [above = 1cm of 32]    {\m{(a)}};
+	\node[gttn] (37)  [above = 1cm of 34]    {\m{(b)}};
+
+	\draw[sgtt] (35) to node[el] {0} (32);
+	\draw[sgtt] (37) to node[el] {0} (34);
+
+	\node[gtn,ultra thick]  (38) [above right = 1cm and 1cm of 35] {$\m{f(a)}$};
+	\draw[gfa]  (38) to node[el,anchor=south east] {\m{f}} (35);
+	\draw[mgfa,ultra thick,dashed] (38) to node[ml,anchor=south west] {\m{f}} (37);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node (15a) [right = 0.5cm of 15] {};
+	\node (35b) [above left = 0.2cm and 1.5cm of 35] {};
+	\node (35c) [below left = 0.2cm and 1.5cm of 35] {};
+	\node (37b) [above left = 0.2cm and 1.5cm of 37] {};
+	\node (37c) [below left = 0.2cm and 1.5cm of 37] {};
+	\draw[se,ultra thick] (37) to[out=180,in=0] (37b) to[out=180,in=0] (17);
+	\draw[se,ultra thick] (37) to[out=180,in=0] (37c) to[out=180,in=0] (25);
+
+	\node (18a) [right = 0.5cm of 18] {};
+	\node (38b) [above left = 0.2cm and 1.5cm of 38] {};
+	\node (38c) [below left = 0.2cm and 1.5cm of 38] {};
+	\draw[se,ultra thick] (38) to[out=180,in=0] (38b) to[out=180,in=0] (18a) to[out=180,in=0] (18);
+	\draw[se,ultra thick] (38) to[out=180,in=0] (38c) to[out=180,in=0] (28);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (3.5cm,-3.3cm) to (3.5cm,6.5cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+Weak join \GFA{} completeness - broken
+}
+\label{snippet3.18a_graph}
+\end{figure}
+Here we see that if a \GFA{} with the same function symbol exists in the source (here source for \m{f(a)}) all joinees, 
+where the \GFA{} tuples in all joinees are the source for a tuple in the join node (here \m{[(b)]_{g_n}}), then we must have that \GFA{} also in the join. Again this is a generalization of the condition for sequential nodes.
+
+\subsubsection{Top down weak join completeness}
+Here we discuss a top down approach to ensuring weak join completeness.
+
+\subsubsection*{Source pairs}
+The key notion here is that of ordered pairs of EC nodes, one from each predecessor.
+We will call these pairs \emph{source-pairs} and will denote them as \gta{s_0}{s_1} for a pair of EC nodes \m{s_0 \in g_{p_0},s_1 \in g_{p_1}}\\
+We will also overload the notation for terms (as opposed to EC nodes) in order to reduce notations where there is no ambiguity - so e.g. \gta{b}{c} would mean the ordered pair \m{([b]_{p_0},[c]_{p_1})}.\\
+We write \m{\gta{t_0}{t_1} \in \sourcesB{n}{t}} iff, for each i, \\
+\m{[t_i]_{g_{p_i}} \in \sources{n}{p_i}{[t]_{g_n}}}.
+
+As we have seen before, each such pair can be the source of at most one EC node at the join, 
+but not all such pairs can be the source of \emph{any} node at the join - for example, \gta{f(\s{a,b})}{\s{a,b}} 
+would not be the source of any node in \ref{snippet3.18a_graph} - we would then say that this pair is \emph{infeasible} - it does not represent any term at the join. \\
+A pair \gta{s_0}{s_1} is obviously feasible if \m{\terms{s_0} \cap \terms{s_1} \neq \emptyset},
+but is also feasible if \m{\exists t \in g_n \cdot \gta{s_0}{s_1} \in \sourcesB{n}{t}}.\\
+This means that if we were to \lstinline{assume a=b} at the join then \gta{a}{b} would become feasible, 
+so that feasibility can change with added equalities, but only in a monotonic manner.\\
+Feasibility also satisfies congruence closure, as we will detail formally.\\
+We denote the set of feasible source pairs at a join node n as \fsps{n}.\\
+We extend the above source-pairs to source-pairs of tuples, where a tuple-source-pair is feasible iff each pair of its elements is feasible - formally:\\
+\m{\gta{\tup{s}}{\tup{t}} \in \fsps{n} \triangleq \bigwedge\limits_i \gta{s_i}{t_i} \in \fsps{n}}\\
+Now we can define a feasible source-pair as follows:
+\begin{figure}[H]
+\begin{enumerate}
+	\item \m{\forall t \in g_n, \gta{s_0}{s_1} \in \sourcesB{n}{t} \cdot}\\
+		\m{\gta{s_0}{s_1} \in \fsps{n}}
+	\item \m{\forall t \in \gta{\tup{s_0}}{\tup{s_1}} \in \fsps{n}, \fa{f}{s_0} \in \gtas{p_0}, \fa{f}{s_1} \in \gtas{p_1}, \cdot}\\
+		\m{\gta{\fa{f}{s_0}}{\fa{f}{s_1}} \in \fsps{n}}
+%\m{\feasible{\gta{s_0}{s_1}} \triangleq }\\
+%\m{(\exists t \in g_n \cdot \gta{s_0}{s_1} \in \sourcesB{n}{t})}\\
+%\m{ \lor (\exists \fa{f}{u_0} \in s_0,\fa{f}{u_1} \in s_1 \cdot \feasible{\gta{\tup{u_0}}{\tup{u_1}}})}
+\end{enumerate}
+\caption{Weak join - feasible source pairs}
+\end{figure}
+
+That is, a pair is feasible if it is already the source of some term at the join (which covers the above case of \lstinline{assuming a=c} at the \m{n} in ~\ref{snippet3.17b_graph}), or if there is a matching feasible pair of \GFAs{} - by congruence closure.\\
+Using this definition we can now phrase \GFA{} completeness for the weak join:
+\begin{figure}[H]
+\m{\forall t \in g_n, \gta{s_0}{s_1} \in \sourcesB{n}{t}, \fa{f}{v_0} \in s_0, \fa{f}{v_1} \in s_1 \cdot}\\
+\m{\gta{\tup{v_0}}{\tup{v_1}} \in \fsps{n} \Rightarrow \exists \fa{f}{u} \in t \cdot \gta{\tup{v_0}}{\tup{v_1}} \in \sourcesB{n}{\tup{u}}}
+\caption{Weak join - non-local propagation invariant}
+\end{figure}
+However, as in the sequential case, we want a more operational bottom-up way of determining which nodes are actually needed, and we do not want to consider all \m{\size{g_{p_0}} \times \size{g_{p_1}}} source-pairs regardless of the terms at \m{g_n} - 
+we want the overall complexity to depend on the final result, and so a source-pair that provably cannot contribute to the result should not be considered.\\
+We will maintain a set of \emph{potentially relevant} source pairs per join node - denoted by \prgtas{n} for the join node \m{n} (the actual concrete representation in the algorithm will be discussed later).\\
+Now we define which source-pairs we consider potentially relevant, similar to relevant terms in the sequential case:
+\begin{figure}[H]
+\begin{enumerate}
+	\item For each term-EC-node at \m{g_n}, each pair of sources should be considered:\\
+	\m{\forall t \in g_n, \gta{s_0}{s_1} \in \sourcesB{n}{t} \cdot \gta{s_0}{s_1} \in \prgtas{n}}
+	\item For each source-pair with a matching \gfa pair, all source-pairs of the matching tuple must be considered:\\
+	\m{\forall \gta{s_0}{s_1} \in \prgtas{n}, \fa{f}{u_0} \in s_0, \fa{f}{u_1} \in s_1 \cdot \gta{\tup{u_0}}{\tup{u_1}} \in \prgtas{n}}
+\end{enumerate}
+\caption{Weak join - relevant potential source-pairs}
+\label{wj_relevant_potential_source_pairs}
+\end{figure}
+For the strong join we will need a third condition that makes a source pairs relevant.\\
+Note that this definition means that checking for feasibility is closed in \prgtas{n} (it is sufficient to check feasibility only on source-pairs in \gtas{n}).\\
+A source pair that is both relevant and feasible is still not necessarily the source of node at the join - for example:
+\begin{figure}[H]
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 2.5cm and 0cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+	\node[gtn]              (12) [above left  = 1cm and 1cm of 11] {\s{a}};
+	\node[gtn,ultra thick]  (13) [above       =       0.9cm of 11] {\s{b}};
+	\node[gtn,ultra thick]  (14) [above right = 1cm and 1cm of 11] {\s{c}};
+	
+	\draw[gfa]             (12)  to node[el,anchor=east]  {\m{a}} (11);
+	\draw[gfa,ultra thick] (13)  to node[el,anchor=west]  {\m{\mathbf{b}}} (11);
+	\draw[gfa,ultra thick] (14)  to node[el,anchor=west]  {\m{\mathbf{c}}} (11);
+
+	\node[gttn]             (12a)  [above = 1cm of 12]    {\m{(a)}};
+	\node[gttn,ultra thick] (14a)  [above = 1cm of 14]    {\m{(b,c)}};
+
+	\draw[sgtt]             (12a) to node[el,anchor=east] {0} (12);
+	\draw[sgtt,ultra thick] (14a) to[out=-90,in=90] node[el,anchor=north] {\textbf{0}} (13);
+	\draw[sgtt,ultra thick] (14a) to node[el,anchor=north west] {\textbf{1}} (14);
+
+	\node[gtn,ultra thick]  (15) [above = 3.5cm of 11] {\tiny$\svb{f(a)}{g(b,c)}$};
+	\draw[gfa]              (15) to node[el,anchor=south east] {\m{f}} (12a);
+	\draw[gfa,ultra thick]  (15) to node[el,anchor=south west] {\m{\mathbf{g}}} (14a);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (21)  [below right= 3.0cm and 0cm of 1] {$()$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+  \node[gtn,ultra thick]  (22) [above  = 1.0cm of 21] {\s{a,b}};
+	
+  \draw[gfa]             (22) to[bend right] node[el,anchor=east] {\m{a}} (21);
+  \draw[gfa,ultra thick] (22) to[bend left]  node[el,anchor=west] {\m{b}} (21);
+
+	\node[gttn]             (22a)  [above = 1cm of 22]    {\m{(\s{a,b})}};
+	\node[gttn,ultra thick] (23a)  [right = 1cm of 22a]   {\m{(\s{a,b},\s{a,b})}};
+
+	\draw[sgtt,ultra thick] (22a) to node[el,anchor=east] {\textbf{0}} (22);
+	\draw[sgtt,ultra thick] (23a) to[out=-90,in=90] node[el,anchor=north west] {\textbf{0,1}} (22);
+
+  \node[gtn,ultra thick] (25) [above = 1cm of 22a] {\tiny$\svb{f(\s{a,b})}{g(\s{a,b},\s{a,b})}$};
+	\draw[gfa,ultra thick] (25) to node[el,anchor=west] {\m{\mathbf{f}}} (22a);
+	\draw[gfa,ultra thick] (25) to node[el,anchor=west] {\m{\mathbf{g}}} (23a);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 6cm of 1] {$()$};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+  \node[gtn]  (32) [above = 1cm of 31] {\s{a}};
+
+  \draw[gfa]  (32)  to node[el,anchor=east]  {\m{a}} (31);
+
+	\node[gttn] (32a)  [above = 1cm of 32]    {\m{(a)}};
+
+	\draw[sgtt] (32a) to node[el] {0} (32);
+
+	\node[gtn]  (35) [above = 1cm of 32a] {$\m{f(a)}$};
+	\draw[gfa]  (35) to node[el,anchor=east] {\m{f}} (32a);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node (18a) [right = 0.5cm of 18] {};
+	\node (35b) [above left = 0.2cm and 1.5cm of 35] {};
+	\node (35c) [below left = 0.2cm and 1.5cm of 35] {};
+	\draw[se] (35) to (35b) to (15);
+	\draw[se] (35) to (35c) to (25);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (4.5cm,-3.3cm) to (4.5cm,6.5cm);
+\end{pgfinterruptboundingbox}
+\end{tikzpicture}
+\caption{
+Join \GFA{} completeness\\
+relevant and feasible source-pairs
+}
+\label{snippet3.19_graph2}
+\end{figure}
+Here the source-pair \gta{b}{\s{a,b}} is both feasible and relevant, but should not appear in the join because the source pair \gta{c}{\s{a,b}} it shares in its only relevant super-tuple with is not relevant.\\
+This implies that an algorithm that only adds necessary (by fragment completeness) nodes in our setting would have to do either of the following:
+\begin{itemize}
+	\item Add an EC-node at the join for each feasible relevant source-pair and then prune those that do not reach a pre-existing EC-node,
+	similarly, we could avoid marking source-pairs as feasible altogether and simply create an EC-node for each relevant source-pair and trim those that remain infeasible. 
+	\item Add a second pass of marking only feasible relevant source-pairs top-down and then adding only EC-nodes (bottom up) for those source-pairs that were marked in the second stage
+\end{itemize}
+Asymptotically there is no difference between the two approaches, as in both cases all the traversed source-pairs have already been traversed at least once, and also the state that we need to keep after a join operation in order to keep incremental performance bounds do not change.\\
+We show here the encoding that would allow us to perform the second option, using \gtas{n} for the set of source-pairs marked in the second phase:
+\begin{figure}[H]
+\begin{enumerate}
+	\item For each term-EC-node at \m{g_n}, each pair of sources that is feasible should be considered:\\
+	\m{\forall t \in g_n, \gta{s_0}{s_1} \in \sourcesB{n}{t} \cdot}\\
+	\m{\gta{s_0}{s_1} \in \gtas{n}}
+	\item Downward closure:\\
+	\m{\forall \gta{s_0}{s_1} \in \gtas{n}, \fa{f}{u_0} \in s_0, \fa{f}{u_1} \in s_1 \cdot }\\
+	\m{\gta{\tup{u_0}}{\tup{u_1}} \in \fsps{n} \Rightarrow \gta{\tup{u_0}}{\tup{u_1}} \in \gtas{n}}
+	\item Bottom up node  addition:\\
+	\m{\forall \gta{s_0}{s_1} \in \gtas{n}, \fa{f}{u_0} \in s_0, \fa{f}{u_1} \in s_1, \tup{t} \in \sourcesInvB{n}{\gta{\tup{u_0}}{\tup{u_1}}} \cdot }\\
+	\m{\fa{f}{t} \in \gfasA{n}}
+\end{enumerate}
+\caption{Weak join - relevant source-pairs}
+\label{wj_relevant_source_pairs}
+\end{figure}
+For completeness we give here also the formulation for feasibility restricted to relevant terms:
+\begin{figure}[H]
+\begin{itemize}
+	\item \m{\forall t \in g_n, s_0,s_1, \gta{s_0}{s_1} \in \sourcesB{n}{t} \cdot}\\
+		\m{\gta{s_0}{s_1} \in \fsps{n}}
+%	\item \m{\forall t \in \gta{\tup{s_0}}{\tup{s_1}} \in \fsps{n}, \fa{f}{s_0} \in \gfas{p_0}, \fa{f}{s_1} \in \gfas{p_1}, \cdot}\\
+%		\m{\gta{\fa{f}{s_0}}{\fa{f}{s_1}} \in \prgtas{n} \Rightarrow \gta{\fa{f}{s_0}}{\fa{f}{s_1}} \in \fsps{n}}
+\end{itemize}
+%\m{\feasible{\gta{s_0}{s_1}} \triangleq }\\
+%\m{(\exists t \in g_n \cdot \gta{s_0}{s_1} \in \sourcesB{n}{t})}\\
+%\m{ \lor ((\exists \fa{f}{u_0} \in s_0,\fa{f}{u_1} \in s_1 \cdot \feasible{\gta{\tup{u_0}}{\tup{u_1}}}) \land \gta{s_0}{s_1} \in \prgtas{n})}
+\caption{Weak join - relevant feasible source pairs}
+\label{wj_relevant_feasible_source_pairs}
+\end{figure}
+Our weak propagation invariant will be the least fixed point of the conjunction of \ref{wj_relevant_potential_source_pairs}, 
+\ref{wj_relevant_source_pairs} and \ref{wj_relevant_feasible_source_pairs}.\\
+We need a least fixed point for cases such as:\\
+\m{\s{a=f(b),b=g(b)} \sqcup \s{a=f(c),c=g(c)}}\\
+where adding the term a to the join could mark\gta{b}{c}{}as feasible if we take a non-minimal fixed point.\\
+As our algorithm will satisfy the invariant by monotonically adding elements (that is, expanding \prgtas{n},\gtas{n}, \m{g_n} etc),
+we will naturally reach the least fixed point (we will show termination, soundness and completeness in the appendix).
+
+
+%\m{O(\size{g_{p_0}}\times\size{g_{p_1}} + \size{g_n}\times(\size{g_{p_0}} + \size{g_{p_1}}))} 
+%simply by counting all possible pairs of both kinds 

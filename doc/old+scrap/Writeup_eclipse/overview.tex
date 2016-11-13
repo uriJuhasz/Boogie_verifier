@@ -1,0 +1,64 @@
+\subsection{Overview}
+Since the first mathematical proofs of a computer program ~\cite{DBLP:journals/cacm/Hoare69}, ~\cite{FLOYD67} many approaches and tools have been developed for automating the proofs and proof-checking of programs.
+
+A program usually includes some set of data domains, such as integers, Booleans, arrays (e.g. of integers) and strings.
+For many domains and domain fragments (e.g. linear integer inequalities) dedicated decision procedures have been developed.
+Domains can also be axiomatized as logical theories (often in [multi-sorted] first order logic - [MS]FOL) - and hence general FOL reasoning tools can be used to reason about a program state.
+
+It would seem that, even considering the latest development in general Logic reasoning tools and theory axiomatization, a dedicated decision procedure for a domain tends to be much more efficient than a generic reasoning tool using axioms.
+
+There are two domains that are quite specific to computer programs:
+ 
+One is the heap domain, which is being researched extensively.
+When encoded into first order logic, the heap is often encoded as update-able maps, for which there are some dedicated decision procedures.
+Several techniques address heaps directly, such as many symbolic execution tools and shape analysis.
+
+The other domain is the domain of control flow graphs - most tools have some implicit notion of a control flow graph, but most analyses only use a local view on the graph - for example to know where to apply join in abstract interpretation or where to branch in symbolic execution.
+When generating verification conditions for a program, the CFG structure is usually encoded into propositional logic, with a set of nullary predicates representing the program location and implications signifying the structure and which statement is where in the CFG - this means that reasoning about the CFG is done via generic SAT solving techniques.
+In contrast, many compilation tools use deeper knowledge of the CFG in order to simplify, optimize and rewrite it, and to exploit properties, such as variable scoping, that depend on the CFG.
+
+Another issue is the combination of domains - in abstract interpretation we can encode the Cartesian product of two domains, and sometimes we can define a reduction operator to obtain a reduced product domain which is more precise than the Cartesian domain.
+An SMT solver uses the to combine two or more (black box) decision procedures.
+These tools for combining domains allow for the construction of efficient tools from given building blocks, potentially with some limited support for extras such as  limited quantification, however combining two black box decision procedures is rarely as complete or as efficient as a dedicated combined domain.
+
+This work is based on the observation, that computer program proofs have different characteristics than other common mathematical proofs such as in algebra or analysis, and so could benefit from specialized tools rather than the use of general theorem provers.
+
+A lot of work has been done on general automated FOL proof search and [un]satisfiability tools "theorem provers" - such as SMT solvers e.g. ~\cite{DBLP:conf/tacas/MouraB08} and ~\cite{DBLP:conf/cav/BarrettCDHJKRT11} and resolution based solvers - e.g. ~\cite{DBLP:conf/cade/RiazanovV99}.
+Some of these provers, especially SMT solvers, specialize some theories, especially (linear) (integer) arithmetic and sometimes bit vectors and arrays, and virtually all have a dedicated Boolean SAT engine.
+However, few of the theorem provers can take direct and full advantage of some of the special features of programming languages such as scoping, CFG structure and heap.
+
+The main approaches for automated reasoning about programs include:\\
+Verification condition generation: the semantics of the programing language is used to encode a set of logical conditions that ensure that the program is correct.
+This is usually done using weakest-preconditions, which are calculated by traversing the program CFG backwards from the end and usually requires the invariants for all loops in the program.
+The verification conditions are usually in FOL for automated proving or sometimes HOL interactive proving.
+In the automated case they are discharged using a theorem prover - usually a FOL theorem prover, either SMT solver or sometimes a resolution based solver.
+This usually requires that loops (and recursion) are annotated with invariants as most automated provers cannot infer invariants or discharge induction proofs.
+The main advantages is that this method is complete (relative to the theorem prover) and specifications are limited only by the logic.
+Using weakest preconditions is, to some degree, goal oriented, as the proof obligation implies exactly that all assertions hold.
+The disadvantage is that a lot of structural information is lost in the conversion to a "flat" logical formula, and that theorem provers are often very unpredictable.
+
+Symbolic Execution:\\
+The program is executed using symbolic values for input variables, where execution is forked whenever a branch in the original program is encountered.
+A theorem prover (or some other automated reasoning tool) is used to check the feasibility of branches, and to discharge assertions that are encountered during execution.
+As the program is basically executed using the operational semantics, specialized handling and data-structures can be implemented for e.g. heaps, and so it can be more efficient and sometimes more complete for some domains.
+This also usually requires invariants to be given as a loop body cannot be executed an unbounded or symbolic number of times.
+The main disadvantage is that the number of execution paths can be exponential in the program size, and a lot of calculations can be repeated when two traces execute the same code with a similar initial state (e.g. after a branch and join).
+Another disadvantage is that it is not goal directed in the sense that it can track a lot of irrelevant information, such as heap updates to locations that are never read from later in the trace, as it executes the program in the forward direction.
+
+Abstract Interpretation:\\
+This method chooses an abstraction for the program state, and executes the program with the abstracted state.
+Loops are handled by repeatedly executing the body until a fixpoint is reached, possibly by losing precision in order to force convergence.
+This method can infer invariants in some cases but it requires that the fixed abstract domain (which is usually much less expressive than FOL) can represent both the initial state, assertions, and all intermediate states (including the invariants).
+This method is often used reasoning forward (in which case it is less goal directed), but some domains also admit backward reasoning.
+Some attempts have been made to combine domains (e.g. heap and linear inequalities) in order to prove programs that depend on interaction between these domains.
+
+Model checking:\\
+This method is used usually for programs with a finite state, or a finite abstraction of a program with infinite states.
+The program can be described as a finite state machine and the assertions to be proven can be described as states of this machine.
+In bounded model checking the correctness of the program is encoded into a SAT problem which is usually discharged by a SAT-solver.
+The encoding into SAT for BMC is often done by "unrolling" the program up to a bound - introducing propositional variables for each program variable and each execution step, and encoding the transition relation between successive time steps in propositional logic - a satisfying interpretation for this formula is a counter-example showing how an assertion can be violated.
+For handling software programs which can have an infinite state-space (as opposed to hardware circuits which are by definition finite) abstraction is often used for e.g. integers.
+Model checking can handle some large programs and take advantage of advances in SAT-solving (BMC) which is a decidable problem that is easier than FOL theorem proving (which is only semidecidable), but cannot encode unbounded domains such as heaps in a complete way.
+
+	
+	

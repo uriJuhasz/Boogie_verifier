@@ -1,0 +1,62 @@
+\relax 
+\citation{DowneySethiTarjan}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Congruence closure graphs}{35}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.1}Data Structure}{35}}
+\citation{NelsonOppenUnionFind}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Basic EC graph data structure  GTs{} and GFAs{} are defined in Scala style to simplify the notation.  A GT{} represents an EC of ground terms.  A GFA{} represents an AEC (atomic EC) of ground terms.  \relax }}{36}}
+\newlabel{fig_basic_ECGraph}{{3.1}{36}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Basic EC graph congruence closure code  The algorithm maintains a queue \lstinline |mergeQ| of GTs{} that need to be merged,  and a map \lstinline |mergeMap| that encodes which GT{} is merged to which GT{}, it is maintained essentially as in the union-find algorithm.  The \lstinline |transitiveMerge| method traverses the map and returns the last element of the chain that starts at its argument.  The \lstinline |mergeOne| method merges two GTs{}, updates the relevant maps and enqueues any equalities implied by congruence closure - it is detailed in figure 3.3\hbox {}. \relax }}{37}}
+\newlabel{fig_basic_ECGraph_assumeEqual}{{3.2}{37}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Basic EC graph single merge step  The method \lstinline |mergeOne| merges one pair of GTs{} and updates the maps and super-terms accordingly.  If a super-term update causes the super-term's EC to overlap another EC, they are enqueued for a merge.  After the \lstinline |mergeOne| method, \lstinline |gt| is effectively removed from the graph.  The syntax \lstinline |gfa[gt$\DOTSB \mapstochar \rightarrow $target]| means replacing each occurrence if \lstinline |gt| with \lstinline |target|. \relax }}{38}}
+\newlabel{fig_basic_ECGraph_mergeOne}{{3.3}{38}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Graph based lazy entailment checking  The algorithm simply selects all equations on terms the graph represents and \lstinline |assume|s them in the graph, until no such axioms remain.  We discuss later how to select the new axioms to add (build \lstinline |ns|) efficiently. \relax }}{41}}
+\newlabel{fig_lazy_congruence}{{3.4}{41}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.2}Notation}{41}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces Equivalence class graph notation  GTs{} are represented using circles and GT{} tuples are represented using rectangles  Inside the circles and rectangles we enumerate some of the members (terms) of each EC for clarity, but as some ECs are infinite, this list is not always complete.  Single arrows represent function application edges while indexed double arrows represent membership in the i-th position of a tuple.  We use the empty tuple as the base of each graph. \relax }}{42}}
+\newlabel{fig_ec_graph_legend}{{3.5}{42}}
+\newlabel{ec_graph_example_binary_tuple1}{{3.6a}{43}}
+\newlabel{sub@ec_graph_example_binary_tuple1}{{a}{43}}
+\newlabel{ec_graph_example_binary_tuple2}{{3.6b}{43}}
+\newlabel{sub@ec_graph_example_binary_tuple2}{{b}{43}}
+\newlabel{ec_graph_example_binary_tuple3}{{3.6c}{43}}
+\newlabel{sub@ec_graph_example_binary_tuple3}{{c}{43}}
+\newlabel{ec_graph_example_binary_tuple4}{{3.6d}{43}}
+\newlabel{sub@ec_graph_example_binary_tuple4}{{d}{43}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces Binary tuples\relax }}{43}}
+\newlabel{ec_graph_example_binary_tuple}{{3.6}{43}}
+\newlabel{ec_graph_example_cyclic1}{{3.7a}{44}}
+\newlabel{sub@ec_graph_example_cyclic1}{{a}{44}}
+\newlabel{ec_graph_example_cyclic2}{{3.7b}{44}}
+\newlabel{sub@ec_graph_example_cyclic2}{{b}{44}}
+\newlabel{ec_graph_example_cyclic3}{{3.7c}{44}}
+\newlabel{sub@ec_graph_example_cyclic3}{{c}{44}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces Cyclic graphs\relax }}{44}}
+\newlabel{ec_graph_example_cyclic}{{3.7}{44}}
+\@setckpt{ugfole_cc_graphs}{
+\setcounter{page}{45}
+\setcounter{equation}{0}
+\setcounter{enumi}{0}
+\setcounter{enumii}{0}
+\setcounter{enumiii}{0}
+\setcounter{enumiv}{0}
+\setcounter{footnote}{0}
+\setcounter{mpfootnote}{0}
+\setcounter{part}{0}
+\setcounter{chapter}{3}
+\setcounter{section}{1}
+\setcounter{subsection}{2}
+\setcounter{subsubsection}{0}
+\setcounter{paragraph}{0}
+\setcounter{subparagraph}{0}
+\setcounter{figure}{7}
+\setcounter{table}{0}
+\setcounter{parentequation}{0}
+\setcounter{lstnumber}{1}
+\setcounter{ContinuedFloat}{0}
+\setcounter{float@type}{8}
+\setcounter{subfigure}{3}
+\setcounter{subtable}{0}
+\setcounter{theorem}{0}
+\setcounter{definition}{0}
+\setcounter{lstlisting}{0}
+}

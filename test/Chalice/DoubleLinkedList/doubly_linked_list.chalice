@@ -1,0 +1,93 @@
+class Node {
+
+    var next: Node;
+    var prev: Node;
+
+    invariant acc(prev, 50-rd(1)) && acc(next, 50-rd(1)) && acc(mu, 50-rd(1))
+    invariant next==null ==> (acc(prev, 25) && acc(next, 25) && acc(mu, 25))
+    invariant next!=null ==> (acc(next.next, 25) && acc(next.prev, 25) && acc(next.mu, 25))
+    invariant prev==null ==> (acc(prev, 25) && acc(next, 25) && acc(mu, 25))
+    invariant prev!=null ==> (acc(prev.next, 25) && acc(prev.prev, 25) && acc(prev.mu, 25))
+    invariant next!=null ==> (next.prev != null && next.prev == this)
+    invariant prev!=null ==> (prev.next != null && prev.next == this)
+    invariant next!=null ==> this.mu << next.mu
+    invariant prev!=null ==> prev.mu << this.mu
+
+    predicate inv {
+        acc(prev, rd(1)) && acc(next, rd(1)) && acc(mu, rd(1)) &&
+        (prev!=null ==> prev.invLeft && unfolding prev.invLeft in prev.mu << this.mu) &&
+        (next!=null ==> next.invRight && unfolding next.invRight in this.mu << next.mu)
+    }
+    predicate invLeft {
+        acc(prev, rd(1)) && acc(next, rd(1)) && acc(mu, rd(1)) &&
+        (prev!=null ==> prev.invLeft && unfolding prev.invLeft in prev.mu << this.mu)
+    }
+    predicate invRight {
+        acc(prev, rd(1)) && acc(next, rd(1)) && acc(mu, rd(1)) &&
+        (next!=null ==> next.invRight && unfolding next.invRight in this.mu << next.mu)
+    }
+
+    method delete() returns (newList:Node)
+        requires inv
+        requires unfolding inv in
+                 ite(prev != null,
+                    unfolding prev.invLeft in
+                    ite(prev.prev != null,
+                        unfolding prev.prev.invLeft in
+                        waitlevel << prev.prev.mu,
+                        waitlevel << prev.mu),
+                    waitlevel << this.mu)
+        ensures inv
+        ensures (newList!=null ==> newList.inv)
+        ensures old(unfolding inv in next) == newList  //if next == null then we have a dangling list in prev
+    {
+        unfold inv
+        if (prev != null) {
+            unfold prev.invLeft;
+            if(prev.prev != null) { unfold prev.prev.invLeft }
+        }
+        if (next != null) {
+            unfold next.invRight;
+            if(next.next != null) { unfold next.next.invRight }
+        }
+        if (prev != null) {
+            if (prev.prev != null) { acquire prev.prev; }
+            acquire prev;
+        }
+        acquire this;
+        if (next != null) {
+            acquire next;
+            if(next.next != null) { acquire next.next; }
+        }
+        
+        var oldPrev: Node;
+        var oldNext: Node;
+        oldPrev := prev;
+        oldNext := next;
+        if (prev != null) { prev.next := this.next; }
+        if (next != null) { next.prev := this.prev; }
+        this.next := null;
+        this.prev := null;
+        newList := oldNext;
+
+        release this;
+        if (oldNext != null) {
+            if(oldNext.next != null) { release oldNext.next; }
+            release oldNext;
+        }
+        if (oldPrev != null) {
+            release oldPrev;
+            if(oldPrev.prev != null) { release oldPrev.prev; }
+        }
+        fold inv;
+        if (newList != null) {
+            if (newList.next != null) { fold newList.next.invRight; }
+            if (newList.prev != null) {
+                if (newList.prev.prev != null) { fold newList.prev.prev.invLeft }
+                fold newList.prev.invLeft
+            }
+            fold newList.inv
+        }
+    }
+}
+

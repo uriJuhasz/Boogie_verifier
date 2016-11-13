@@ -1,0 +1,50 @@
+
+\newpage
+
+\section{Term, literal and clause ordering}\label{section:gfole:ordering}
+In this section we discuss the term ordering we use for superposition. The ordering used for superposition can have a significant effect on performance. There are several constraints when selecting an order, and we have geared our ordering towards interpolation (detailed in chapter \ref{chapter:scoping}). The main property of the ordering is that earlier DSA versions are larger than later DSA versions, so that superposition tends to try and eliminate early DSA versions so that derived clauses are in scope later in the program.
+
+As described in the preliminaries, we use a variation of transfinite Knuth-Bendix ordering (tkbo) which allows us to define a separating ordering based on constants - essentially, we partition the constants into sets that we call layers, and define a total order on these layers, and our tkbo ensures that any term (literal, clause) that includes only constants up to some layer, is smaller than any term (literal, clause) that includes any constant from a higher layer.
+
+We have already hinted that branch conditions must be in one of the bottom layers so as not to interfere with superposition.
+
+The classes of constants that we encounter in our CFG are as follows:
+\begin{itemize}
+	\item Program constants - come from the program (e.g. DSA versions of program variables) and user specification, additionally might include symbols added by some front-end such as Boogie or a verification methodology.
+	\item Branch condition atoms.
+	\item Skolem functions and constants introduced during Skolemization when pre-processing clauses to CNF.
+	\item CNF atoms - these are predicates or boolean typed functions (possibly constants) introduced during the CNF conversion of general propositional formulae in order to prevent exponential explosion (see e.g. ~\cite{RobinsonVoronkov2001} chapter 5 definition 6.5)
+	\item Boolean constants - true and false. Used when we have functions that take Boolean parameters such as if-then-else (see e.g. discussion in ~\cite{RegerSudaVoronkov15})
+	\item Theory constants - for example numbers. If a theory is handled solely by axioms then is part of the program constants.
+	\item Predicate symbols - predicates need to be ordered relative to other layers, but also relative to the equality symbol (e.g. 
+	whether, in the literal ordering, \m{P(b,a) \succ b=a} or not)
+\end{itemize}
+
+Here we only discuss the ordering between classes. The only class where we have found the internal ordering to be significant is program constants (constants that represent DSA versions of program variables).
+The ordering we have chosen is as follows, from lowest to highest:
+\begin{enumerate}
+	\item Theory constants
+	\item Branch conditions
+	\item Boolean constants
+	\item CNF atoms
+	\item Program and Skolem constants
+\end{enumerate}
+
+
+Theory constants (e.g. numbers) must be at the bottom of the ordering in order to be able to send a conjunction of pure theory literals to a theory solver (as in e.g. \cite{BaumgartnerWaldmann13}). We have not implemented a full integer or rational theory, but as branch conditions are not terms, theory literals are the normal form of each term-EC in which they participate.
+
+Branch conditions are low in the ordering as resolution on branch conditions automatically brings an exponential explosion in the size and number of clauses (essentially enumerating paths). We use joins as described in section \ref{section:gfole:joins} in order to reduce the path conditions that clauses carry and several of our simplification inferences (e.g. \m{simp_{res},simp_{res2}}) are aimed specifically at reducing the number of path atoms each clause carries, when possible.
+
+
+Boolean constants are next as they are essentially interpreted, and hence should be nearer the bottom of the ordering in order to give priority to eliminating uninterpreted symbols.
+
+CNF atoms are at the bottom of the uninterpreted symbols. These atoms are added to the vocabulary in order to prevent an exponential explosion in the number and size of clauses.
+All occurrences of a CNF atom originate from the same CFG-node, as we convert clauses to CNF independently for each CFG-node.
+In a flat proof, we would want to give these atoms the lowest priority so that we only try to resolve them in clauses in which we have eliminated all other symbols. In our setting we still want the interpreted symbols at a lower priority. 
+
+Program and Skolem constants are essentially uninterpreted symbols that must be handled by superposition and hence they take the top priority. Like CNF atoms, all occurrences of a given Skolem constant originate in the same CFG-node as each clause is Skolemized independently. 
+
+Predicate symbols we place lower than all program and Skolem constants (needed for interpolation), but higher than equality, 
+as predicate symbols have less potential derivations than equality because they cannot serve as a left premise for superposition.
+
+

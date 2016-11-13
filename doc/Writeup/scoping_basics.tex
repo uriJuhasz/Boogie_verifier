@@ -1,0 +1,98 @@
+\section{Basics}
+We use scoping only on constants, as opposed to all function symbols, mostly because program variables usually translate to constants.
+We can convert any program VC to be constant based by converting each \fa{f}{t} to \m{apply_{\arity{f}}(c_f.\tup{t})} where, for each arity n, \m{apply_n} is a new function symbol of arity n+1, and for each non-constant function symbol f, \m{c_f} is is a new constant symbol - after the transformation we can apply scoping only to constants with a similar effect to scoping on all functions on the original VC (similar to the transformation in \cite{NieuwenhuisOliveras03}).
+
+\subsection{Notation}
+We start with a few definitions:\\
+We use the names forward and backward scope to denote the direction in which the scope is calculated - forward scope is intuitively the set of initialized variables and backward scope is intuitively the set of live variables.
+
+\noindent
+\textbf{Scopes:}\\
+The \textcolor{blue}{local scope} of a CFG-node is the set of constants that appear in clauses at the node:\\
+\m{S^0_n \triangleq \s{c \in C_{\Sigma} \mid c \trianglelefteq \clauses{n}}}\\
+(\clauses{n} is the initial set of clauses at the CFG-node n).
+
+The \textcolor{blue}{forward scope} of a CFG-node is the set of constants that appear at a CFG-node or its transitive predecessors:
+
+\bigskip
+\m{S^F_n \triangleq \bigcup\limits_{p \in \predst{n}} S^0_p ~~(= S^0_n \cup \bigcup\limits_{p \in \preds{n}} S^F_p)}\\
+\bigskip
+
+\noindent
+Symmetrically,  the \textcolor{blue}{backward scope} of a node are all constants used in transitive successors:
+
+\bigskip
+\m{S^B_n \triangleq \bigcup\limits_{s \in \succst{n}} S^0_s ~~(= S^0_n \cup \bigcup\limits_{s \in \succs{n}} S^B_s)}\\
+\bigskip
+
+\noindent
+And finally the \textcolor{blue}{minimal scope} of a node:
+
+\bigskip
+\m{S^{M}_n \triangleq S^F_n \cap S^B_n ~~(\supseteq S^0_n)}\\
+\bigskip
+
+\noindent
+The definitions above correspond to a program variable being initialized 
+(forward scope) and alive (backward scope).
+The minimal scope is the set of program locations in which a variable is in scope in most programming languages.
+It is easy to see that in our verification algorithm each CFG-node uses at most the forward-scope.
+Our objective is a small proof that we can find quickly, and scoping is only a tool for reducing the proof search space, so that we will not always insist on the minimal scope.
+
+\bigskip
+
+\noindent
+\textbf{Interpolation:}
+\begin{definition}{\textcolor{blue}{language} - \textcolor{blue}{\lang{S}}}
+
+\noindent
+For a set of clauses S we define the language of S, \lang{S}, to be the set of constants that appear in S - formally:\\
+\m{\lang{S}\triangleq\s{c \mid c() \trianglelefteq S}}.\\
+A term, atom, literal, clause or set of clauses are in the language \lang{} iff all the constants that appear in it are in \lang{}, formally:\\
+\m{C \in \lang{} \equivdef \forall c \in \consts{} \cdot c() \trianglelefteq C \Rightarrow c \in \mathfrak{L}}.\\
+We use \lang{} both for the set of constants and the set of terms, atoms, literals, clauses and sets of clauses in the language,
+as long as there is no ambiguity.
+\end{definition}
+
+We begin by discussing \textcolor{blue}{binary interpolation} - given two sets of clauses A,B, s.t. \m{A
+\cup B \models \emptyClause}, our objective is to find a set of clauses I s.t. \\
+\m{A \models I}, \m{I \cup B \models \emptyClause} and \m{I \in \lang{A} \cap \lang{B}}. \\
+This problem models the interaction between two consecutive CFG-nodes in order to find a refutation on a path they share. Later we discuss how this extends to the general problem of finding an interpolant for each CFG-node that is sufficient to prove all assertions on all paths that pass through that CFG-node.\\
+Ground first order logic with equality admits interpolation (shown e.g. in ~\cite{McMillan04}).
+
+We name the sets of clauses for binary interpolation the top (A) and bottom (B) sets (according to the CFG direction).\\
+We use \m{\textcolor{blue}{N^t_0}} for the top set and \m{\textcolor{blue}{N^b_0}} for the bottom set.\\
+Theses sets are the initial interpolation problem, but during our interpolation and proof process these sets evolve,
+and we use \m{\textcolor{blue}{N^t},\textcolor{blue}{N^b}} when describing the current sets of clauses during an algorithm run.\\
+We use \textcolor{blue}{N} for \m{N^t \cup N^b} and similarly \m{\textcolor{blue}{N_0}} for \m{N^t_0 \cup N^b_0}.\\
+We use \m{\textcolor{blue}{\langt},\textcolor{blue}{\langb}} for the language of \m{N^t_0,N^b_0} respectively, (top,bottom language), and also:\\
+The interface language \textcolor{blue}{\langI} is defined:\\
+\m{\langI \triangleq \langt \cap \langb}\\
+And the private languages are:\\
+\m{\textcolor{blue}{\langtp} \triangleq \langt \setminus \langb}\\
+\m{\textcolor{blue}{\langbp} \triangleq \langb \setminus \langt}
+
+\bigskip
+
+\noindent
+In our terminology, the binary interpolation problem is:\\
+Given \m{N^t_0,N^b_0} find \m{I \in \langI} s.t. \m{N^t_0 \models I} and if \m{N^t_0,N^b_0 \models \emptyClause} then \m{I \cup N^b_0 \models \emptyClause}.
+
+
+For interpolation in the CFG: we look at any path P in a program CFG s.t. P=Q.p.n.R  (we use . for path concatenation), Q begins at the root, p,n are consecutive CFG-nodes, R ends at an assertion node and Q,R are possibly empty sub-paths.
+In our CFG, the assertion at the end of the path holds on the path iff \m{\clauses{P} \models \emptyClause} (that is, the set of all clauses on the path is inconsistent).
+Because ground FOL admits interpolation, if \clauses{P} is ground there is a ground interpolant
+\m{I \in \lang{\clauses{Q.p}} \cap \lang{\clauses{n.R}}} s.t. \\
+\m{\clauses{Q.p} \models I} and \m{\clauses{n.R} \cup I \models \emptyClause}.\\
+By definition we can see that \\
+\m{\lang{\clauses{Q.p}} \cap \lang{\clauses{n.R}} \subseteq S^{M}_p \cap S^{M}_n}.\\
+Moreover, we can see that:\\
+\m{S^{M}_n = S^0_n \cup \bigcup\limits_{p \in \preds{n}} (S^M_p \cap S^M_n) \cup \bigcup\limits_{s \in \succs{n}} (S^M_s \cap S^M_n)}
+\\
+In other words, \m{S^{M}_n} is exactly the minimal language guaranteed to be sufficient to represent the interpolant between the prefix and suffix of \emph{any} path from the root to an assertion through n.
+For this reason, we do not consider any scope that is smaller than \m{S^{M}_n} and we would sometimes select a larger scope, either for performance or for the non-ground case. Note that each path through the node might have a different set of possible interpolants, and there may be an exponential number of such paths.
+
+\textbf{Theory symbols:}\\
+In some cases, we want some symbols to be global even if they don't occur in all CFG-nodes - for example, 
+for linear integer arithmetic, we want the number constants to be in the language of all CFG-nodes.\\
+In addition, if we have some background axioms (e.g. from a verification methodology, heap modeling, etc.), we would want all constants that occur in the axioms to be global.

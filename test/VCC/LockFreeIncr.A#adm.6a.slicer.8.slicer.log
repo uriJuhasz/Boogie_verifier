@@ -1,0 +1,767 @@
+
+***Preprocessing clauses         [0] start  - g/n   1/   6  c/a   133/  2066
+   CNF Conversion
+   CNF Conversion - expressions: 292+1
+   **Done - clauses:  550,atoms:  1428
+***Preprocessing clauses         [0] end    - g/n   1/   6  c/a   523/  1164 - proved   0 - time [     0s]/[     0s]
+   [   1]
+   [   0]
+   [  PC]
+
+***Extracting CFG                [0] start  - g/n   1/   6  c/a   523/  1164
+   Correlating branches
+   Compressing blocks
+   Calculating branch conditions
+   Calculating variable forward scope
+   Calculating live variables
+   Calculating variable scope
+   Calculating extra terms
+   Calculating DSA pass 1
+   Calculating DSA pass 2
+   Calculating Key Nodes
+   Calculating variable order
+  AXF:$kind_primitive
+  AXF:$typ
+  AXF:$kind_of
+  AXF:true
+  AXF:$@bf_16
+  AXF:$@bf_37
+  AXF:$@bf_13
+  AXF:$@bf_14
+  AXF:$kind_thread
+  AXF:$owner
+  AXF:$@bf_11
+  AXF:$read_vol_version
+  AXF:$current_timestamp
+  AXF:$@bf_35
+  AXF:$timestamp
+  AXF:$@bf_38
+  AXF:$@bf_15
+  AXF:$@bf_2
+  AXF:$@bf_1
+  AXF:$@bf_26
+  AXF:$@bf_24
+  AXF:$@bf_31
+  AXF:$@bf_30
+  AXF:$@bf_33
+  AXF:$@bf_32
+  AXF:$@bf_36
+  AXF:$@bf_4
+  AXF:$@bf_3
+  AXF:$@bf_6
+  AXF:$@bf_5
+  AXF:$@bf_8
+  AXF:$@bf_7
+  AXF:$@bf_9
+  AXF:$@bf_10
+  AXF:$@bf_28
+  AXF:$@bf_12
+  AXF:$@bf_25
+  AXF:$@bf_21
+  AXF:$me
+  AXF:$@bf_19
+  AXF:$@bf_20
+  AXF:$dot
+  AXF:$mem
+  AXF:0
+  AXF:$ref
+  AXF:$@bf_17
+  AXF:$@bf_18
+  AXF:$@bf
+  AXF:^^root_emb
+  AXF:$emb
+  AXF:$memory
+  AXF:$select.mem
+  AXF:$statusmap
+  AXF:$select.sm
+  AXF:$typemap
+  AXF:$select.tm
+  AXF:$extent
+  AXF:$@bf_22
+  AXF:$full_extent
+  AXF:$@bf_23
+  AXF:$@bf_29
+  AXF:$st
+  AXF:$@bf_34
+  AXF:$ts
+  AXF:$ts_emb
+  AXF:*
+  AXF:+
+  AXF:false
+  AXF:^^u4
+  AXF:$max.u4
+  AXF:^^u8
+  AXF:$max.u8
+  AXF:$st_owner
+  AXF:$@bf_54
+  AXF:$@bf_49
+  AXF:$@bf_51
+  AXF:$@bf_52
+  AXF:$ghost_ref
+  AXF:$@bf_55
+  AXF:$@bf_56
+  AXF:$unchecked
+  AXF:$s
+  AXF:A.x
+  AXF:1
+  AXF:$@bf_58
+  AXF:$@bf_43
+  AXF:$@bf_57
+  AXF:$@bf_44
+  AXF:$@bf_47
+  AXF:^$@ptrset
+  AXF:$owns_set_field
+  AXF:$read_version
+  AXF:A.$owns
+  AXF:$@bf_53
+  AXF:$@bf_50
+  AXF:$@bf_48
+  AXF:$@bf_46
+  AXF:$@bf_59
+  AXF:$@bf_45
+  AXF:$max.i1
+  AXF:$min.i1
+  AXF:$ptr_to_i1
+  AXF:$max.i2
+  AXF:$min.i2
+  AXF:$ptr_to_i2
+  AXF:$max.i4
+  AXF:$min.i4
+  AXF:$ptr_to_i4
+  AXF:$max.i8
+  AXF:$min.i8
+  AXF:$ptr_to_i8
+  AXF:$max.u1
+  AXF:$ptr_to_u1
+  AXF:$max.u2
+  AXF:$ptr_to_u2
+  AXF:$ptr_to_u4
+  AXF:$ptr_to_u8
+  AXF:$ghost_emb
+  AXF:$ghost_path
+***Extracting CFG                [0] end    - g/n   1/   2  c/a   513/   914 - proved   0 - time [     3s]/[     4s]
+   [   1][   1]
+   [   0][   3]
+   [  PC][  EC]
+
+***Building Universes            [0] start  - g/n   1/   2  c/a   513/   914
+  0.merge start        <0>            : GT: 281[ 281]/  281 GTT: 304[ 304]+   0/   304 GFA/B:    X/    Y GAF:224/ 224 GC:222/  222 FTT:  991/   991 FAF: 606/  606 FC:290/  290
+  0.merge   end: 219   <0>            : GT: 180[ 180]/  377 GTT: 299[ 299]+   0/   475 GFA/B:    X/    Y GAF:209/ 361 GC:122/  273 FTT:  987/  1065 FAF: 602/  674 FC:288/  357
+  0.noneq start        <0>            : GT: 180[ 180]/  377 GTT: 299[ 299]+   0/   475 GFA/B:    X/    Y GAF:209/ 361 GC:122/  273 FTT:  987/  1065 FAF: 602/  674 FC:288/  357
+  0.noneq   end : 94   <0>            : GT: 195[ 196]/  393 GTT: 309[ 313]+   0/   489 GFA/B:    X/    Y GAF: 89/ 368 GC: 87/  279 FTT:  987/  1065 FAF: 602/  674 FC:288/  357
+  0.noneq start        <0>            : GT: 195[ 196]/  393 GTT: 309[ 313]+   0/   489 GFA/B:    X/    Y GAF: 89/ 368 GC: 87/  279 FTT:  987/  1065 FAF: 602/  674 FC:288/  357
+  0.noneq   end  : 0   <0>            : GT: 195[ 196]/  393 GTT: 309[ 313]+   0/   489 GFA/B:    X/    Y GAF: 89/ 368 GC: 87/  279 FTT:  987/  1065 FAF: 602/  674 FC:288/  357
+  0.merge start        <0>            : GT: 195[ 196]/  393 GTT: 309[ 313]+   0/   489 GFA/B:    X/    Y GAF: 89/ 368 GC: 87/  279 FTT:  987/  1065 FAF: 602/  674 FC:288/  357
+  0.merge   end : 32   <0>            : GT: 183[ 184]/  415 GTT: 310[ 314]+   0/   536 GFA/B:    X/    Y GAF: 89/ 371 GC: 87/  282 FTT:  987/  1112 FAF: 602/  718 FC:288/  399
+AX:  0 FVs:2 {!$closed(v0,v1),!$kind_primitive = $kind_of($typ(v1)),!true = $@bf_16(v0,v1)}
+AX:  0 FVs:3 {!$closed(v0,v1),!$NP@1(v0,v1,v2)}
+AX:  0 FVs:3 {!$closed(v0,v1),!$NP@1(v2,v1,v0)}
+AX:  0 FVs:3 {!$closed(v0,v1),!$NP@3(v0,v1,v2)}
+AX:  0 FVs:3 {!$closed(v0,v1),!$NP@3(v2,v1,v0)}
+AX:  0 FVs:3 {!$closed(v0,v1),!$NP@5(v1,v0,v2)}
+AX:  0 FVs:3 {!$closed(v0,v1),!$NP@5(v1,v2,v0)}
+AX:  0 FVs:4 {!$kind_primitive = $kind_of($typ(v0)),!true = $@bf_37(v1,v0,v2,v3)}
+AX:  0 FVs:3 {!$kind_primitive = $kind_of(v0),!true = $@bf_13(v1,v2,v0)}
+AX:  0 FVs:3 {!$kind_primitive = $kind_of(v0),!true = $@bf_14(v1,v2,v0)}
+AX:  0 FVs:2 {!true = $@bf_11(v0,v1),!$kind_thread = $kind_of($typ($owner(v0,v1)))}
+AX:  0 FVs:4 {!$NP@11(v0,v1,v2,v3),!$read_vol_version(v1,v2) = $read_vol_version(v0,v2)}
+AX:  0 FVs:4 {!$NP@17(v0,v1,v2,v3),!$read_vol_version(v2,v1) = $read_vol_version(v0,v1)}
+AX:  0 FVs:2 {!($current_timestamp(v0)<$current_timestamp(v1)),!true = $@bf_35(v1,v0)}
+AX:  0 FVs:3 {!($timestamp(v0,v1)<$timestamp(v2,v1)),!true = $@bf_35(v2,v0)}
+AX:  0 FVs:1 {!(v0<v0)}
+AX:  0 FVs:2 {!(v0<v1),!(v1<v0)}
+AX:  0 FVs:3 {!(v0<v1),!true = $@bf_38(v1,v0,v2)}
+AX:  0 FVs:3 {!(v0<v1),!true = $@bf_38(v2,v1,v0)}
+AX:  0 FVs:3 {$@bf_14(v0,v1,v2) = $@bf_13(v0,v1,v2)}
+AX:  0 FVs:2 {$@bf_16(v0,v1) = $@bf_15(v0,v1)}
+AX:  0 FVs:3 {$@bf_2(v0,v1,v2) = $@bf_1(v0,v1,v2)}
+AX:  0 FVs:2 {$@bf_26(v0,v1) = $@bf_24(v0,v1)}
+AX:  0 FVs:5 {$@bf_31(v0,v1,v2,v3,v4) = $@bf_30(v0,v3,v1,v2,v4)}
+AX:  0 FVs:1 {$@bf_33(v0) = $@bf_32(v0)}
+AX:  0 FVs:4 {$@bf_37(v0,v1,v2,v3) = $@bf_36(v0,v1,v2,v3)}
+AX:  0 FVs:3 {$@bf_4(v0,v1,v2) = $@bf_3(v0,v1,v2)}
+AX:  0 FVs:3 {$@bf_6(v0,v1,v2) = $@bf_5(v0,v1,v2)}
+AX:  0 FVs:2 {$@bf_8(v0,v1) = $@bf_7(v0,v1)}
+AX:  0 FVs:2 {$@bf_9(v0,v1) = $@bf_10(v0,v1)}
+AX:  0 FVs:2 {$closed(v0,@sk_1(v0,v1)),$closed(v1,@sk_1(v0,v1)),true = $@bf_26(v0,v1)}
+AX:  0 FVs:1 {$closed(v0,@sk_3(v0)),true = $@bf_28(v0)}
+AX:  0 FVs:1 {$closed(v0,@sk_5(v0)),true = $@bf_28(v0)}
+AX:  0 FVs:1 {!$good_for_admissibility(v0),$closed(v0,@sk_6(v0)),true = $@bf_32(v0)}
+AX:  0 FVs:1 {!$good_for_admissibility(v0),$closed(v0,@sk_7(v0)),true = $@bf_33(v0)}
+AX:  0 FVs:3 {!true = $@bf_12(v0,v1,v2),$closed(v0,v1)}
+AX:  0 FVs:3 {!true = $@bf_13(v0,v1,v2),$closed(v0,v1)}
+AX:  0 FVs:3 {!true = $@bf_14(v0,v1,v2),$closed(v0,v1)}
+AX:  0 FVs:2 {!true = $@bf_25(v0,v1),$closed(v0,v1)}
+AX:  0 FVs:4 {!true = $@bf_37(v0,v1,v2,v3),$closed(v0,v1)}
+AX:  0 FVs:4 {!true = $@bf_37(v0,v1,v2,v3),$closed(v2,v1)}
+AX:  0 FVs:3 {$closed(v0,v1),$closed(v2,v1),$NP@1(v0,v1,v2)}
+AX:  0 FVs:3 {$closed(v0,v1),$closed(v2,v1),$NP@3(v0,v1,v2)}
+AX:  0 FVs:3 {$closed(v0,v1),$closed(v2,v1),$NP@5(v1,v0,v2)}
+AX:  0 FVs:4 {$closed(v0,v1),$closed(v2,v1),true = $@bf_21(v0,v1,v2,v3)}
+AX:  0 FVs:1 {!$in_range_t(^^u4,v0),!($max.u4<v0)}
+AX:  0 FVs:1 {$in_range_t(^^u4,v0),($max.u4<v0),(v0<0)}
+AX:  0 FVs:1 {!true = $@bf_32(v0),$good_for_admissibility(v0)}
+AX:  0 FVs:1 {!true = $@bf_33(v0),$good_for_admissibility(v0)}
+AX:  0 FVs:2 {!$closed(v0,v1),!true = $@bf_33(v0),$inv2(v0,v0,v1,$typ(v1))}
+AX:  0 FVs:3 {!true = $@bf_19(v0,v1,v2),$inv2(v0,v0,v1,v2)}
+AX:  0 FVs:3 {!true = $@bf_20(v0,v1,v2),$inv2(v0,v1,v2,$typ(v2))}
+AX:  0 FVs:1 {!$in_range_t(^^u8,v0),!(v0<0)}
+AX:  0 FVs:3 {!$state_spans_the_same(v0,v1,v2,^A),true = $@bf_59(v0,v1,v2)}
+AX:  0 FVs:3 {!true = $@bf_26(v0,v1),$inv2(v0,v1,v2,$typ(v2)),$NP@5(v2,v0,v1)}
+AX:  0 FVs:4 {!true = $@bf_21(v0,v1,v2,v3),$inv2(v0,v2,v1,v3),$NP@1(v0,v1,v2)}
+AX:  0 FVs:4 {!true = $@bf_21(v0,v1,v2,v3),$inv2(v0,v2,v1,v3),$NP@3(v0,v1,v2)}
+AX:  0 FVs:3 {!true = $@bf_59(v0,v1,v2),$state_spans_the_same(v0,v1,v2,^A)}
+AX:  0 FVs:3 {!$select.mem($memory(v0),$dot(v1,A.x)) = $select.mem($memory(v2),$dot(v1,A.x)),!$select.mem($memory(v0),$dot(v1,A.$owns)) = $select.mem($memory(v2),$dot(v1,A.$owns)),$state_spans_the_same(v2,v0,v1,^A)}
+AX:  0 FVs:3 {!true = $@bf_14(v0,v1,v2),$is(v1,v2)}
+AX:  0 FVs:3 {!true = $@bf_17(v0,v1,v2),$is(v0,v1)}
+AX:  0 FVs:3 {!true = $@bf_18(v0,v1,v2),$is(v0,v1)}
+AX:  0 FVs:4 {!true = $@bf_36(v0,v1,v2,v3),$is_non_primitive($typ(v1))}
+AX:  0 FVs:4 {!true = $@bf_37(v0,v1,v2,v3),$is_non_primitive($typ(v1))}
+AX:  0 FVs:3 {!true = $@bf_13(v0,v1,v2),$is_non_primitive(v2)}
+AX:  0 FVs:3 {!true = $@bf_14(v0,v1,v2),$is_non_primitive(v2)}
+AX:  0 FVs:4 {!$NP@11(v0,v1,v2,v3),$is_threadtype($typ(v3))}
+AX:  0 FVs:4 {!$NP@17(v0,v1,v2,v3),$is_threadtype($typ(v3))}
+AX:  0 FVs:5 {$is_threadtype($typ(v0)),$NP@10(v1,v2,v3,v4,v0)}
+AX:  0 FVs:5 {$is_threadtype($typ(v0)),$NP@14(v1,v2,v3,v4,v0)}
+AX:  0 FVs:5 {$is_threadtype($typ(v0)),$NP@16(v1,v2,v3,v4,v0)}
+AX:  0 FVs:5 {$is_threadtype($typ(v0)),$NP@8(v1,v2,v3,v4,v0)}
+AX:  0 FVs:5 {!$inv2nt(v0,v1,v2),$is_threadtype($typ(v2)),true = $@bf_30(v0,v1,v3,v4,v2)}
+AX:  0 FVs:5 {!$inv2(v0,v1,v2,$typ(v2)),$is_threadtype($typ(v2)),true = $@bf_31(v0,v3,v4,v1,v2)}
+AX:  0 FVs:1 {$ref(v0) = $ptr_to_i2(v0),($ref(v0)<-32768),(32767<$ref(v0))}
+AX:  0 FVs:1 {$ref(v0) = $ptr_to_i1(v0),($ref(v0)<-128),(127<$ref(v0))}
+AX:  0 FVs:1 {$ref(v0) = $ptr_to_u4(v0),($ref(v0)<0),($max.u4<$ref(v0))}
+AX:  0 FVs:1 {!$in_range_t(^^u8,v0),!($max.u8<v0)}
+AX:  0 FVs:1 {!true = $@bf(v0),$kind_primitive = $kind_of(v0)}
+AX:  0 FVs:1 {$in_range_t(^^u8,v0),($max.u8<v0),(v0<0)}
+AX:  0 FVs:2 {true = $@bf_11(v0,v1),$kind_thread = $kind_of($typ($owner(v0,v1)))}
+AX:  0 FVs:3 {!$state_spans_the_same(v0,v1,v2,^A),$select.mem($memory(v1),$dot(v2,A.x)) = $select.mem($memory(v0),$dot(v2,A.x))}
+AX:  0 FVs:3 {!$state_spans_the_same(v0,v1,v2,^A),$select.mem($memory(v1),$dot(v2,A.$owns)) = $select.mem($memory(v0),$dot(v2,A.$owns))}
+AX:  0 FVs:3 {!true = $@bf_1(v0,v1,v2),$mem(v0,v1) = $mem(v2,v1)}
+AX:  0 FVs:3 {!$inv2(v0,v1,v2,^A),true = $@bf_58(v0,v1,v2)}
+AX:  0 FVs:3 {!true = $@bf_58(v0,v1,v2),$inv2(v0,v1,v2,^A)}
+AX:  0 FVs:3 {!true = $@bf_26(v0,v1),$nonvolatile_spans_the_same(v0,v1,v2,$typ(v2)),$NP@5(v2,v0,v1)}
+AX:  0 FVs:4 {!true = $@bf_21(v0,v1,v2,v3),$nonvolatile_spans_the_same(v0,v2,v1,v3),$NP@1(v0,v1,v2)}
+AX:  0 FVs:4 {!true = $@bf_21(v0,v1,v2,v3),$nonvolatile_spans_the_same(v0,v2,v1,v3),$NP@3(v0,v1,v2)}
+AX:  0 FVs:5 {!$mem_eq(v0,v1,$dot(v2,v3)),$NP@10(v0,v1,v2,v3,v4)}
+AX:  0 FVs:3 {!$inv2(v0,v1,v2,^A),$typed(v1,v2)}
+AX:  0 FVs:5 {!true = $@bf_30(v0,v1,v2,v3,v4),$NP@11(v0,v1,v2,v4),$NP@7(v0,v1,v2,v3,v4)}
+AX:  0 FVs:5 {!true = $@bf_30(v0,v1,v2,v3,v4),$NP@11(v0,v1,v2,v4),$NP@8(v0,v1,v2,v3,v4)}
+AX:  0 FVs:4 {!$is_threadtype($typ(v0)),$NP@11(v1,v2,v3,v0),$read_vol_version(v2,v3) = $read_vol_version(v1,v3)}
+AX:  0 FVs:5 {!$inv2(v0,v1,v2,$typ(v2)),$NP@13(v0,v3,v4,v1,v2)}
+AX:  0 FVs:5 {!$mem(v0,$dot(v1,v2)) = $mem(v3,$dot(v1,v2)),$NP@13(v3,v1,v2,v0,v4)}
+AX:  0 FVs:5 {!$NP@15(v0,v1,v2,v3,v4),!$NP@16(v0,v1,v2,v3,v4),$NP@13(v0,v1,v2,v3,v4)}
+AX:  0 FVs:3 {!$inv2(v0,v1,v2,^A),$set_eq($owns(v1,v2),$set_empty)}
+AX:  0 FVs:5 {!true = $@bf_31(v0,v1,v2,v3,v4),$NP@13(v0,v1,v2,v3,v4),$NP@17(v0,v1,v3,v4)}
+AX:  0 FVs:5 {!$mem(v0,$dot(v1,v2)) = $mem(v3,$dot(v1,v2)),$NP@14(v3,v1,v2,v0,v4)}
+AX:  0 FVs:5 {!$NP@15(v0,v1,v2,v3,v4),!$NP@16(v0,v1,v2,v3,v4),$NP@14(v0,v1,v2,v3,v4)}
+AX:  0 FVs:1 {$ref(v0) = $ptr_to_i4(v0),($ref(v0)<-2147483648),($max.i4<$ref(v0))}
+AX:  0 FVs:5 {!true = $@bf_31(v0,v1,v2,v3,v4),$NP@14(v0,v1,v2,v3,v4),$NP@17(v0,v1,v3,v4)}
+AX:  0 FVs:5 {!$inv2(v0,v1,v2,$typ(v2)),$NP@15(v0,v3,v4,v1,v2)}
+AX:  0 FVs:5 {!$mem(v0,$dot(v1,v2)) = $mem(v3,$dot(v1,v2)),$NP@15(v3,v1,v2,v0,v4)}
+AX:  0 FVs:1 {$ref(v0) = $ptr_to_i8(v0),($ref(v0)<$min.i8),($max.i8<$ref(v0))}
+AX:  0 FVs:5 {!$mem(v0,$dot(v1,v2)) = $mem(v3,$dot(v1,v2)),$NP@16(v3,v1,v2,v0,v4)}
+AX:  0 FVs:3 {!$select.mem($memory(v0),$dot(v1,A.x)) = $select.mem($memory(v2),$dot(v1,A.x)),!$set_eq($owns(v0,v1),$set_empty),!$typed(v0,v1),$inv2(v2,v0,v1,^A)}
+AX:  0 FVs:4 {!$is_threadtype($typ(v0)),$NP@17(v1,v2,v3,v0),$read_vol_version(v3,v2) = $read_vol_version(v1,v2)}
+AX:  0 FVs:5 {!$inv2nt(v0,v1,v2),$NP@7(v0,v1,v3,v4,v2)}
+AX:  0 FVs:5 {!$mem_eq(v0,v1,$dot(v2,v3)),$NP@7(v0,v1,v2,v3,v4)}
+AX:  0 FVs:5 {!$NP@10(v0,v1,v2,v3,v4),!$NP@9(v0,v1,v2,v3,v4),$NP@7(v0,v1,v2,v3,v4)}
+AX:  0 FVs:3 {!$inv2(v0,v1,v2,^A),$select.mem($memory(v1),$dot(v2,A.x)) = $select.mem($memory(v0),$dot(v2,A.x)),($select.mem($memory(v0),$dot(v2,A.x))+1) = $select.mem($memory(v1),$dot(v2,A.x))}
+AX:  0 FVs:5 {!$mem_eq(v0,v1,$dot(v2,v3)),$NP@8(v0,v1,v2,v3,v4)}
+AX:  0 FVs:5 {!$NP@10(v0,v1,v2,v3,v4),!$NP@9(v0,v1,v2,v3,v4),$NP@8(v0,v1,v2,v3,v4)}
+AX:  0 FVs:3 {!$set_eq($owns(v0,v1),$set_empty),!$typed(v0,v1),!($select.mem($memory(v2),$dot(v1,A.x))+1) = $select.mem($memory(v0),$dot(v1,A.x)),$inv2(v2,v0,v1,^A)}
+AX:  0 FVs:5 {!$inv2nt(v0,v1,v2),$NP@9(v0,v1,v3,v4,v2)}
+AX:  0 FVs:5 {!$mem_eq(v0,v1,$dot(v2,v3)),$NP@9(v0,v1,v2,v3,v4)}
+AX:  0 FVs:3 {!$is_primitive(v0),!0 = $select.mem($memory(v1),$ptr(v0,v2)),$extent_zero(v1,$ptr(v0,v2))}
+AX:  0 FVs:1 {$ref(v0) = $ptr_to_u8(v0),($ref(v0)<0),($max.u8<$ref(v0))}
+AX:  0 FVs:5 {!$NP@13(v0,v1,v2,v3,v4),$inv2(v0,v3,v4,$typ(v4)),$mem(v3,$dot(v1,v2)) = $mem(v0,$dot(v1,v2)),0 = $ref(v4)}
+AX:  0 FVs:5 {!$NP@15(v0,v1,v2,v3,v4),$inv2(v0,v3,v4,$typ(v4)),$mem(v3,$dot(v1,v2)) = $mem(v0,$dot(v1,v2)),0 = $ref(v4)}
+AX:  0 FVs:5 {!$NP@7(v0,v1,v2,v3,v4),$inv2nt(v0,v1,v4),$mem_eq(v0,v1,$dot(v2,v3)),0 = $ref(v4)}
+AX:  0 FVs:5 {!$NP@9(v0,v1,v2,v3,v4),$inv2nt(v0,v1,v4),$mem_eq(v0,v1,$dot(v2,v3)),0 = $ref(v4)}
+AX:  0 FVs:2 {!true = $@bf_7(v0,v1),$ptr(^^root_emb,$ref(v1)) = $emb(v0,v1)}
+AX:  0 FVs:5 {!$is_threadtype($typ(v0)),$read_vol_version(v1,v2) = $read_vol_version(v3,v2),true = $@bf_30(v1,v3,v2,v4,v0)}
+AX:  0 FVs:5 {!$is_threadtype($typ(v0)),$read_vol_version(v1,v2) = $read_vol_version(v3,v2),true = $@bf_31(v1,v2,v4,v3,v0)}
+AX:  0 FVs:3 {!true = $@bf_2(v0,v1,v2),$select.mem($memory(v0),v1) = $select.mem($memory(v2),v1)}
+AX:  0 FVs:3 {!true = $@bf_4(v0,v1,v2),$select.sm($statusmap(v0),v1) = $select.sm($statusmap(v2),v1)}
+AX:  0 FVs:3 {!true = $@bf_6(v0,v1,v2),$select.tm($typemap(v0),v1) = $select.tm($typemap(v2),v1)}
+AX:  0 FVs:1 {$set_in(@sk_2(v0),$owns(v0,@sk_3(v0))),true = $@bf_28(v0)}
+AX:  0 FVs:1 {$set_in(@sk_4(v0),$owns(v0,@sk_5(v0))),true = $@bf_28(v0)}
+AX:  0 FVs:3 {!true = $@bf_22(v0,v1,v2),$set_in(v0,$extent(v1,v2))}
+AX:  0 FVs:2 {!true = $@bf_23(v0,v1),$set_in(v0,$full_extent(v1))}
+AX:  0 FVs:3 {!true = $@bf_29(v0,v1,v2),$set_in(v0,$owns(v1,v2))}
+AX:  0 FVs:4 {!true = $@bf_36(v0,v1,v2,v3),$set_in(v1,$owns(v0,v3))}
+AX:  0 FVs:4 {!true = $@bf_37(v0,v1,v2,v3),$set_in(v1,$owns(v0,v3))}
+AX:  0 FVs:3 {!true = $@bf_3(v0,v1,v2),$st(v0,v1) = $st(v2,v1)}
+AX:  0 FVs:2 {!true = $@bf_34(v0,v1),$timestamp(v0,v1) = $current_timestamp(v0)}
+AX:  0 FVs:4 {!true = $@bf_37(v0,v1,v2,v3),$timestamp(v2,v1) = $current_timestamp(v2)}
+AX:  0 FVs:3 {!true = $@bf_5(v0,v1,v2),$ts(v0,v1) = $ts(v2,v1)}
+AX:  0 FVs:2 {!true = $@bf_8(v0,v1),$ts_emb($ts(v0,v1)) = $ptr(^^root_emb,$ref(v1))}
+AX:  0 FVs:2 {$ts_emb($ts(v0,v1)) = $ts_emb($select.tm($typemap(v0),v1))}
+AX:  0 FVs:3 {!true = $@bf_14(v0,v1,v2),$typed(v0,v1)}
+AX:  0 FVs:2 {!true = $@bf_15(v0,v1),$typed(v0,v1)}
+AX:  0 FVs:2 {!true = $@bf_16(v0,v1),$typed(v0,v1)}
+AX:  0 FVs:3 {!true = $@bf_17(v0,v1,v2),$typed(v2,v0)}
+AX:  0 FVs:4 {!true = $@bf_36(v0,v1,v2,v3),$typed(v0,v1)}
+AX:  0 FVs:4 {!true = $@bf_37(v0,v1,v2,v3),$typed(v0,v1)}
+AX:  0 FVs:3 {!$extent_zero(v0,$ptr(v1,v2)),!$is_primitive(v1),0 = $select.mem($memory(v0),$ptr(v1,v2))}
+AX:  0 FVs:1 {$ref(v0) = $ptr_to_u1(v0),($ref(v0)<0),(255<$ref(v0))}
+AX:  0 FVs:3 {(v0<v1),(v2<v0),true = $@bf_38(v1,v0,v2)}
+AX:  0 FVs:1 {$ref(v0) = $ptr_to_u2(v0),($ref(v0)<0),(65535<$ref(v0))}
+AX:  0 FVs:1 {v0 = (0+v0)}
+AX:  0 FVs:1 {!$kind_primitive = $kind_of(v0),true = $@bf(v0)}
+AX:  0 FVs:3 {!$mem(v0,v1) = $mem(v2,v1),true = $@bf_1(v0,v1,v2)}
+AX:  0 FVs:4 {!$ts(v0,v1) = $select.tm($typemap(v2),v3),!true = $@bf_9(v0,v1),true = $@bf_10(v2,v3)}
+AX:  0 FVs:2 {!$closed(v0,v1),true = $@bf_12(v0,v1,$owner(v0,v1))}
+AX:  0 FVs:5 {!$is_threadtype($typ(v0)),!$NP@14(v1,v2,v3,v4,v0),$mem(v4,$dot(v2,v3)) = $mem(v1,$dot(v2,v3)),0 = $ref(v0)}
+AX:  0 FVs:3 {!$is(v0,v1),!$typed(v2,v0),true = $@bf_17(v0,v1,v2)}
+AX:  0 FVs:4 {!$is(v0,v1),!true = $@bf_18(v0,v2,v3),true = $@bf_18(v0,v1,v3)}
+AX:  0 FVs:3 {!$inv2(v0,v0,v1,v2),true = $@bf_19(v0,v1,v2)}
+AX:  0 FVs:3 {!$select.mem($memory(v0),v1) = $select.mem($memory(v2),v1),true = $@bf_2(v0,v1,v2)}
+AX:  0 FVs:3 {!$inv2(v0,v1,v2,$typ(v2)),true = $@bf_20(v0,v1,v2)}
+AX:  0 FVs:4 {!$inv2(v0,v1,v2,v3),!$nonvolatile_spans_the_same(v0,v1,v2,v3),true = $@bf_21(v0,v2,v1,v3)}
+AX:  0 FVs:3 {!$set_in(v0,$extent(v1,v2)),true = $@bf_22(v0,v1,v2)}
+AX:  0 FVs:2 {!$set_in(v0,$full_extent(v1)),true = $@bf_23(v0,v1)}
+AX:  0 FVs:2 {!$closed(v0,v1),true = $@bf_25(v0,v1)}
+AX:  0 FVs:2 {!$inv2(v0,v1,@sk_1(v0,v1),$typ(@sk_1(v0,v1))),!$nonvolatile_spans_the_same(v0,v1,@sk_1(v0,v1),$typ(@sk_1(v0,v1))),true = $@bf_26(v0,v1)}
+AX:  0 FVs:3 {!$set_in(v0,$owns(v1,v2)),true = $@bf_29(v0,v1,v2)}
+AX:  0 FVs:3 {!$st(v0,v1) = $st(v2,v1),true = $@bf_3(v0,v1,v2)}
+AX:  0 FVs:5 {!$mem_eq(v0,v1,$dot(v2,v3)),true = $@bf_30(v0,v1,v2,v3,v4)}
+AX:  0 FVs:1 {v0 = (v0+0)}
+AX:  0 FVs:5 {!$mem(v0,$dot(v1,v2)) = $mem(v3,$dot(v1,v2)),true = $@bf_31(v0,v1,v2,v3,v4)}
+AX:  0 FVs:3 {!$closed(v0,v1),!$owner(v2,v1) = $me,!$typed(v2,v1),!true = $@bf_15(v0,v1),true = $@bf_15(v2,v1)}
+AX:  0 FVs:1 {!$good_for_admissibility(v0),!$inv2(v0,v0,@sk_7(v0),$typ(@sk_7(v0))),true = $@bf_33(v0)}
+AX:  0 FVs:2 {!$timestamp(v0,v1) = $current_timestamp(v0),true = $@bf_34(v0,v1)}
+AX:  0 FVs:9 {!$is_non_primitive($typ(v0)),!$set_in(v0,$owns(v1,v2)),!$typed(v1,v0),!true = $@bf_36(v3,v0,v4,v5),!true = $@bf_36(v6,v0,v4,v7),!true = $@bf_36(v1,v0,v8,v2),true = $@bf_36(v1,v0,v4,v2)}
+AX:  0 FVs:3 {!$select.sm($statusmap(v0),v1) = $select.sm($statusmap(v2),v1),true = $@bf_4(v0,v1,v2)}
+AX:  0 FVs:3 {!$ts(v0,v1) = $ts(v2,v1),true = $@bf_5(v0,v1,v2)}
+AX:  0 FVs:3 {!$select.tm($typemap(v0),v1) = $select.tm($typemap(v2),v1),true = $@bf_6(v0,v1,v2)}
+AX:  0 FVs:2 {!$ptr(^^root_emb,$ref(v0)) = $emb(v1,v0),true = $@bf_7(v1,v0)}
+AX:  0 FVs:2 {!$ts_emb($ts(v0,v1)) = $ptr(^^root_emb,$ref(v1)),true = $@bf_8(v0,v1)}
+AX:  0 FVs:4 {!$ts(v0,v1) = $select.tm($typemap(v2),v3),!true = $@bf_10(v2,v3),true = $@bf_9(v0,v1)}
+AX:  0 FVs:3 {!true = $@bf_12(v0,v1,v2),v2 = $owner(v0,v1)}
+AX:  0 FVs:4 {!true = $@bf_37(v0,v1,v2,v3),v3 = $owner(v0,v1)}
+AX:  0 FVs:2 {!$owner(v0,v1) = $me,!$typed(v0,v1),$closed(v0,v1),true = $@bf_16(v0,v1)}
+AX:  0 FVs:2 {!$owner(v0,v1) = $me,!$typed(v0,v1),$closed(v0,v1),true = $@bf_15(v0,v1)}
+AX:  0 FVs:1 {v0 = true,v0 = false}
+AX:  0 FVs:4 {!true = $@bf_37(v0,v1,v2,v3),$owner(v2,v1) = $me}
+AX:  0 FVs:2 {!true = $@bf_16(v0,v1),$owner(v0,v1) = $me}
+AX:  0 FVs:5 {!$is_threadtype($typ(v0)),!$NP@16(v1,v2,v3,v4,v0),$mem(v4,$dot(v2,v3)) = $mem(v1,$dot(v2,v3)),0 = $ref(v0)}
+AX:  0 FVs:2 {!true = $@bf_15(v0,v1),$owner(v0,v1) = $me}
+AX:  0 FVs:5 {!0 = $ref(v0),$NP@10(v1,v2,v3,v4,v0)}
+AX:  0 FVs:3 {!true = $@bf_14(v0,v1,v2),$owner(v0,v1) = $me}
+AX:  0 FVs:1 {!$kind_primitive = $kind_of($typ($st_owner(v0)))}
+AX:  0 FVs:2 {!$NP@18(v0,v1),!$set_in(@sk_10(v1,v0),v0)}
+AX:  0 FVs:2 {!$NP@19(v0,v1),!$set_in(@sk_10(v1,v0),v1)}
+AX:  0 FVs:2 {!$ts_typed($select.tm($typemap(v0),v1)),!($current_timestamp(v0)<$timestamp(v0,v1))}
+AX:  0 FVs:3 {!$closed(v0,v1),!$good_state(v0),!$set_in(v2,$owns(v0,v1)),$closed(v0,v2)}
+AX:  0 FVs:2 {!$is_non_primitive($typ(v0)),!$st_closed($select.sm($statusmap(v1),v0)),$closed(v1,v0)}
+AX:  0 FVs:1 {!true = $@bf_54(v0),$dont_instantiate(v0)}
+AX:  0 FVs:1 {$extent_hint(v0,v0)}
+AX:  0 FVs:3 {!$is_primitive(v0),!$mutable(v1,$ptr(v0,v2)),$extent_mutable(v1,$ptr(v0,v2))}
+AX:  0 FVs:3 {!true = $@bf_49(v0,v1,v2),$extent_mutable(v0,$ptr(v1,v2))}
+AX:  0 FVs:3 {!true = $@bf_13(v0,v1,v2),$owner(v0,v1) = $me}
+AX:  0 FVs:3 {!true = $@bf_51(v0,v1,v2),$extent_zero(v0,$ptr(v1,v2))}
+AX:  0 FVs:1 {!true = $@bf_52(v0),$good_state(v0)}
+AX:  0 FVs:2 {$in_range_spec_ptr($ghost_ref(v0,v1))}
+AX:  0 FVs:1 {!true = $@bf_55(v0),$in_range_t(^^u4,v0)}
+AX:  0 FVs:5 {!$is_threadtype($typ(v0)),!$NP@10(v1,v2,v3,v4,v0),$mem_eq(v1,v2,$dot(v3,v4)),0 = $ref(v0)}
+AX:  0 FVs:1 {!true = $@bf_56(v0),$in_range_t(^^u8,v0)}
+AX:  0 FVs:5 {!0 = $ref(v0),$NP@13(v1,v2,v3,v4,v0)}
+AX:  0 FVs:2 {$in_range_t(v0,$unchecked(v0,v1))}
+AX:  0 FVs:1 {!$closed($s,v0),$inv2($s,$s,v0,$typ(v0))}
+AX:  0 FVs:5 {!0 = $ref(v0),$NP@7(v1,v2,v3,v4,v0)}
+AX:  0 FVs:5 {!0 = $ref(v0),$NP@8(v1,v2,v3,v4,v0)}
+AX:  0 FVs:1 {!$closed(v0,@sk_2(v0)),true = $@bf_28(v0),0 = $ref(@sk_2(v0))}
+AX:  0 FVs:2 {!true = $@bf_43(v0,v1),$is(v0,v1)}
+AX:  0 FVs:1 {!true = $@bf_57(v0),$is_math_type(v0)}
+AX:  0 FVs:1 {$is_non_primitive($typ($st_owner(v0)))}
+AX:  0 FVs:1 {!true = $@bf_44(v0),$is_non_primitive($typ(v0))}
+AX:  0 FVs:1 {!$is_math_type(v0),$is_primitive(v0)}
+AX:  0 FVs:1 {!true = $@bf_47(v0),$is_primitive(v0)}
+AX:  0 FVs:3 {!$extent_mutable(v0,$ptr(v1,v2)),!$is_primitive(v1),$mutable(v0,$ptr(v1,v2))}
+AX:  0 FVs:2 {$NP@18(v0,v1),$NP@19(v0,v1),$set_eq(v0,v1)}
+AX:  0 FVs:2 {!$set_in(@sk_10(v0,v1),v0),$NP@18(v1,v0),$set_in(@sk_10(v0,v1),v1)}
+AX:  0 FVs:2 {!$set_in(@sk_10(v0,v1),v1),$NP@19(v1,v0),$set_in(@sk_10(v0,v1),v0)}
+AX:  0 FVs:4 {!$spans_the_same(v0,v1,v2,v3),$owns(v1,v2) = $owns(v0,v2)}
+AX:  0 FVs:2 {$ptr(^$@ptrset,$ghost_ref(v0,$owns_set_field(v1))) = $dot(v0,$owns_set_field(v1))}
+AX:  0 FVs:4 {!$spans_the_same(v0,v1,v2,v3),$read_version(v1,v2) = $read_version(v0,v2)}
+AX:  0 FVs:5 {!0 = $ref(v0),true = $@bf_30(v1,v2,v3,v4,v0)}
+AX:  0 FVs:5 {!0 = $ref(v0),true = $@bf_31(v1,v2,v3,v4,v0)}
+AX:  0 FVs:5 {!0 = $ref(v0),$NP@9(v1,v2,v3,v4,v0)}
+AX:  0 FVs:4 {!$spans_the_same(v0,v1,v2,v3),$select.tm($typemap(v1),v2) = $select.tm($typemap(v0),v2)}
+AX:  0 FVs:3 {!(v0<v1),((v0*v2)<(v1*v2)),v2 = 0}
+AX:  0 FVs:2 {!true = $@bf_53(v0,v1),$set_eq(v0,v1)}
+AX:  0 FVs:3 {!$is_primitive(v0),$set_in($ptr(v0,v1),$extent(v2,$ptr(v0,v1)))}
+AX:  0 FVs:2 {!$is_primitive(v0),$set_in($ptr(v0,v1),$full_extent($ptr(v0,v1)))}
+AX:  0 FVs:2 {!$NP@18(v0,v1),$set_in(@sk_10(v1,v0),v1)}
+AX:  0 FVs:2 {!$NP@19(v0,v1),$set_in(@sk_10(v1,v0),v0)}
+AX:  0 FVs:4 {!true = $@bf_50(v0,v1,v2,v3),$set_in(v0,$extent(v1,$ptr(v2,v3)))}
+AX:  0 FVs:3 {!true = $@bf_48(v0,v1,v2),$set_in(v0,$full_extent($ptr(v1,v2)))}
+AX:  0 FVs:4 {!$owns(v0,v1) = $owns(v2,v1),!$read_version(v0,v1) = $read_version(v2,v1),!$select.tm($typemap(v0),v1) = $select.tm($typemap(v2),v1),!$state_spans_the_same(v2,v0,v1,v3),$spans_the_same(v2,v0,v1,v3)}
+AX:  0 FVs:4 {!true = $@bf_46(v0,v1,v2,v3),$spans_the_same(v0,v1,v2,v3)}
+AX:  0 FVs:2 {!$closed(v0,v1),!$is_non_primitive($typ(v1)),$st_closed($select.sm($statusmap(v0),v1))}
+AX:  0 FVs:2 {!$is_non_primitive($typ(v0)),$st_owner($select.sm($statusmap(v1),v0)) = $owner(v1,v0)}
+AX:  0 FVs:3 {!(v0*v1) = (v2*v1),v0 = v2,v1 = 0}
+AX:  0 FVs:3 {!$closed(v0,v1),!$good_state(v0),!$set_in(v2,$owns(v0,v1)),!0 = $ref(v2)}
+AX:  0 FVs:4 {!$spans_the_same(v0,v1,v2,v3),$state_spans_the_same(v0,v1,v2,v3)}
+AX:  0 FVs:2 {!$good_state(v0),!$typed(v0,v1),$ts_typed($select.tm($typemap(v0),v1))}
+AX:  0 FVs:2 {!$good_state(v0),!$ts_typed($select.tm($typemap(v0),v1)),$typed(v0,v1)}
+AX:  0 FVs:2 {!(0<v0),!(0<v1),(0<(v0*v1))}
+AX:  0 FVs:2 {!true = $@bf_45(v0,v1),$typed(v0,v1)}
+AX:  0 FVs:2 {!$owner(v0,v1) = $me,!$typed(v0,v1),$kind_primitive = $kind_of($typ(v1)),true = $@bf_16(v0,v1)}
+AX:  0 FVs:4 {!$closed(v0,v1),!$is_non_primitive($typ(v1)),!$owner(v0,v1) = $me,!true = $@bf_37(v2,v1,v0,v3),$kind_primitive = $kind_of($typ(v1)),true = $@bf_13(v0,v1,$typ(v1))}
+AX:  0 FVs:5 {!0 = $ref(v0),$NP@16(v1,v2,v3,v4,v0)}
+AX:  0 FVs:5 {!0 = $ref(v0),$NP@15(v1,v2,v3,v4,v0)}
+AX:  0 FVs:5 {!$closed(v0,v1),!$closed(v2,v1),!$is_non_primitive($typ(v1)),!$owner(v2,v1) = $me,!$set_in(v1,$owns(v0,$owner(v0,v1))),!$timestamp(v2,v1) = $current_timestamp(v2),!$typed(v0,v1),!true = $@bf_37(v3,v1,v2,v4),$kind_primitive = $kind_of($typ(v1)),true = $@bf_37(v0,v1,v2,$owner(v0,v1))}
+AX:  0 FVs:3 {!$closed(v0,v1),!$closed(v2,v1),!$is_non_primitive($typ(v1)),!$owner(v2,v1) = $me,!$set_in(v1,$owns(v0,$owner(v0,v1))),!$timestamp(v2,v1) = $current_timestamp(v2),!$typed(v0,v1),!true = $@bf_13(v2,v1,$typ(v1)),$kind_primitive = $kind_of($typ(v1)),true = $@bf_37(v0,v1,v2,$owner(v0,v1))}
+AX:  0 FVs:5 {!$is_threadtype($typ(v0)),!$NP@8(v1,v2,v3,v4,v0),$mem_eq(v1,v2,$dot(v3,v4)),0 = $ref(v0)}
+AX:  0 FVs:5 {!0 = $ref(v0),$NP@14(v1,v2,v3,v4,v0)}
+AX:  0 FVs:3 {!$closed(v0,v1),!$is(v1,v2),!$is_non_primitive(v2),!$owner(v0,v1) = $me,!$typed(v0,v1),$kind_primitive = $kind_of(v2),true = $@bf_14(v0,v1,v2)}
+AX:  0 FVs:2 {!$is(v0,v1),true = $@bf_43(v0,v1)}
+AX:  0 FVs:1 {!$is_non_primitive($typ(v0)),true = $@bf_44(v0)}
+AX:  0 FVs:2 {!$typed(v0,v1),true = $@bf_45(v0,v1)}
+AX:  0 FVs:4 {!$spans_the_same(v0,v1,v2,v3),true = $@bf_46(v0,v1,v2,v3)}
+AX:  0 FVs:1 {!$is_primitive(v0),true = $@bf_47(v0)}
+AX:  0 FVs:3 {!$set_in(v0,$full_extent($ptr(v1,v2))),true = $@bf_48(v0,v1,v2)}
+AX:  0 FVs:3 {!$extent_mutable(v0,$ptr(v1,v2)),true = $@bf_49(v0,v1,v2)}
+AX:  0 FVs:4 {!$set_in(v0,$extent(v1,$ptr(v2,v3))),true = $@bf_50(v0,v1,v2,v3)}
+AX:  0 FVs:3 {!$extent_zero(v0,$ptr(v1,v2)),true = $@bf_51(v0,v1,v2)}
+AX:  0 FVs:1 {!$good_state(v0),true = $@bf_52(v0)}
+AX:  0 FVs:2 {!$set_eq(v0,v1),true = $@bf_53(v0,v1)}
+AX:  0 FVs:1 {!$dont_instantiate(v0),true = $@bf_54(v0)}
+AX:  0 FVs:1 {!$in_range_t(^^u4,v0),true = $@bf_55(v0)}
+AX:  0 FVs:1 {!$in_range_t(^^u8,v0),true = $@bf_56(v0)}
+AX:  0 FVs:1 {!$is_math_type(v0),true = $@bf_57(v0)}
+AX:  0 FVs:1 {!$closed(v0,@sk_4(v0)),true = $@bf_28(v0),0 = $ref(@sk_4(v0))}
+AX:  0 FVs:1 {!$in_range_t(^^u4,v0),!(v0<0)}
+AX:  0 FVs:2 {v0 = $ghost_emb($ghost_ref(v0,v1))}
+AX:  0 FVs:2 {v0 = $ghost_path($ghost_ref(v1,v0))}
+AX:  0 FVs:2 {!$is(v0,v1),v0 = $ptr(v1,$ref(v0))}
+AX:  0 FVs:4 {!$is_primitive(v0),!$set_in(v1,$extent(v2,$ptr(v0,v3))),v1 = $ptr(v0,v3)}
+AX:  0 FVs:3 {!$is_primitive(v0),!$set_in(v1,$full_extent($ptr(v0,v2))),v1 = $ptr(v0,v2)}
+AX:  0 FVs:2 {v0 = $ref($ptr(v1,v0))}
+AX:  0 FVs:2 {v0 = $typ($ptr(v0,v1))}
+AX:  0 FVs:2 {!$in_range_t(v0,v1),v1 = $unchecked(v0,v1)}
+  1.noneq start        C<1>(0)        : GT:   9[   9]/  419 GTT:   8[   8]+   0/   543 GFA/B:    X/    Y GAF:  4/ 372 GC:  3/  283 FTT:    0/  1112 FAF:   0/  718 FC:  0/  399
+     1.importInstRec  (  0)
+     1.importInstAxiom(  2)
+  1.noneq   end : 31   C<1>(0)        : GT:  11[  11]/  420 GTT:  10[  10]+   0/   545 GFA/B:    X/    Y GAF:  7/ 376 GC:  3/  285 FTT:    0/  1112 FAF:   0/  718 FC:  0/  399
+  1.noneq start        C<1>(0)        : GT:  11[  11]/  420 GTT:  10[  10]+   0/   545 GFA/B:    X/    Y GAF:  7/ 376 GC:  3/  285 FTT:    0/  1112 FAF:   0/  718 FC:  0/  399
+     1.importInstRec  (  0)
+     1.importInstAxiom(  1)
+  1.noneq   end  : 0   C<1>(0)        : GT:  11[  11]/  420 GTT:  10[  10]+   0/   545 GFA/B:    X/    Y GAF:  7/ 376 GC:  3/  285 FTT:    0/  1112 FAF:   0/  718 FC:  0/  399
+-----Non refuted C<1>(0)          at $$begin_assertion                                  :   0,  1/  1
+***Building Universes            [0] end    - g/n   1/   2  c/a   532/   930 - proved   0 - time [     0s]/[     5s]
+   [   1][   1][   1]
+   [   0][   3][   0]
+   [  PC][  EC][  BU]
+
+***Saturating CFG Maps           [1] start  - g/n   1/   2  c/a   532/   930
+   Saturating MRs backward
+   Saturating MR backwards universe C<1>(0)          at $$begin_assertion                                 
+  1.merge start        C<1>(0)        : GT:  11[  11]/  420 GTT:  10[  10]+   0/   588 GFA/B:    X/    Y GAF:  7/ 376 GC:  3/  285 FTT:    0/  1112 FAF:   0/  718 FC:  0/  399
+  1.merge   end  : 0   C<1>(0)        : GT:  11[  11]/  420 GTT:  10[  10]+   0/   588 GFA/B:    X/    Y GAF:  7/ 376 GC:  3/  285 FTT:    0/  1112 FAF:   0/  718 FC:  0/  399
+-----Non refuted C<1>(0)          at $$begin_assertion                                  :   0,  1/  1
+   Saturating MR backwards universe <0>              at true                                              
+  0.merge start        <0>            : GT: 183[ 184]/  420 GTT: 310[ 314]+   1/   588 GFA/B:    X/    Y GAF: 89/ 376 GC: 87/  285 FTT:  987/  1112 FAF: 602/  718 FC:288/  399
+  0.merge   end : 15   <0>            : GT: 183[ 184]/  420 GTT: 310[ 314]+   1/   588 GFA/B:    X/    Y GAF: 89/ 376 GC: 87/  285 FTT:  987/  1112 FAF: 602/  718 FC:288/  399
+   Saturating MRs forward
+   Saturating MR forwards universe <0>              at true                                              
+  0. sync start        <0>            : GT: 183[ 184]/  420 GTT: 310[ 314]+   1/   588 GFA/B:    X/    Y GAF: 89/ 376 GC: 87/  285 FTT:  987/  1112 FAF: 602/  718 FC:288/  399
+  0.merge start        <0>            : GT: 183[ 184]/  420 GTT: 310[ 314]+   1/   588 GFA/B:    X/    Y GAF: 89/ 376 GC: 87/  285 FTT:  987/  1112 FAF: 602/  718 FC:288/  399
+  0.merge   end : 16   <0>            : GT: 183[ 184]/  420 GTT: 310[ 314]+   1/   588 GFA/B:    X/    Y GAF: 89/ 376 GC: 87/  285 FTT:  987/  1112 FAF: 602/  718 FC:288/  399
+  0. sync   end : 16   <0>            : GT: 183[ 184]/  420 GTT: 310[ 314]+   1/   588 GFA/B:    X/    Y GAF: 89/ 376 GC: 87/  285 FTT:  987/  1112 FAF: 602/  718 FC:288/  399
+  0.merge start        <0>            : GT: 183[ 184]/  420 GTT: 310[ 314]+   1/   588 GFA/B:    X/    Y GAF: 89/ 376 GC: 87/  285 FTT:  987/  1112 FAF: 602/  718 FC:288/  399
+  0.merge   end  : 0   <0>            : GT: 183[ 184]/  420 GTT: 310[ 314]+   1/   588 GFA/B:    X/    Y GAF: 89/ 376 GC: 87/  285 FTT:  987/  1112 FAF: 602/  718 FC:288/  399
+  0.noneq start        <0>            : GT: 183[ 184]/  420 GTT: 310[ 314]+   1/   588 GFA/B:    X/    Y GAF: 89/ 376 GC: 87/  285 FTT:  987/  1112 FAF: 602/  718 FC:288/  399
+  0.noneq   end : 16   <0>            : GT: 193[ 194]/  430 GTT: 314[ 318]+   1/   592 GFA/B:    X/    Y GAF: 89/ 376 GC: 87/  285 FTT:  987/  1112 FAF: 602/  718 FC:288/  399
+  0.merge start        <0>            : GT: 193[ 194]/  430 GTT: 314[ 318]+   1/   592 GFA/B:    X/    Y GAF: 89/ 376 GC: 87/  285 FTT:  987/  1112 FAF: 602/  718 FC:288/  399
+  0.merge   end : 15   <0>            : GT: 184[ 185]/  449 GTT: 314[ 318]+   1/   643 GFA/B:    X/    Y GAF: 89/ 379 GC: 87/  288 FTT:  987/  1159 FAF: 602/  762 FC:288/  441
+   Saturating MR forwards universe C<1>(0)          at $$begin_assertion                                 
+  1. sync start        C<1>(0)        : GT:  11[  11]/  449 GTT:  10[  10]+   0/   643 GFA/B:    X/    Y GAF:  7/ 379 GC:  3/  288 FTT:    0/  1159 FAF:   0/  762 FC:  0/  441
+  1. sync   end : 16   C<1>(0)        : GT:  11[  11]/  449 GTT:  10[  10]+   0/   643 GFA/B:    X/    Y GAF:  7/ 379 GC:  3/  288 FTT:    0/  1159 FAF:   0/  762 FC:  0/  441
+  1.merge start        C<1>(0)        : GT:  11[  11]/  449 GTT:  10[  10]+   0/   643 GFA/B:    X/    Y GAF:  7/ 379 GC:  3/  288 FTT:    0/  1159 FAF:   0/  762 FC:  0/  441
+  1.merge   end  : 0   C<1>(0)        : GT:  11[  11]/  449 GTT:  10[  10]+   0/   643 GFA/B:    X/    Y GAF:  7/ 379 GC:  3/  288 FTT:    0/  1159 FAF:   0/  762 FC:  0/  441
+  1.noneq start        C<1>(0)        : GT:  11[  11]/  449 GTT:  10[  10]+   0/   643 GFA/B:    X/    Y GAF:  7/ 379 GC:  3/  288 FTT:    0/  1159 FAF:   0/  762 FC:  0/  441
+     1.importInstRec  (  0)
+     1.importInstAxiom(  3)
+  1.noneq   end  : 0   C<1>(0)        : GT:  11[  11]/  449 GTT:  10[  10]+   0/   643 GFA/B:    X/    Y GAF:  7/ 379 GC:  3/  288 FTT:    0/  1159 FAF:   0/  762 FC:  0/  441
+  1.merge start        C<1>(0)        : GT:  11[  11]/  449 GTT:  10[  10]+   0/   643 GFA/B:    X/    Y GAF:  7/ 379 GC:  3/  288 FTT:    0/  1159 FAF:   0/  762 FC:  0/  441
+  1.merge   end  : 0   C<1>(0)        : GT:  11[  11]/  449 GTT:  10[  10]+   0/   643 GFA/B:    X/    Y GAF:  7/ 379 GC:  3/  288 FTT:    0/  1159 FAF:   0/  762 FC:  0/  441
+-----Non refuted C<1>(0)          at $$begin_assertion                                  :   0,  1/  1
+***Saturating CFG Maps           [1] end    - g/n   1/   2  c/a   541/   939 - proved   0 - time [     0s]/[     5s]
+   [   1][   1][   1][   1]
+   [   0][   3][   0][   0]
+   [  PC][  EC][  BU][  MR]
+
+***Saturating CFG[In]            [1] start  - g/n   1/   2  c/a   541/   939
+   Saturating[IN] universe <0>              at true                                              
+  0.noneq start        <0>            : GT: 184[ 185]/  449 GTT: 314[ 318]+   1/   643 GFA/B:    X/    Y GAF: 89/ 379 GC: 87/  288 FTT:  987/  1159 FAF: 602/  762 FC:288/  441
+  0.noneq   end : 16   <0>            : GT: 190[ 191]/  455 GTT: 316[ 320]+   1/   645 GFA/B:    X/    Y GAF: 89/ 379 GC: 87/  288 FTT:  987/  1159 FAF: 602/  762 FC:288/  441
+   Saturating[IN] universe C<1>(0)          at $$begin_assertion                                 
+  1. sync start        C<1>(0)        : GT:  11[  11]/  455 GTT:  10[  10]+   0/   645 GFA/B:    X/    Y GAF:  7/ 379 GC:  3/  288 FTT:    0/  1159 FAF:   0/  762 FC:  0/  441
+  1. sync   end  : 0   C<1>(0)        : GT:  11[  11]/  455 GTT:  10[  10]+   0/   645 GFA/B:    X/    Y GAF:  7/ 379 GC:  3/  288 FTT:    0/  1159 FAF:   0/  762 FC:  0/  441
+-----Non refuted C<1>(0)          at $$begin_assertion                                  :   0,  1/  1
+***Saturating CFG[In]            [1] end    - g/n   1/   2  c/a   541/   939 - proved   0 - time [     0s]/[     5s]
+   [   1][   1][   1][   1][   1]
+   [   0][   3][   0][   0][   0]
+   [  PC][  EC][  BU][  MR][  SU]
+
+***Saturating CFG Maps           [2] start  - g/n   1/   2  c/a   541/   939
+   Saturating MRs backward
+   Saturating MR backwards universe C<1>(0)          at $$begin_assertion                                 
+  1.merge start        C<1>(0)        : GT:  11[  11]/  455 GTT:  10[  10]+   0/   645 GFA/B:    X/    Y GAF:  7/ 379 GC:  3/  288 FTT:    0/  1159 FAF:   0/  762 FC:  0/  441
+  1.merge   end  : 0   C<1>(0)        : GT:  11[  11]/  455 GTT:  10[  10]+   0/   645 GFA/B:    X/    Y GAF:  7/ 379 GC:  3/  288 FTT:    0/  1159 FAF:   0/  762 FC:  0/  441
+-----Non refuted C<1>(0)          at $$begin_assertion                                  :   0,  1/  1
+   Saturating MR backwards universe <0>              at true                                              
+  0.merge start        <0>            : GT: 190[ 191]/  455 GTT: 316[ 320]+   1/   645 GFA/B:    X/    Y GAF: 89/ 379 GC: 87/  288 FTT:  987/  1159 FAF: 602/  762 FC:288/  441
+  0.merge   end : 31   <0>            : GT: 184[ 185]/  474 GTT: 316[ 320]+   1/   699 GFA/B:    X/    Y GAF: 89/ 382 GC: 87/  291 FTT:  987/  1206 FAF: 602/  806 FC:288/  483
+   Saturating MRs forward
+   Saturating MR forwards universe <0>              at true                                              
+  0. sync start        <0>            : GT: 184[ 185]/  474 GTT: 316[ 320]+   1/   699 GFA/B:    X/    Y GAF: 89/ 382 GC: 87/  291 FTT:  987/  1206 FAF: 602/  806 FC:288/  483
+  0.merge start        <0>            : GT: 184[ 185]/  474 GTT: 316[ 320]+   1/   699 GFA/B:    X/    Y GAF: 89/ 382 GC: 87/  291 FTT:  987/  1206 FAF: 602/  806 FC:288/  483
+  0.merge   end  : 0   <0>            : GT: 184[ 185]/  474 GTT: 316[ 320]+   1/   699 GFA/B:    X/    Y GAF: 89/ 382 GC: 87/  291 FTT:  987/  1206 FAF: 602/  806 FC:288/  483
+  0. sync   end : 16   <0>            : GT: 184[ 185]/  474 GTT: 316[ 320]+   1/   699 GFA/B:    X/    Y GAF: 89/ 382 GC: 87/  291 FTT:  987/  1206 FAF: 602/  806 FC:288/  483
+  0.merge start        <0>            : GT: 184[ 185]/  474 GTT: 316[ 320]+   1/   699 GFA/B:    X/    Y GAF: 89/ 382 GC: 87/  291 FTT:  987/  1206 FAF: 602/  806 FC:288/  483
+  0.merge   end  : 0   <0>            : GT: 184[ 185]/  474 GTT: 316[ 320]+   1/   699 GFA/B:    X/    Y GAF: 89/ 382 GC: 87/  291 FTT:  987/  1206 FAF: 602/  806 FC:288/  483
+  0.noneq start        <0>            : GT: 184[ 185]/  474 GTT: 316[ 320]+   1/   699 GFA/B:    X/    Y GAF: 89/ 382 GC: 87/  291 FTT:  987/  1206 FAF: 602/  806 FC:288/  483
+  0.noneq   end : 15   <0>            : GT: 184[ 185]/  474 GTT: 316[ 320]+   1/   699 GFA/B:    X/    Y GAF: 89/ 382 GC: 87/  291 FTT:  987/  1206 FAF: 602/  806 FC:288/  483
+  0.merge start        <0>            : GT: 184[ 185]/  474 GTT: 316[ 320]+   1/   699 GFA/B:    X/    Y GAF: 89/ 382 GC: 87/  291 FTT:  987/  1206 FAF: 602/  806 FC:288/  483
+  0.merge   end : 16   <0>            : GT: 183[ 184]/  492 GTT: 316[ 320]+   1/   753 GFA/B:    X/    Y GAF: 89/ 385 GC: 87/  294 FTT:  987/  1253 FAF: 602/  850 FC:288/  525
+   Saturating MR forwards universe C<1>(0)          at $$begin_assertion                                 
+  1. sync start        C<1>(0)        : GT:  11[  11]/  492 GTT:  10[  10]+   0/   753 GFA/B:    X/    Y GAF:  7/ 385 GC:  3/  294 FTT:    0/  1253 FAF:   0/  850 FC:  0/  525
+  1. sync   end  : 0   C<1>(0)        : GT:  11[  11]/  492 GTT:  10[  10]+   0/   753 GFA/B:    X/    Y GAF:  7/ 385 GC:  3/  294 FTT:    0/  1253 FAF:   0/  850 FC:  0/  525
+  1.merge start        C<1>(0)        : GT:  11[  11]/  492 GTT:  10[  10]+   0/   753 GFA/B:    X/    Y GAF:  7/ 385 GC:  3/  294 FTT:    0/  1253 FAF:   0/  850 FC:  0/  525
+  1.merge   end  : 0   C<1>(0)        : GT:  11[  11]/  492 GTT:  10[  10]+   0/   753 GFA/B:    X/    Y GAF:  7/ 385 GC:  3/  294 FTT:    0/  1253 FAF:   0/  850 FC:  0/  525
+  1.noneq start        C<1>(0)        : GT:  11[  11]/  492 GTT:  10[  10]+   0/   753 GFA/B:    X/    Y GAF:  7/ 385 GC:  3/  294 FTT:    0/  1253 FAF:   0/  850 FC:  0/  525
+     1.importInstRec  (  0)
+     1.importInstAxiom(  3)
+  1.noneq   end  : 0   C<1>(0)        : GT:  11[  11]/  492 GTT:  10[  10]+   0/   753 GFA/B:    X/    Y GAF:  7/ 385 GC:  3/  294 FTT:    0/  1253 FAF:   0/  850 FC:  0/  525
+  1.merge start        C<1>(0)        : GT:  11[  11]/  492 GTT:  10[  10]+   0/   753 GFA/B:    X/    Y GAF:  7/ 385 GC:  3/  294 FTT:    0/  1253 FAF:   0/  850 FC:  0/  525
+  1.merge   end  : 0   C<1>(0)        : GT:  11[  11]/  492 GTT:  10[  10]+   0/   753 GFA/B:    X/    Y GAF:  7/ 385 GC:  3/  294 FTT:    0/  1253 FAF:   0/  850 FC:  0/  525
+-----Non refuted C<1>(0)          at $$begin_assertion                                  :   0,  1/  1
+***Saturating CFG Maps           [2] end    - g/n   1/   2  c/a   548/   946 - proved   0 - time [     0s]/[     5s]
+   [   1][   1][   1][   1][   1][   1]
+   [   0][   3][   0][   0][   0][   0]
+   [  PC][  EC][  BU][  MR][  SU][  MR]
+
+***Saturating CFG[SP]            [2] start  - g/n   1/   2  c/a   548/   946
+   Saturating[SP] universe <0>              at true                                              
+  0.   SP start        <0>            : GT: 183[ 184]/  492 GTT: 316[ 320]+   1/   753 GFA/B:    X/    Y GAF: 89/ 385 GC: 87/  294 FTT:  987/  1253 FAF: 602/  850 FC:288/  525
+     0.importSpRec  (  0)
+     0.importSpAxiom(  0)
+ <0>.SP GTxFC:
+    0SP.L: (281474976710656*32768) -> 9223372036854775808
+    0SP.R: {!(0<v0),!(0<v1),(0<(v0*v1))}[2.1.]
+    0SP.C: {!(0<32768),!(0<281474976710656),(0<9223372036854775808)}
+    gDW:  0, gGW: 76, gNW:  2
+    fDW:  0, fGW: 76, fNW:  2
+    gDO:  0, gGO:142, gNO:  2
+    fDO:  0, fGO:142, fNO:142
+ <0>.SP GTxFC:
+    0SP.L: (32768*281474976710656) -> 9223372036854775808
+    0SP.R: {!(0<v0),!(0<v1),(0<(v0*v1))}[2.1.]
+    0SP.C: {!(0<32768),!(0<281474976710656),(0<9223372036854775808)}
+    gDW:  0, gGW: 76, gNW:  2
+    fDW:  0, fGW: 76, fNW:  2
+    gDO:  0, gGO:142, gNO:  2
+    fDO:  0, fGO:142, fNO:142
+ <0>.SP GTxFC:
+    0SP.L: (-1*2147483648) -> -2147483648
+    0SP.R: {!(0<v0),!(0<v1),(0<(v0*v1))}[2.1.]
+    0SP.C: {!(0<2147483648),!(0<-1),(0<-2147483648)}
+    gDW:  0, gGW: 75, gNW:  2
+    fDW:  0, fGW: 75, fNW:  2
+    gDO:  0, gGO:140, gNO:  2
+    fDO:  0, fGO:140, fNO:140
+ <0>.SP GTxFC:
+    0SP.L: (-1*9223372036854775808) -> -9223372036854775808
+    0SP.R: {!(0<v0),!(0<v1),(0<(v0*v1))}[2.1.]
+    0SP.C: {!(0<-1),!(0<9223372036854775808),(0<-9223372036854775808)}
+    gDW:  0, gGW: 85, gNW:  3
+    fDW:  0, fGW: 85, fNW:  3
+    gDO:  0, gGO:159, gNO:  3
+    fDO:  0, fGO:159, fNO:159
+ <0>.SP GTxFC:
+    0SP.L: (-281474976710656*32768) -> -9223372036854775808
+    0SP.R: {!(0<v0),!(0<v1),(0<(v0*v1))}[2.1.]
+    0SP.C: {!(0<32768),!(0<-281474976710656),(0<-9223372036854775808)}
+    gDW:  0, gGW: 85, gNW:  3
+    fDW:  0, fGW: 85, fNW:  3
+    gDO:  0, gGO:159, gNO:  3
+    fDO:  0, fGO:159, fNO:159
+ <0>.SP GTxFC:
+    0SP.L: (-32768*281474976710656) -> -9223372036854775808
+    0SP.R: {!(0<v0),!(0<v1),(0<(v0*v1))}[2.1.]
+    0SP.C: {!(0<-32768),!(0<281474976710656),(0<-9223372036854775808)}
+    gDW:  0, gGW: 85, gNW:  3
+    fDW:  0, fGW: 85, fNW:  3
+    gDO:  0, gGO:159, gNO:  3
+    fDO:  0, fGO:159, fNO:159
+ <0>.SP GTxFC:
+    0SP.L: $select.tm($typemap($s_$_0),call0formal_$_@l_$_0) -> $select.tm($typemap($s),call0formal_$_@l_$_0)
+    0SP.R: {$ts_emb($ts(v0,v1)) = $ts_emb($select.tm($typemap(v0),v1))}[0.1.0]
+    0SP.C: {$ts_emb($select.tm($typemap($s),call0formal_$_@l_$_0)) = $ts_emb($ts($s_$_0,call0formal_$_@l_$_0))}
+    gDW:  3, gGW: 19, gNW:  7
+    fDW:  3, fGW: 19, fNW:  7
+    gDO:  7, gGO: 34, gNO: 17
+    fDO:  7, fGO: 34, fNO: 34
+ <0>.SP GTxFC:
+    0SP.L: $select.tm($typemap($s_$_0),call0formal_$_@l_$_0) -> $select.tm($typemap($s),call0formal_$_@l_$_0)
+    0SP.R: {!$ts_typed($select.tm($typemap(v0),v1)),!($current_timestamp(v0)<$timestamp(v0,v1))}[0.0.]
+    0SP.C: {!$ts_typed($select.tm($typemap($s),call0formal_$_@l_$_0)),!($current_timestamp($s_$_0)<$timestamp($s_$_0,call0formal_$_@l_$_0))}
+    gDW:  2, gGW: 18, gNW:  6
+    fDW:  2, fGW: 18, fNW:  6
+    gDO:  5, gGO: 32, gNO: 15
+    fDO:  5, fGO: 32, fNO: 32
+ <0>.SP GTxFC:
+    0SP.L: $select.tm($typemap($s_$_0),call0formal_$_@l_$_0) -> $select.tm($typemap($s),call0formal_$_@l_$_0)
+    0SP.R: {!$good_state(v0),!$typed(v0,v1),$ts_typed($select.tm($typemap(v0),v1))}[2.0.]
+    0SP.C: {!$good_state($s_$_0),!$typed($s_$_0,call0formal_$_@l_$_0),$ts_typed($select.tm($typemap($s),call0formal_$_@l_$_0))}
+    gDW:  0, gGW: 16, gNW:  4
+    fDW:  0, fGW: 16, fNW:  4
+    gDO:  0, gGO: 27, gNO: 10
+    fDO:  0, fGO: 27, fNO: 27
+ <0>.SP GTxFC:
+    0SP.L: $select.tm($typemap($s_$_0),call0formal_$_@l_$_0) -> $select.tm($typemap($s),call0formal_$_@l_$_0)
+    0SP.R: {!$good_state(v0),!$ts_typed($select.tm($typemap(v0),v1)),$typed(v0,v1)}[1.0.]
+    0SP.C: {!$good_state($s_$_0),!$ts_typed($select.tm($typemap($s),call0formal_$_@l_$_0)),$typed($s_$_0,call0formal_$_@l_$_0)}
+    gDW:  0, gGW: 16, gNW:  4
+    fDW:  0, fGW: 16, fNW:  4
+    gDO:  0, gGO: 27, gNO: 10
+    fDO:  0, fGO: 27, fNO: 27
+ <0>.SP GTxFC:
+    0SP.L: $unchecked(^^u8,-1) -> 18446744073709551615
+    0SP.R: {$in_range_t(v0,$unchecked(v0,v1))}[0.1.]
+    0SP.C: {$in_range_t(^^u8,18446744073709551615)}
+    gDW:  0, gGW: 68, gNW:  2
+    fDW:  0, fGW: 68, fNW:  2
+    gDO:  0, gGO:128, gNO:  2
+    fDO:  0, fGO:128, fNO:128
+ <0>.SP GTxFC:
+    0SP.L: $unchecked(^^u4,-1) -> 4294967295
+    0SP.R: {$in_range_t(v0,$unchecked(v0,v1))}[0.1.]
+    0SP.C: {$in_range_t(^^u4,4294967295)}
+    gDW:  0, gGW: 68, gNW:  2
+    fDW:  0, fGW: 68, fNW:  2
+    gDO:  0, gGO:128, gNO:  2
+    fDO:  0, fGO:128, fNO:128
+ <0>.SP GTxFC:
+    0SP.L: $unchecked(^^u4,4294967296) -> 0
+    0SP.R: {$in_range_t(v0,$unchecked(v0,v1))}[0.1.]
+    0SP.C: {$in_range_t(^^u4,0)}
+    gDW:  0, gGW: 68, gNW:  2
+    fDW:  0, fGW: 68, fNW:  2
+    gDO:  0, gGO:128, gNO:  2
+    fDO:  0, fGO:128, fNO:128
+ <0>.SP GTxFC:
+    0SP.L: $unchecked(^^u8,18446744073709551616) -> 0
+    0SP.R: {$in_range_t(v0,$unchecked(v0,v1))}[0.1.]
+    0SP.C: {$in_range_t(^^u8,0)}
+    gDW:  0, gGW: 68, gNW:  2
+    fDW:  0, fGW: 68, fNW:  2
+    gDO:  0, gGO:128, gNO:  2
+    fDO:  0, fGO:128, fNO:128
+ <0>.SP FCxGC:
+    0SP.L: $kind_of(v_1) -> $kind_primitive : {!true = $@bf(v_1),$kind_primitive = $kind_of(v_1)}
+    0SP.R: {!$kind_primitive = $kind_of($typ(call0formal_$_@l_$_0))}[0.1.]
+    0SP.C: {!true = $@bf($typ(call0formal_$_@l_$_0))}
+    gDW:  1, gGW: 12, gNW:  1
+    fDW:  1, fGW: 12, fNW:  1
+    gDO:  2, gGO: 19, gNO:  2
+    fDO:  2, fGO: 19, fNO: 19
+ <0>.SP FCxGC:
+    0SP.L: $typ($ptr(@t_$5,@b)) -> @t_$5 : {@t_$5 = $typ($ptr(@t_$5,@b))}
+    0SP.R: {$spans_the_same($s,$s_$_0,call0formal_$_@l_$_0,$typ(call0formal_$_@l_$_0))}[0.3.]
+    0SP.C: {$spans_the_same($s,$s_$_0,call0formal_$_@l_$_0,^A)}
+    gDW:  0, gGW: 12, gNW:  0
+    fDW:  0, fGW: 12, fNW:  0
+    gDO:  0, gGO: 17, gNO:  0
+    fDO:  0, fGO: 17, fNO: 17
+ <0>.SP FCxGC:
+    0SP.L: $typ($ptr(@t_$5,@b)) -> @t_$5 : {@t_$5 = $typ($ptr(@t_$5,@b))}
+    0SP.R: {$inv2($s,$s,call0formal_$_@l_$_0,$typ(call0formal_$_@l_$_0))}[0.3.]
+    0SP.C: {$inv2($s,$s,call0formal_$_@l_$_0,^A)}
+    gDW:  0, gGW: 10, gNW:  0
+    fDW:  0, fGW: 10, fNW:  0
+    gDO:  0, gGO: 15, gNO:  0
+    fDO:  0, fGO: 15, fNO: 15
+ <0>.SP FCxGC:
+    0SP.L: $typ($ptr(@t_$5,@b)) -> @t_$5 : {@t_$5 = $typ($ptr(@t_$5,@b))}
+    0SP.R: {$state_spans_the_same($s,$s_$_0,call0formal_$_@l_$_0,$typ(call0formal_$_@l_$_0))}[0.3.]
+    0SP.C: {$state_spans_the_same($s,$s_$_0,call0formal_$_@l_$_0,^A)}
+    gDW:  0, gGW: 12, gNW:  0
+    fDW:  0, fGW: 12, fNW:  0
+    gDO:  0, gGO: 17, gNO:  0
+    fDO:  0, fGO: 17, fNO: 17
+ <0>.SP FCxGC:
+    0SP.L: $typ($ptr(@t_$5,@b)) -> @t_$5 : {@t_$5 = $typ($ptr(@t_$5,@b))}
+    0SP.R: {$is_non_primitive($typ(call0formal_$_@l_$_0))}[0.0.]
+    0SP.C: {$is_non_primitive(^A)}
+    gDW:  0, gGW:  6, gNW:  0
+    fDW:  0, fGW:  6, fNW:  0
+    gDO:  0, gGO:  9, gNO:  0
+    fDO:  0, fGO:  9, fNO:  9
+ <0>.SP FCxGC:
+    0SP.L: $typ($ptr(@t_$5,@b)) -> @t_$5 : {@t_$5 = $typ($ptr(@t_$5,@b))}
+    0SP.R: {$typed2($s,call0formal_$_@l_$_0,$typ(call0formal_$_@l_$_0))}[0.2.]
+    0SP.C: {$typed2($s,call0formal_$_@l_$_0,^A)}
+    gDW:  0, gGW: 10, gNW:  0
+    fDW:  0, fGW: 10, fNW:  0
+    gDO:  0, gGO: 15, gNO:  0
+    fDO:  0, fGO: 15, fNO: 15
+ <0>.SP FCxGC:
+    0SP.L: $typ($ptr(@t_$5,@b)) -> @t_$5 : {@t_$5 = $typ($ptr(@t_$5,@b))}
+    0SP.R: {!$kind_primitive = $kind_of($typ(call0formal_$_@l_$_0))}[0.1.0,0]
+    0SP.C: {!$kind_primitive = $kind_of(^A)}
+    gDW:  1, gGW:  8, gNW:  1
+    fDW:  1, fGW:  8, fNW:  1
+    gDO:  2, gGO: 12, gNO:  2
+    fDO:  2, fGO: 12, fNO: 12
+  0.   SP   end: 156   <0>            : GT: 193[ 194]/  502 GTT: 334[ 354]+   1/   790 GFA/B:    X/    Y GAF:112/ 435 GC:104/  317 FTT:  991/  1268 FAF: 605/  864 FC:291/  528
+   Saturating[SP] universe C<1>(0)          at $$begin_assertion                                 
+  1. sync start        C<1>(0)        : GT:  11[  11]/  502 GTT:  10[  10]+   0/   790 GFA/B:    X/    Y GAF:  7/ 435 GC:  3/  317 FTT:    0/  1268 FAF:   0/  864 FC:  0/  528
+  1. sync   end  : 0   C<1>(0)        : GT:  11[  11]/  502 GTT:  10[  10]+   0/   790 GFA/B:    X/    Y GAF:  7/ 435 GC:  3/  317 FTT:    0/  1268 FAF:   0/  864 FC:  0/  528
+  1.   SP start        C<1>(0)        : GT:  11[  11]/  502 GTT:  10[  10]+   0/   790 GFA/B:    X/    Y GAF:  7/ 435 GC:  3/  317 FTT:    0/  1268 FAF:   0/  864 FC:  0/  528
+     1.importSpRec  (  0)
+     1.importSpAxiom( 11)
+  1.   SP   end : 47   C<1>(0)        : GT:  35[  35]/  515 GTT:  39[  61]+   0/   821 GFA/B:    X/    Y GAF:  7/ 441 GC:  3/  324 FTT:    1/  1271 FAF:   1/  867 FC:  1/  531
+-----Non refuted C<1>(0)          at $$begin_assertion                                  :   0,  1/  1
+***Saturating CFG[SP]            [2] end    - g/n   1/   2  c/a   629/  1043 - proved   0 - time [     0s]/[     5s]
+   [   1][   1][   1][   1][   1][   1][   1]
+   [   0][   3][   0][   0][   0][   0][   0]
+   [  PC][  EC][  BU][  MR][  SU][  MR][  SU]
+
+***Saturating CFG Maps           [3] start  - g/n   1/   2  c/a   629/  1043
+   Saturating MRs backward
+   Saturating MR backwards universe C<1>(0)          at $$begin_assertion                                 
+  1.merge start        C<1>(0)        : GT:  35[  35]/  515 GTT:  39[  61]+   0/   821 GFA/B:    X/    Y GAF:  7/ 441 GC:  3/  324 FTT:    1/  1271 FAF:   1/  867 FC:  1/  531
+  1.merge   end  : 0   C<1>(0)        : GT:  35[  35]/  515 GTT:  39[  61]+   0/   821 GFA/B:    X/    Y GAF:  7/ 441 GC:  3/  324 FTT:    1/  1271 FAF:   1/  867 FC:  1/  531
+-----Non refuted C<1>(0)          at $$begin_assertion                                  :   0,  1/  1
+   Saturating MR backwards universe <0>              at true                                              
+  0.merge start        <0>            : GT: 193[ 194]/  515 GTT: 334[ 354]+   2/   821 GFA/B:    X/    Y GAF:112/ 441 GC:104/  324 FTT:  991/  1271 FAF: 605/  867 FC:291/  531
+  0.merge   end : 32   <0>            : GT: 189[ 190]/  517 GTT: 334[ 351]+   2/   824 GFA/B:    X/    Y GAF:112/ 443 GC:104/  326 FTT:  991/  1419 FAF: 605/ 1015 FC:291/  686
+   Saturating MRs forward
+   Saturating MR forwards universe <0>              at true                                              
+  0. sync start        <0>            : GT: 189[ 190]/  517 GTT: 334[ 351]+   2/   824 GFA/B:    X/    Y GAF:112/ 443 GC:104/  326 FTT:  991/  1419 FAF: 605/ 1015 FC:291/  686
+  0.merge start        <0>            : GT: 189[ 190]/  517 GTT: 334[ 351]+   2/   824 GFA/B:    X/    Y GAF:112/ 443 GC:104/  326 FTT:  991/  1419 FAF: 605/ 1015 FC:291/  686
+  0.merge   end : 16   <0>            : GT: 189[ 190]/  517 GTT: 334[ 351]+   2/   824 GFA/B:    X/    Y GAF:110/ 443 GC:102/  326 FTT:  991/  1419 FAF: 605/ 1015 FC:291/  686
+  0. sync   end : 16   <0>            : GT: 189[ 190]/  517 GTT: 334[ 351]+   2/   824 GFA/B:    X/    Y GAF:110/ 443 GC:102/  326 FTT:  991/  1419 FAF: 605/ 1015 FC:291/  686
+  0.merge start        <0>            : GT: 189[ 190]/  517 GTT: 334[ 351]+   2/   824 GFA/B:    X/    Y GAF:110/ 443 GC:102/  326 FTT:  991/  1419 FAF: 605/ 1015 FC:291/  686
+  0.merge   end  : 0   <0>            : GT: 189[ 190]/  517 GTT: 334[ 351]+   2/   824 GFA/B:    X/    Y GAF:110/ 443 GC:102/  326 FTT:  991/  1419 FAF: 605/ 1015 FC:291/  686
+  0.noneq start        <0>            : GT: 189[ 190]/  517 GTT: 334[ 351]+   2/   824 GFA/B:    X/    Y GAF:110/ 443 GC:102/  326 FTT:  991/  1419 FAF: 605/ 1015 FC:291/  686
+  0.noneq   end : 32   <0>            : GT: 189[ 190]/  517 GTT: 340[ 354]+   1/   828 GFA/B:    X/    Y GAF:111/ 452 GC:106/  339 FTT:  991/  1419 FAF: 605/ 1015 FC:291/  686
+  0.merge start        <0>            : GT: 189[ 190]/  517 GTT: 340[ 354]+   1/   828 GFA/B:    X/    Y GAF:111/ 452 GC:106/  339 FTT:  991/  1419 FAF: 605/ 1015 FC:291/  686
+  0.merge   end : 47   <0>            : GT: 187[ 188]/  551 GTT: 334[ 348]+   1/   951 GFA/B:    X/    Y GAF:105/ 485 GC:100/  370 FTT:  991/  1638 FAF: 605/ 1227 FC:291/  887
+   Saturating MR forwards universe C<1>(0)          at $$begin_assertion                                 
+  1. sync start        C<1>(0)        : GT:  35[  35]/  551 GTT:  39[  61]+   0/   951 GFA/B:    X/    Y GAF:  7/ 485 GC:  3/  370 FTT:    1/  1638 FAF:   1/ 1227 FC:  1/  887
++++++Refuted goal [  2]$$begin_assertion                                 
++++++Refuted     n2: 1/1/[0] goal by False assumed
+***Saturating CFG Maps           [3] end    - g/n   0/   1  c/a   564/   966 - proved   1 - time [     0s]/[     5s]
+   [   1][   1][   1][   1][   1][   1][   1][   0]
+   [   0][   3][   0][   0][   0][   0][   0][   0]
+   [  PC][  EC][  BU][  MR][  SU][  MR][  SU][  MR]
+!!!!!!!!!!!!!!!!!!!!!!!!!Refuted!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+***Analysis done - time: [     6s] - proven 1 goals
+Still 0/1 goals and 1/2 nodes
+Total time - A#adm:      6s
+Slicer Ended - function "A#adm"

@@ -1,0 +1,722 @@
+Boogie program verifier version 2.2.30705.1126, Copyright (c) 2003-2013, Microsoft.
+>>> Becoming sentient   [0 s]
+>>> Starting resolution   [1.4040025 s]
+>>> Starting typechecking   [1.6224029 s]
+>>> Starting abstract interpretation   [2.9484052 s]
+>>> Starting implementation verification   [3.2448057 s]
+>>> Starting live variable analysis   [3.3228059 s]
+Slicer starting - function "AVLTree$monitorinvariant$checkDefinedness"
+Preprocessing: -    572ms
+FOLing around:
+   FOL conversion:[   863ms]
+   Analyzing
+     Building CFG:[  1184ms]
+        Proved 0/1 assertions
+     Saturating CFG 5 nodes, 1 goals:[  1184ms]
+        Proved 0/1 assertions
+   Analyzing done: [  1363ms]
+FOL -   2244ms
+Total time - AVLTree$monitorinvariant$checkDefinedness:   2817ms
+Slicer Ended - function "AVLTree$monitorinvariant$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [6.240011 s]
+>>> Starting implementation verification   [6.255611 s]
+>>> Starting live variable analysis   [6.255611 s]
+Slicer starting - function "AVLTree.valid$checkDefinedness"
+Preprocessing: -    241ms
+FOLing around:
+   FOL conversion:[   611ms]
+   Analyzing
+     Building CFG:[   674ms]
+        Proved 23/31 assertions
+     Saturating CFG 63 nodes, 8 goals:[   674ms]
+        Proved 23/31 assertions
+   Analyzing done: [   965ms]
+FOL -   1577ms
+Total time - AVLTree.valid$checkDefinedness:   1820ms
+Slicer Ended - function "AVLTree.valid$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [8.0808142 s]
+>>> Starting implementation verification   [8.0808142 s]
+>>> Starting live variable analysis   [8.0808142 s]
+Slicer starting - function "AVLTree.init$checkDefinedness"
+Preprocessing: -    460ms
+FOLing around:
+   FOL conversion:[   623ms]
+   Analyzing
+     Building CFG:[   249ms]
+        Proved 2/3 assertions
+     Saturating CFG 7 nodes, 1 goals:[   249ms]
+        Proved 2/3 assertions
+   Analyzing done: [   279ms]
+FOL -    909ms
+Total time - AVLTree.init$checkDefinedness:   1373ms
+Slicer Ended - function "AVLTree.init$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [9.4692167 s]
+>>> Starting implementation verification   [9.4848167 s]
+>>> Starting live variable analysis   [9.4848167 s]
+Slicer starting - function "AVLTree.init"
+Preprocessing: -    292ms
+FOLing around:
+   FOL conversion:[  1516ms]
+   Analyzing
+     Building CFG:[  1350ms]
+        Proved 9/24 assertions
+     Saturating CFG 135 nodes, 17 goals:[  1350ms]
+        Proved 9/24 assertions
+   Analyzing done: [  2562ms]
+FOL -   4081ms
+Total time - AVLTree.init:   4374ms
+Slicer Ended - function "AVLTree.init"
+Slicing time : 6ms
+>>> Finished implementation verification   [13.8684244 s]
+>>> Starting implementation verification   [13.8684244 s]
+>>> Starting live variable analysis   [13.8684244 s]
+Slicer starting - function "AVLTree.insert$checkDefinedness"
+Preprocessing: -    236ms
+FOLing around:
+   FOL conversion:[   589ms]
+   Analyzing
+     Building CFG:[   494ms]
+        Proved 23/24 assertions
+     Saturating CFG 8 nodes, 1 goals:[   494ms]
+        Proved 23/24 assertions
+   Analyzing done: [   532ms]
+FOL -   1128ms
+Total time - AVLTree.insert$checkDefinedness:   1369ms
+Slicer Ended - function "AVLTree.insert$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [15.2880269 s]
+>>> Starting implementation verification   [15.2880269 s]
+>>> Starting live variable analysis   [15.3036269 s]
+Slicer starting - function "AVLTree.insert"
+Preprocessing: -    328ms
+FOLing around:
+   FOL conversion:[   901ms]
+   Analyzing
+     Building CFG:[  2526ms]
+        Proved 20/60 assertions
+     Saturating CFG 249 nodes, 40 goals:[  2526ms]
+        Proved 20/60 assertions
+   Analyzing done: [  6355ms]
+FOL -   7260ms
+Total time - AVLTree.insert:   7597ms
+Slicer Ended - function "AVLTree.insert"
+Slicing time : 6ms
+>>> Finished implementation verification   [22.9164403 s]
+>>> Starting implementation verification   [22.9320403 s]
+>>> Starting live variable analysis   [22.9320403 s]
+Slicer starting - function "AVLTree.remove$checkDefinedness"
+Preprocessing: -    218ms
+FOLing around:
+   FOL conversion:[   588ms]
+   Analyzing
+     Building CFG:[   559ms]
+        Proved 27/28 assertions
+     Saturating CFG 8 nodes, 1 goals:[   559ms]
+        Proved 27/28 assertions
+   Analyzing done: [   591ms]
+FOL -   1185ms
+Total time - AVLTree.remove$checkDefinedness:   1407ms
+Slicer Ended - function "AVLTree.remove$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [24.3672428 s]
+>>> Starting implementation verification   [24.4296429 s]
+>>> Starting live variable analysis   [24.4296429 s]
+Slicer starting - function "AVLTree.remove"
+Preprocessing: -    327ms
+FOLing around:
+   FOL conversion:[  1182ms]
+   Analyzing
+     Building CFG:[  2587ms]
+        Proved 17/48 assertions
+     Saturating CFG 295 nodes, 31 goals:[  2587ms]
+        Proved 17/48 assertions
+   Analyzing done: [  5144ms]
+FOL -   6328ms
+Total time - AVLTree.remove:   6656ms
+Slicer Ended - function "AVLTree.remove"
+Slicing time : 6ms
+>>> Finished implementation verification   [31.0908546 s]
+>>> Starting implementation verification   [31.0908546 s]
+>>> Starting live variable analysis   [31.1064547 s]
+Slicer starting - function "AVLTree.has$checkDefinedness"
+Preprocessing: -    234ms
+FOLing around:
+   FOL conversion:[   831ms]
+   Analyzing
+     Building CFG:[   766ms]
+        Proved 3/4 assertions
+     Saturating CFG 8 nodes, 1 goals:[   766ms]
+        Proved 3/4 assertions
+   Analyzing done: [   818ms]
+FOL -   1654ms
+Total time - AVLTree.has$checkDefinedness:   1893ms
+Slicer Ended - function "AVLTree.has$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [33.025258 s]
+>>> Starting implementation verification   [33.0408581 s]
+>>> Starting live variable analysis   [33.0408581 s]
+Slicer starting - function "AVLTree.has"
+Preprocessing: -    342ms
+FOLing around:
+   FOL conversion:[   806ms]
+   Analyzing
+     Building CFG:[  1381ms]
+        Proved 12/34 assertions
+     Saturating CFG 192 nodes, 22 goals:[  1381ms]
+        Proved 12/34 assertions
+   Analyzing done: [  2877ms]
+FOL -   3688ms
+Total time - AVLTree.has:   4033ms
+Slicer Ended - function "AVLTree.has"
+Slicing time : 6ms
+>>> Finished implementation verification   [37.0968652 s]
+>>> Starting implementation verification   [37.0968652 s]
+>>> Starting live variable analysis   [37.0968652 s]
+Slicer starting - function "AVLTreeNode$monitorinvariant$checkDefinedness"
+Preprocessing: -    221ms
+FOLing around:
+   FOL conversion:[   547ms]
+   Analyzing
+     Building CFG:[   193ms]
+        Proved 0/1 assertions
+     Saturating CFG 5 nodes, 1 goals:[   193ms]
+        Proved 0/1 assertions
+   Analyzing done: [   215ms]
+FOL -    769ms
+Total time - AVLTreeNode$monitorinvariant$checkDefinedness:    994ms
+Slicer Ended - function "AVLTreeNode$monitorinvariant$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [38.126467 s]
+>>> Starting implementation verification   [38.126467 s]
+>>> Starting live variable analysis   [38.126467 s]
+Slicer starting - function "AVLTreeNode.valid$checkDefinedness"
+Preprocessing: -    305ms
+FOLing around:
+   FOL conversion:[   765ms]
+   Analyzing
+     Building CFG:[  1756ms]
+        Proved 124/160 assertions
+     Saturating CFG 268 nodes, 36 goals:[  1756ms]
+        Proved 124/160 assertions
+   Analyzing done: [  2964ms]
+FOL -   3731ms
+Total time - AVLTreeNode.valid$checkDefinedness:   4044ms
+Slicer Ended - function "AVLTreeNode.valid$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [42.1980741 s]
+>>> Starting implementation verification   [42.1980741 s]
+>>> Starting live variable analysis   [42.2136742 s]
+Slicer starting - function "AVLTreeNode.init$checkDefinedness"
+Preprocessing: -    223ms
+FOLing around:
+   FOL conversion:[   575ms]
+   Analyzing
+     Building CFG:[   298ms]
+        Proved 6/9 assertions
+     Saturating CFG 13 nodes, 3 goals:[   298ms]
+        Proved 6/9 assertions
+   Analyzing done: [   361ms]
+FOL -    942ms
+Total time - AVLTreeNode.init$checkDefinedness:   1169ms
+Slicer Ended - function "AVLTreeNode.init$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [43.3992762 s]
+>>> Starting implementation verification   [43.3992762 s]
+>>> Starting live variable analysis   [43.3992762 s]
+Slicer starting - function "AVLTreeNode.init"
+Preprocessing: -    271ms
+FOLing around:
+   FOL conversion:[  1135ms]
+   Analyzing
+     Building CFG:[  1937ms]
+        Proved 11/53 assertions
+     Saturating CFG 156 nodes, 42 goals:[  1937ms]
+        Proved 11/53 assertions
+   Analyzing done: [  4074ms]
+FOL -   5211ms
+Total time - AVLTreeNode.init:   5491ms
+Slicer Ended - function "AVLTreeNode.init"
+Slicing time : 6ms
+>>> Finished implementation verification   [48.9216859 s]
+>>> Starting implementation verification   [48.9216859 s]
+>>> Starting live variable analysis   [48.937286 s]
+Slicer starting - function "AVLTreeNode.insert$checkDefinedness"
+Preprocessing: -    242ms
+FOLing around:
+   FOL conversion:[   815ms]
+   Analyzing
+     Building CFG:[  1321ms]
+        Proved 43/50 assertions
+     Saturating CFG 58 nodes, 7 goals:[  1321ms]
+        Proved 43/50 assertions
+   Analyzing done: [  1845ms]
+FOL -   2666ms
+Total time - AVLTreeNode.insert$checkDefinedness:   2912ms
+Slicer Ended - function "AVLTreeNode.insert$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [51.8700911 s]
+>>> Starting implementation verification   [51.8700911 s]
+>>> Starting live variable analysis   [51.8856912 s]
+Slicer starting - function "AVLTreeNode.insert"
+Preprocessing: -    647ms
+FOLing around:
+   FOL conversion:[  2028ms]
+   Analyzing
+     Building CFG:[ 10845ms]
+        Proved 85/275 assertions
+     Saturating CFG 926 nodes, 190 goals:[ 10845ms]
+        Proved 85/275 assertions
+   Analyzing done: [ 22963ms]
+FOL -  24995ms
+Total time - AVLTreeNode.insert:  25646ms
+Slicer Ended - function "AVLTreeNode.insert"
+Slicing time : 6ms
+>>> Finished implementation verification   [77.5789363 s]
+>>> Starting implementation verification   [77.5789363 s]
+>>> Starting live variable analysis   [77.5945363 s]
+Slicer starting - function "AVLTreeNode.remove$checkDefinedness"
+Preprocessing: -    256ms
+FOLing around:
+   FOL conversion:[   668ms]
+   Analyzing
+     Building CFG:[  1057ms]
+        Proved 46/62 assertions
+     Saturating CFG 148 nodes, 16 goals:[  1057ms]
+        Proved 46/62 assertions
+   Analyzing done: [  1878ms]
+FOL -   2548ms
+Total time - AVLTreeNode.remove$checkDefinedness:   2805ms
+Slicer Ended - function "AVLTreeNode.remove$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [80.4025412 s]
+>>> Starting implementation verification   [80.4025412 s]
+>>> Starting live variable analysis   [80.4181413 s]
+Slicer starting - function "AVLTreeNode.remove"
+Preprocessing: -   1176ms
+FOLing around:
+   FOL conversion:[  2646ms]
+   Analyzing
+     Building CFG:[ 26027ms]
+        Proved 115/391 assertions
+     Saturating CFG 1898 nodes, 276 goals:[ 26027ms]
+        Proved 115/391 assertions
+   Analyzing done: [ 58357ms]
+FOL -  61010ms
+Total time - AVLTreeNode.remove:  62190ms
+Slicer Ended - function "AVLTreeNode.remove"
+Slicing time : 6ms
+>>> Finished implementation verification   [142.6934506 s]
+>>> Starting implementation verification   [142.6934506 s]
+>>> Starting live variable analysis   [142.6934506 s]
+Slicer starting - function "AVLTreeNode.pruneMax$checkDefinedness"
+Preprocessing: -    239ms
+FOLing around:
+   FOL conversion:[   636ms]
+   Analyzing
+     Building CFG:[  1007ms]
+        Proved 32/47 assertions
+     Saturating CFG 111 nodes, 15 goals:[  1007ms]
+        Proved 32/47 assertions
+   Analyzing done: [  2277ms]
+FOL -   2920ms
+Total time - AVLTreeNode.pruneMax$checkDefinedness:   3163ms
+Slicer Ended - function "AVLTreeNode.pruneMax$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [145.8914563 s]
+>>> Starting implementation verification   [145.8914563 s]
+>>> Starting live variable analysis   [145.8914563 s]
+Slicer starting - function "AVLTreeNode.pruneMax"
+Preprocessing: -    471ms
+FOLing around:
+   FOL conversion:[  1265ms]
+   Analyzing
+     Building CFG:[  8097ms]
+        Proved 56/182 assertions
+     Saturating CFG 675 nodes, 127 goals:[  8097ms]
+        Proved 56/182 assertions
+   Analyzing done: [ 15546ms]
+FOL -  16813ms
+Total time - AVLTreeNode.pruneMax:  17284ms
+Slicer Ended - function "AVLTreeNode.pruneMax"
+Slicing time : 6ms
+>>> Finished implementation verification   [163.1918866 s]
+>>> Starting implementation verification   [163.2074867 s]
+>>> Starting live variable analysis   [163.2074867 s]
+Slicer starting - function "AVLTreeNode.pruneMin$checkDefinedness"
+Preprocessing: -    230ms
+FOLing around:
+   FOL conversion:[   851ms]
+   Analyzing
+     Building CFG:[  1504ms]
+        Proved 31/47 assertions
+     Saturating CFG 108 nodes, 16 goals:[  1504ms]
+        Proved 31/47 assertions
+   Analyzing done: [  2281ms]
+FOL -   3138ms
+Total time - AVLTreeNode.pruneMin$checkDefinedness:   3372ms
+Slicer Ended - function "AVLTreeNode.pruneMin$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [166.6238927 s]
+>>> Starting implementation verification   [166.6238927 s]
+>>> Starting live variable analysis   [166.6394927 s]
+Slicer starting - function "AVLTreeNode.pruneMin"
+Preprocessing: -    498ms
+FOLing around:
+   FOL conversion:[  1329ms]
+   Analyzing
+     Building CFG:[  9087ms]
+        Proved 72/209 assertions
+     Saturating CFG 724 nodes, 140 goals:[  9087ms]
+        Proved 72/209 assertions
+   Analyzing done: [ 24210ms]
+FOL -  25542ms
+Total time - AVLTreeNode.pruneMin:  26042ms
+Slicer Ended - function "AVLTreeNode.pruneMin"
+Slicing time : 6ms
+>>> Finished implementation verification   [192.7383385 s]
+>>> Starting implementation verification   [192.7383385 s]
+>>> Starting live variable analysis   [192.7695386 s]
+Slicer starting - function "AVLTreeNode.has$checkDefinedness"
+Preprocessing: -    212ms
+FOLing around:
+   FOL conversion:[   570ms]
+   Analyzing
+     Building CFG:[   253ms]
+        Proved 3/4 assertions
+     Saturating CFG 8 nodes, 1 goals:[   253ms]
+        Proved 3/4 assertions
+   Analyzing done: [   280ms]
+FOL -    859ms
+Total time - AVLTreeNode.has$checkDefinedness:   1075ms
+Slicer Ended - function "AVLTreeNode.has$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [193.8615405 s]
+>>> Starting implementation verification   [193.8615405 s]
+>>> Starting live variable analysis   [193.8771405 s]
+Slicer starting - function "AVLTreeNode.has"
+Preprocessing: -    409ms
+FOLing around:
+   FOL conversion:[  1048ms]
+   Analyzing
+     Building CFG:[  4624ms]
+        Proved 25/78 assertions
+     Saturating CFG 401 nodes, 53 goals:[  4624ms]
+        Proved 25/78 assertions
+   Analyzing done: [  9623ms]
+FOL -  10677ms
+Total time - AVLTreeNode.has:  11091ms
+Slicer Ended - function "AVLTreeNode.has"
+Slicing time : 6ms
+>>> Finished implementation verification   [204.9843601 s]
+>>> Starting implementation verification   [204.9843601 s]
+>>> Starting live variable analysis   [204.9999601 s]
+Slicer starting - function "AVLTreeNode.getBalanceFactor$checkDefinedness"
+Preprocessing: -    497ms
+FOLing around:
+   FOL conversion:[  1123ms]
+   Analyzing
+     Building CFG:[ 11369ms]
+        Proved 8/14 assertions
+     Saturating CFG 505 nodes, 6 goals:[ 11369ms]
+        Proved 8/14 assertions
+   Analyzing done: [ 24508ms]
+FOL -  25637ms
+Total time - AVLTreeNode.getBalanceFactor$checkDefinedness:  26139ms
+Slicer Ended - function "AVLTreeNode.getBalanceFactor$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [231.1768061 s]
+>>> Starting implementation verification   [231.1768061 s]
+>>> Starting live variable analysis   [231.1924061 s]
+Slicer starting - function "AVLTreeNode.getBalanceFactor"
+Preprocessing: -    401ms
+FOLing around:
+   FOL conversion:[  1045ms]
+   Analyzing
+     Building CFG:[  4422ms]
+        Proved 23/65 assertions
+     Saturating CFG 367 nodes, 44 goals:[  4422ms]
+        Proved 23/65 assertions
+   Analyzing done: [  8737ms]
+FOL -   9785ms
+Total time - AVLTreeNode.getBalanceFactor:  10188ms
+Slicer Ended - function "AVLTreeNode.getBalanceFactor"
+Slicing time : 6ms
+>>> Finished implementation verification   [241.394824 s]
+>>> Starting implementation verification   [241.394824 s]
+>>> Starting live variable analysis   [241.394824 s]
+Slicer starting - function "AVLTreeNode.getBalanceFactorI$checkDefinedness"
+Preprocessing: -    369ms
+FOLing around:
+   FOL conversion:[   801ms]
+   Analyzing
+     Building CFG:[   818ms]
+        Proved 47/60 assertions
+     Saturating CFG 113 nodes, 13 goals:[   818ms]
+        Proved 47/60 assertions
+   Analyzing done: [  1272ms]
+FOL -   2075ms
+Total time - AVLTreeNode.getBalanceFactorI$checkDefinedness:   2446ms
+Slicer Ended - function "AVLTreeNode.getBalanceFactorI$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [243.8596283 s]
+>>> Starting implementation verification   [243.8596283 s]
+>>> Starting live variable analysis   [243.8596283 s]
+Slicer starting - function "AVLTreeNode.getBalanceFactorI"
+Preprocessing: -    555ms
+FOLing around:
+   FOL conversion:[  1962ms]
+   Analyzing
+     Building CFG:[  8580ms]
+        Proved 26/55 assertions
+     Saturating CFG 399 nodes, 29 goals:[  8580ms]
+        Proved 26/55 assertions
+   Analyzing done: [ 16536ms]
+FOL -  18501ms
+Total time - AVLTreeNode.getBalanceFactorI:  19057ms
+Slicer Ended - function "AVLTreeNode.getBalanceFactorI"
+Slicing time : 6ms
+>>> Finished implementation verification   [262.9852645 s]
+>>> Starting implementation verification   [262.9882647 s]
+>>> Starting live variable analysis   [262.9922649 s]
+Slicer starting - function "AVLTreeNode.close$checkDefinedness"
+Preprocessing: -    552ms
+FOLing around:
+   FOL conversion:[   892ms]
+   Analyzing
+     Building CFG:[  3136ms]
+        Proved 110/147 assertions
+     Saturating CFG 262 nodes, 37 goals:[  3136ms]
+        Proved 110/147 assertions
+   Analyzing done: [  6099ms]
+FOL -   6995ms
+Total time - AVLTreeNode.close$checkDefinedness:   7549ms
+Slicer Ended - function "AVLTreeNode.close$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [270.5606978 s]
+>>> Starting implementation verification   [270.5606978 s]
+>>> Starting live variable analysis   [270.563698 s]
+Slicer starting - function "AVLTreeNode.close"
+Preprocessing: -    674ms
+FOLing around:
+   FOL conversion:[  1678ms]
+   Analyzing
+     Building CFG:[ 20844ms]
+        Proved 77/150 assertions
+     Saturating CFG 749 nodes, 75 goals:[ 20844ms]
+        Proved 77/150 assertions
+   Analyzing done: [ 48000ms]
+FOL -  49685ms
+Total time - AVLTreeNode.close:  50363ms
+Slicer Ended - function "AVLTreeNode.close"
+Slicing time : 6ms
+>>> Finished implementation verification   [320.9675809 s]
+>>> Starting implementation verification   [320.9705811 s]
+>>> Starting live variable analysis   [320.9735813 s]
+Slicer starting - function "AVLTreeNode.rebalanceLeft$checkDefinedness"
+Preprocessing: -    275ms
+FOLing around:
+   FOL conversion:[   860ms]
+   Analyzing
+     Building CFG:[  1743ms]
+        Proved 72/95 assertions
+     Saturating CFG 145 nodes, 23 goals:[  1743ms]
+        Proved 72/95 assertions
+   Analyzing done: [  3147ms]
+FOL -   4014ms
+Total time - AVLTreeNode.rebalanceLeft$checkDefinedness:   4292ms
+Slicer Ended - function "AVLTreeNode.rebalanceLeft$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [325.3188298 s]
+>>> Starting implementation verification   [325.32183 s]
+>>> Starting live variable analysis   [325.3668325 s]
+Slicer starting - function "AVLTreeNode.rebalanceLeft"
+Preprocessing: -   3740ms
+FOLing around:
+   FOL conversion:[  5310ms]
+   Analyzing
+     Building CFG:[149252ms]
+        Proved 38/95 assertions
+     Saturating CFG 2718 nodes, 68 goals:[149252ms]
+        Proved 38/95 assertions
+   Analyzing done: [403150ms]
+FOL - 408463ms
+Total time - AVLTreeNode.rebalanceLeft: 412212ms
+Slicer Ended - function "AVLTreeNode.rebalanceLeft"
+Slicing time : 6ms
+>>> Finished implementation verification   [737.6974165 s]
+>>> Starting implementation verification   [737.7004167 s]
+>>> Starting live variable analysis   [737.7154175 s]
+Slicer starting - function "AVLTreeNode.rebalanceRL$checkDefinedness"
+Preprocessing: -    466ms
+FOLing around:
+   FOL conversion:[   982ms]
+   Analyzing
+     Building CFG:[  3618ms]
+        Proved 73/102 assertions
+     Saturating CFG 282 nodes, 29 goals:[  3618ms]
+        Proved 73/102 assertions
+   Analyzing done: [  7829ms]
+FOL -   8817ms
+Total time - AVLTreeNode.rebalanceRL$checkDefinedness:   9288ms
+Slicer Ended - function "AVLTreeNode.rebalanceRL$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [747.0289502 s]
+>>> Starting implementation verification   [747.0319504 s]
+>>> Starting live variable analysis   [747.0449512 s]
+Slicer starting - function "AVLTreeNode.rebalanceRL"
+Preprocessing: -   1575ms
+FOLing around:
+   FOL conversion:[  2736ms]
+   Analyzing
+     Building CFG:[ 86948ms]
+        Proved 83/190 assertions
+     Saturating CFG 1765 nodes, 119 goals:[ 86948ms]
+        Proved 83/190 assertions
+   Analyzing done: [256062ms]
+FOL - 258805ms
+Total time - AVLTreeNode.rebalanceRL: 260384ms
+Slicer Ended - function "AVLTreeNode.rebalanceRL"
+Slicing time : 6ms
+>>> Finished implementation verification   [1007.5018484 s]
+>>> Starting implementation verification   [1007.5048486 s]
+>>> Starting live variable analysis   [1007.5088488 s]
+Slicer starting - function "AVLTreeNode.rebalanceRR$checkDefinedness"
+Preprocessing: -    280ms
+FOLing around:
+   FOL conversion:[   726ms]
+   Analyzing
+     Building CFG:[  1624ms]
+        Proved 75/99 assertions
+     Saturating CFG 150 nodes, 24 goals:[  1624ms]
+        Proved 75/99 assertions
+   Analyzing done: [  3085ms]
+FOL -   3817ms
+Total time - AVLTreeNode.rebalanceRR$checkDefinedness:   4101ms
+Slicer Ended - function "AVLTreeNode.rebalanceRR$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [1011.637085 s]
+>>> Starting implementation verification   [1011.6410852 s]
+>>> Starting live variable analysis   [1011.6520858 s]
+Slicer starting - function "AVLTreeNode.rebalanceRR"
+Preprocessing: -    429ms
+FOLing around:
+   FOL conversion:[  1132ms]
+   Analyzing
+     Building CFG:[  5909ms]
+        Proved 23/90 assertions
+     Saturating CFG 360 nodes, 67 goals:[  5909ms]
+        Proved 23/90 assertions
+   Analyzing done: [ 12920ms]
+FOL -  14058ms
+Total time - AVLTreeNode.rebalanceRR:  14491ms
+Slicer Ended - function "AVLTreeNode.rebalanceRR"
+Slicing time : 6ms
+>>> Finished implementation verification   [1026.1809168 s]
+>>> Starting implementation verification   [1026.1849171 s]
+>>> Starting live variable analysis   [1026.1879172 s]
+Slicer starting - function "AVLTreeNode.rebalanceRight$checkDefinedness"
+Preprocessing: -    295ms
+FOLing around:
+   FOL conversion:[   738ms]
+   Analyzing
+     Building CFG:[  1422ms]
+        Proved 71/95 assertions
+     Saturating CFG 148 nodes, 24 goals:[  1422ms]
+        Proved 71/95 assertions
+   Analyzing done: [  2574ms]
+FOL -   3318ms
+Total time - AVLTreeNode.rebalanceRight$checkDefinedness:   3618ms
+Slicer Ended - function "AVLTreeNode.rebalanceRight$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [1029.8341258 s]
+>>> Starting implementation verification   [1029.838126 s]
+>>> Starting live variable analysis   [1029.855127 s]
+Slicer starting - function "AVLTreeNode.rebalanceRight"
+Preprocessing: -   2962ms
+FOLing around:
+   FOL conversion:[  5523ms]
+   Analyzing
+     Building CFG:[153014ms]
+        Proved 41/95 assertions
+     Saturating CFG 2717 nodes, 67 goals:[153014ms]
+        Proved 41/95 assertions
+   Analyzing done: [428206ms]
+FOL - 433731ms
+Total time - AVLTreeNode.rebalanceRight: 436695ms
+Slicer Ended - function "AVLTreeNode.rebalanceRight"
+Slicing time : 6ms
+>>> Finished implementation verification   [1466.6761117 s]
+>>> Starting implementation verification   [1466.6761117 s]
+>>> Starting live variable analysis   [1466.7221143 s]
+Slicer starting - function "AVLTreeNode.rebalanceLR$checkDefinedness"
+Preprocessing: -    405ms
+FOLing around:
+   FOL conversion:[  1564ms]
+   Analyzing
+     Building CFG:[  5365ms]
+        Proved 73/102 assertions
+     Saturating CFG 284 nodes, 29 goals:[  5365ms]
+        Proved 73/102 assertions
+   Analyzing done: [ 14491ms]
+FOL -  16058ms
+Total time - AVLTreeNode.rebalanceLR$checkDefinedness:  16464ms
+Slicer Ended - function "AVLTreeNode.rebalanceLR$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [1483.1950565 s]
+>>> Starting implementation verification   [1483.1960566 s]
+>>> Starting live variable analysis   [1483.2050571 s]
+Slicer starting - function "AVLTreeNode.rebalanceLR"
+Preprocessing: -   2196ms
+FOLing around:
+   FOL conversion:[  3350ms]
+   Analyzing
+     Building CFG:[ 96373ms]
+        Proved 85/190 assertions
+     Saturating CFG 1765 nodes, 119 goals:[ 96373ms]
+        Proved 85/190 assertions
+   Analyzing done: [273224ms]
+FOL - 276575ms
+Total time - AVLTreeNode.rebalanceLR: 278773ms
+Slicer Ended - function "AVLTreeNode.rebalanceLR"
+Slicing time : 6ms
+>>> Finished implementation verification   [1762.0500061 s]
+>>> Starting implementation verification   [1762.0510062 s]
+>>> Starting live variable analysis   [1762.0730074 s]
+Slicer starting - function "AVLTreeNode.rebalanceLL$checkDefinedness"
+Preprocessing: -    281ms
+FOLing around:
+   FOL conversion:[   727ms]
+   Analyzing
+     Building CFG:[  1452ms]
+        Proved 74/99 assertions
+     Saturating CFG 153 nodes, 25 goals:[  1452ms]
+        Proved 74/99 assertions
+   Analyzing done: [  2692ms]
+FOL -   3424ms
+Total time - AVLTreeNode.rebalanceLL$checkDefinedness:   3709ms
+Slicer Ended - function "AVLTreeNode.rebalanceLL$checkDefinedness"
+Slicing time : 6ms
+>>> Finished implementation verification   [1765.8142214 s]
+>>> Starting implementation verification   [1765.8172216 s]
+>>> Starting live variable analysis   [1765.8192217 s]
+Slicer starting - function "AVLTreeNode.rebalanceLL"
+Preprocessing: -    447ms
+FOLing around:
+   FOL conversion:[  2025ms]
+   Analyzing
+     Building CFG:[  4988ms]
+        Proved 24/90 assertions
+     Saturating CFG 359 nodes, 66 goals:[  4988ms]
+        Proved 24/90 assertions
+   Analyzing done: [ 12481ms]
+FOL -  14524ms
+Total time - AVLTreeNode.rebalanceLL:  14975ms
+Slicer Ended - function "AVLTreeNode.rebalanceLL"
+Slicing time : 6ms
+>>> Finished implementation verification   [1780.8220798 s]
+
+Boogie program verifier finished with 0 verified, 0 errors, 42 inconclusives
+Press any key to continue . . .

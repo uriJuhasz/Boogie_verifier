@@ -1,0 +1,1 @@
+for %f in (out.bpl.*.sliced.bpl) do boogie /trace /traceTimes /timeLimit:120 %f >> aaaa.log

@@ -1,0 +1,10 @@
+Running AVLTree.Chalice - AVLTree.bpl - AVLTree.init
+  Boogie: c:\work\slicer\src\Binaries\Boogie.exe
+  Boogie params: /slice /noProver
+  Z3: C:\provers\z3-4.4.1-x64-win\bin\z3.exe
+  Z3 params: -smt2 -st -v:1
+SlicerTime: AVLTree.init.start                                           - 2
+SlicerTime: AVLTree.init.build                                           - 4
+SlicerTime: AVLTree.init.maps                                            - 5
+SlicerTime: AVLTree.init.end                                             - 5
+Z3runtime: AVLTree.AVLTree.init.build.fw.orig                           - 0   

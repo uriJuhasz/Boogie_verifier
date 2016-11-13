@@ -1,0 +1,163 @@
+(set-option :print-success false)
+(set-info :smt-lib-version 2.0)
+(set-option :AUTO_CONFIG false)
+(set-option :MODEL_HIDE_UNUSED_PARTITIONS false)
+(set-option :MODEL_V2 true)
+(set-option :ASYNC_COMMANDS false)
+(set-option :PHASE_SELECTION 0)
+(set-option :RESTART_STRATEGY 0)
+(set-option :RESTART_FACTOR |1.5|)
+(set-option :ARITH_RANDOM_INITIAL_VALUE true)
+(set-option :CASE_SPLIT 3)
+(set-option :DELAY_UNITS true)
+(set-option :DELAY_UNITS_THRESHOLD 16)
+(set-option :NNF_SK_HACK true)
+(set-option :MBQI false)
+(set-option :QI_EAGER_THRESHOLD 100)
+(set-option :QI_COST |"(+ weight generation)"|)
+(set-option :TYPE_CHECK true)
+(set-option :BV_REFLECT true)
+; done setting options
+
+; Boogie universal background predicate
+; Copyright (c) 2004-2010, Microsoft Corp.
+(set-info :category "industrial")
+(declare-sort |T@U| 0)
+(declare-sort |T@T| 0)
+(declare-fun int_div (Int Int) Int)
+(declare-fun int_mod (Int Int) Int)
+(declare-fun UOrdering2 (|T@U| |T@U|) Bool)
+(declare-fun UOrdering3 (|T@T| |T@U| |T@U|) Bool)
+(declare-fun tickleBool (Bool) Bool)
+(assert (and (tickleBool true) (tickleBool false)))
+
+(declare-fun Ctor (T@T) Int)
+(declare-fun intType () T@T)
+(declare-fun boolType () T@T)
+(declare-fun int_2_U (Int) T@U)
+(declare-fun U_2_int (T@U) Int)
+(declare-fun type (T@U) T@T)
+(declare-fun bool_2_U (Bool) T@U)
+(declare-fun U_2_bool (T@U) Bool)
+(declare-fun FieldType (T@T) T@T)
+(declare-fun FieldTypeInv0 (T@T) T@T)
+(declare-fun MapType0Select (T@U T@U) T@U)
+(declare-fun MapType0Type () T@T)
+(declare-fun MapType0Store (T@U T@U T@U) T@U)
+(declare-fun read (T@U T@U) T@U)
+(declare-fun heap () T@U)
+(declare-fun f1 () T@U)
+(declare-fun %lbl%+88 () Bool)
+(declare-fun i@0 () Int)
+(declare-fun %lbl%@192 () Bool)
+(declare-fun %lbl%+138 () Bool)
+(assert (and
+(= (Ctor intType) 0)
+(= (Ctor boolType) 1)
+(forall ((arg0 Int) ) (! (= (U_2_int (int_2_U arg0)) arg0)
+ :qid |typeInv:U_2_int|
+ :pattern ( (int_2_U arg0))
+))
+(forall ((x T@U) ) (! (=> (= (type x) intType) (= (int_2_U (U_2_int x)) x))
+ :qid |cast:U_2_int|
+ :pattern ( (U_2_int x))
+))
+(forall ((arg0@@0 Int) ) (! (= (type (int_2_U arg0@@0)) intType)
+ :qid |funType:int_2_U|
+ :pattern ( (int_2_U arg0@@0))
+))
+(forall ((arg0@@1 Bool) ) (! (iff (U_2_bool (bool_2_U arg0@@1)) arg0@@1)
+ :qid |typeInv:U_2_bool|
+ :pattern ( (bool_2_U arg0@@1))
+))
+(forall ((x@@0 T@U) ) (! (=> (= (type x@@0) boolType) (= (bool_2_U (U_2_bool x@@0)) x@@0))
+ :qid |cast:U_2_bool|
+ :pattern ( (U_2_bool x@@0))
+))
+(forall ((arg0@@2 Bool) ) (! (= (type (bool_2_U arg0@@2)) boolType)
+ :qid |funType:bool_2_U|
+ :pattern ( (bool_2_U arg0@@2))
+))))
+(assert (forall ((x@@1 T@U) ) (! (UOrdering2 x@@1 x@@1)
+ :qid |bg:subtype-refl|
+ :no-pattern (U_2_int x@@1)
+ :no-pattern (U_2_bool x@@1)
+)))
+(assert (forall ((x@@2 T@U) (y T@U) (z T@U) ) (! (let ((alpha (type x@@2)))
+(=> (and
+(= (type y) alpha)
+(= (type z) alpha)
+(UOrdering2 x@@2 y)
+(UOrdering2 y z)) (UOrdering2 x@@2 z)))
+ :qid |bg:subtype-trans|
+ :pattern ( (UOrdering2 x@@2 y) (UOrdering2 y z))
+)))
+(assert (forall ((x@@3 T@U) (y@@0 T@U) ) (! (let ((alpha@@0 (type x@@3)))
+(=> (= (type y@@0) alpha@@0) (=> (and
+(UOrdering2 x@@3 y@@0)
+(UOrdering2 y@@0 x@@3)) (= x@@3 y@@0))))
+ :qid |bg:subtype-antisymm|
+ :pattern ( (UOrdering2 x@@3 y@@0) (UOrdering2 y@@0 x@@3))
+)))
+(assert (and
+(forall ((arg0@@3 T@T) ) (! (= (Ctor (FieldType arg0@@3)) 2)
+ :qid |ctor:FieldType|
+))
+(forall ((arg0@@4 T@T) ) (! (= (FieldTypeInv0 (FieldType arg0@@4)) arg0@@4)
+ :qid |typeInv:FieldTypeInv0|
+ :pattern ( (FieldType arg0@@4))
+))
+(forall ((arg0@@5 T@U) (arg1 T@U) ) (! (let ((a (FieldTypeInv0 (type arg1))))
+(= (type (MapType0Select arg0@@5 arg1)) a))
+ :qid |funType:MapType0Select|
+ :pattern ( (MapType0Select arg0@@5 arg1))
+))
+(= (Ctor MapType0Type) 3)
+(forall ((arg0@@6 T@U) (arg1@@0 T@U) (arg2 T@U) ) (! (= (type (MapType0Store arg0@@6 arg1@@0 arg2)) MapType0Type)
+ :qid |funType:MapType0Store|
+ :pattern ( (MapType0Store arg0@@6 arg1@@0 arg2))
+))
+(forall ((m T@U) (x0 T@U) (val T@U) ) (! (let ((a@@0 (FieldTypeInv0 (type x0))))
+(=> (= (type val) a@@0) (= (MapType0Select (MapType0Store m x0 val) x0) val)))
+ :qid |mapAx0:MapType0Select|
+ :weight 0
+))
+(forall ((val@@0 T@U) (m@@0 T@U) (x0@@0 T@U) (y0 T@U) ) (! (or
+(= x0@@0 y0)
+(= (MapType0Select (MapType0Store m@@0 x0@@0 val@@0) y0) (MapType0Select m@@0 y0)))
+ :qid |mapAx1:MapType0Select:0|
+ :weight 0
+))
+(forall ((val@@1 T@U) (m@@1 T@U) (x0@@1 T@U) (y0@@0 T@U) ) (! (or
+true
+(= (MapType0Select (MapType0Store m@@1 x0@@1 val@@1) y0@@0) (MapType0Select m@@1 y0@@0)))
+ :qid |mapAx2:MapType0Select|
+ :weight 0
+))
+(forall ((arg0@@7 T@U) (arg1@@1 T@U) ) (! (let ((T (FieldTypeInv0 (type arg1@@1))))
+(= (type (read arg0@@7 arg1@@1)) T))
+ :qid |funType:read|
+ :pattern ( (read arg0@@7 arg1@@1))
+))))
+(assert (forall ((h T@U) (f T@U) ) (! (let ((T@@0 (FieldTypeInv0 (type f))))
+(=> (and
+(= (type h) MapType0Type)
+(= (type f) (FieldType T@@0))) (= (read h f) (MapType0Select h f))))
+ :qid |z3testbp.7:18|
+ :skolemid |0|
+ :pattern ( (read h f))
+)))
+(assert (and
+(= (type heap) MapType0Type)
+(= (type f1) (FieldType intType))))
+(push 1)
+(set-info :boogie-vc-id p)
+(assert (not
+(let ((anon0_correct (=> (! (and %lbl%+88 true) :lblpos +88) (=> (= i@0 (U_2_int (MapType0Select heap f1))) (and
+(! (or %lbl%@192 (> i@0 0)) :lblneg @192)
+(=> (> i@0 0) true))))))
+(let ((PreconditionGeneratedEntry_correct (=> (! (and %lbl%+138 true) :lblpos +138) (=> (> (U_2_int (MapType0Select heap f1)) 0) anon0_correct))))
+PreconditionGeneratedEntry_correct))
+))
+(check-sat)
+(pop 1)

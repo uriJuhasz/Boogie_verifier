@@ -1,0 +1,531 @@
+%====================================================================================================================
+%====================================================================================================================
+\subsection{Boolean Programs}
+In order to simplify the exposition of the algorithm we will now look at the simple case where we have only a Boolean program, so all clauses are propositional.
+
+As we have seen, for each node \node{n}, the information at that node is initially only the information implied by the statements at \node{n} - which can be represented as \clauses{n}.
+The set of models of \clauses{n} (over the vocabulary of the whole program) is an over-approximation of the set of feasible states after any execution that reaches just after \node{n} from \node{root} - 
+the exact set of feasible states after \node{n} is the set of models of $\clauses{n}\cup\precond{n}$.
+
+Our objective is to show that for all the assertion nodes in the DAG, this set of states is empty - in which case we say the node is \emph{infeasible}.
+The set of states is empty iff \clauses{n}$\cup$\precond{n} is inconsistent.
+In order to show the inconsistency of a set of FOLE clauses the most common techniques are SMT (DPLL(T)) and resolution with superposition.
+We will concentrate on resolution based method, but some of the discussion applies also to other reasoning methods.
+We will start by discussing general resolution, and later see how more relevant methods, such as ordered resolution, are applicable.
+
+A node \node{n} can be infeasible in two distinct cases:
+\begin{itemize}
+	\item \precond{n} is inconsistent - meaning that each of \node{n}'s predecessors is infeasible
+	\item \precond{n} is consistent but \precond{n}$\cup$\clauses{n} is inconsistent - meaning that the original assertion is reachable and holds
+\end{itemize}
+
+In the first case we could find an inconsistency proof at the scope of each of \node{n}'s predecessors.
+In the second case an inconsistency proof must include at least one clause from \clauses{n}.
+
+We have found that the second case tends to be more common in VCG, so we try to bias the proof search in that direction.
+An existing method for exploiting this fact is using the set of supports strategy (SOS) - where we designate the set \clauses{n} of a goal node \node{n} as the set of supports, and only allow resolution when one of the participants is in the set of supports - the result of such a derivation is added to the set of supports. 
+This strategy is complete for resolution if \precond{n} is consistent. 
+For calculi such as ordered resolution or superposition with term ordering, we must also require that \precond{n} is saturated with respect to the calculus in order to ensure completeness.
+
+Our algorithm will work as follows:\\
+Initially, each node \node{n} contains the clauses \clausesz{n}, and we define, accordingly, \precondz{n} and \postcondz{n}.  \\
+The algorithm modifies \clauses{n} for a node by either adding a clause from \\ 
+\precond{n} to \clauses{n} or by adding a resolvent of two clauses from \clauses{n} to \clauses{n} (or more generally, applying the logic calculus to \clauses{n}).
+The set of models of $\clauses{n}$ always over-approximates the set of models of $\postcondz{n}$, and always under-approximates the set of models of $\clausesz{n}$ (so no information is lost).
+The set of models of $\clauses{n}$ can only shrink throughout the algorithm as we add more clauses (but we can also remove redundant clauses), and the algorithm terminates when either $\clauses{n}$ includes the empty clause for all assertions, no more clauses can be added to any $\clauses{n}$, or some resource criterion is reached (e.g. number of steps).
+
+Formally, the invariant for any node \node{n} in the CFG is as follows:
+\begin{itemize}
+	\item $\postcondz{n} \Rightarrow \clauses{n}$   (soundness)
+	\item $\clauses{n} \Rightarrow \clausesz{n}$ (never lose the information unique to \node{n})
+	\item $\clauses{n}' \Rightarrow \clauses{n}$ whenever we update \clauses{n} (monotonicity - implies the former - sometimes we can relax this - e.g. pure literal elimination)
+\end{itemize}
+
+\subsubsection{Basics}
+We shall now use the basic resolution calculus: clauses are represented as sets of literals, and we have exactly one deduction rule for unrestricted propositional binary resolution:\\
+$\frac{\clause{C}\lor\clause{A}~~\clause{\lnot A}\lor\clause{D}}{\clause{C\lor D}}$
+
+\noindent
+Now suppose we are at an assertion node \node{n} and we have the clause \clause{C}=\clause{A \lor D}$\in$\clauses{n}.
+(Here and throughout this section we would represent literals using the letters \clause{A},\clause{B} and (possibly empty) CNF clauses using the letters \clause{C}, \clause{D}), if we want to make sure that we have performed all valid resolutions on \clause{C}, we have to look for all clauses that contain the literal \clause{\lnot A}, including unit clauses.
+
+\noindent
+First we can look at such clauses in \clauses{n}, and resolve them with \clause{C}.
+If that does not produce the empty clause, the next step would be to look for such clauses anywhere in \precond{n}.
+
+\noindent
+All clauses in \precond{n} are of the form $\clause{D}=\lnot \rpc{p}{n} \lor \clause{D'}$ (\node{p} is the transitive predecessor where \clause{D'}$\in$\clauses{p}).
+As mentioned above, $\lnot \rpc{p}{n}$ is in CNF form for a program with only good joins.
+
+\noindent
+If \clause{A} is not a path literal, then \clause{D} must contain the literal \clause{\lnot A}.\\
+If \clause{A} is a path literal \variable{c_b} (or \clause{\lnot\variable{c_b}}), there is exactly one branch \node{b} and one join \node{j_b} that correspond to this path literal - so \clause{C} must be a transitive resolvent of a clause that came from \tns{b} (\fns{b}) and \clause{D'} must be a transitive resolvent of a clause from \fns{b} (\tns{b}).
+
+\noindent
+This has an undesirable effect that if we add even one clause from one side of a join we would potentially add all clauses from both sides of the join (and their transitive resolvents) - we will improve on this later. 
+
+\noindent
+Note that if $\node{j_b}\notin\predst{n}$ (the branch \node{b} is not joined before \node{n}), then \clause{A} holds in \node{n} (\node{n} is an assertion inside one side of the branch \node{n}), and hence $\clause{A}\notin \lnot\rpc{p}{n}$ and also $\clause{\lnot A}\notin\lnot\rpc{p}{n}$.
+
+We can sketch this approach as:
+\lstset{tabsize=2}
+\begin{lstlisting}[mathescape]
+saturate()
+{
+	foreach n : Nodes
+		$\clauses{n}$ := $\clausesz{n}$ //Initial clauses
+		$\clausess{n}$ := $\emptyset$   //Saturated clauses
+			//saturate $\clauses{n}$ for resolution
+		resolution_saturate($\clauses{n}$) 
+		while ($\square \notin \clauses{n}$ and $\clausess{n} \subset \clauses{n}$)
+			C := choose from $\clauses{n} \setminus \clausess{n}$
+			foreach literal $\clause{A} \in \clause{C}$
+				imported := import(n,$\clause{A}$)
+			$\clauses{n}$ := $\clauses{n} \cup$ imported
+				//saturate $\clause{C}$ with $\clauses{n}$
+			resolution_saturate($\clauses{n}$,$\clause{C}$) 
+			$\clausess{n} += \clause{C}$
+}
+
+import(n:Node,l:Literal)
+{
+	result := $\emptyset$
+	foreach node $\node{p} \in \predsto{n}$
+		foreach clause $\clause{D'} \in \clauses{p}$ 
+			$\clause{D} = \lnot\rpc{p}{n} \lor \clause{D'}$
+			if $(\lnot \clause{A}) \in \clause{D} \land \clause{D} \notin \clauses{n}$
+				result := result $\cup \clause{D}$
+}
+\end{lstlisting}
+
+\noindent 
+Here we import into \clauses{n} all the clauses that we can resolve with clauses in \clauses{n} (and that are implied by \postcond{n}), until we are either saturated or have produced the empty clause. The set $\clausess{n}$ represents here the clauses for which we have imported all potential clauses to resolve, and resolved with all possible clauses.
+In the worst case $\clauses{n}$ would degenerate to the resolution closure of \postcond{n}.\\
+We could somewhat alternate the order between resolutions inside \clauses{n} and the import of new clauses, and the choice of when each action is done on which node - we discuss these issues later.
+
+%===============================================================================================================================
+\subsubsection{CFG}
+Now let's see how we can improve upon this basic idea without losing completeness:\\
+The first step would be to avoid the repeated search and import of clauses - for each node we mark all literals for which we have already imported the relevant clauses and refrain from reimporting them.
+
+The second step would be to try and take advantage of the CFG structure in order to optimize the import process - consider the following example:
+
+\begin{lstlisting}[mathescape]
+$p0$: 
+assume $\clause{P \lor Q_1}$
+if (c0)
+	$p0t$:
+	assume $\clause{P \lor Q_2}$
+else
+	$p0f$:
+	assume $\clause{P \lor Q_3}$
+$pj0$:
+assume $\lnot \clause{Q_2}$
+assume $\lnot \clause{Q_3}$
+if (c1)
+	$p1t$:
+	assert $\clause{P}$ //negated $\lnot \clause{P}$
+else
+	$p1f$:
+	assume $\clause{Q_1}$
+	assert $\clause{P}$ //negated $\lnot \clause{P}$
+\end{lstlisting}
+
+Now here we would import:\\
+To $p1t$: $\{ \clause{P \lor Q_1}, \clause{\lnot c0 \lor P \lor Q_2}, \clause{c0 \lor P \lor Q_3}\}$, and later $\{\clause{\lnot Q_2}, \clause{\lnot Q_3} \}$ \\
+To $p1f$: $\{ \clause{P \lor Q_1}, \clause{\lnot c0 \lor P \lor Q_2}, \clause{c0 \lor P \lor Q_3}\}$, and later $\{\clause{\lnot Q_2}, \clause{\lnot Q_3}, \clause{Q_1} \}$ 
+
+As we can see, there is a lot of sharing here, and the common part is actually implied by the CFG structure - 
+the program point $pj0$ is the common prefix for $p1t$ and $p1f$ and it is also where the intersection of the imports holds. 
+We try to take advantage of this fact by performing clause import always from direct predecessors - so a node would ask its predecessors for all clauses containing a literal, each predecessor would in turn check whether this literal is cached - if yes it will simply return all current clauses that contain that literal, otherwise it will query all its predecessors, add the returned clauses to the current set of clauses (with a properly adjusted $\mathbf{rpc}$), mark the literal as cached and return all such relevant clauses (the newly imported, and the local ones).
+This also simplifies the $\mathbf{rpc}$ calculations as calculating the delta in $\mathbf{rpc}$ is simple: a sequential node has the same $\mathbf{rpc}$ as its direct predecessor (plus potentially \lpc{n}) and a join node should just add the join condition literal or its negation to each clause from its predecessors.
+
+So in our example, we would import:\\
+To $pj0$: $\{ \clause{P \lor Q_1}, \clause{\lnot c0 \lor P \lor Q_2}, \clause{c0 \lor P \lor Q_3}\}$ \\
+In addition we already have $\{\clause{\lnot Q_2}, \clause{\lnot Q_3} \}$, which would be propagated when asked for (after making sure  that there are no other relevant clauses in transitive predecessors).
+
+But now we can see immediately that there is more space for improvement - simple unit propagation, simplifying resolutions (self subsuming) and subsumption (all discussed later) can get from:\\
+$\clauses{pj0}=\{ \clause{P \lor Q_1}, \clause{\lnot c0 \lor P \lor Q_2}, \clause{c0 \lor P \lor Q_3}, \clause{\lnot Q_2}, \clause{\lnot Q_3} \}$ \\ 
+to \\
+$\clauses{pj0}=\{ \clause{P}, \clause{\lnot Q_2}, \clause{\lnot Q_3} \}$ \\ 
+While still preserving the cache $\{ \clause{P} \}$ and not needing to propagate $\{\clause{\lnot Q_2}, \clause{\lnot Q_3} \}$ at all. 
+This suggests, in general, the next step:
+
+The third step would be to add some simplifications - all these operations are strictly decreasing in the size of $\clauses{n}$ (counting literals and clauses), although some need to be implemented carefully so as not to incur a time penalty:
+\begin{itemize}
+	\item Unit clause propagation - we always keep all clauses in \clauses{n} saturated with respect to unit propagation, and we always import eagerly to each node all the relevant unit clauses - namely if $\clause{\lnot A \lor C} \in \clauses{n}$, we check if $\clause{A} \in \precond{n}$ and if it so we add it to \clauses{n}.
+	Given clauses $\clause{A}, \clause{\lnot A \lor C} \in \clauses{n}$, we replace the second with \clause{C} in \clauses{n}.\\
+	$\frac{\clause{A}~~\cancel{\clause{\lnot A}\lor\clause{C}}}{\clause{C}}$
+	\item Safe resolution - given the clauses \clause{A \lor C} and \clause{\lnot A \lor C}, we replace them by \clause{C}\\
+	$\frac{\cancel{\clause{A\lor C}}~~\cancel{\clause{\lnot A}\lor\clause{C}}}{\clause{C}}$
+	\item Safe resolution 2 - given the clauses \clause{A \lor C \lor D} and \clause{\lnot A \lor C}, we replace the first by \clause{C \lor D}\\
+	$\frac{\clause{A\lor C}~~\cancel{\clause{\lnot A\lor C \lor D}}}{\clause{C\lor D}}$
+	\item Subsumption - given the clauses \clause{A} and \clause{A \lor C}, we remove the second \\
+	$\frac{\clause{C} ~~ \cancel{\clause{C\lor D}}}{}$
+	\item Tautology elimination - given the clause \clause{A \lor \lnot A \lor C} we remove it\\
+	$\frac{\cancel{\clause{A \lor \lnot A \lor C}}}{}$
+\end{itemize}
+Pure literal elimination we do not handle here as it is more tricky for program extensions - we will relate to it later.
+
+We term these steps "safe resolutions". Here safety means that they are guaranteed to decrease strictly the total number of literals + clauses in the whole CFG, but we usually ensure this by decreasing strictly the number of literals+clauses in a specific node. if we only allow these steps (and the implied imports) then we can bound the complexity of the whole algorithm - we will show the calculations later. This will form part of the basis of the basic predictable fragment.
+
+%===============================================================================================================================
+\subsubsection{Lemmas}
+We have seen that applying some simplifications at intermediate nodes can reduce the complexity of the proof and proof search. 
+Also, for two assertions that share a prefix in the CFG up to some branch point, each trace reaching either of the assertions has a prefix that reaches the branch point, so it is to be expected that the proofs of the assertions would also share some proof sub-DAGs.
+In this section we explore how we can exploit this potential sharing in order to improve the verification algorithm, and what are the limitations.
+We will compare our approach to running a flat proof in a CDCL solver and also to the IC3/PDR technique - the two most common techniques.
+In our setting a property of an intermediate CFG node would be stored as a clause in the node, and so each such property can be used directly also by program extensions.
+
+Consider the following program:
+\begin{lstlisting}[mathescape]
+$pb$: 
+assume $\clause{\lnot P_0 \lor P_1}$
+assume $\clause{\lnot P_1 \lor P_2}$
+...
+assume $\clause{\lnot P_{n-1} \lor P_n}$
+if (c)
+	$pt$:
+	$pta$:
+		assert $\clause{\lnot P_1 \lor P_n}$ //negated $\clause{P_1},\clause{\lnot P_n}$
+else
+	$pe$:
+		assume $\clause{P_0}$
+	$pea$:
+		assert $\clause{P_{n-1}}$ //negated $\clause{\lnot P_{n-1}}$
+\end{lstlisting}
+
+Here, if we allow only simplifications at $pb$, no resolutions would be performed there, and we would need to perform at least n-1 resolutions at \emph{each} of $pta$, $pea$ in order to refute it, while these n-1 resolutions are in fact shared.
+The information at $pb$ and its transitive predecessors alone does not tell us which resolutions would be needed in successor nodes, and so we must use some information from the transitive successors of $pb$ in order to decide which resolutions to attempt (we will refer to ``attempting'' resolutions because in FOLE resolution depends on unification, so there is the price of unification even for attempting a resolution).
+Also, the information at $pta$ only tells us which resolutions might be necessary in order to prove $pta$ and no hint about $pea$, in the case that $pea$ came from unrolling a loop further after proving $pta$, we would not have that information while proving $pta$.
+In this case, there is a proof in n steps, but in the current system we will produce a proof of at least 2n steps.
+
+\noindent
+A CDCL prover, in general, can choose any order in which to decide variables. 
+
+If it were to choose to decide first \clause{P_1}, it would generate \clause{P_{n-1}} and \clause{P_{n}} by n-1 unit propagation, and hence also \clause{\lnot pta} and \clause{\lnot pea} with 2 more unit propagations. It could then learn any of \clause{\lnot P_1 \lor P_k} for $1<k\leq n$ and also \clause{\lnot P_1 \lor \lnot pta} and \clause{\lnot P_1 \lor \lnot pea}.
+Backtracking and deciding \clause{\lnot P_1} we get \clause{\lnot pta} immediately using one unit propagation and then we get the unit propagation chain \clause{\lnot P_0}, \clause{\lnot pe}, \clause{\lnot pea}. So a good choice of decision variables (and to some extent order of unit propagation) can make a CDCL solver generate the optimal proof. However, if $pe$ and $pea$ were to be added after $pta$ was proven, the CDCL solver would not have any useful lemmas unless it chose to learn specifically \clause{\lnot P_1 \lor P_{n-1}}, for which there is no plausible reason.
+
+If the prover were to choose to decide first on \variable{c}, in most cases it would learn the clause \clause{\lnot P_1 \lor P_n} and keep it while backtracking to decide \variable{\lnot c}, but this clause will not be useful in that case, and so the same n-1 resolutions would need to be performed again. Deciding first \variable{\lnot c} would not change the situation. This, however, would be robust to program extension.
+
+\noindent
+An IC3 style solver will generate the model $\{ \clause{P_1}, \clause{\lnot P_n} \}$ at $pta$ (assuming scoping), which will be rejected at $pb$ by learning (at the price of n-1 resolution equivalents) the clause $\clause{\lnot P_1 \lor P_n}$ , which cannot be generalized further.
+The same process will happen when trying to refute $pea$, producing  the clause $\clause{\lnot P_0 \lor P_{n-1}}$ at $pb$, but at the price of performing again the equivalent of n-1 resolutions.
+
+\noindent
+
+If we were to follow the SOS strategy, at $pta$ the goal clauses are $\{ \clause{P_1}, \clause{\lnot P_n} \}$, both of which do not exist in the predecessor, and hence the only resolutions permitted are by importing \\
+$\{ \clause{\lnot P_1 \lor P_2}, \clause{\lnot P_{n-1} \lor P_n} \}$ to $pta$ and following the resolution chain to get the empty clause - the resolution chains from \clause{P_1} and \clause{P_n} can meet at any point in the middle, or exactly the middle if we order unit propagation by proof depth. No resolutions are performed in $pb$ and no lemmas learned. This assumes that \clause{P_2}..\clause{P_{n-1}} are in scope in $pta$, which we would want to avoid if possible (they are not alive there).
+
+Our first attempt to improve on this would be as follows: when a clause \clause{A \lor C} is marked as a goal clause in a given node, when querying the predecessors of the node for resolvable clauses containing \clause{\lnot A}, we would also mark the clauses found as goal clauses, but enable resolution on these clauses except for the queried literal.
+
+In our case this might help generate the desired lemma at $pb$: we would perform resolutions starting from \clause{\lor P_1 \lor P_2}, only allowing the literal \clause{P_2} to resolve, we generate all the clauses \clause{\lnot P_1 \lor P_k} for $1<k<n$ (and potentially the analogous ones from the other direction). Now we can use scoping to filter which of these consequences is propagated to $pta$ - so only \clause{\lnot P_1 \lor P_n} qualifies with strict scoping (scope is live variables) and is sufficient to get a refutation. The chain of resolutions at $pb$ satisfies the clause width restriction, but not the proof depth restriction.
+
+When the verifier gets to $pea$, it would query $pe$ for clauses containing \clause{P_{n-1}}, which would in turn query $pb$ and enable resolution for the clauses \clause{\lnot P_1 \lor P_{n-1}} and \clause{\lnot P_{n-2} \lor P_{n-1}}, the first of which would generate, in one step, \clause{\lnot P_0 \lor P_{n-1}} - this is the only consequence in scope for $pe$, which would propagate it as \clause{P_{n-1}} - allowing $pea$ to be refuted.
+
+There are many details missing in the above description, of course. 
+
+For example, why would $pb$ be allowed n-1 resolutions for \{ \clause{\lnot P_1 \lor P_2} but would propagate \clause{\lnot P_0 \lor P_{n-1}} immediately although there are more resolutions enabled. This could be explained by propagating clauses eagerly, before performing further resolutions - i.e. at each step saturating resolution and propagation for some proof depth, until refutation.
+
+Another question would be whether $pb$ would be queried for clauses containing \clause{P_n} before it propagates the lemma forward - in which case it might generate n-1 more (unneeded) lemmas - this could be resolved with a variant of ordered resolution:
+We define a total order on all literals, which conforms to the partial order defined by the variable scope and topological order on the CFG nodes - that is, a variable would be larger in the order than any variable it outlives (this requires some more detail when a variable is ``born'' or ``dies'' on both sides of a branch), and resolution is only allowed on the maximal literal in each clause.
+This is not enough for completeness as two clauses that may need to resolve (and share a (negated) maximal literal), contain literals that are nowhere together in scope - e.g.:
+
+\begin{lstlisting}[mathescape]
+$pb$: //scope : A,B,C
+assume $\clause{A \lor B \lor C}$
+assume $\clause{\lnot A \lor C}$
+if (c0)
+	$pt0$: //scope : A,B,C
+	assume $\clause{      A \lor \lnot B}$
+	assume $\clause{\lnot A \lor \lnot B}$
+	if (c1)
+		$pt1$: 
+			$pt1a$: //scope : B,C
+			assert $\clause{\lnot B \land C}$ //negated $\clause{B \lor \lnot C}$
+\end{lstlisting}
+
+We now underline the literals enabled for resolution in each clause.\\
+The proving process will proceed as follows:
+
+\noindent
+$pt1a$: query $pt0$ for \clause{C} maximal in \clause{B \lor \underline{\lnot C}}\\
+$~~pt0$: mark \clause{C} as non blocking maximal, query $pb$ for \clause{C} \\
+$~~~~pb$: mark \clause{C} as non blocking maximal, no resolutions possible, \\
+$~~~~~~$:return $\{\clause{A \lor \underline{B} \lor \underline{C}}, \clause{\underline{\lnot A} \lor \underline{C}}\}$\\
+$~~pt0$: add returned clauses, resolve \\
+$~~~~~~~r1:$ $\clause{A \lor \underline{B} \lor \underline{C}} \otimes \clause{A \lor \underline{\lnot B}} = \clause{\underline{A} \lor \underline{C}}$ \\
+$~~~~~~~r2:$ $\clause{\underline{\lnot A} \lor \underline{C}} \otimes \clause{\underline{A} \lor \underline{C}} = \clause{\underline{C}}$ \\
+$~~~~~~~$	return $\{\clause{\underline{C}}\}$\\
+$pt1a$: add returned clauses, resolve \\
+$~~~~~~~r3:$: $\clause{B \lor \underline{\lnot C}} \otimes \clause{\underline{C}} = \clause{B}$ \\
+$~~~~~~~$query $pt0$ for \clause{\underline{\lnot B}} maximal in \clause{B}\\
+$~~pt0$: mark \clause{\lnot B} as non blocking maximal, query $pb$ for \clause{\lnot B} \\
+$~~~~pb$: mark \clause{\lnot B} as non blocking maximal, no resolutions possible \\
+$~~~~~~~$return $\{\}$\\
+$~~pt0$: resolve:\\
+$~~~~~~~r4:$ $\clause{\underline{A} \lor \underline{\lnot B}} \otimes \clause{\underline{\lnot A} \lor \underline{\lnot B}} = \clause{\lnot B}$ \\
+$~~~~~~~r5:$ $\clause{\underline{\lnot B}} \otimes \clause{A \lor \underline{B} \lor \underline{C}} = \clause{\underline{A}\lor \underline{C}}$ //superfluous\\
+$~~~~~~~$return $\{\clause{\underline{\lnot B}}\}$\\
+$pt1a$: add returned clauses, resolve \\
+$~~~~~~~r6:$ $\clause{\underline{B}} \otimes \clause{\underline{\lnot B}} = \square$
+	
+We can refine this further by, rather than just marking e.g. \clause{C} as non blocking maximal because it is queried from \clause{B \lor \underline{\lnot C}}, we would mark instead that literals \clause{B} and greater are not blocked by \clause{C}, which would prevent, for example, \clause{\lnot A} from being enabled in \clause{\lnot A \lor \underline{C}}, until also \clause{\lnot B} is marked as non-blocking maximal, which is not bounded from below as it is a unit clause.
+
+With this modified ordered resolution we could still perform non-useful resolutions, but their number is much reduced.
+If we want to keep SOS as well, we must now ensure that all internal nodes are saturated with respect to resolution. 
+We can approximate this by marking a clause as goal if it was blocked from resolving with another goal clause because of the ordering.
+For example, returning to the first example, if $n=10$ and $...<\clause{P_8}<\clause{P_2}<\clause{P_7}<\clause{P_3}<...$, 
+then without propagating the goal marking we would not be able to resolve 
+\clause{\underline{\lnot P_8} \lor \underline{P_{10}}} with \clause{\underline{\lnot P_7} \lor P_8}, and also not 
+\clause{\underline{\lnot P_1} \lor \underline{P_2} } with \clause{\lnot P_2 \lor \underline{P_3}}.
+
+
+
+\subsubsection{Scoping}
+We want to use the structure of the program to restrict the search space for a proof for the program, without losing completeness, or efficiency (size of smallest proof and time to reach it).
+One way to do this is to use the scoping of variables inherent in the program - each variable is only used in some parts of the program, for each variable we choose a contiguous sub-graph of the CFG that includes all its uses (the scope of the variable) and only allow deductions on the variable inside this scope.
+We also restrict the proof further by ensuring that any deduction performed between clauses (e.g. resolution) is only performed where all clauses are in scope, and, for some deductions, only at the earliest CFG node where all premises are known to hold.
+This raises a completeness question - does this reduction of the search space still allow us to refute all infeasible nodes? We will show it does - first for Boolean programs and later for larger fragments.
+The second question is that of complexity - is the smallest stratified proof always not significantly larger than the smallest \emph{flat} proof (of the standard VCG) - unfortunately the answer here is no, we will show examples and discuss the consequences and possible remedies.
+
+For a Boolean program this means that a resolution on a variable is only allowed where it is in scope.
+We enforce a further invariant that two clauses can only be resolved if they are not both imported (for a join point, from all predecessors) -  so a resolution will happen at the earliest program point where it is enabled.
+We further enforce that the safe resolutions always have priority, and so a clause that is imported to node \node{n} has been saturated with safe resolutions with respect to \precond{n}, and so at node \node{n} we only need to consider simplifying the imported clause with \clauses{n}.
+There is not always an earliest node in which two clauses appear - for example when both clauses are assumed on both sides of a branch, but not at the branch point - so there are two earliest points at which they can be resolved, or at the join point - we will discuss this case later, but in general it does not cause a complexity problem.
+
+When a node queries its predecessors for clauses containing a literal \clause{A}, there is no need to query any predecessors in which \clause{A} is not in scope. This means that resolution on \clause{A} can only happen where \clause{A} is in scope. This can save us some queries and make reasoning more local. Completeness is not affected by this.
+
+The completeness argument for scoping (without restricting where deductions can occur) comes from the interpolation property of the logic (in this section - propositional logic).
+
+There is an inherent complexity problem with interpolation complexity - consider the following program (thanks to Arie Gurfinkel):
+\begin{lstlisting}[mathescape]
+$l_b$:
+assume $\clause{\lnot A_1 \lor B_1}$
+assume $\clause{\lnot A_1 \lor C_1}$
+...
+assume $\clause{\lnot A_n \lor B_n}$
+assume $\clause{\lnot A_n \lor C_n}$
+
+assume $\clause{A_1 \lor ... \lor A_n}$
+//Here ends the scope for $\clause{A_1}..\clause{A_n}$
+if (c0)
+	$l_t$:
+	assume $\clause{\lnot B_1 \lor \lnot C_1}$
+	...
+	assume $\clause{\lnot B_{n-1} \lor \lnot C_{n-1}}$
+	
+	assert $\clause{B_n \land C_n}$ //negated CNF: $\clause{\lnot B_n \lor \lnot C_n}$
+else
+	$l_e$:
+	...
+$l_j$:
+assert ...
+\end{lstlisting}
+
+Here the atoms \clause{A_1} to \clause{A_n} are not in scope in $l_t$. If we import all consequences of \clauses{l_b} that are in scope in $l_t$  we get a set of clauses exponential in the size of the program (number of CNF clauses). 
+Note that this would happen also if we were to force all resolutions on the \clause{A_i} clauses to happen at $l_b$.
+So a minimal "flat" proof would be linear in the size of the input while a "scoped" proof would be exponential.
+We can get a linear proof by either allowing the clauses \clause{A_i} in the scope of $l_t$, or eliminating them by existential quantification and then Skolemizing to get new variables instead, which might be useful for loop unrolling.
+
+This example should show that removing symbols from scope when they are not anymore "alive" is not always desirable. 
+There is a similar exponential explosion stemming from ground equalities when looking at ground-FOL+equality (GFOLE). 
+Our solution for this, which does not cover the loop-unrolling case, will be discussed in the section about GFOLE, and is based on the idea that if a constant that is not alive anymore is known to be equal to a term over constants that are alive, it can be dropped and replaced by this term without affecting the proof size (except for the size of the term, but we handle that by sharing sub-terms).
+
+\newpage
+\subsubsection{Radius}
+
+\subsubsection*{Intuition}
+Intuitively, the proofs of computer programs are often large (many clauses) and shallow (proof DAG depth, ground term depth) \cite{}, so we want a proof search more akin to BFS than to DFS. The exception here is the depth of the CFG, where, for example, propagating the value of a variable that is assigned only at the beginning of the program to the end of the program (e.g. by the rule of conjunction/frame rule) would require a deep proof DAG for a flat VC proof, but would be shallow at each node in our case.
+
+We denote the original problem (set of CNF clauses) by $\mathrm{S}$. We will first consider a flat proof and later extend these ideas to CFG proofs.\\
+We try to direct the proof search priorities by using the following criteria:
+\begin{itemize}
+	\item Proof depth - we search for proofs where the depth of the proof DAG is smaller before looking for deeper proofs
+	\item Clause width - we search for proofs with narrower clauses (less literals) before proofs with wider clauses
+	\item Goal directed - we search for infeasibility proofs starting at goal nodes (assertions) and going backwards until we reach the root (or any order we choose) - this means that we bias the proof search to programs where most program locations are feasible. We can also prioritize branch conditions, or any other subset of the statements
+\end{itemize}
+(For FOLE we will have additional criteria).
+
+We make an exception for strictly simplifying derivations - for example, applying unit propagation is always enabled and not limited by clause width or proof depth, and the resolvent clauses are not considered deeper than the resolution premises.
+
+Our objective is an incremental algorithm that lets us search for a proof in stages so that:
+\begin{itemize}
+	\item Each stage has a well defined worst case time bound (less than exponential in the size of the original problem)
+	\item Each stage uses the results of the previous one (with little duplication), but can also run directly on the original problem 
+	\item Each stage would find all refutations in a well defined logic fragment - regardless of the previous stages preformed - so an unknown result tells us there is no refutation in the fragment for any assertion not yet refuted
+	\item If there is a refutation, it would be found in a finite number of stages (always finite for PL)
+	\item The performance penalty for finding a proof in stages vs finding it in one stage should be minimal
+\end{itemize}
+
+In order to satisfy these requirements we define two functions:
+\begin{itemize}
+	\item Maximum proof depth allowed in stage $\mathrm{i}$: $\mathrm{d}_\mathrm{max}(\mathrm{i})$
+	\item Maximum clause width allowed in stage $\mathrm{i}$: $\mathrm{w}_\mathrm{max}(\mathrm{i})$
+\end{itemize}
+
+In order to be goal oriented, we adopt a variant of the SOS (Set of Supports) strategy - we designate a subset of the clauses $\mathrm{G}\subseteq\mathrm{S}$ as goal clauses and only look for proofs were all leaf derivations (resolution between two leaf nodes) include at least one goal clause. 
+This is complete under the condition that $\mathrm{S}\setminus\mathrm{G}$ is consistent. 
+However, for ordered resolution (or the standard superposition with ordering) this is not complete unless $\mathrm{S}\setminus\mathrm{G}$ is saturated with respect to the calculus.
+
+If an assertion is reachable and holds, the pre-condition for the assertion will be consistent but not the post-condition, so all non-assertion clauses will be consistent. 
+As a first approximation then, we can start at stage 0 with $\mathrm{G}$ including only assertion clauses (and potentially branch conditions), and define a threshold stage $\mathrm{i}_\mathrm{goal}$ after which all clauses are goal clauses.
+We can refine this by gradually allowing more clauses to be designated as goal clauses, for example allowing predecessors of assertions at up to a certain step-dependent distance from the assertion to be goals.
+Note that a program with only DSA-assignments and non-deterministic branches is always consistent, so these clauses need never be designated as goal clauses.
+
+\subsubsection*{Complexity}
+\noindent
+We will discuss complexity in greater depth later, here we will just mention the main points.
+We note that the complexity of a proof search algorithm cannot be summed up into one function (asymptotic worst case run time), 
+in addition we will also discuss the size of the search space, the size (number of clauses / literals) of the smallest proof the algorithm can find vs the smallest proof that exists, the depth of the shallowest proof and the interplay between depth and size.
+Another parameter is the width of the proof, meaning the width of the widest clause in the proof, and for first order logic we can also talk about (ground) term depth and the weight (total number of symbols) of terms, clauses and proofs.
+As it is not uncommon to have algorithms with a sub-optimal worse case behaviour but good performance in practice, we will try to characterize some classes of program VCs for which our algorithm can give good performance.
+It is often the case that an algorithm that guarantees finding the smallest proof has a larger worst case complexity than one that is guaranteed to find a proof, and often a worse common behaviour ~\cite{}. However, a search algorithm that cannot find small proofs at all is also undesirable.\\
+The basic properties of our problem are such: PL is in NP and so the best known algorithms are all in EXPTIME, for resolution based methods (including DPLL/CDCL) the worst case size of a PL proof is exponential (e.g. the pigeonhole principle (PHP)). GFOL (ground first order logic without equality) is polynomially reducible to PL and so also in NP. 
+FOL, GFOLE and FOLE are all in RE, so the best we can hope for is a semi-decision procedure.
+
+\noindent
+For the set $\mathrm{S}$ of $\mathrm{c}=\|\mathrm{S}\|$ CNF clauses, we can cap the number of resolvents of depth 1 by $\mathrm{O}(\mathrm{c}^2)$ and hence the number of resolvents of depth n by $\mathrm{O}(\mathrm{c}^{2^\mathrm{n}})$ - not necessarily a tight bound.\\
+\noindent
+If the input $\mathrm{S}$ has in total $\mathrm{a}$ atoms in the vocabulary, the total number of clauses we can get in the resolution closure of $S$ is $\bigO{3^\mathrm{a}}$ (each atom can appear positively, negatively or not at all) - again, the bound could be lower if we take into account i.e. simplifications. 
+The maximal number of clauses of size exactly $\mathrm{n}$ (if $\mathrm{n}<\mathrm{a}$) is $2^n\binom{a}{n}$ 
+(we can choose any $\mathrm{n}$ atoms out of $\mathrm{a}$, and each one can appear in one of two polarities), 
+so the number of clauses of size less than or equal to $\mathrm{n}$ is $\sum\limits_{i=0}^{n}2^i\binom{a}{i}$, 
+which is $\bigO{\mathrm{a}^\mathrm{n}}$ - not tightly.\\
+\noindent
+We denote the width of a clause \clause{C} by $\mathrm{w}(C)$ and the width of the widest clause in $\mathrm{S}$ as $\mathrm{w} \triangleq \mathrm{w}(\mathrm{S}) \triangleq \mathrm{max}_{\clause{C} \in \mathrm{S}} \mathrm{w}(\clause{C})$.
+The total number of literal occurrences in $\mathrm{S}$ as $\mathrm{l} \triangleq \mathrm{\#lit}(\mathrm{S}) \triangleq \Sigma_{\clause{C} \in \mathrm{S}} \mathrm{w}(C)$.
+
+\noindent
+So our complexity parameters are $\mathrm{c}$, $\mathrm{l}$ and $\mathrm{a}$ and $\mathrm{w}$, where the actual size of the input is linear in $\mathrm{l}$.\\
+We know that:
+\begin{itemize}
+	\item $\mathrm{c} \leq 3^\mathrm{a}$ - as explained above
+	\item $\mathrm{a} \leq \mathrm{l}/2$ as each atom must appear in at least two clauses
+	\item $\mathrm{l} \leq \mathrm{c} \times \mathrm{w}$
+	\item $\mathrm{c} \leq \mathrm{l}$
+	\item $\mathrm{w} \leq \mathrm{a}$
+\end{itemize}
+
+We can always reduce $\mathrm{w}$ to 3 at the price of only a linear (in $\mathrm{l}$) increase in $\mathrm{c},\mathrm{a}$ and $\mathrm{l}$ (3-CNF), but this might affect the depth or size (number of clauses) of the smallest proof and loses the original "form" of the problem, so we avoid this.
+
+For each stage, the worst case running time is limited by polynomials in $\mathrm{l}$, although the degree depends on $\mathrm{i}$.
+
+\subsubsection*{Implementation}
+We adopt the standard technique of maintaining a set of inter-saturated (with respect to resolution) clauses $\mathrm{O}$, a set of not yet saturated clauses $\mathrm{N}$ and gradually saturating clauses from $\mathrm{N}$ and transferring them to $\mathrm{O}$ - saturating a clause $\clause{C}$ amounts to resolving it with all clauses from $\mathrm{O}$ that it can be resolved with (under the stage restrictions), adding the (new) resolvents to $\mathrm{N}$, and then moving $\clause{C}$ to $\mathrm{O}$.\\
+\noindent
+In order to enforce the stage proof depth restrictions, we annotate each clause \clause{C} with its depth $\mathrm{d}(\mathrm{C})$ (all clauses in $\mathrm{S}$ have depth 0) and saturation depth $\mathrm{d_s}(\mathrm{C})$.
+The saturation depth records the highest depth at which \clause{C} has been saturated - so that we can reduce duplication of work between stages.
+
+\noindent
+At stage $\mathrm{i}$ with the depth limit $\mathrm{d_i}$, we only allow resolution between the clauses \clause{C} and \clause{D} if:
+\begin{itemize}
+	\item $\mathrm{d_s}(\mathrm{C})<\mathrm{d_i}$ or $\mathrm{d_s}(\mathrm{D})<\mathrm{d_i}$ - otherwise the resolution has already been performed
+	\item $\mathrm{max}(\mathrm{d}(\clause{C}),\mathrm{d}(\clause{D}))<\mathrm{d_i}$  - ensure the result is not too deep
+\end{itemize}
+
+The depth of a resolvent $\mathrm{C}_\mathrm{r}$ of $\mathrm{C}_1$ and $\mathrm{C}_2$ is $\mathrm{d}(\mathrm{C}_\mathrm{r}) = \mathrm{max}(\mathrm{d}(\mathrm{C}_1),\mathrm{d}(\mathrm{C}_2))$. 
+If the resolvent is already in $\mathrm{N}$ or $\mathrm{O}$, the depth would be the minimum between the old and new depth - if the new depth is less than the old depth, this would move the resolvent from $\mathrm{O}$ to $\mathrm{N}$.
+After resolving \clause{C} with all such potential clauses, we set $\mathrm{d_s}(\mathrm{C}) := \mathrm{d_i}$ 
+
+\noindent
+We Denote the resolvent of \clause{C} and \clause{D} as $\clause{C} \otimes \clause{CD}$. \\
+We note that $\textrm{max}(w(\clause{C_1}),w(\clause{C_2}))-1 \leq w(\clause{C_1} \otimes \clause{C_2}) \leq w(\clause{C_1})+w(\clause{C_2})-2$.\\
+In order to enforce the maximum width restriction, we have identified two major options:
+\begin{itemize}
+	\item Allow only resolutions that \emph{definitely} produce resolvents that are not too wide - using the formula above
+	\item Attempt all resolutions that \emph{might} produce resolvents that are not too wide, keep all valid resolvents and either
+		\subitem Discard any resolvent that is too wide - this would mean some resolutions will have to be attempted again as we increase the width limit
+		\subitem Keep the too wide resolvents but do not allow them to participate in any resolution/import
+		\subitem Mark each pair with a discarded resolvent, and reattempt the resolution after the width limit has been increased
+\end{itemize}
+
+At first glance it might seem that the first approach is more promising as it has less duplication of work, but we have experimented with the first option of the second approach, and it seems that it can allow many more narrow proofs, while the price for the duplication of work is often not very heavy.
+
+For first order logic, both GFOLE and FOLE, we would extend this idea of radius to \\
+(ground)terms and allow only gradually clauses that contain terms that are larger or "further" away from the original problem terms.
+
+\subsubsection{Key nodes}
+Even with only safe resolutions and radius limitations, we are facing a potential complexity problem:\\
+Remember that the predecessor \node{p} of a sequential node \node{n} must have at least 2 successors (otherwise \node{p} would be merged with \node{n}) - so either \node{n} is a leaf assertion node or \node{p} is a branch point.
+Now assume we have to following program:
+\begin{lstlisting}[mathescape]
+$p_{b0}$: 
+assume $\clause{A \lor B \lor C}$
+if (c0)
+	$p_{b0t}$:assume $\clause{\lnot A}$
+else
+	$p_{b0f}$:assume $\clause{\lnot B}$
+$p_{b1}$: 
+if (c1)
+	$p_{b1t}$:assume $\clause{\lnot A}$
+else
+	$p_{b1f}$:assume $\clause{\lnot B}$
+...
+$p_{bn}$: 
+if (cn)
+	$p_{bnt}$:assume $\clause{\lnot A}$
+else
+	$p_{bnf}$:assume $\clause{\lnot B}$
+$p_{jn}$: 
+$p_{jna}$:assert $\clause{A \lor B \lor C}$ 
+\end{lstlisting}
+
+Here we will cache versions of the clause \clause{A \lor B \lor C} in each node in the program - as \clause{B \lor C} in the then branches, \clause{A \lor C} in the else branch and \clause{A \lor B \lor C}  at the join points.
+Without losing completeness we could discard these clauses everywhere except for $p_{jn}$, even if the program continues after the assertion, as long as we make sure we saturate them before we discard them - in this example saturation would not produce any further clauses.
+
+In general, in a given node, a clause that has been saturated and imported by all successors can be discarded.
+If we do not do that, the complexity of our algorithm might become $\|nodes\| \times \|res(clauses)\|$ where $res(clauses)$ is the resolution closure of clauses in the program - this is not optimal and potentially much larger than a "flat" proof.
+So essentially each node is trying to produce consequences "on demand", potentially generating all consequences eventually, but we can discard consequences that are known to all our successors and cannot be used to generate new consequences (not for leaf nodes!).
+Another slight optimization here might be to allow each $p_{bn}$ to import clauses directly from $p_{bn-1}$ - everything that holds at the branch point also holds at the join. However,as the vocabulary (DSA versions) of variables is not necessarily shared between the branch and join points, this does not always work.
+
+One could imagine that in the above program we would only want to perform resolutions at the nodes $p_{jn}$ and $p_{jna}$ - the node $p_{jn}$ could be termed a \emph{key node} as there is no transitive successor of it that can reach all the assertions reachable from it (it is not covered by a later node that could potentially perform all resolutions).
+So a possible tactic would be to allow only key nodes to perform resolutions and allow other nodes only to import clauses. This in a sense \emph{flattens} a sub-CFG with one entry point, one exit point and no assertions.
+This can be a disadvantage as it loses the explicit structure of the CFG which could be used to control case splits, but could in some cases reduce a lot of redundancy.
+We have experimented with this tactic, and also with a less radical tactic where we allowed only a subset of the resolutions in non-key nodes.
+
+Now consider the following scenario:\\
+We have another assertion after $p_{jna}$, that includes the literal \clause{B} (in the CFG it is a successor of $p_{jn}$).
+We verified the assertion $p_{jna}$ by importing all clauses that contain the literal \clause{A}, saturated them and then discarded them from all but $p_{b0}$ and $p_{jn}$.
+Now if the second assertion were to require clauses for the literal \clause{A}, it is marked as cached in $p_{jn}$ and so we can import the relevant clause (\clause{A \lor B \lor C})  immediately without traversing the CFG.
+However, if we require the literal \clause{B}, it is not cached and we have to go backwards in the CFG to the root, reimport all the clauses we have discarded and recalculate the unit propagation and resolution - highly inefficient.
+
+This suggests that we should refrain from reimporting clauses - each node should remember which clauses it has imported.
+It is not sufficient to check if we already have the exact clause at the importing node as it might have been simplified or subsumed with the above safe resolutions.
+There is the added complication that a clause may have been simplified or subsumed in the predecessor node \emph{after} it has been imported, in which case we either re-import it or the predecessor must inform its successors that a previously imported clause has been simplified, or the importing node has to re-perform the simplifications itself - either way it is a lot of bookkeeping.
+
+\subsection{Collected Definitions}
+\subsection*{CFG}
+A CFG $\mathrm{G}$ is a directed acyclic graph. We denote the nodes as $\mathrm{nodes}(\mathrm{G})$ and the edges as $\mathrm{edges}(\mathrm{G})$.\\
+The in and outgoing edges of a node \node{n} are \succs{n} and \preds{n}, respectively.\\
+The CFG has one \node{root} node.
+The goal nodes, $\mathrm{goals}(\mathrm{G})$ are a subset of the leaves of the DAG - $\mathrm{leaves}(\mathrm{G})$.
+A join is a node with more than one predecessor, the set of all joins is $\joins(\mathrm{G})$.\\
+A branch is a node with more than one successor, the set of all branches which have a join is $\branches(\mathrm{G})$.\\
+We will often omit the $\mathrm{G}$ when it is obvious from the context.
+A sequential node has one predecessor.
+
+Unless otherwise noted, we are dealing with CFGs that satisfy the following properties:
+\begin{itemize}
+	\item In and out degree is less than or equal to 2
+	\item $\mathrm{goals}(\mathrm{G})=\mathrm{leaves}(\mathrm{G})$
+	\item Well branching - formalized above - each branch either has one leaf direct descendant, or a full and only join, and all joined branches are joined in reverse order to branching
+\end{itemize}
+
+For a well branching program, for each branch \node{b}:
+\begin{itemize}
+	\item The join $\join{b}=\node{j_b}$ and its inverse $\branch{j_b}=\node{b}$
+	\item The true resp. false branch targets \node{b_t}, \node{b_f}
+	\item The the set of nodes on the true resp. false side that reach the join as $\tns{b}=\succst{b_t} \cap \predsto{j_b}$ resp. $\fns{b}=\succst{b_f} \cap \predsto{j_b}$.
+	\item The true resp. false join nodes $\node{b_{jt}} \in \preds{j_b} \cap \tns{b}$ resp. $\node{b_{jf}} \in \preds{j_b} \cap \fns{b}$
+\end{itemize}
+
+\subsection*{Logic}
+The logics we are dealing with are: propositional logic (PL), unit ground first order logic with equality (UGFOLE), ground first order logic with equality (GFOLE) and first order logic with equality (FOLE)
+
+\subsection*{Clauses}
+The input to the algorithm is a CFG as above, where each node \node{n} is assigned a set of clauses denoted as \clauses{\node{n}}.\\
+The pre and post conditions are defined as follows:\\
+$\precond{n} \triangleq ((\land_{\node{p} \in \predsto{n}} \land_{\clause{c} \in \clauses{p}} (\rpc{p}{n} \rightarrow \clause{c})) \land \pc{n})$\\
+$\postcond{n} \triangleq (\precond{n} \land \land_{\clause{c} \in \clauses{n}} \clause{c} )$
+

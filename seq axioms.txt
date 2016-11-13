@@ -1,0 +1,70 @@
+Search "Seq@Equal$Int$" (8 hits in 1 file)
+  C:\Users\uri\Desktop\Slicer\trunk\tmp.txt (8 hits)
+!(@sk_37(v0,v1)<0),Seq@Length$Int$(v1) != Seq@Length$Int$(v0),Seq@Equal$Int$(v0,v1)
+Seq@Length$Int$(v0) != Seq@Length$Int$(v1),(@sk_37(v1,v0)<Seq@Length$Int$(v1)),Seq@Equal$Int$(v1,v0)
+T != @bf_44(v0,v1),Seq@Equal$Int$(v0,v1)
+Seq@Index$Int$(v0,@sk_37(v1,v0)) != Seq@Index$Int$(v1,@sk_37(v1,v0)),Seq@Length$Int$(v0) != Seq@Length$Int$(v1),Seq@Equal$Int$(v1,v0)
+!Seq@Equal$Int$(v0,v1),Seq@Length$Int$(v1) = Seq@Length$Int$(v0)
+!(v0<Seq@Length$Int$(v1)),!Seq@Equal$Int$(v1,v2),(v0<0),Seq@Index$Int$(v2,v0) = Seq@Index$Int$(v1,v0)
+!Seq@Equal$Int$(v0,v1),T = @bf_44(v0,v1)
+!Seq@Equal$Int$(v0,v1),v1 = v0
+Search "Seq@Take$Int$" (11 hits in 1 file)
+  C:\Users\uri\Desktop\Slicer\trunk\tmp.txt (11 hits)
+{!(i_$3_$1_2<n_$5_$0_9),!(i_$3_$1_2<Seq@Length$Int$(s_$5_$0_9)),(i_$3_$1_2<0),Seq@Contains$Int$(Seq@Take$Int$(s_$5_$0_9,n_$5_$0_9),Seq@Index$Int$(s_$5_$0_9,i_$3_$1_2))}}
+{!Seq@Contains$Int$(Seq@Take$Int$(s_$5_$0_7,n_$5_$0_7),x_$4_$0_7),(@sk_33(x_$4_$0_7,s_$5_$0_7,n_$5_$0_7)<Seq@Length$Int$(s_$5_$0_7))}}
+{!Seq@Contains$Int$(Seq@Take$Int$(s_$5_$0_8,n_$5_$0_8),x_$4_$0_8),(@sk_33(x_$4_$0_8,s_$5_$0_8,n_$5_$0_8)<n_$5_$0_8)}}
+	Line 292: +		[291]	{{!Seq@Contains$Int$(Seq@Take$Int$(v_$98_4,v_$99_4),v_$100_4),@bf_25 = @bf_40(v_$98_4,v_$99_4,v_$100_4)}}
+	Line 389: +		[388]	{{(n_$8_$0_3<0),(Seq@Length$Int$(s_$7_$0_3)<n_$8_$0_3),n_$8_$0_3 = Seq@Length$Int$(Seq@Take$Int$(s_$7_$0_3,n_$8_$0_3))}}
+	Line 454: +		[453]	{{!@bf_25 = @bf_40(v_$98_3,v_$99_3,v_$100_3),Seq@Contains$Int$(Seq@Take$Int$(v_$98_3,v_$99_3),v_$100_3)}}
+	Line 554: +		[553]	{{!(@sk_33(x_$4_$0_6,s_$5_$0_6,n_$5_$0_6)<0),!Seq@Contains$Int$(Seq@Take$Int$(s_$5_$0_6,n_$5_$0_6),x_$4_$0_6)}}
+	Line 569: +		[568]	{{!(Seq@Length$Int$(s_$7_$0_4)<n_$8_$0_4),(n_$8_$0_4<0),Seq@Length$Int$(s_$7_$0_4) = Seq@Length$Int$(Seq@Take$Int$(s_$7_$0_4,n_$8_$0_4))}}
+	Line 583: +		[582]	{{!(j_$2_$0_2<n_$9_$0_2),!(j_$2_$0_2<Seq@Length$Int$(s_$8_$0_2)),(j_$2_$0_2<0),Seq@Index$Int$(s_$8_$0_2,j_$2_$0_2) = Seq@Index$Int$(Seq@Take$Int$(s_$8_$0_2,n_$9_$0_2),j_$2_$0_2)}}
+	Line 641: +		[640]	{{!Seq@Contains$Int$(Seq@Take$Int$(s_$5_$0_10,n_$5_$0_10),x_$4_$0_10),x_$4_$0_10 = Seq@Index$Int$(s_$5_$0_10,@sk_33(x_$4_$0_10,s_$5_$0_10,n_$5_$0_10))}}
+	Line 648: +		[647]	{{s_$11_$0_4 = Seq@Take$Int$(Seq@Append$Int$(s_$11_$0_4,t_$1_$0_4),Seq@Length$Int$(s_$11_$0_4))}}
+Search "Seq@Append$Int$" (10 hits in 1 file)
+  C:\Users\uri\Desktop\Slicer\trunk\tmp.txt (10 hits)
+	Line 301: +		[300]	{{!Seq@Contains$Int$(Seq@Append$Int$(v_$82_4,v_$83_4),v_$84_4),@bf_25 = @bf_36(v_$82_4,v_$83_4,v_$84_4)}}
+	Line 359: +		[358]	{{(n_$3_$0_3<Seq@Length$Int$(s0_$0_$0_3)),Seq@Index$Int$(s1_$0_$0_3,(n_$3_$0_3+(-1*Seq@Length$Int$(s0_$0_$0_3)))) = Seq@Index$Int$(Seq@Append$Int$(s0_$0_$0_3,s1_$0_$0_3),n_$3_$0_3)}}
+	Line 517: +		[516]	{{!Seq@Contains$Int$(s0_$1_$0_4,x_$2_$0_4),Seq@Contains$Int$(Seq@Append$Int$(s0_$1_$0_4,s1_$1_$0_4),x_$2_$0_4)}}
+	Line 518: +		[517]	{{!Seq@Contains$Int$(s1_$1_$0_5,x_$2_$0_5),Seq@Contains$Int$(Seq@Append$Int$(s0_$1_$0_5,s1_$1_$0_5),x_$2_$0_5)}}
+	Line 526: +		[525]	{{!Seq@Contains$Int$(Seq@Append$Int$(s0_$1_$0_6,s1_$1_$0_6),x_$2_$0_6),Seq@Contains$Int$(s0_$1_$0_6,x_$2_$0_6),Seq@Contains$Int$(s1_$1_$0_6,x_$2_$0_6)}}
+	Line 544: +		[543]	{{!(n_$3_$0_4<Seq@Length$Int$(s0_$0_$0_4)),Seq@Index$Int$(s0_$0_$0_4,n_$3_$0_4) = Seq@Index$Int$(Seq@Append$Int$(s0_$0_$0_4,s1_$0_$0_4),n_$3_$0_4)}}
+	Line 546: +		[545]	{{Seq@Length$Int$(Seq@Append$Int$(s0_$4_2,s1_$4_2)) = (Seq@Length$Int$(s0_$4_2)+Seq@Length$Int$(s1_$4_2))}}
+	Line 634: +		[633]	{{t_$1_$0_3 = Seq@Drop$Int$(Seq@Append$Int$(s_$11_$0_3,t_$1_$0_3),Seq@Length$Int$(s_$11_$0_3))}}
+	Line 636: +		[635]	{{!@bf_25 = @bf_36(v_$82_3,v_$83_3,v_$84_3),Seq@Contains$Int$(Seq@Append$Int$(v_$82_3,v_$83_3),v_$84_3)}}
+	Line 648: +		[647]	{{s_$11_$0_4 = Seq@Take$Int$(Seq@Append$Int$(s_$11_$0_4,t_$1_$0_4),Seq@Length$Int$(s_$11_$0_4))}}
+	
+Search "Seq@Empty$Int$" (1 hit in 1 file)
+  C:\Users\uri\Desktop\Slicer\trunk\tmp.txt (1 hit)
+	Line 196: +		[195]	{{!Seq@Length$Int$(s_$0_$0_2) = 0,s_$0_$0_2 = Seq@Empty$Int$}}		
+	
+	Line 326: +		[325]	{{t_$0_$0_2 = Seq@Index$Int$(Seq@Singleton$Int$(t_$0_$0_2),0)}}	
+	Line 466: +		[465]	{{!@bf_25 = @bf_46(v_$114_3,v_$115_3),Seq@Contains$Int$(Seq@Singleton$Int$(v_$114_3),v_$115_3)}}	
+	Line 522: +		[521]	{{Seq@Contains$Int$(Seq@Singleton$Int$(x_$6_$0_3),x_$6_$0_3)}}	
+	Line 548: +		[547]	{{Seq@Length$Int$(Seq@Singleton$Int$(t_$2_2)) = 1}}	
+	Line 581: +		[580]	{{!Seq@Contains$Int$(Seq@Singleton$Int$(v_$114_4),v_$115_4),@bf_25 = @bf_46(v_$114_4,v_$115_4)}}	
+	Line 656: +		[655]	{{!Seq@Contains$Int$(Seq@Singleton$Int$(x_$6_$0_4),y_$0_$0_4),y_$0_$0_4 = x_$6_$0_4}}		
+	
+Search "@sk_37" (4 hits in 1 file)
+  C:\Users\uri\Desktop\Slicer\trunk\tmp.txt (4 hits)
+	
+	Search "@sk_29" (3 hits in 1 file)
+  C:\Users\uri\Desktop\Slicer\trunk\tmp.txt (3 hits)
+	Line 266: +		[265]	{{!Seq@Contains$Int$(s_$3_$0_6,x_$0_$0_6),(@sk_29(x_$0_$0_6,s_$3_$0_6)<Seq@Length$Int$(s_$3_$0_6))}}	
+	Line 289: +		[288]	{{!(@sk_29(x_$0_$0_5,s_$3_$0_5)<0),!Seq@Contains$Int$(s_$3_$0_5,x_$0_$0_5)}}	
+	Line 639: +		[638]	{{!Seq@Contains$Int$(s_$3_$0_8,x_$0_$0_8),x_$0_$0_8 = Seq@Index$Int$(s_$3_$0_8,@sk_29(x_$0_$0_8,s_$3_$0_8))}}	
+	
++		[7]	{{Seq@Contains$Int$(Seq@Singleton$Int$(k@8),k@8)}}
++		[10]	{{!(@sk_37(exhaleHeap@_236@0[this,AVLTreeNode.keys],Seq@Singleton$Int$(k@8))<0)}}
++		[11]	{{!(@sk_29(k@8,Seq@Singleton$Int$(k@8))<0)}}
++		[12]	{{!(1<@sk_37(exhaleHeap@_236@0[this,AVLTreeNode.keys],Seq@Singleton$Int$(k@8)))}}
++		[13]	{{!(1<@sk_37(Seq@Singleton$Int$(k@8),exhaleHeap@_236@0[this,AVLTreeNode.keys]))}}
++		[16]	{{(@sk_37(Seq@Singleton$Int$(k@8),exhaleHeap@_236@0[this,AVLTreeNode.keys])<1)}}
++		[17]	{{(@sk_37(exhaleHeap@_236@0[this,AVLTreeNode.keys],Seq@Singleton$Int$(k@8))<1)}}
++		[22]	{{(@sk_29(k@8,Seq@Singleton$Int$(k@8))<1)}}
++		[30]	{{!(1<@sk_29(k@8,Seq@Singleton$Int$(k@8)))}}
++		[34]	{{!(@sk_37(Seq@Singleton$Int$(k@8),exhaleHeap@_236@0[this,AVLTreeNode.keys])<0)}}
++		[37]	{{!Seq@Equal$Int$(Seq@Singleton$Int$(k@8),exhaleHeap@_236@0[this,AVLTreeNode.keys])}}
++		[37]	{{!Seq@Equal$Int$(Seq@Singleton$Int$(k@8),exhaleHeap@_236@0[this,AVLTreeNode.keys])}}
++		[39]	{{!Seq@Equal$Int$(exhaleHeap@_236@0[this,AVLTreeNode.keys],Seq@Singleton$Int$(k@8))}}
++		[39]	{{!Seq@Equal$Int$(exhaleHeap@_236@0[this,AVLTreeNode.keys],Seq@Singleton$Int$(k@8))}}

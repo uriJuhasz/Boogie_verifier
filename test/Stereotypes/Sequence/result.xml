@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<boogie version="2.2.30705.1126" commandLine="C:\Boogie-CodePlex\Binaries\Boogie.exe /errorLimit:28 /z3opt:/rs:28 /enhancedErrorMessages:1 /trace /vcsMaxKeepGoingSplits:20 /vcsKeepGoingTimeout:5 /xml:result.xml ListOperations.bpl Heap.bpl Region.bpl ListStereotype.bpl ListInvariant.bpl ListImplementation.bpl">
+  <file name="ListImplementation.bpl">
+    <fileFragment name="ListOperations.bpl" />
+    <fileFragment name="Heap.bpl" />
+    <fileFragment name="Region.bpl" />
+    <fileFragment name="ListStereotype.bpl" />
+    <fileFragment name="ListInvariant.bpl" />
+    <fileFragment name="ListImplementation.bpl" />
+    <method name="CreatEmptyList" startTime="2011-11-27 19:50:03Z">
+      <conclusion endTime="2011-11-27 19:50:05Z" duration="1.9051905" outcome="correct" />
+    </method>
+    <method name="AddToEnd" startTime="2011-11-27 19:50:05Z">
+      <conclusion endTime="2011-11-27 19:50:09Z" duration="4.6454645" outcome="correct" />
+    </method>
+    <method name="InsertAtTheMiddleAfter" startTime="2011-11-27 19:50:09Z">
+      <conclusion endTime="2011-11-27 19:50:36Z" duration="26.7136711" outcome="correct" />
+    </method>
+    <method name="InsertAfter" startTime="2011-11-27 19:50:36Z">
+      <conclusion endTime="2011-11-27 19:50:36Z" duration="0.1370137" outcome="correct" />
+    </method>
+    <method name="RemoveEnd" startTime="2011-11-27 19:50:36Z">
+      <conclusion endTime="2011-11-27 19:50:40Z" duration="4.2354235" outcome="correct" />
+    </method>
+    <method name="RemoveBegin" startTime="2011-11-27 19:50:40Z">
+      <conclusion endTime="2011-11-27 19:50:44Z" duration="3.830383" outcome="correct" />
+    </method>
+    <method name="RemoveFromTheMiddle" startTime="2011-11-27 19:50:44Z">
+      <conclusion endTime="2011-11-27 19:50:57Z" duration="12.5472546" outcome="correct" />
+    </method>
+    <method name="RemoveEl" startTime="2011-11-27 19:50:57Z">
+      <conclusion endTime="2011-11-27 19:50:57Z" duration="0.2530253" outcome="correct" />
+    </method>
+    <method name="GetItBegin" startTime="2011-11-27 19:50:57Z">
+      <conclusion endTime="2011-11-27 19:50:57Z" duration="0.1440144" outcome="correct" />
+    </method>
+    <method name="ItRemoveNext" startTime="2011-11-27 19:50:57Z">
+      <conclusion endTime="2011-11-27 19:50:58Z" duration="1.2561256" outcome="correct" />
+    </method>
+    <method name="ItInsertAfter" startTime="2011-11-27 19:50:58Z">
+      <conclusion endTime="2011-11-27 19:51:00Z" duration="1.0151015" outcome="correct" />
+    </method>
+    <method name="main" startTime="2011-11-27 19:51:00Z">
+      <conclusion endTime="2011-11-27 19:51:00Z" duration="0.4070407" outcome="correct" />
+    </method>
+  </file>
+</boogie>

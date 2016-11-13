@@ -1,0 +1,3038 @@
+
+\makeatletter
+\def\url@leostyle{
+  \@ifundefined{selectfont}{\def\UrlFont{\sf}}{\def\UrlFont{\small\ttfamily}}}
+\makeatother
+\urlstyle{leostyle}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+%% INTRODUCTION %%
+  
+@misc{applesecurity,
+  author  = {{Apple Inc.}},
+  title   = {{iOS} Security},
+  note    = {\url{https://www.apple.com/business/docs/iOS_Security_Guide.pdf}},
+  year    = {last access 2015},
+}
+
+@misc{androidsecurity,
+  author  = {{Google Inc.}},
+  title   = {{Android Security}},
+  note    = {\url{https://source.android.com/devices/tech/security/index.html}},
+  year    = {last access 2015},
+}
+
+@misc{windowssecurity,
+  author  = {{Microsoft Inc.}},
+  title   = {{Security for Windows Phone 8}},
+  note    = {\url{https://msdn.microsoft.com/en-us/library/windows/apps/ff402533(v=vs.105).aspx}},
+  year    = {last access 2015},
+}
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+%% BACKGROUND %%
+
+@misc{marketshare,
+  author  = {{IDC Corporate USA}},
+  title   = {{Smartphone OS Market Share, 2015 Q2}},
+  note    = {\url{http://www.idc.com/prodserv/smartphone-os-market-share.jsp}},
+  year    = {last access 2015},
+}
+
+@misc{blackberrysecurity,
+  author  = {{BlackBerry}},
+  title   = {{BlackBerry Java SDK - Security}},
+  note    = {\url{http://docs.blackberry.com/en/developers/deliverables/29301/BlackBerry_Java_SDK-Development_Guide--1560066-0531040818-001-7.0_Beta-US.pdf}},
+  year    = {last access 2015},
+}
+
+@misc{arminstructionset,
+  author  = {{ARM Ltd.}},
+  title   = {{ARM and Thumb-2 Instruction Set Quick Reference Card}},
+  note    = {\url{http://infocenter.arm.com/help/topic/com.arm.doc.qrc0001m/QRC0001_UAL.pdf}},
+  year    = {last access 2015},
+}
+
+@misc{6axis,
+  author  = {{InvenSense Inc.}},
+  title   = {{ICM-20608-G - 6-axis MotionTracking device}},
+  note    = {\url{http://www.invensense.com/products/motion-tracking/6-axis/icm-20608-2/}},
+  year    = {last access 2015},
+}
+
+@misc{broadcombcm,
+  author  = {{Broadcom Corp.}},
+  title   = {{5G WiFi 802.11ac Client - BCM4354}},
+  note    = {\url{https://www.broadcom.com/products/wireless-connectivity/wireless-lan/bcm4354}},
+  year    = {last access 2015},
+}
+
+@misc{broadcomgps,
+  author  = {{Broadcom Corp.}},
+  title   = {{Integrated Monolithic GPS And GLONASS Receiver IC - BCM47521}},
+  note    = {\url{http://www.broadcom.com/products/wireless-connectivity/gps/bcm47521}},
+  year    = {last access 2015},
+}
+
+@misc{etsigsm,
+  author  = {{ETSI}},
+  title   = {{Mobile Technologies GSM}},
+  note    = {\url{http://www.etsi.org/technologies-clusters/technologies/mobile/gsm}},
+  year    = {last access 2015},
+}
+
+@misc{etsigprs,
+  author  = {{ETSI}},
+  title   = {{General Packet Radio Service, GPRS}},
+  note    = {\url{http://www.etsi.org/index.php/technologies-clusters/technologies/mobile/gprs}},
+  year    = {last access 2015},
+}
+
+@misc{etsiedge,
+  author  = {{ETSI}},
+  title   = {{Enhanced Data rates for Global Evolution, EDGE}},
+  note    = {\url{http://www.etsi.org/index.php/technologies-clusters/technologies/mobile/edge}},
+  year    = {last access 2015},
+}
+
+@misc{etsilte,
+  author  = {{ETSI}},
+  title   = {{Long Term Evolution, LTE}},
+  note    = {\url{http://www.etsi.org/technologies-clusters/technologies/mobile/long-term-evolution}},
+  year    = {last access 2015},
+}
+
+@misc{nucleos,
+  author  = {{Mentor Graphics}},
+  title   = {{Nucleus RTOS}},
+  note    = {\url{http://www.mentor.com/embedded-software/nucleus/}},
+  year    = {last access 2015},
+}
+
+@misc{threadx,
+  author  = {{Express Logic Inc.}},
+  title   = {{ThreadX}},
+  note    = {\url{http://rtos.com/products/threadx/}},
+  year    = {last access 2015},
+}
+
+@misc{okl4,
+  author  = {{General Dynamics Mission Systems}},
+  title   = {{OKL4 Microvisor}},
+  note    = {\url{http://gdmissionsystems.com/cyber/products/trusted-computing-cross-domain/microvisor-products/}},
+  year    = {last access 2015},
+}
+
+@inproceedings{basebandwoot,
+  author    = {Ralf-Philipp Weinmann},
+  title     = {Baseband Attacks: Remote Exploitation of Memory Corruptions in Cellular Protocol Stacks},
+  booktitle = {USENIX Workshop on Offensive Technologies},
+  series    = {WOOT'12},
+  year      = {2012},
+}
+
+@inproceedings{basebandccc,
+  author    = {Guillaume Delugr\'{e}},
+  title     = {Reverse-engineering a Qualcomm baseband},
+  booktitle = {Chaos Communication Congress},
+  series    = {CCC'11},
+  year      = {2011},
+}
+
+@misc{androidkernel,
+  author  = {{Google Inc.}},
+  title   = {{Android Open Source Project}},
+  note    = {\url{https://source.android.com/index.html}},
+  year    = {last access 2015},
+}
+
+@misc{machkernel,
+  author  = {{Apple Inc.}},
+  title   = {{Kernel and Device Drivers Layer}},
+  note    = {\url{https://developer.apple.com/library/mac/documentation/MacOSX/Conceptual/OSX_Technology_Overview/SystemTechnology/SystemTechnology.html}},
+  year    = {last access 2015},
+}
+
+@misc{webkit,
+  author  = {{Apple Inc.}},
+  title   = {{The WebKit Open Source Project}},
+  note    = {\url{https://www.webkit.org}},
+  year    = {last access 2015},
+}
+
+@misc{blink,
+  author  = {{Google Inc.}},
+  title   = {{The Chromium Projects - Blink}},
+  note    = {\url{http://www.chromium.org/blink}},
+  year    = {last access 2015},
+}
+
+@misc{dalvik,
+  author  = {{Google Inc.}},
+  title   = {{ART and Dalvik}},
+  note    = {\url{https://source.android.com/devices/tech/dalvik/}},
+  year    = {last access 2015},
+}
+
+@misc{androidopengl,
+  author  = {{Google Inc.}},
+  title   = {{OpenGL ES}},
+  note    = {\url{http://developer.android.com/guide/topics/graphics/opengl.html}},
+  year    = {last access 2015},
+}
+
+@misc{projectne10,
+  author  = {{ARM Ltd.}},
+  title   = {{Project Ne10 - An Open Optimized Software Library Project for the ARM Architecture}},
+  note    = {\url{http://projectne10.github.io/Ne10/}},
+  year    = {last access 2015},
+}
+
+@misc{swift,
+  author  = {{Apple Inc.}},
+  title   = {{Swift programming language}},
+  note    = {\url{https://developer.apple.com/swift/}},
+  year    = {last access 2015},
+}
+
+@misc{iosdevelopment,
+  author  = {{Apple Inc.}},
+  title   = {{{iOS} Developer Library}},
+  note    = {\url{https://developer.apple.com/library/ios/navigation/}},
+  year    = {last access 2015},
+}
+
+@misc{trustonicknox,
+  author  = {{Trustonic}},
+  title   = {{Trustonic for Samsung KNOX}},
+  note    = {\url{http://www.trustonic.com/assets/common/Trustonic_for_Samsung_Knox_Brochure.pdf}},
+  year    = {last access 2015},
+}
+
+@misc{cccfingerprint,
+  author  = {{Chaos Computer Club}},
+  title   = {{Chaos Computer Club breaks Apple TouchID}},
+  note    = {\url{http://www.ccc.de/en/updates/2013/ccc-breaks-apple-touchid}},
+  year    = {last access 2015},
+}
+
+@misc{appstore,
+  author  = {{Apple Inc.}},
+  title   = {{iTunes AppStore}},
+  note    = {\url{https://itunes.apple.com/us/store}},
+  year    = {last access 2015},
+}
+
+@misc{googleplay,
+  author  = {{Google Inc.}},
+  title   = {{Google play}},
+  note    = {\url{https://play.google.com/store}},
+  year    = {last access 2015},
+}
+
+@misc{googlebouncer,
+  author  = {{Google Inc.}},
+  title   = {{Android and Security}},
+  note    = {\url{http://googlemobile.blogspot.ch/2012/02/android-and-security.html}},
+  year    = {last access 2015},
+}
+
+@misc{bouncerdissect,
+  author  = {Jon Oberheide and Charlie Miller},
+  title   = {{Dissecting the Android Bouncer}},
+  note    = {\url{https://jon.oberheide.org/files/summercon12-bouncer.pdf}},
+  year    = {last access 2015},
+}
+
+@misc{amazonappstore,
+  author  = {{Amazon Inc.}},
+  title   = {{Amazon Underground}},
+  note    = {\url{http://www.amazon.com/b?node=11350978011}},
+  year    = {last access 2015},
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+%% RELATED-WORK %%
+
+@misc{1password,
+  author  = {AgileBits Inc.},
+  title   = {{1Password}},
+  note    = {\url{https://agilebits.com/onepassword}},
+  year    = {last access 2015},
+}
+
+@misc{transakt,
+  author  = {Entersekt},
+  title   = {{Transakt}},
+  note    = {\url{https://www.entersekt.com/Technology-Transakt}},
+  year    = {last access 2015},
+}
+
+@inproceedings{fingerprint, 
+  author=    {Ratha, N.K. and Bolle, R.M. and Pandit, V.D. and Vaish, V.}, 
+  booktitle= {IEEE Workshop on Applications of Computer Vision}, 
+  title=     {Robust fingerprint authentication using local structural similarity}, 
+  year=      {2000},
+}
+
+@misc{cccfingerprintoriginal,
+  author  = {{Chaos Computer Club}},
+  title   = {{How to fake fingerprints?}},
+  note    = {\url{http://dasalte.ccc.de/biometrie/fingerabdruck_kopieren.en}},
+  year    = {last access 2015},
+}
+
+@misc{fujitsupalm,
+  author  = {{Fujitsu}},
+  title   = {{PalmSecure}},
+  note    = {\url{http://www.fujitsu.com/us/Images/palmsecure_datasheet.pdf}},
+  year    = {last access 2015},
+}
+
+@misc{m2syspalm,
+  author  = {{M2SYS Technology}},
+  title   = {{M2-PalmVein - Secure Palm Vein Scanner}},
+  note    = {\url{http://www.m2sys.com/palm-vein-reader/}},
+  year    = {last access 2015},
+}
+
+@misc{nuanceauth,
+  author  = {{Nuance Communications Inc.}},
+  title   = {{Voice biometrics}},
+  note    = {\url{http://www.nuance.com/for-business/customer-service-solutions/voice-biometrics/index.htm}},
+  year    = {last access 2015},
+}
+
+@inproceedings{rasmussenpulse,
+  author    = {Kasper Bonne Rasmussen and
+               Marc Roeschlin and
+               Ivan Martinovic and
+               Gene Tsudik},
+  title     = {Authentication Using Pulse-Response Biometrics},
+  booktitle = {Annual Network and Distributed System Security Symposium},
+  year      = {2014},
+  series    = {NDSS'14},
+  publisher = {The Internet Society},
+}
+
+@inproceedings{rasmussen15,
+  author    = {Simon Eberz and
+               Kasper Bonne Rasmussen and
+               Vincent Lenders and
+               Ivan Martinovic},
+  title     = {Preventing Lunchtime Attacks: Fighting Insider Threats With Eye Movement Biometrics},
+  booktitle = {Annual Network and Distributed System Security Symposium},
+  year      = {2015},
+  series    = {NDSS'15},
+  publisher = {The Internet Society},
+}
+
+@misc{eyelock,
+  author  = {{eyeLock Inc.}},
+  title   = {{Advanced iris authentication and recognition solutions}},
+  note    = {\url{http://www.eyelock.com}},
+  year    = {last access 2015},
+}
+
+@article{touchscreenbiometrics, 
+  author  =  {Frank, M. and Biedert, R. and Ma, E. and Martinovic, I. and Song, D.}, 
+  journal = {Information Forensics and Security, IEEE Transactions on}, 
+  title   = {Touchalytics: On the Applicability of Touchscreen Input as a Behavioral Biometric for Continuous Authentication}, 
+  year    = {2013}, 
+  volume  = {8}, 
+  number  = {1}, 
+  month   = {Jan},
+}
+
+@inproceedings{mousebiometrics,
+  author    = {Jorgensen, Zach and Yu, Ting},
+  title     = {On Mouse Dynamics As a Behavioral Biometric for Authentication},
+  booktitle = {{ACM} Symposium on Information, Computer and Communications Security},
+  series    = {ASIACCS'11},
+  year      = {2011},
+} 
+
+@inproceedings{keyboardbiometrics, 
+  author    = {Shepherd, S.J.}, 
+  booktitle = {European Convention on Security and Detection}, 
+  title     = {Continuous authentication by analysis of keyboard typing characteristics}, 
+  year      = {1995}
+}
+
+@inproceedings{honeysp,
+  author    = {Rahul Chatterjee and
+               Joseph Bonneau and
+               Ari Juels and
+               Thomas Ristenpart},
+  title     = {Cracking-Resistant Password Vaults Using Natural Language Encoders},
+  booktitle = {{IEEE} Symposium on Security and Privacy},
+  series    = {SP'15},
+  year      = {2015},
+}
+
+@inproceedings{honeycomb,
+  author    = {Ari Juels and
+               Ronald L. Rivest},
+  title     = {Honeywords: making password-cracking detectable},
+  booktitle = {{ACM} Conference on Computer and Communications Security},
+  series    = {CCS'13},
+  year      = {2013},
+}
+
+@misc{yahoohack,
+  author  = {{Lee Munson}},
+  title   = {{Yahoo prompts password reset after mass attack on email service}},
+  note    = {\url{https://nakedsecurity.sophos.com/2014/01/31/yahoo-prompts-password-reset-after-mass-attack-on-email-service/}},
+  year    = {last access 2015},
+}
+
+@misc{linkedinhack,
+  author  = {{Jaikumar Vijayan}},
+  title   = {{Hackers crack more than 60\% of breached LinkedIn passwords}},
+  note    = {\url{http://www.computerworld.com/article/2504078/cybercrime-hacking/hackers-crack-more-than-60--of-breached-linkedin-passwords.html}},
+  year    = {last access 2015},
+}
+
+@misc{evernotehack,
+  author  = {{Doug Gross}},
+  title   = {{50 million compromised in Evernote hack}},
+  note    = {\url{http://edition.cnn.com/2013/03/04/tech/web/evernote-hacked/}},
+  year    = {last access 2015},
+}
+
+@inproceedings{passwordreuse,
+  author    = {Anupam Das and
+               Joseph Bonneau and
+               Matthew Caesar and
+               Nikita Borisov and
+               XiaoFeng Wang},
+  title     = {The Tangled Web of Password Reuse},
+  booktitle = {Annual Network and Distributed System Security Symposium},
+  series    = {NDSS'14},
+  year      = {2014},
+}
+
+@inproceedings{passhash,
+  author    = {Ross, Blake and Jackson, Collin and Miyake, Nick and Boneh, Dan and Mitchell, John C.},
+  title     = {Stronger Password Authentication Using Browser Extensions},
+  booktitle = {USENIX Security Symposium},
+  series    = {USENIX'05},
+  year      = {2005},
+} 
+
+@inproceedings{vaultwww,
+  author    = {Halderman, J. Alex and Waters, Brent and Felten, Edward W.},
+  title     = {A Convenient Method for Securely Managing Passwords},
+  booktitle = {International Conference on World Wide Web},
+ series = {WWW'05},
+ year = {2005},
+}
+
+@inproceedings{passpet,
+  author    = {Yee, Ka-Ping and Sitaker, Kragen},
+  title     = {Passpet: Convenient Password Management and Phishing Protection},
+  booktitle = {Symposium on Usable Privacy and Security},
+ series = {SOUPS'06},
+ year = {2006},
+}
+
+@inproceedings{passwordsstrenghts,
+  author    = {Xavier de Carn{\'{e}} de Carnavalet and
+               Mohammad Mannan},
+  title     = {From Very Weak to Very Strong: Analyzing Password-Strength Meters},
+  booktitle = {Annual Network and Distributed System Security Symposium},
+  series    = {NDSS'14},
+  year      = {2014},
+}
+
+@inproceedings{fourthfactor,
+  author    = {Brainard, John and Juels, Ari and Rivest, Ronald L. and Szydlo, Michael and Yung, Moti},
+  title     = {Fourth-factor Authentication: Somebody You Know},
+  booktitle = {{ACM} Conference on Computer and Communications Security},
+  series    = {CCS'06},
+  year      = {2006},
+}
+
+@inproceedings{graphpass, 
+  author    = {Sabzevar, A.P. and Stavrou, A.}, 
+  booktitle = {IEEE International Conference on Signal Image Technology and Internet Based Systems},
+  series    = {SITIS'08},
+  title     = {Universal Multi-Factor Authentication Using Graphical Passwords}, 
+  year      = {2008}
+} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+%% SOUND-PROOF %%
+
+@inproceedings{rasmussen10usenix,
+  author    = {Kasper Bonne Rasmussen and Srdjan Capkun},
+  title     = {Realization of {RF} Distance Bounding},
+  booktitle = {USENIX Security Symposium},
+  series = {USENIX'10},
+  year      = {2010},
+}
+
+@inproceedings{backes08sp,
+  author    = {Michael Backes and Markus D{\"{u}}rmuth and Dominique Unruh},
+  title     = {Compromising Reflections-or-How to Read {LCD} Monitors around the Corner},
+  booktitle = {{IEEE} Symposium on Security and Privacy},
+  series    = {SP'08},
+  year      = {2008},
+}
+@inproceedings{backes09sp,
+  author    = {Michael Backes and Tongbo Chen and Markus D{\"{u}}rmuth and Hendrik P. A. Lensch and Martin Welk},
+  title     = {Tempest in a Teapot: Compromising Reflections Revisited},
+  booktitle = {{IEEE} Symposium on Security and Privacy},
+  series    = {SP'09},
+  year      = {2009},
+}
+
+@inproceedings{raguram11ccs,
+  author    = {Rahul Raguram and Andrew M. White and Dibyendusekhar Goswami and Fabian Monrose and Jan{-}Michael Frahm},
+  title     = {{iSpy}: Automatic reconstruction of typed input from compromising reflections},
+  booktitle = {{ACM} Conference on Computer and Communications Security},
+  series    = {CCS'11},
+  year      = {2011},
+}
+
+
+@inproceedings{petsas15eurosec,
+  author    = {Petsas, Thanasis and Tsirantonakis, Giorgos and Athanasopoulos, Elias and Ioannidis, Sotiris},
+  title     = {Two-factor Authentication: {I}s the World Ready?: {Q}uantifying {2FA} Adoption},
+  booktitle = {European Workshop on System Security},
+  series    = {EuroSec'15},
+  year      = {2015},
+}
+
+@book{book,
+  author    = {I.L. V\'{e}r and L.L. Beranek},
+  title     = {Noise and Vibration Control Engineering},
+  publisher = {Wiley},
+  year      = 2005,
+}
+
+@article{bangor,
+  author    = {Aaron Bangor and Philip T. Kortum and James T. Miller},
+  title     = {An Empirical Evaluation of the System Usability Scale},
+  journal   = {International Journal of Human-Computer Interaction},
+  volume    = {24},
+  number    = {6},
+  year      = {2008},
+}
+
+@article{sus,
+  author    = {John Brooke},
+  title     = {{SUS - {A} quick and dirty usability scale}},
+  journal   = {Usability evaluation in industry},
+  volume    = {189},
+  number    = {194},
+  year      = {1996},
+}
+
+@inproceedings{bonneau12sp,
+  author    = {Joseph Bonneau and Cormac Herley and Paul C. van Oorschot and Frank Stajano},
+  title     = {The Quest to Replace Passwords: {A} Framework for Comparative Evaluation of Web Authentication Schemes},
+  booktitle = {{IEEE} Symposium on Security and Privacy},
+  series    = {SP'12},
+  year      = {2012},
+}
+
+@inproceedings{czeskis12ccs,
+  author    = {Alexei Czeskis and Michael Dietz and Tadayoshi Kohno and Dan S. Wallach and Dirk Balfanz},
+  title     = {Strengthening user authentication through opportunistic cryptographic identity assertions},
+  booktitle = {{ACM} Conference on Computer and Communications Security},
+  series    = {CCS'12},
+  year      = {2012},
+}
+
+@misc{ansi,
+  title =    {{ANSI} S1.11-2004 - {S}pecification for Octave-Band and Fractional-Octave-Band Analog and Digital Filters},
+  author =   {{The American National Standards Insitute}},
+  year  =         {2004},
+}
+
+
+
+@misc{rsa,
+  author       = {{EMC Inc.}},
+  title        = {{RSA SecurID}},
+  note = {\url{https://www.emc.com/security/rsa-securid.htm/}},
+  year = {last access 2015}
+}
+
+@misc{fido,
+  author       = {{FIDO Alliance}},
+  title        = {{Fido U2F specifications}},
+  note = {\url{https://fidoalliance.org/specifications/}},
+  year = {last access 2015}
+}
+
+@misc{yubico,
+  author       = {{Yubico}},
+  title        = {{Yubikey hardware}},
+  note = {\url{https://www.yubico.com/}},
+  year = {last access 2015}
+}
+
+@misc{slicklogin,
+  author       = {{Google Inc.}},
+  title        = {{SlickLogin}},
+  note = {\url{http://www.slicklogin.com/}},
+  year = {last access 2015}
+}
+
+@misc{duosecurity,
+  author       = {{Duo Security, Inc.}},
+  title        = {{Duo Push}},
+  note = {\url{https://www.duosecurity.com/product/methods/duo-mobile}},
+  year = {last access 2015}
+}
+@misc{authy,
+  author       = {{Authy Inc.}},
+  title        = {{Authy}},
+  note = {\url{https://www.authy.com}},
+  year = {last access 2015}
+}
+
+@misc{encap,
+  author       = {{Encap Security}},
+  title        = {{Encap Security}},
+  note = {\url{https://www.encapsecurity.com/}},
+  year = {last access 2015}
+}
+
+
+@inproceedings{stajano11secprot,
+  author    = {Frank Stajano},
+  title     = {Pico: No More Passwords!},
+  booktitle = {Security Protocols - International Workshop},
+  year      = {2011},
+}
+
+@inproceedings{haitsma02,
+  author    = {Jaap Haitsma and Ton Kalker and Job Oostveen},
+  title     = {An efficient database search strategy for audio fingerprinting},
+  booktitle = {Workshop on Multimedia Signal Processing},
+  series    =  {MMSP'02},
+  year      = {2002},
+}
+
+
+@inproceedings{kumar07,
+  author    = {Manu Kumar and Tal Garfinkel and Dan Boneh and Terry Winograd},
+  title     = {Reducing shoulder-surfing by using gaze-based password entry},
+  booktitle = {Symposium on Usable Privacy and Security},
+  series    =  {SOUPS'07},
+  year      = {2007},
+}
+
+
+@inproceedings{shirvanian14,
+  author    = {Maliheh Shirvanian and Stanislaw Jarecki and Nitesh Saxena and Naveen Nathan},
+  title     = {Two-Factor Authentication Resilient to Server Compromise Using Mix-Bandwidth Devices},
+  booktitle = {Annual Network and Distributed System Security Symposium},
+  series    =  {NDSS'14},
+  year      = {2014},
+}
+
+
+@inproceedings{shrestha14,
+  author    = {Babins Shrestha and Nitesh Saxena and Hien Truong and N. Asokan},
+  title     = {Drone to the Rescue: Relay-Resilient Authentication using Ambient Multi-Sensing},
+  booktitle = {Financial Cryptography and Data Security},
+  series    = {FC '14},
+  year      = {2014},
+}
+
+
+
+@article{baluja08pr,
+  author    = {Shumeet Baluja and Michele Covell},
+  title     = {Waveprint: Efficient wavelet-based audio fingerprinting},
+  journal   = {Pattern Recognition},
+  year      = {2008},
+  volume    = {41},
+  number    = {11},
+}
+
+@article{Wang06cacm,
+  author    = {Avery Wang},
+  title     = {The Shazam music recognition service},
+  journal   = {Communication {ACM}},
+  year      = {2006},
+  volume    = {49},
+  number    = {8},
+}
+
+@inproceedings{chandrasekhar11ismir,
+  author    = {Vijay Chandrasekhar and Matt Sharifi and David A. Ross},
+  title     = {Survey and Evaluation of Audio Fingerprinting Schemes for Mobile Query-by-Example Applications},
+  booktitle = {12th International Society for Music Information Retrieval Conference},
+  series    = {ISMIR'11},
+  year      = {2011},
+}
+
+@misc{firefoxgeolocation,
+  author       = {{Mozilla}},
+  title        = {{Location-Aware Browsing}},
+  year         = {last access 2015},
+  note         = {\url{https://www.mozilla.org/en-US/firefox/geolocation/}},
+}
+
+@inproceedings{arentz11ubicomp,
+  author    = {Will Archer Arentz and Udana Bandara},
+  title     = {Near ultrasonic directional data transfer for modern smartphones},
+  booktitle = {International Conference on Pervasive and Ubiquitous Computing},
+  series    = {UbiComp'11},
+  year      = {2011},
+}
+
+@inproceedings{hazas02ubicomp,
+  author    = {Mike Hazas and Andy Ward},
+  title     = {A Novel Broadband Ultrasonic Location System},
+  booktitle = {International Conference on Pervasive and Ubiquitous Computing},
+  series    = {UbiComp'02},
+  year      = {2002},
+}
+
+@article{valiente14audiology,
+author = {Rodr\'{i}guez Valiente, A. and Trinidad, A. and Garc\'{i}a Berrocal, J. R. and G\'{o}rriz, C. and Ram\'{i}rez Camacho, R.},
+title = {Extended high-frequency (9-20 kHz) audiometry reference thresholds in 645 healthy subjects},
+journal = {International Journal of Audiology},
+volume = {53},
+number = {8},
+year = {2014},
+}
+
+@inproceedings{karapanos14usenix,
+  author    = {Nikolaos Karapanos and Srdjan Capkun},
+  title     = {On the Effective Prevention of {TLS} Man-in-the-Middle Attacks in Web Applications},
+  booktitle = {USENIX Security Symposium},
+  series    = {USENIX'14},
+  year      = {2014},
+}
+
+@inproceedings{parno06fc,
+  author    = {Bryan Parno and Cynthia Kuo and Adrian Perrig},
+  title     = {Phoolproof Phishing Prevention},
+  booktitle = {International Conference on Financial Cryptography and Data Security},
+  series    = {FC'06},
+  year      = {2006},
+}
+
+@inproceedings{halevi12esorics,
+  author    = {Tzipora Halevi and Di Ma and Nitesh Saxena and Tuo Xiang},
+  title     = {Secure Proximity Detection for {NFC} Devices Based on Ambient Sensor Data},
+  booktitle = {European Symposium on Research in Computer Security},
+  series    = {ESORICS'12},
+  year      = {2012},
+}
+
+
+
+@article{schurmannS13tmc,
+  author    = {Dominik Sch{\"{u}}rmann and
+               Stephan Sigg},
+  title     = {Secure Communication Based on Ambient Audio},
+  journal   = {{IEEE} Trans. Mob. Comput.},
+  year      = {2013},
+  volume    = {12},
+  number    = {2},
+}
+
+@article{gunson11cs,
+   author   = {Nancie Gunson and Diarmid Marshall and Hazel Morton and Mervyn A. Jack},
+   title    = {User perceptions of security and usability of single-factor and two-factor authentication in automated telephone banking},
+   journal  = {Computers \& Security},
+   year     = {2011},
+   volume   = {30},
+   number   = {4},
+}
+
+@article{weir10int,
+ author     = {Catherine S. Weir and Gary Douglas and Tim Richardson and Mervyn A. Jack},
+ title      = {Usable Security: User Preferences for Authentication Methods in eBanking and the Effects of Experience},
+ journal    = {Interacting with Computers},
+ volume     = {22},
+ number     = {3},
+ year       = {2010},
+}
+
+@article{weir09compsec,
+  author    = {Catherine S. Weir and Gary Douglas and Martin Carruthers and Mervyn A. Jack},
+  title     = {User perceptions of security, convenience and usability for ebanking authentication tokens},
+  journal   = {Computers {\&} Security},
+  volume    = {28},
+  number    = {1-2},
+  year      = {2009},
+}
+
+
+
+@misc{imperi13umsurvey,
+  author       = {{BusinessWire}},
+  title        = {Impermium Study Unearths Consumer Attitudes Toward Internet Security},
+  year         = {last access 2015},
+  note = {\url{http://www.businesswire.com/news/home/20130627005473/en/Impermium-Study-Unearths-Consumer-Attitudes-Internet-Security#.VXryixNrg4M}},
+}
+
+@article{yepes09ercim,
+  author    = {Diego A. Ortiz{-}Yepes},
+  title     = {Enhancing Authentication in eBanking with {NFC}-Enabled Mobile Phones},
+  journal   = {{ERCIM} News},
+  year      = {2009},
+  volume    = {2009},
+  number    = {76},
+}
+
+@inproceedings{truong14percom,
+  author    = {Hien Thi Thu Truong and Xiang Gao and Babins Shrestha and Nitesh Saxena and N. Asokan and Petteri Nurmi},
+  title     = {Comparing and fusing different sensor modalities for relay attack resistance in Zero-Interaction Authentication},
+  booktitle = {International Conference on Pervasive Computing and Communications},
+  series    = {PerCom'14},
+  year      = {2014},
+}
+
+@inproceedings{haselsteiber06rfidsec,
+  author    = {Ernst Haselsteiner and Klemens Breitfuss},
+  title     = {Security in near field communication ({NFC})},
+  booktitle = {RFIDSec '06},
+  year      = {2006}
+}
+
+
+@article{diakos13joe,
+ author     = {Thomas P. Diakos and Johann A. Briffa and Tim W. C. Brown and Stephan Wesemeyer},
+ title      = {Eavesdropping near-field contactless payments: A quantitative analysis},
+ journal    = {The Journal of Engineering},
+ year       = {2013},
+}
+
+
+@article{russell98amjphys,
+ author     = {Daniel A. Russell and Joseph P. Titlow and Ya-Juan Bemmen},
+ title      = {Acoustic monopoles, dipoles, and quadrupoles: An experiment revisited},
+ journal    = {American Journal of Physics},
+ year       = {1999},
+ volume    = {67},
+ number    = {8},
+}
+
+
+
+@misc{ntpprotocol,
+  author        = {{Network Time Foundation}},
+  title         = {{NTP: The Network Time Protocol}},
+  note  = {\url{http://www.ntp.org/}},
+  year = {last access 2015}
+}
+
+@misc{webrtc,
+  author        = {{Google Inc.}},
+  title         = {{WebRTC}},
+  note  = {\url{http://www.webrtc.org/}},
+  year = {last access 2015}
+}
+
+@misc{webrtcw3c,
+  author        = {{Daniel C. Burnett and Adam Bergkvist and Cullen Jennings and Anant Narayanan}},
+  title         = {{Media Capture and Streams (W3C Working Draft)}},
+  note  = {\url{http://www.w3.org/TR/mediacapture-streams/}},
+  year = {last access 2015}
+}
+
+@misc{websocketsrfc,
+  author        = {Fette, I. and Melnikov, A.},
+  title         = {{The WebSocket protocol (RFC 6455)}},
+  note  = {\url{http://tools.ietf.org/html/rfc6455}},
+  year          = {2011},
+}
+
+@misc{gcm,
+  author        = {{Google Inc.}},
+  title         = {{Google Cloud Messaging for Android}},
+  note  = {\url{https://developer.android.com/google/gcm/index.html}},
+    year = {last access 2015}
+}
+
+@misc{apn,
+  author        = {{Apple Inc.}},
+  title         = {{Apple Push Notification Service}},
+  note  = {\url{https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ApplePushService.html}},
+  year = {last access 2015}
+}
+
+@misc{ne10,
+  author        = {{ARM Ltd.}},
+  title         = {{Project Ne10}},
+  note  = {\url{http://projectne10.github.io/Ne10/}},
+    year = {last access 2015}
+}
+
+@misc{accelerate,
+  author        = {{Apple Inc.}},
+  title         = {Accelerate Framework Reference},
+  note  = {\url{https://developer.apple.com/library/mac/documentation/Accelerate/Reference/AccelerateFWRef/}},
+  year = {last access 2015}
+}
+
+@misc{neon,
+  author        = {{ARM Ltd.}},
+  title         = {{ARM NEON}},
+  note  = {\url{http://www.arm.com/products/processors/technologies/neon.php}},
+  year = {last access 2015}
+}
+
+@misc{owasp_mitb,
+  author        = {{OWASP Foundation}},
+  title         = {Man-In-The-Browser attack},
+  note          = {\url{https://www.owasp.org/index.php/Man-in-the-browser_attack}},
+  year          = {last access 2015},
+}
+
+@misc{aircable,
+  author        = {{Wireless Cables Inc.}},
+  title         = {{AIRCable}},
+  note  = {\url{https://www.aircable.net/extend.php}},
+    year = {last access 2015}
+}
+
+@misc{iewebrtc,
+  author        = {{Microsoft Inc.}},
+  title         = {Bringing Interoperable Real-Time Communications to the Web},
+  note  = {\url{http://blogs.skype.com/2014/10/27/bringing-interoperable-real-time-communications-to-the-web/}},
+  year = {last access 2015}
+}
+
+@misc{statcounter,
+  author        = {{StatCounter}},
+  title         = {{StatCounter} Global Stats},
+  note  = {\url{http://gs.statcounter.com/}},
+  year = {last access 2015}
+}
+
+@misc{w3cwebbluetooth,
+  author       = {{Web Bluetooth Community Group}},
+  title        = {{Web Bluetooth}},
+  note = {\url{https://webbluetoothcg.github.io/web-bluetooth/}}, 
+  year = {last access 2015}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% TZ Location %%
+
+@misc{ECB2012,
+  author = {{European Central Bank}},
+  title  = {Report on Card Fraud},
+  month  = {July},
+  year   = {2012},
+  note   = {\url{http://www.ecb.int/pub/pdf/other/cardfraudreport201207en.pdf}},
+}
+  
+
+@inproceedings{kari11stc,
+ author = {Kostiainen, Kari and Asokan, N.},
+ title = {Credential life cycle management in open credential platforms (short paper)},
+ booktitle = {ACM workshop on Scalable trusted computing},
+ series = {STC'11},
+ year = {2011},
+ }
+
+@inproceedings{feng13trust,
+  author    = {Wei Feng and Dengguo Feng and Ge Wei and Yu Qin and Qianying Zhang and Dexian Chang},
+  title     = {TEEM: A User-Oriented Trusted Mobile Device for Multi-platform Security Applications},
+ booktitle = {International Conference on Trust and Trustworthy Computing},
+ series    = {TRUST'13},
+  year      = {2013},
+}
+
+
+@misc{osmocombb,
+  author={{osmocomBB}},
+  title = {The {OsmocomBB} project},
+  note={\url{http://bb.osmocom.org}},
+  year={last access 2015},
+}
+
+@misc{mastercardpatent,
+ author = {Fourez, Pablo and {Mastercard International Inc.}},
+ title = {Location Controls On Payment Card Transactions - {Patent No. WO/2011/022062}},
+ year = {2011},
+ note = {\url{http://patentscope.wipo.int/search/en/WO2011022062}},
+}
+
+@misc{global,
+  title = {{Card Specification Version 2.2.1}},
+  author = {{GlobalPlatform}},
+  note = {\url{http://www.globalplatform.org/specificationscard.asp}},
+  year = {2011},
+}
+
+@misc{nfctimesticketing,
+  title = {{New York Transit Authority to Test Tag-based Ticketing with Nokia NFC Phones}},
+  author = {{NFC Times}},
+  note = {\url{http://nfctimes.com/news/new-york-transit-authority-test-tag-based-ticketing-nokia-nfc-phones}},
+  year = {last access 2015},
+}
+
+@misc{reutersnfcticketing,
+  title = {{Gemalto Provides Trusted Services for New Mobile NFC Ticketing in the Territory of Caen La Mer}},
+  author = {Reuters},
+  note = {\url{http://www.reuters.com/article/2013/06/17/gemalto-idUSnBw175580a+100+BSW20130617}},
+  year = {last access 2015},
+}
+
+
+
+@misc{abloynfcaccess,
+  title = {{Evaluation of the world's first pilot using NFC phones for check-in and hotel room keys}},
+  author = {{Assa Abloy}},
+  note = {\url{http://www.assaabloy.com/Global/Products/Products-old/ASSA-ABLOY-Mobile-Keys/Report-ASSA-ABLOY-Mobile-Keys-Pilot-Clarion.pdf}},
+  year = {last access 2015},
+}
+
+@misc{whatsapp,
+  title = {{WhatsApp mobile messaging application}},
+  author = {{WhatsApp Inc.}},
+  note = {\url{http://www.whatsapp.com}},
+    year = {last access 2015},
+}
+
+
+@misc{gemaltomobileid,
+  title = {{Mobile ID}},
+  author = {{Gemalto}},
+  note = {\url{http://www.gemalto.com/govt/coesys/mobile_id.html}},
+  year = {last access 2015},
+}
+
+@misc{etsi102206,
+  title = {{Mobile Commerce (M-COMM); Mobile Signature Service; Security Framework}},
+  author = {{ETSI}},
+  note = {\url{http://docbox.etsi.org//EC_Files/EC_Files/tr_102206v010103p.pdf}},
+  year = {2008},
+}
+
+
+@misc{harvardsmartphonehealth,
+  title = {{Using smartphone apps for heart health}},
+  author = {{Harvard Health Publications}},
+  note = {\url{http://www.health.harvard.edu/family-health-guide/updates/using-smartphone-apps-for-heart-health}},
+  year = {last access 2015},
+}
+
+
+@inproceedings{McKeen2013,
+ author    = {Frank McKeen and Ilya Alexandrovich and Alex Berenzon and Carlos Rozas and Hisham Shafi and Vedvyas Shanbhogue and Uday Savagaonkar},
+ title     = {Innovative Instructions and Software Model for Isolated Execution},
+ booktitle = {Workshop on Hardware and Architectural Support for Security and Privacy},
+ year      = {2013}
+}
+
+
+
+@article{anderson2006ieee,
+    author={Anderson, R. and Bond, M. and Clulow, J. and Skorobogatov, S.},
+    journal={Proceedings of the {IEEE}},
+    title={Cryptographic Processors-A Survey},
+    year={2006},
+    volume={94},
+    number={2},
+}
+
+@inproceedings{dmitrienko2011trust,
+ author    = {Alexandra Dmitrienko and Ahmad-Reza Sadeghi and Sandeep Tamrakar and Christian Wachsmann},
+ title     = {{SmartTokens: Delegable Access Control with NFC-enabled Smartphones}},
+ booktitle = {International Conference on Trust and Trustworthy Computing},
+ series    = {TRUST'11},
+ year      = {2011},
+}
+
+@inproceedings{busold2013codaspy,
+ author     = {Busold, Christoph and Taha, Ahmed and Wachsmann, Christian and Dmitrienko, Alexandra and Seudi{\'e}, Herv{\'e} and Sobhani, Majid and Sadeghi, Ahmad-Reza},
+ title      = {{Smart keys for cyber-cars: secure smartphone-based NFC-enabled car immobilizer}},
+ booktitle  = {ACM conference on Data and application security and privacy},
+ series     = {CODASPY'13},
+ year       = {2013},
+}
+
+@inproceedings{tamrakar2011stc,
+ author    = {Tamrakar, Sandeep and Ekberg, Jan-Erik and Asokan, N.},
+ title     = {Identity verification schemes for public transport ticketing with NFC phones},
+ booktitle = {{ACM Workshop on Scalable Trusted Computing }},
+ series    = {STC'11},
+ year      = {2011},
+}
+
+@inproceedings{tamrakar2013trust,
+ author    = {Tamrakar, Sandeep and Ekberg, Jan-Erik},
+ title     = {Tapping and Tripping with NFC},
+ booktitle = {International Conference on Trust and Trustworthy Computing},
+ series = {TRUST'13},
+ year      = {2013},
+}
+
+@misc{telegraph2013roaming,
+  author       = {Telegraph},
+  title        = {{EU} to end mobile roaming charges next year},
+  year         = {2013},
+  month        = {June},
+  note         = {\url{http://www.telegraph.co.uk/finance/newsbysector/mediatechnologyandtelecoms/telecoms/10119159/EU-to-end-mobile-roaming-charges-next-year.html}},
+}
+
+@article{unitedbankers,
+  author       = {{No Author Given}},
+  title        = {{United Bankers' Bank Authenticates Customers Online}},
+  journal      = {{Biometric Technology Today}},
+  volume       = {12},
+  number       = {6},
+  year         = {2004},
+}
+
+@article{utahbank,
+  author       = {{No Author Given}},
+  title        = {{Bank of Utah Adopts Keystroke Dynamics}},
+  journal      = {{Biometric Technology Today}},
+  volume       = {15},
+  number       = {5},
+  year         = {2007},
+}
+
+@misc{hlrlookup,
+  author       = {{Comcetera Ltd.}},
+  title        = {{Number Portability Lookup}},
+  note = {\url{http://www.numberportabilitylookup.com/}},
+  year={last access 2015},
+}
+
+@misc{google_authentication,
+  author       = {{Google Inc.}},
+  title        = {{Google 2-Step Verification}},
+  note = {\url{http://www.google.com/landing/2step/}},
+  year         = {last access 2015},
+}
+
+@misc{battlenet_auth,
+  author        = {{Blizzard Entertainment Inc.}},
+  title        = {{Account Security with Authenticator}},
+  note = {\url{http://us.battle.net/en/security/}},
+  year         = {last access 2015}
+}
+
+@misc{barclays_pinsentry,
+  author       = {{Barclays}},
+  title        = {{Mobile PINsentry}},
+  note = {\url{http://www.barclays.co.uk/BarclaysMobileBanking/MobilePINsentry/P1242616134119}},
+  year         = {last access 2015},
+}
+
+@misc{validsoft,
+  title        = {{ValidPOS}},
+  author       = {{ValidSoft}},
+  note          = {\url{http://www.validsoft.com/}},
+  year         = {last access 2015},
+}
+
+@misc{emv,
+  title        = {{Integrated Circuit Card Specifications for Payment Systems,
+                  Book 1-4, Version 4.3}},
+  author       = {{EMV}},
+  note          = {\url{https://www.emvco.com/specifications.aspx?id=223}},
+  year         = {last access 2015},
+}
+
+@misc{mastercarddev,
+  title        = {{Mastercard Developer Zone}},
+  author       = {{Mastercard International Inc.}},
+  note          = {\url{https://developer.mastercard.com/}},
+  year         = {last access 2015},
+}
+
+@misc{visadev,
+  title        = {{Visa Developer Program}},
+  author       = {{VISA Inc.}},
+  note          = {\url{https://developer.visa.com/}},
+  year         = {last access 2015},
+}
+
+@misc{rsasecurid,
+  author       = {{EMC Corporation}},
+  title        = {{RSA SecurID}},
+  note         = {\url{http://www.emc.com/security/rsa-securid/index.htm}},
+  year = {last access 2015}
+}
+
+@misc{verifiedbyvisa,
+  author       = {{VISA Inc.}},
+  title        = {{Verified by VISA}},
+  note         =
+                  {\url{http://www.visaeurope.com/en/cardholders/verified_by_visa.aspx}},
+                  year = {last access 2015}
+}
+
+@misc{paypalkey,
+  author       = {{PayPal}},
+  title        = {{PayPal Security Key}},
+  note         = {\url{https://www.paypal.com/webapps/mpp/security/security-protections}},
+  year = {last access 2015}
+}
+
+@misc{googlewallet,
+  author       = {{Google Inc.}},
+  title        = {Google Wallet},
+  note         = {\url{http://www.google.com/wallet/}},
+  year = {last access 2015},
+}
+
+@misc{isis,
+  author       = {{JVL Ventures, LLC}},
+  title        = {{Softcard}},
+  note         = {\url{https://en.wikipedia.org/wiki/Softcard}},
+    year={last access 2015},
+}
+
+@inproceedings{naliO08esorics,
+  author       = {Deholo Nali and Paul C. van Oorschot},
+  title        = {CROO: A Universal Infrastructure and Protocol to Detect
+                  Identity Fraud},
+  booktitle    = {European Symposium on Research in
+                  Computer Security},
+  series       = {ESORICS'08},
+  year         = 2008,
+}
+
+@inproceedings{czeskis12ccs,
+  author       = {Alexei Czeskis and Michael Dietz and Tadayoshi Kohno and Dan
+                  S. Wallach and Dirk Balfanz},
+  title        = {Strengthening user authentication through opportunistic
+                  cryptographic identity assertions},
+  booktitle    = {{ACM} Conference on Computer and
+                  Communications Security},
+  series       = {CCS'12},
+  year         = 2012,
+}
+
+@inproceedings{park09acsac,
+  author       = {Frank S. Park and Chinmay Gangakhedkar and Patrick Traynor},
+  title        = {Leveraging Cellular Infrastructure to Improve Fraud
+                  Prevention},
+  booktitle    = {Annual Computer Security Applications
+                  Conference},
+  series       = {ACSAC'09},
+  year         = {2009},
+}
+
+@misc{gsma2011,
+  author       = {{GSM Association}},
+  title        = {{Requirements for Single Wire Protocol NFC Handsets}},
+  year         = {2011},
+  note         = {\url{http://www.gsma.com/mobilenfc/}},
+}
+
+@inproceedings{yee2002icics,
+  author       = {Yee, Ka-Ping},
+  title        = {User Interaction Design for Secure Systems},
+  booktitle    = {International Conference on Information and Communications Security},
+  series       = {ICICS '02},
+  year         = {2002},
+}
+
+@article{ye2005tissec,
+  author       = {Zishuang Ye and Sean W. Smith and Denise Anthony},
+  title        = {Trusted Paths for Browsers},
+  journal      = {ACM Trans. Inf. Syst. Secur.},
+  volume       = {8},
+  number       = {2},
+  year         = {2005},
+}
+
+@misc{paya2013blog,
+  author       = {Cem Paya},
+  title        = {TrustZone, TEE and the delusion of security indicators},
+  year         = {2013},
+  note         = {\url{https://randomoracle.wordpress.com/2013/05/20/trustzone-tee-and-the-delusion-of-security-indicators-part-i/}},
+}
+
+@misc{armTZslides,
+  author       = {{ARM Ltd.}},
+  title        = {Securing the System with TrustZone Ready Program},
+  note = {\url{http://www.arm.com/files/pdf/Tech_seminar_TrustZone_v7_PUBLIC.pdf}},
+  year         = {last access 2015},
+}
+
+@inproceedings{jackson2007usec,
+  author       = {Jackson, Collin and Simon, Daniel R. and Tan, Desney S. and
+                  Barth, Adam},
+  title        = {An evaluation of extended validation and picture-in-picture
+                  phishing attacks},
+  booktitle    = {International Conference on Financial cryptography and International conference on Usable Security},
+  series       = {FC'07/USEC'07},
+  year         = 2007,
+}
+
+@inproceedings{egelman2008chi,
+  author       = {Egelman, Serge and Cranor, Lorrie Faith and Hong, Jason},
+  title        = {You've been warned: an empirical study of the effectiveness of web browser phishing warnings},
+  booktitle    = {SIGCHI Conference on Human Factors in Computing Systems},
+  series       = {CHI'08},
+  year         = {2008},
+}
+
+@inproceedings{kostiainen2011acns,
+  author       = {Kostiainen, Kari and Asokan, N. and Afanasyeva, Alexandra},
+  title        = {Towards user-friendly credential transfer on open credential
+                  platforms},
+  booktitle    = {International conference on Applied cryptography and network security},
+  series       = {ACNS'11},
+  year         = 2011,
+}
+
+@inproceedings{bauer2007soups,
+  author       = {Bauer, Lujo and Cranor, Lorrie Faith and Reiter, Michael
+                  K. and Vaniea, Kami},
+  title        = {Lessons learned from the deployment of a smartphone-based
+                  access-control system},
+  booktitle    = {Symposium on Usable privacy and
+                  security},
+  series       = {SOUPS'07},
+  year         = {2007},
+}
+
+
+@inproceedings{zhou2012sp,
+  author       = {Zhou, Yajin and Jiang, Xuxian},
+  title        = {Dissecting Android Malware: Characterization and Evolution},
+  booktitle    = {{IEEE} Symposium on Security and Privacy},
+  series       = {SP'12},
+  year         = 2012,
+}
+
+@inproceedings{Laurie08,
+  author       = {Laurie, Ben and Singer, Abe},
+  title        = {Choose the red pill and the blue pill: a position paper},
+  booktitle    = {Workshop on New security paradigms},
+  series       = {NSPW'08},
+  year         = {2008},
+}
+
+@inproceedings{Balfanz99,
+  author       = {Balfanz, Dirk and Felten, Edward W.},
+  title        = {Hand-held computers can be better smart cards},
+  booktitle    = {USENIX Security Symposium},
+  series       = {USENIX'99},
+  year         = {1999},
+}
+
+@inproceedings{Mannan07,
+  author       = {Mannan, Mohammad and Van Oorschot, P. C.},
+  title        = {Using a personal device to strengthen password authentication
+                  from an untrusted computer},
+  booktitle    = {International Conference on Financial
+                  cryptography and International conference on Usable
+                  Security},
+  series       = {FC'07/USEC'07},
+  year         = 2007,
+}
+
+@inproceedings{Mannan11,
+  author       = {Mannan, Mohammad and Kim, Beom Heyn and Ganjali, Afshar and
+                  Lie, David},
+  title        = {Unicorn: two-factor attestation for data security},
+  booktitle    = {{ACM} Conference on Computer and
+                  communications security},
+  series       = {CCS'11},
+  year         = 2011,
+
+}
+
+@inproceedings{burke06wsw,
+  author       = {Jeffrey A. Burke and Deborah Estrin and Mark Hansen and Andrew
+                  Parker and Nithya Ramanathan and Sasank Reddy and Mani
+                  B. Srivastava},
+  title        = {Participatory Sensing},
+  booktitle    = {Workshop on World-Sensor-Web},
+  series = {WSW'07},
+  year         = {2007},
+}
+
+@inproceedings{ardagna07dbsec,
+  author    = {Claudio Agostino Ardagna and Marco Cremonini and Ernesto Damiani and Sabrina De Capitani di Vimercati and Pierangela Samarati},
+  title     = {Location Privacy Protection Through Obfuscation-Based Techniques},
+  booktitle = {Working Conference on Data and Applications Security},
+  series = {DBSec'07},
+  year      = {2007},
+}
+
+@article{beresford03pervasive,
+  author    = {Alastair R. Beresford and Frank Stajano},
+  title     = {Location Privacy in Pervasive Computing},
+  journal   = {{IEEE} Pervasive Computing},
+  volume    = {2},
+  number    = {1},
+  year      = {2003},
+}
+
+@inproceedings{trevisani04wmcsa,
+  author    = {Emiliano Trevisani and Andrea Vitaletti},
+  title     = {Cell-ID Location Technique, Limits and Benefits: An Experimental Study},
+  booktitle = {{IEEE} Workshop on Mobile Computing Systems and Applications},
+  series = {WMCSA'04},
+  year      = {2004},
+}
+
+
+@article{Guida04,
+  author  = {Guida, R. and Stahl, R. and Bunt, T. and Secrest, G. and Moorcones, J.},
+  journal = {IEEE Security Privacy},
+  title   = {Deploying and using public key technology: lessons learned in real life},
+  year    = {2004},
+  volume  = {2},
+  number  = {4},
+}
+
+@inproceedings{kostiainen2011codaspy,
+  author    = {Kostiainen, Kari and Reshetova, Elena and Ekberg, Jan-Erik and Asokan, N.},
+  title     = {Old, new, borrowed, blue -- a perspective on the evolution of mobile platform security architectures},
+  booktitle = {ACM conference on Data and application security and privacy},
+  series = {CODASPY'11},
+  year      = {2011},
+}
+
+@inproceedings{Felt11,
+     author  = {Felt, Adrienne Porter and Finifter, Matthew and Chin, Erika and Hanna, Steve and Wagner, David},
+     title   = {A survey of mobile malware in the wild},
+     booktitle = {{ACM} workshop on security and privacy in smartphones and mobile devices},
+     series  = {SPSM'11},
+     year = {2011},
+}
+
+@misc{polariswireless,
+  title = {Polaris Wireless Location Signatures - For lawful and mass location surveillance},
+  author = {Polaris Wireless},
+  url = {http://www.polariswireless.com/},
+  year = {2012},
+}
+
+
+@misc{trueposition,
+  title = {U-TDOA: Enabling New Location-based Safety and Security Solutions},
+  author = {TruePosition Inc.},
+  url = {http://www.trueposition.com/},
+  year = {2008},
+}
+
+@inproceedings{gustafsson03ICASSP,
+author={Fredrik Gustafsson and Fredrik Gunnarsson},
+title={Positioning using time-difference of arrival measurements},
+booktitle={{IEEE} International Conference on Acoustics, Speech, and Signal Processing (ICASSP)},
+year={2003},
+volume={6},
+}
+
+@article{gueye06ton,
+  author    = {Bamba Gueye and Artur Ziviani and Mark Crovella and Serge Fdida},
+  title     = {Constraint-based geolocation of internet hosts},
+  journal   = {IEEE/ACM Trans. Netw.},
+  volume    = {16},
+  number    = {6},
+  year      = {2006},
+}
+
+@inproceedings{gilbert10hotmobile,
+ author     = {Peter Gilbert and Landon P. Cox and Jaeyeon Jung and David Wetherall},
+ title      = {Toward trustworthy mobile sensing},
+ booktitle  = {ACM International Workshop on Mobile Computing Systems and Applications},
+ series = {HotMobile'10},
+ year       = {2010},
+}
+
+@inproceedings{dua10hotsec,
+  author    = {Akshay Dua and Nirupama Bulusu and Wu-chang Feng},
+  title     = {Towards Trustworthy Participatory Sensing},
+  booktitle = {USENIX Summit on Hot Topics in Security},
+  series = {HotSec'09},
+  year      = {2009},
+}
+
+@article{chan06TVT,
+  author    = {Yiu-Tong Chan and Herman Yau Chin Han and Pak-chung Ching},
+  title     = {Exact and Approximate Maximum Likelihood Localization Algorithms},
+  journal   = {IEEE T. Vehicular Technology},
+  volume    = {55},
+  number    = {1},
+  year      = {2006},
+}
+
+@inproceedings{lamarca05pervasive,
+  author    = {Anthony LaMarca and Yatin Chawathe and Sunny Consolvo and Jeffrey Hightower and Ian E. Smith and James Scott and Timothy Sohn and James Howard and Jeff Hughes and Fred Potter and Jason Tabert and Pauline Powledge andGaetano Borriello and Bill N. Schilit},
+  title     = {Place Lab: Device Positioning Using Radio Beacons in the Wild},
+  booktitle = {International Conference on Pervasive Computing},
+  series = {PerCom'05},
+  year      = {2005},
+}
+
+@inproceedings{laitinen01vtc,
+  author    = {H. L\"{a}itinen and and J. Lahteenmaki and T. N\"{o}rdstrom},
+  title     = {Database correlation method for GSM location},
+  booktitle = {{IEEE} Vehicular Technology Conference},
+  series = {VTC'01},
+  year      = {2001},
+}
+
+@inproceedings{chen06ubicomp,
+  author    = {Mike Y. Chen and Timothy Sohn and Dmitri Chmelev and Dirk H{\"a}hnel and Jeffrey Hightower and Jeff Hughes and Anthony LaMarca and Fred Potter and Ian E. Smith and Alex Varshavsky},
+  title     = {Practical Metropolitan-Scale Positioning for GSM Phones},
+  booktitle = {International Conference on Ubiquitous Computing},
+  series = {Ubicomp'06},
+  year      = {2006},
+}
+
+@inproceedings{otsason05ubicomp,
+  author    = {Veljo Otsason and Alex Varshavsky and Anthony LaMarca and Eyal de Lara},
+  title     = {Accurate GSM Indoor Localization},
+  booktitle = {International Conference on Ubiquitous Computing},
+  series = {Ubicomp'05},
+  year      = {2005},
+}
+
+
+@article{Dolev83,
+    author   = {Dolev, D. and Yao, Andrew C.},
+    journal  = {IEEE Transactions on Information Theory},
+    title    = {On the security of public key protocols},
+    year     = {1983},
+    volume   = {29},
+    number   = {2},
+}
+
+@incollection{Cremers08,
+    year      = {2008},
+    booktitle = {Computer Aided Verification},
+    volume    = {5123},
+    series    = {Lecture Notes in Computer Science},
+    title     = {The Scyther Tool: Verification, Falsification, and Analysis of Security Protocols},
+    author    = {Cremers, CasJ.F.},
+}
+
+@misc{ARMTrustZone,
+    author   = {{ARM Ltd.}},
+    title    = {{Building a Secure System using TrustZone Technology}},
+    year     = {2009},
+    note = {\url{http://www.arm.com}}
+}
+
+@article{Denning96,
+    title    = {Location-based authentication: Grounding cyberspace for better security},
+    author   = {Dorothy E. Denning and Peter F. MacDoran},
+    journal  = {Computer Fraud \& Security},
+    volume   = {1996},
+    number   = {2},
+    month    = {February},
+    year     = {1996},
+}
+
+@article{rao03cacm,
+  author    = {Bharat Rao and
+               Louis Minakakis},
+  title     = {Evolution of mobile location-based services},
+  journal   = {Commun. ACM},
+  volume    = {46},
+  number    = {12},
+  year      = {2003},
+}
+
+@inproceedings{tippenhauer09esorics,
+  author    = {Nils Ole Tippenhauer and Srdjan Capkun},
+  title     = {ID-Based Secure Distance Bounding and Localization},
+  booktitle = {European Symposium on Research in Computer Security},
+  series = {ESORICS'09},
+  year      = {2009},
+}
+
+@inproceedings{carbunar12acns,
+  author    = {Bogdan Carbunar and Radu Sion and Rahul Potharaju and Moussa Ehsan},
+  title     = {The Shy Mayor: Private Badges in GeoSocial Networks},
+  booktitle = {International Conference on Applied Cryptography and Network Security},
+  series = {ACNS'12},
+  year      = {2012},
+}
+
+@inproceedings{luo10gis,
+  author    = {Wanying Luo and Urs Hengartner},
+  title     = {VeriPlace: a privacy-aware location proof architecture},
+  booktitle = {ACM International Symposium on Advances in Geographic Information Systems},
+  series = {GIS'10},
+  year      = {2010},
+}
+
+@inproceedings{saroiu09hotmobile,
+  author    = {Stefan Saroiu and Alec Wolman},
+  title     = {Enabling new mobile applications with location proofs},
+  booktitle = {ACM International Workshop on Mobile Computing Systems and Application},
+  series = {HotMobile'09},
+  year      = {2009},
+}
+
+@inproceedings{katz-bassett06imc,
+  author    = {Ethan Katz-Bassett and
+               John P. John and
+               Arvind Krishnamurthy and
+               David Wetherall and
+               Thomas E. Anderson and
+               Yatin Chawathe},
+  title     = {Towards IP geolocation using delay and topology measurements},
+  booktitle = {ACM SIGCOMM Conference on Internet Measurement},
+  series = {SIGCOMM'06},
+  year      = {2006},
+
+}
+
+@inproceedings{gilbert11sensys,
+  author    = {Peter Gilbert and Jaeyeon Jung and Kyungmin Lee and Henry Qin and Daniel Sharkey and Anmol Sheth and Landon P. Cox},
+  booktitle = {International Conference on Embedded Networked
+               Sensor Systems},
+  title     = {YouProve: authenticity and fidelity in mobile sensing},
+  series = {SenSys'11},
+  year      = {2011},
+}
+
+@inproceedings{brassil12mobisec,
+  author    = {Jack Brassil and
+               Pratyusa K. Manadhata},
+  title     = {Verifying the Location of a Mobile Device User},
+  booktitle = {Security and Privacy in Mobile Information and Communication Systems},
+  series = {MobiSec'12},
+  year      = {2012},
+}
+
+@inproceedings{sariou10hotmobile,
+  author    = {Stefan Saroiu and Alec Wolman},
+  title     = {I am a sensor, and I approve this message},
+  booktitle = {ACM International Workshop on Mobile Computing Systems and Applications},
+  series = {HotMobile'10},
+  year      = {2010},
+}
+
+@inproceedings{liu12mobisys,
+  author    = {He Liu and Stefan Saroiu and Alec Wolman and Himanshu Raj},
+  title     = {Software abstractions for trusted sensors},
+  booktitle = {International Conference on Mobile Systems, Applications, and Services},
+  series = {MobiSys'12},
+  year      = {2012},
+}
+
+
+@inproceedings{sorber12mobisys,
+  author    = {Jacob Sorber and Minho Shin and Ronald A. Peterson and David Kotz},
+  title     = {Plug-n-trust: practical trusted sensing for mhealth},
+  booktitle = {International Conference on Mobile Systems, Applications, and Services},
+  series    = {MobiSys'12},
+  year      = {2012},
+}
+
+@techreport{credo,
+author      = {H. Raj and D. Robinson and T. Tariq and P. England and S. Saroiu and A. Wolman},
+title       = {Credo: Trusted Computing for Guest VMs with a Commodity Hypervisor},
+institution = {Microsoft Research},
+number      = {MSR-TR-2011-130},
+year        = {2011},
+}
+
+@inproceedings{dwork06icapl,
+  author    = {Cynthia Dwork},
+  title     = {Differential Privacy},
+  booktitle = {International Colloquium on Automata, Languages and Programming},
+  series = {ICALP'06},
+  year      = {2006},
+}
+
+@misc{androidjb,
+  title        = {{Android 4.1 APIs - Jelly Bean}},
+  author       = {{Google Inc.}},
+  year         = {last access 2015},
+  note = {\url{http://developer.android.com/about/versions/jelly-bean.html}}
+}
+
+@misc{armmbexpress,
+  title        = {{ARM Motherboard Express}},
+  author       = {{ARM Ltd.}},
+  note =
+                  {\url{http://www.arm.com/products/tools/development-boards/versatile-express/motherboard-express.php}},
+year = {last access 2015}
+}
+
+@misc{armctexpress,
+  title        = {{ARM Coretile Express}},
+  author       = {{ARM Ltd.}},
+  note =
+                  {\url{http://www.arm.com/products/tools/development-boards/versatile-express/coretile-express.php}},
+  year = {last access 2015}
+}
+
+@misc{openvirtualization,
+  title        = {{Open Virtualization - ARM TrustZone and ARM Hypervisor Open
+                  Source Software}},
+  author       = {{Sierraware}},
+  note = {\url{http://www.openvirtualization.org/}},
+  year = {last access 2015}
+}
+
+@misc{globalplatformspecs,
+  title        = {{GlobalPlatform Device Specifications}},
+  author       = {{GlobalPlatform}},
+  note = {\url{http://www.globalplatform.org/specificationsdevice.asp}},
+  year = {last access 2015},
+}
+
+@inproceedings{sgx,
+  author       = {McKeen, Frank and Alexandrovich, Ilya and Berenzon, Alex and
+                  Rozas, Carlos V. and Shafi, Hisham and Shanbhogue, Vedvyas and
+                  Savagaonkar, Uday R.},
+  title        = {{Innovative Instructions and Software Model for Isolated
+                  Execution}},
+  booktitle    = {International Workshop on Hardware and
+                  Architectural Support for Security and Privacy},
+  series       = {HASP'13},
+  year         = {2013},
+}
+
+@misc{mshield,
+  author       = {J. Azema and G. Fayad},
+  title        = {{M-Shield mobile security technology: Making wireless secure}},
+  booktitle    = {{Texas Instruments white paper}},
+  year         = 2008,
+  note = {\url{http://focus.ti.com/pdfs/wtbu/ti_mshield_whitepaper.pdf}}
+}
+
+@inproceedings{vasudevan12trust,
+  author       = {Amit Vasudevan and Emmanuel Owusu and Zongwei Zhou and James Newsome and Jonathan M. McCune},
+  title        = {Trustworthy Execution on Mobile Devices: What Security Properties Can My Mobile Platform Give Me?},
+  booktitle    = {International Conference on Trust and Trustworthy Computing},
+  series       = {TRUST'12},
+  year         = {2012},
+}
+
+@inproceedings{epass-symbian,
+  author       = {Wan Hussin and Wan Huzaini and  Edwards Reuben  and Paul Coulton},
+  title        = {{E-Pass Using DRM in Symbian v8 OS and TrustZone: Securing Vital Data on Mobile Devices}},
+  booktitle    = {International Conference on Mobile Business},
+  series       = {ICMB '06},
+  year         = {2006},
+}
+
+@inproceedings{mobile-tickets,
+  author       = {Hussin, W.H. and Coulton, P. and Edwards, R.},
+  booktitle    = {International Conference on Mobile Business},
+  series       = {ICMB'05},
+  title        = {Mobile ticketing system employing TrustZone technology},
+  year         = {2005},
+}
+
+@inproceedings{tz-secondfactor,
+  author       = {Roland van Rijswijk-Deij and Erik Poll},
+  title        = {Using Trusted Execution Environment in Two-Factor Authentication: comparing approaches},
+  booktitle    = {Open Identity Summit},
+  series       = {OID'13},
+  year         = {2013},
+}
+
+@misc{polarssl,
+  title        = {{mbed TLS}},
+  note = {\url{https://tls.mbed.org}},
+  author = {{ARM Ltd.}},
+  year = {last access 2015}
+}
+
+@misc{3gppsms,
+  title        = {{3GPP TS 23.040 - Technical realization of the Short Message Service (SMS)}},
+  note = {\url{http://www.3gpp.org/ftp/Specs/html-info/23040.htm}},
+  year = {last access 2015},
+  author = {{3GPP}}
+}
+
+@misc{ios7,
+	title = {{iOS}},
+	note = {\url{http://www.apple.com/ios/}},
+	year = {last access 2015},
+	author = {Apple Inc.}
+}
+
+@misc{gdsdcard,
+	title = {{G\&D Makes Mobile Terminal Devices Even More Secure with New Version of Smart Card in MicroSD Format}},
+	note = {\url{http://www.gi-de.com/en/about_g_d/press/press_releases/G%26D-Makes-Mobile-Terminal-Devices-Secure-with-New-MicroSD-Card-g3592.jsp}},
+	year = {last access 2015},
+	author = {{Giesecke \& Devrient GmbH}}
+}
+
+@misc{smartSD,
+	title = {{smartSD Memory Cards}},
+	note = {\url{https://www.sdcard.org/developers/overview/ASSD/smartsd/}},
+	year = {last access 2015},
+	author = {{SD Association}}
+}
+
+@inproceedings{smsdelay,
+  author       = {Pries, R. and Hobfeld, T. and Tran-Gia, P.},
+  booktitle    = {Vehicular Technology Conference},
+  title        = {On the Suitability of the Short Message Service for Emergency Warning Systems},
+  year         = {2006},
+  series       = {VTC'06},
+}
+
+@inproceedings{2013_spsm_marforio,
+  year         = {2013},
+  title        = {Secure Enrollment and Practical Migration for Mobile Trusted
+                  Execution Environments},
+  author       = {Marforio, Claudio and Karapanos, Nikolaos and Soriente,
+                  Claudio and Kostiainen, Kari and Capkun, Srdjan},
+  booktitle    = {{ACM} workshop on security and privacy in smartphones and mobile devices},
+  series       = {SPSM'13},
+}
+
+@inproceedings{parno_trust,
+  author       = {Parno, Bryan},
+  title        = {Bootstrapping Trust in a ``Trusted'' Platform},
+  booktitle    = {USENIX Summit on Hot Topics in Security},
+  series       = {HotSec'08},
+  year         = {2008},
+} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+%% INTRO SECOND PART %%
+
+@misc{lookout2014,
+  author    = {{Lookout Inc.}},
+  title     = {{2014 Mobile Threat Report}},
+  note      = {\url{https://www.lookout.com/resources/reports/mobile-threat-report}},
+  year      = {last access 2015}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+%% RELATED WORK SECOND PART %%
+
+@misc{xcodeghost,
+  author    = {Claud Xiao},
+  title     = {{Novel Malware XcodeGhost Modifies Xcode, Infects Apple {iOS} Apps and Hits App Store}},
+  note      = {\url{http://researchcenter.paloaltonetworks.com/2015/09/novel-malware-xcodeghost-modifies-xcode-infects-apple-ios-apps-and-hits-app-store/}},
+  year      = {last access 2015}
+}
+
+@misc{malwaregenome,
+  author    = {Yajin Zhou and Xuxian Jiang},
+  title     = {{Android Malware Genome Project}},
+  note      = {\url{http://www.malgenomeproject.org}},
+  year      = {last access 2015}
+}
+
+@inproceedings{Fette2007,
+ author = {Fette, Ian and Sadeh, Norman and Tomasic, Anthony},
+ title = {Learning to Detect Phishing Emails},
+ booktitle = {International Conference on World Wide Web},
+ series = {WWW'07},
+ year = {2007},
+}
+
+@inproceedings{Garera2007,
+ author = {Garera, Sujata and Provos, Niels and Chew, Monica and Rubin, Aviel D.},
+ title = {A Framework for Detection and Measurement of Phishing Attacks},
+ booktitle = {{ACM} Workshop on Recurring Malcode},
+ series = {WORM'07},
+ year = {2007},
+} 
+
+@inproceedings{xiao-dsn13, 
+author={Jidong Xiao and Zhang Xu and Hai Huang and Haining Wang}, 
+booktitle={Dependable Systems and Networks}, 
+title={{Security Implications of Memory Deduplication in a Virtualized Environment}}, 
+series={DSN '13},
+year={2013}, 
+}
+
+@inproceedings{hu-sp92,
+ author = {Hu, Wei-Ming},
+ title = {Lattice Scheduling and Covert Channels},
+ booktitle = {{IEEE} Symposium on Security and Privacy},
+ series = {SP'92},
+ year = {1992},
+} 
+
+@inproceedings{wu-usenix12,
+ author = {Wu, Zhenyu and Xu, Zhang and Wang, Haining},
+ title = {{Whispers in the Hyper-space: High-speed Covert Channel Attacks in the Cloud}},
+ booktitle = {USENIX Security Symposium},
+ series = {USENIX'12},
+ year = {2012},
+} 
+
+@inproceedings{lalande13,
+  TITLE = {{Hiding privacy leaks in Android applications using low-attention raising covert channels}},
+  AUTHOR = {Lalande, Jean-Fran{\c c}ois and Wendzel, Steffen},
+  booktitle = {2013 International Conference on Availability, Reliability and Security},
+  series = {{ARES'13}},
+  YEAR = {2013},
+}
+
+@inproceedings{taplogger12,
+ author = {Xu, Zhi and Bai, Kun and Zhu, Sencun},
+ title = {TapLogger: Inferring User Inputs on Smartphone Touchscreens Using On-board Motion Sensors},
+ booktitle = {{ACM} Conference on Security and Privacy in Wireless and Mobile Networks},
+ series = {WISEC'12},
+ year = {2012},
+}
+
+@inproceedings{accessory12,
+ author = {Owusu, Emmanuel and Han, Jun and Das, Sauvik and Perrig, Adrian and Zhang, Joy},
+ title = {ACCessory: Password Inference Using Accelerometers on Smartphones},
+ booktitle = {Workshop on Mobile Computing Systems \& Applications},
+ series = {HotMobile'12},
+ year = {2012},
+}
+
+@inproceedings{touchlogger11,
+ author = {Cai, Liang and Chen, Hao},
+ title = {TouchLogger: Inferring Keystrokes on Touch Screen from Smartphone Motion},
+ booktitle = {USENIX Summit on Hot Topics in Security},
+ series = {HotSec'11},
+ year = {2011},
+ } 
+
+@inproceedings{memento12,
+ author = {Jana, Suman and Shmatikov, Vitaly},
+ title = {Memento: Learning Secrets from Process Footprints},
+ booktitle = {{IEEE} Symposium on Security and Privacy},
+ series = {SP'12},
+ year = {2012},
+} 
+
+@inproceedings{Felt2011,
+ author = {Felt, Adrienne Porter and Chin, Erika and Hanna, Steve and Song, Dawn and Wagner, David},
+ title = {{Android} Permissions Demystified},
+ booktitle = {{ACM} Conference on Computer and Communications Security},
+ series = {CCS'11},
+ year = {2011},
+}
+
+@inproceedings{Felt12,
+ author = {Felt, Adrienne Porter and Ha, Elizabeth and Egelman, Serge and Haney, Ariel and Chin, Erika and Wagner, David},
+ title = {{Android} Permissions: User Attention, Comprehension, and Behavior},
+ booktitle = {Symposium on Usable Privacy and Security},
+ series = {SOUPS'12},
+ year = {2012},
+}
+
+@inproceedings{Chia2012,
+ author = {Chia, Pern Hui and Yamamoto, Yusuke and Asokan, N.},
+ title = {Is This App Safe?: A Large Scale Study on Application Permissions and Risk Signals},
+ booktitle = {International Conference on World Wide Web},
+ series = {WWW'12},
+ year = {2012},
+} 
+
+@inproceedings{whyper,
+ author = {Pandita, Rahul and Xiao, Xusheng and Yang, Wei and Enck, William and Xie, Tao},
+ title = {WHYPER: Towards Automating Risk Assessment of Mobile Applications},
+ booktitle = {USENIX Security Symposium},
+ series = {USENIX'13},
+ year = {2013},
+}
+
+@inproceedings{Bugiel2011,
+ author = {Bugiel, Sven and Davi, Lucas and Dmitrienko, Alexandra and Heuser, Stephan and Sadeghi, Ahmad-Reza and Shastry, Bhargava},
+ title = {Practical and Lightweight Domain Isolation on {Android}},
+ booktitle = {{ACM} workshop on security and privacy in smartphones and mobile devices},
+ series = {SPSM'11},
+ year = {2011},
+}
+
+@misc{stackprofit,
+author = {{aleph one}},
+title = {Smashing the Stack for Fun and Profit},
+booktitle = {Phrack Magazine. Issue 59},
+year = {1996},
+note = {\url{http://phrack.org/issues/49/14.html}}
+}
+
+@misc{stringformat,
+author = {{riq and gera}},
+title = {Advances in format string exploitation},
+booktitle = {Phrack Magazine. Issue 49},
+year = {2002},
+note = {\url{http://phrack.org/issues/59/7.html}}
+}
+
+@misc{integeroverflow,
+author = {{blexim}},
+title = {Basic Integer Overflows},
+booktitle = {Phrack Magazine. Issue 60},
+year = {2002},
+note = {\url{http://phrack.org/issues/60/10.html}}
+}
+
+@inproceedings{mocfi,
+  author    = {Lucas Davi and
+               Alexandra Dmitrienko and
+               Manuel Egele and
+               Thomas Fischer and
+               Thorsten Holz and
+               Ralf Hund and
+               Stefan N{\"{u}}rnberger and
+               Ahmad{-}Reza Sadeghi},
+  title     = {MoCFI: {A} Framework to Mitigate Control-Flow Attacks on Smartphones},
+  booktitle = {Annual Network and Distributed System Security Symposium},
+  series = {NDSS'12},
+    year      = {2012},
+}
+
+@inproceedings{pios,
+  author    = {Manuel Egele and
+               Christopher Kruegel and
+               Engin Kirda and
+               Giovanni Vigna},
+  title     = {{PiOS}: Detecting Privacy Leaks in {iOS} Applications},
+  booktitle = {Annual Network and Distributed System Security Symposium},
+  series = {NDSS'11},
+    year      = {2011}
+}
+
+@inproceedings{naclusenix,
+ author = {Sehr, David and Muth, Robert and Biffle, Cliff and Khimenko, Victor and Pasko, Egor and Schimpf, Karl and Yee, Bennet and Chen, Brad},
+ title = {Adapting Software Fault Isolation to Contemporary CPU Architectures},
+ booktitle = {USENIX Security Symposium},
+ series = {USENIX'10},
+ year = {2010},
+} 
+
+@inproceedings{xifer,
+ author = {Davi, Lucas Vincenzo and Dmitrienko, Alexandra and N\"{u}rnberger, Stefan and Sadeghi, Ahmad-Reza},
+ title = {Gadge Me if You Can: Secure and Efficient Ad-hoc Instruction-level Randomization for x86 and ARM},
+ booktitle = {{ACM} Symposium on Information, Computer and Communications Security},
+ series = {ASIACCS '13},
+ year = {2013},
+}
+
+@inproceedings{edgeminer,
+  author    = {Yinzhi Cao and
+               Yanick Fratantonio and
+               Antonio Bianchi and
+               Manuel Egele and
+               Christopher Kruegel and
+               Giovanni Vigna and
+               Yan Chen},
+  title     = {EdgeMiner: Automatically Detecting Implicit Control Flow Transitions through the {Android} Framework},
+  booktitle = {Annual Network and Distributed System Security Symposium},  series = {NDSS'15},
+  year      = {2015},
+}
+
+@misc{iosmemory15,
+    author = {Liang Chen},
+    title = {Attacking {WebKit} Applications by exploiting memory corruption bugs},
+    note = {\url{https://cansecwest.com/slides/2015/Liang_CanSecWest2015.pdf}},
+    howpublished = {CanSecWest},
+    year = {2015},
+}
+
+@misc{iosmemory13,
+    author = {Stefan Esser},
+    title = {{iOS} 6 Exploitation 280 days later},
+    note = {\url{https://cansecwest.com/slides/2013/CSW2013_StefanEsser_iOS6_Exploitation_280_Days_Later.pdf}},
+    howpublished = {CanSecWest},
+    year = {2013}
+}
+
+@misc{androidexploit15,
+    author = {Wen Xu},
+    title = {AH! UNIVERSAL ANDROID ROOTING IS BACK},
+    note = {\url{https://www.blackhat.com/docs/us-15/materials/us-15-Xu-Ah-Universal-Android-Rooting-Is-Back-wp.pdf}},
+    howpublished = {BlackHat USA},
+    year = {2015}
+}
+
+@misc{androidexploit15ipc,
+    author = {Guang Gong},
+    title = {FUZZING ANDROID SYSTEM SERVICES BY BINDER CALL TO ESCALATE PRIVILEGE},
+    note = {\url{https://www.blackhat.com/docs/us-15/materials/us-15-Gong-Fuzzing-Android-System-Services-By-Binder-Call-To-Escalate-Privilege-wp.pdf}},
+    howpublished = {BlackHat USA},
+    year = {2015}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+%% SECURITY INDICATORS %%
+
+@inproceedings{traynorimc,
+  author    = {Chaitrali Amrutkar and
+               Patrick Traynor and
+               Paul C. van Oorschot},
+  title     = {Measuring {SSL} Indicators on Mobile Browsers: Extended Life, or End of the Road?},
+  booktitle = {International Information Security Conference},
+  year      = {2012},
+  series = {ISC'12}
+}
+
+
+@misc{googleappverifiy,
+  author  = {{Google Inc.}},
+  title   = {{Protect against harmful apps}},
+  note    = {\url{https://support.google.com/accounts/answer/2812853}},
+  year    = {last access 2015},
+}
+
+@misc{malisa2015,
+  author    = {Luka Malisa},
+  title     = {Detecting Mobile Application Spoofing Attacks by Leveraging User Visual Similarity Perception},
+  year      = {2015},
+  note      = {Cryptology ePrint Archive: Report 2015/709},
+}
+
+@misc{forbes,
+  author    = {Forbes},
+  title     = {{Alleged ``Nazi'' {Android} FBI Ransomware Mastermind Arrested In Russia}},
+  year      = {last access 2015},
+  note      = {\url{http://www.forbes.com/sites/thomasbrewster/2015/04/13/alleged-nazi-android-fbi-ransomware-mastermind-arrested-in-russia/}},
+}
+
+
+
+@misc{macrumors,
+  author    = {MacRumors},
+  title     = {{``Masque Attack''} Vulnerability Allows Malicious Third-Party {iOS} Apps to Masquerade as Legitimate Apps},
+  year      = {2014},
+  note      = {\url{http://www.macrumors.com/2014/11/10/masque-attack-ios-vulnerability/}},
+}
+
+@misc{digitaltrends,
+  author       = {{Digital Trends}},
+  title        = {{Do not use iMessage chat for Android, it's not safe}},
+  year         = {last access 2015},
+  note         = {\url{http://www.digitaltrends.com/mobile/imessage-chat-android-security-flaw/}},
+}
+
+@misc{securelist,
+  author       = {{Secure List}},
+  title        = {{The Android Trojan Svpeng now capable of mobile phishing}},
+  year         = {last access 2015},
+  note         = {\url{http://www.securelist.com/en/blog/8138/The_Android_Trojan_Svpeng_now_capable_of_mobile_phishing}},
+}
+
+@misc{boa,
+  author       = {{Bank of America}},
+  title        = {{SiteKey Authentication}},
+  year         = {last access 2015},
+  note         = {\url{https://www.bankofamerica.com/privacy/online-mobile-banking-privacy/sitekey.go}},
+}
+
+@misc{vanguard,
+  author       = {{The Vanguard Group}},
+  title        = {{Vanguard Enhanced Logon}},
+  year         = {last access 2015},
+  note         = {\url{http://www.vanguard.com/us/content/Home/RegEnhancedLogOnContent.jsp}},
+}
+
+
+@misc{proxama,
+  author       = {Proxama},
+  title        = {{ARM Click and Pay}},
+  year         = {last access 2015},
+  note         = {\url{http://www.proxama.com/resource-centre/case-studies/arm-click-pay/}},
+}
+
+@misc{droid09,
+  author       = {{F-secure}},
+  title        = {Warning On Possible {Android} Mobile Trojans},
+  year         = {2010},
+  note         = {\url{www.f-secure.com/weblog/archives/00001852.html}},
+}
+
+@misc{hou-umich12,
+  author       = {Jie Hou and Qi Yang},
+  title        = {Defense Against Mobile Phishing Attack},
+  year         = {last access 2015},
+  note         = {\url{www-personal.umich.edu/~yangqi/pivot/mobile_phishing_defense.pdf}}
+}
+
+@misc{ARMTrustZone,
+  author       = {{ARM Ltd.}},
+  title        = {{Building a Secure System using TrustZone Technology}},
+  year         = {last access 2015},
+  note         = {\url{http://infocenter.arm.com/help/topic/com.arm.doc.prd29-genc-009492c/PRD29-GENC-009492C_trustzone_security_whitepaper.pdf}}
+}
+
+@misc{speke,
+  author       = {Jablon, D.},
+  title        = {{The SPEKE Password-Based Key Agreement Methods}},
+  year         = {2003},
+  note         = {\url{http://tools.ietf.org/html/draft-jablon-speke-02}}
+}
+
+@misc{IntelIPT,
+  author       = {{Intel Corporation}},
+  title        = {{Identity Protection Technology}},
+  year         = {last access 2015},
+  note         = {\url{http://www.intel.com}}
+}
+
+@misc{bouncycastle,
+  author       = {{Legion of the Bouncy Castle}},
+  title        = {{Bouncy Castle Crypto APIs}},
+  note         = {\url{http://www.bouncycastle.org}},
+  year         = {last access 2015},
+}
+
+@misc{cherrypy,
+  title        = {{CherryPy - A Minimalistic Python Web Framework}},
+  author       = {{CherryPy Team}},
+  year         = {last access 2015},
+  note         = {\url{http://www.cherrypy.org/}}
+}
+
+@misc{sqlite,
+  title        = {{SQLite}},
+  author       = {{SQLite Development Team}},
+  year         = {last access 2015},
+  note         = {\url{http://www.sqlite.org}}
+}
+
+@misc{androidjb,
+  title        = {{Android 4.3 APIs - JellyBean}},
+  author       = {{Android Development Team}},
+  year         = {last access 2015},
+  note         = {\url{http://developer.android.com/about/versions/jelly-bean.html}}
+}
+
+@misc{cyanogen,
+  title        = {{CyanogenMod}},
+  author       = {{CyanogenMod Project Developers}},
+  year         = {last access 2015},
+  note         = {\url{http://www.cyanogenmod.org/}}
+}
+
+@misc{cvemitre,
+  title        = {{Common Vulnerabilities and Exposures List}},
+  year         = {last access 2015},
+  note         = {\url{http://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=Android}},
+  author       = {{The MITRE Corportaion}},
+}
+
+%---- articles
+
+@article{hong12cacm,
+  author    = {Jason Hong},
+  title     = {The state of phishing attacks},
+  journal   = {Commun. {ACM}},
+  volume    = {55},
+  number    = {1},
+  year      = {2012},
+}
+
+@article{bravolillo11sp,
+  author    = {Cristian Bravo{-}Lillo and Lorrie Faith Cranor and Julie S. Downs and Saranga Komanduri},
+  title     = {Bridging the Gap in Computer Security Warnings: {A} Mental Model Approach},
+  journal   = {{IEEE} Security {\&} Privacy},
+  volume    = {9},
+  number    = {2},
+  year      = {2011},
+}
+
+
+@article{rensink2002,
+  title={Change detection},
+  author={Rensink, Ronald A},
+  journal={Annual review of psychology},
+  volume={53},
+  number={1},
+  year={2002},
+}
+
+@article{amrutkar-mobcomp13,
+  author       = {Amrutkar, C. and Traynor, P. and Van Oorschot, P.},
+  journal      = {IEEE Transactions on Mobile Computing},
+  title        = {An Empirical Evaluation of Security Indicators in Mobile Web
+                  Browsers},
+  year         = {2013},
+  volume       = {PP},
+  number       = {99},
+}
+
+@article{gilad-pc14,
+  author       = {Yossi Gilad and Amir Herzberg and Ari Trachtenberg},
+  title        = {Securing Smartphones: A Micro-TCB Approach},
+  journal      = {CoRR},
+  volume       = {abs/1401.7444},
+  year         = {2014},
+  note         = {\url{http://arxiv.org/abs/1401.7444}},
+}
+
+@article{chen10tit,
+  author       = {Chen, Teh-Chung and Dick, Scott and Miller, James},
+  title        = {Detecting Visually Similar Web Pages: Application to Phishing
+                  Detection},
+  volume       = {10},
+  number       = {2},
+  journal      = {ACM Trans. Internet Technol.},
+  year         = {2010},
+}
+
+%---- inproceedings
+
+@inproceedings{Azim2013,
+ author = {Azim, Tanzirul and Neamtiu, Iulian},
+ title = {Targeted and Depth-first Exploration for Systematic Testing of {Android} Apps},
+ booktitle = {International Conference on Object Oriented Programming Systems Languages and Applications},
+ series = {OOPSLA'13},
+ year = {2013},
+} 
+
+@inproceedings{zhou12ndss,
+  author    = {Yajin Zhou and Zhi Wang and Wu Zhou and Xuxian Jiang},
+  title     = {Hey, You, Get Off of My Market: Detecting Malicious Apps in Official and Alternative {Android} Markets},
+  booktitle    = {Annual Network and Distributed System Security Symposium},
+  series       = {NDSS'12},
+  year         = {2012},
+}
+
+
+@inproceedings{chisecurity,
+ author = {Egelman, Serge and King, Jennifer and Miller, Robert C. and Ragouzis, Nick and Shehan, Erika},
+ title = {Security User Studies: Methodologies and Best Practices},
+ booktitle = {Extended Abstracts on Human Factors in Computing Systems},
+ series = {CHI EA'07},
+ year = {2007},
+ location = {San Jose, CA, USA},
+} 
+
+@inproceedings{bianchi15sp,
+  author       = {Antonio Bianchi and Jacopo Corbetta and Luca Invernizzi and Yanick Fratantonio and Christopher Kruegel and Giovanni Vigna},
+  title        = {What the App is That? Deception and Countermeasures in the {Android} User Interface},
+  booktitle    = {{IEEE} Symposium on Security and Privacy},
+  series       = {SP'15},
+  year         = {2015},
+}
+
+
+@inproceedings{lin-ndss14,
+  author         = {Chia-Chi Lin and Hongyang Li and Xiaoyong Zhou and XiaoFeng Wang},
+  title        = {Screenmilker: How to Milk Your {Android} Screen for Secrets},
+  booktitle    = {Annual Network and Distributed System Security Symposium},
+  series       = {NDSS'14},
+  year         = {2014},
+}
+
+@inproceedings{gligor87tse,
+  author       = {Virgil D. Gligor and E. L. Burch and C. Sekar Chandersekaran
+                  and Robert S. Chapman and Leslie J. Dotterer and Matthew
+                  S. Hecht and Wen-Der Jiang and Gary L. Luckenbaugh and
+                  N. Vasudevan},
+  title        = {On the Design and the Implementation of Secure Xenix
+                  Workstations},
+  booktitle    = {{IEEE} Symposium on Security and Privacy},
+  series       = {SP'86},
+  year         = {1986},
+}
+
+@inproceedings{chin11mobisys,
+  author       = {Chin, Erika and Felt, Adrienne Porter and Greenwood, Kate and
+                  Wagner, David},
+  title        = {Analyzing Inter-application Communication in {Android}},
+  booktitle    = {International Conference on Mobile Systems, Applications, and
+                  Services},
+  series       = {MobiSys'11},
+  year         = {2011},
+}
+
+@inproceedings{mccune09ndss,
+  author       = {Jonathan M. McCune and Adrian Perrig and Michael K. Reiter},
+  title        = {Safe Passage for Passwords and Other Sensitive Data},
+  year         = {2009},
+  series       = {NDSS'09},
+  booktitle    = {Annual Network and Distributed System Security Symposium}
+}
+
+@inproceedings{libonati11ndss,
+  author       = {Alana Libonati and Jonathan M. McCune and Michael K. Reiter},
+  title        = {Usability Testing a Malware-Resistant Input Mechanism},
+  series       = {NDSS'11},
+  year         = {2011},
+  booktitle    = {Annual Network and Distributed System Security Symposium}
+}
+
+@inproceedings{niu-upsec08,
+  author       = {Niu, Yuan and Hsu, Francis and Chen, Hao},
+  title        = {{iPhish: Phishing Vulnerabilities on Consumer Electronics}},
+  booktitle    = {Conference on Usability, Psychology, and Security},
+  series       = {UPSEC'08},
+  year         = {2008},
+}
+
+@inproceedings{zu-woot12,
+  author       = {Xu, Zhi and Zhu, Sencun},
+  booktitle    = {USENIX Workshop on Offensive Technologies},
+  series       = {WOOT'12},
+  title        = {Abusing Notification Services on Smartphones for Phishing and
+                  Spamming},
+  year         = {201},
+}
+
+@inproceedings{rydstedt-woot10,
+  author       = {Rydstedt, Gustav and Gourdin, Baptiste and Bursztein, Elie and
+                  Boneh, Dan},
+  title        = {Framing Attacks on Smart Phones and Dumb Routers: Tap-jacking
+                  and Geo-localization Attacks},
+  booktitle    = {USENIX Workshop on Offensive Technologies},
+  series       = {WOOT'10},
+  year         = {2010},
+}
+
+@inproceedings{zhou-jiang12sp,
+  author       = {Yajin Zhou and Xuxian Jiang},
+  booktitle    = {{IEEE} Symposium on Security and Privacy},
+  series       = {SP'12},
+  title        = {Dissecting {Android} Malware: Characterization and Evolution},
+  year         = {2012},
+}
+
+@inproceedings{lever-ndss13,
+  author       = {Lever, Charles and Antonakakis, Manos and Reaves, Bradley and
+                  Traynor, Patrick and Lee, Wenke},
+  booktitle    = {Annual Network and Distributed System Security Symposium},
+  series       = {NDSS'13},
+  title        = {The Core of the Matter: Analyzing Malicious Traffic in
+                  Cellular Carriers},
+  year         = 2013
+}
+
+@inproceedings{truong13,
+  author       = {Truong, Hien Thi Thu and Lagerspetz, Eemil and Nurmi, Petteri
+                  and Oliner, Adam J. and Tarkoma, Sasu and Asokan, N. and
+                  Bhattacharya, Sourav},
+  title        = {The Company You Keep: Mobile Malware Infection Rates and
+                  Inexpensive Risk Indicators},
+  booktitle    = {International Conference on World Wide Web},
+  series       = {WWW'14},
+  year         = {2014},
+}
+
+@inproceedings{dhamija06chi,
+  author       = {Dhamija, Rachna and Tygar, J. D. and Hearst, Marti},
+  title        = {Why Phishing Works},
+  booktitle    = {SIGCHI Conference on Human Factors in Computing Systems},
+  series       = {CHI'06},
+  year         = {2006},
+}
+
+@inproceedings{maurer-css12,
+  author       = {Maurer, Max-Emanuel and H\"{o}fer, Lukas},
+  title        = {{Sophisticated Phishers Make More Spelling Mistakes: Using URL
+                  Similarity against Phishing}},
+  booktitle    = {International Conference on Cyberspace Safety and Security},
+  series       = {CSS'12},
+  year         = {2012},
+}
+
+@inproceedings{yue-www07,
+  author       = {Zhang, Yue and Hong, Jason I. and Cranor, Lorrie F.},
+  title        = {Cantina: A Content-based Approach to Detecting Phishing Web
+                  Sites},
+  booktitle    = {International Conference on World Wide Web},
+  series       = {WWW'07},
+  year         = {2007},
+}
+
+@inproceedings{dhamija05soups,
+  author       = {Dhamija, Rachna and Tygar, J. D.},
+  title        = {The Battle Against Phishing: Dynamic Security Skins},
+  booktitle    = {Symposium on Usable Privacy and Security},
+  series       = {SOUPS'05},
+  year         = {2005},
+}
+
+@inproceedings{herzberg12,
+  author       = {Herzberg, Amir and Margulies, Ronen},
+  title        = {My Authentication Album: Adaptive Images-Based Login
+                  Mechanism},
+  year         = {2012},
+  booktitle    = {Information Security and Privacy Research},
+}
+
+@inproceedings{wu-soups06,
+  author       = {Wu, Min and Miller, Robert C. and Little, Greg},
+  title        = {Web Wallet: Preventing Phishing Attacks by Revealing User
+                  Intentions},
+  booktitle    = {Symposium on Usable Privacy and Security},
+  series       = {SOUPS'06},
+  year         = {2006},
+}
+
+
+@inproceedings{lange-acsac13,
+  author       = {Lange, Matthias and Liebergeld, Steffen},
+  title        = {Crossover: Secure and Usable User Interface for Mobile Devices
+                  with Multiple Isolated OS Personalities},
+  booktitle    = {Annual Computer Security Applications Conference},
+  series       = {ACSAC'13},
+  year         = {2013},
+}
+
+@inproceedings{radke-ozhci13,
+  author       = {Radke, Kenneth and Boyd, Colin and Nieto, Juan Gonzalez and
+                  Buys, Laurie},
+  title        = {{``Who Decides?'': Security and Privacy in the Wild}},
+  booktitle    = {Australian Computer-Human Interaction Conference:
+                  Augmentation, Application, Innovation, Collaboration},
+  series       = {OzCHI'13},
+  year         = {2013},
+}
+
+@inproceedings{herzberg11esorics,
+  author       = {Herzberg, Amir and Margulies, Ronen},
+  title        = {Forcing Johnny to Login Safely: Long-term User Study of
+                  Forcing and Training Login Mechanisms},
+  booktitle    = {European Conference on Research in Computer Security},
+  series       = {ESORICS'11},
+  year         = {2011},
+}
+
+@inproceedings{karlof09ndss,
+  author       = {Karlof, Chris and Tygar, J. Doug and Wagner, David},
+  title        = {Conditioned-safe Ceremonies and a User Study of an Application
+                  to Web Authentication},
+  booktitle    = {Annual Network and Distributed System Security Symposium},
+  series       = {NDSS'09},
+  year         = {2009},
+}
+
+@inproceedings{schechter07sp,
+  author       = {Schechter, Stuart E. and Dhamija, Rachna and Ozment, Andy and
+                  Fischer, Ian},
+  title        = {The Emperor's New Security Indicators},
+  booktitle    = {{IEEE} Symposium on Security and Privacy},
+  series       = {SP'07},
+  year         = {2007},
+}
+
+@inproceedings{akhawe13usenix,
+  author       = {Akhawe, Devdatta and Felt, Adrienne Porter},
+  title        = {Alice in Warningland: A Large-scale Field Study of Browser
+                  Security Warning Effectiveness},
+  booktitle    = {USENIX Security Symposium},
+  series       = {USENIX'13},
+  year         = {2013},
+}
+
+@inproceedings{kumaraguru-ecrime07,
+  author       = {Kumaraguru, Ponnurangam and Rhee, Yong and Sheng, Steve and
+                  Hasan, Sharique and Acquisti, Alessandro and Cranor, Lorrie
+                  Faith and Hong, Jason},
+  title        = {Getting Users to Pay Attention to Anti-phishing Education:
+                  Evaluation of Retention and Transfer},
+  booktitle    = {Annual eCrime Researchers
+                  Summit --- Anti-phishing Working Groups},
+  series       = {eCrime'07},
+  year         = {2007},
+}
+
+@inproceedings{kumaraguru-soups09,
+  author       = {Kumaraguru, Ponnurangam and Cranshaw, Justin and Acquisti,
+                  Alessandro and Cranor, Lorrie and Hong, Jason and Blair, Mary
+                  Ann and Pham, Theodore},
+  title        = {School of Phish: A Real-world Evaluation of Anti-phishing
+                  Training},
+  booktitle    = {Symposium on Usable Privacy and Security},
+  series       = {SOUPS'09},
+  year         = {2009},
+}
+
+@inproceedings{felt11w2sp,
+  author       = {Adrienne Porter Felt and David Wagner},
+  title        = {Phishing on Mobile Devices},
+  booktitle    = {Web 2.0 Security and Privacy Workshop},
+  series       = {W2SP'11},
+  year         = {2011},
+}
+
+@inproceedings{tygar96woec,
+  author       = {Tygar, J. D. and Whitten, Alma},
+  title        = {WWW Electronic Commerce and Java Trojan Horses},
+  booktitle    = {USENIX Workshop on Electronic Commerce},
+  series       = {WOEC'96},
+  year         = {1996},
+}
+
+@inproceedings{kostiainen09asiaccs,
+  author       = {Kari Kostiainen and Jan-Erik Ekberg and N. Asokan and Aarne
+                  Rantala},
+  title        = {On-board credentials with open provisioning},
+  booktitle    = {{ACM} Symposium on Information, Computer and Communications Security},
+  series       = {ASIACCS'09},
+  year         = {2009},
+}
+
+@inproceedings{zhou12sp,
+  author       = {Zongwei Zhou and Virgil D. Gligor and James Newsome and
+                  Jonathan M. McCune},
+  title        = {Building Verifiable Trusted Path on Commodity x86 Computers},
+  booktitle    = {{IEEE} Symposium on Security and Privacy},
+  series       = {SP'12},
+  year         = {2012},
+}
+
+@inproceedings{filyanov11dsn,
+  author       = {Atanas Filyanov and Jonathan M. McCune and Ahmad-Reza Sadeghi
+                  and Marcel Winandy},
+  title        = {Uni-directional trusted path: Transaction confirmation on just
+                  one device},
+  booktitle    = {International Conference on Dependable Systems and Networks},
+  series       = {DSN'11},
+  year         = {2011},
+}
+
+@inproceedings{selhorst10trust,
+  author       = {Marcel Selhorst and Christian St\"{u}ble and Florian Feldmann and Utz Gnaida},
+  title        = {Towards a trusted mobile desktop},
+  booktitle    = {International Conference on Trust and Trustworthy Computing},
+  series       = {TRUST'10},
+  year         = {2010},
+}
+
+@inproceedings{bitvisor,
+  author       = {Shinagawa, Takahiro and Eiraku, Hideki and Tanimoto, Kouichi
+                  and Omote, Kazumasa and Hasegawa, Shoichi and Horie, Takashi
+                  and Hirano, Manabu and Kourai, Kenichi and Oyama, Yoshihiro
+                  and Kawai, Eiji and Kono, Kenji and Chiba, Shigeru and Shinjo,
+                  Yasushi and Kato, Kazuhiko},
+  title        = {BitVisor: A Thin Hypervisor for Enforcing I/O Device Security},
+  booktitle    = {ACM International Conference on Virtual
+                  Execution Environments},
+  series       = {VEE'09},
+  year         = {2009},
+}
+
+@inproceedings{cheng-esorics11,
+  author       = {Cheng, Yueqiang and Ding, Xuhua and Deng, Robert H.},
+  title        = {DriverGuard: A Fine-grained Protection on I/O Flows},
+  booktitle    = {European Conference on Research in Computer Security},
+  series       = {ESORICS'11},
+  year         = {2011},
+}
+
+@inproceedings{cheng-trust12,
+  author       = {Cheng, Yueqiang and Ding, Xuhua},
+  title        = {Virtualization Based Password Protection Against Malware in
+                  Untrusted Operating Systems},
+  booktitle    = {International Conference on Trust and Trustworthy Computing},
+  series       = {TRUST'12},
+  year         = {2012},
+}
+
+@inproceedings{spekesec,
+  author       = {Philip MacKenzie},
+  title        = {On the Security of the SPEKE Password-Authenticated Key
+                  Exchange Protocol},
+  booktitle    = {In IACR ePrint archive},
+  note         = {\url{http://eprint.iacr.org/2001/057}},
+  year         = {2001},
+}
+
+%--------user studies on effectiveness of warnings and indicators on web browsers.
+
+@inproceedings{wu-chi06,
+ author = {Wu, Min and Miller, Robert C. and Garfinkel, Simson L.},
+ title = {Do Security Toolbars Actually Prevent Phishing Attacks?},
+ booktitle = {SIGCHI Conference on Human Factors in Computing Systems},
+ series = {CHI'06},
+ year = {2006},
+ }
+
+@inproceedings{jackson-fincrypto07,
+  title={An evaluation of extended validation and picture-in-picture phishing attacks},
+  author={Jackson, Collin and Simon, Daniel R and Tan, Desney S and Barth, Adam},
+  booktitle={Financial Cryptography and Data Security},
+  series = {FC'07},
+  year={2007},
+}
+
+ @article{lee-w2sp14,
+  title =        {Studying the effectiveness of security images in {Internet} banking},
+  author =       {Joel Lee and Lujo Bauer and Michelle L. Mazurek},
+  journal =      {IEEE Internet Computing},
+  year =         2014,
+  volume =       {13},
+  number =       {1},
+}
+
+@inproceedings{sunshine-usenix09,
+  title={Crying Wolf: An Empirical Study of SSL Warning Effectiveness.},
+  author={Sunshine, Joshua and Egelman, Serge and Almuhimedi, Hazim and Atri, Neha and Cranor, Lorrie Faith},
+  booktitle={USENIX Security Symposium},
+  series = {USENIX'09},
+  year={2009}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+%% COVERT CHANNELS %%
+
+@misc{Android_malware_Oberhide,
+  author       = {Jon Oberheide},
+  title        = {{Android Hax}},
+  howpublished = {SummerCon 2010},
+  month        = {June},
+  year         = 2010,
+  note         =                  {\url{http://jon.oberheide.org/files/summercon10-androidhax-jonoberheide.pdf}}
+  }
+
+@inproceedings{App_centric_android_security,
+  author       = {Ongtang, M. and McLaughlin, S. and Enck, W. and
+                  McDaniel, P.},
+  booktitle    = {Annual Computer Security
+                  Applications Conference},
+  series       = {ACSAC'09},
+  title        = {Semantically Rich Application-Centric Security in
+                  {Android}},
+  year         = 2009,
+}
+
+@misc{CovertChannel_NCSC,
+  author       = {Virgil Gligor},
+  howpublished = {NCSC-TG-030, Library No. S-240,572},
+  year         = 1993,
+  title        = {A Guide to Understanding Covert Channel Analysis of
+                  Trusted Systems, Version 1 (Light Pink Book)},
+  note          =
+                  {\url{http://www.radium.ncsc.mil/tpep/library/rainbow/NCSC-TG-030.pdf}},
+}
+
+@inproceedings{DBLP:conf/acsac/WangL06,
+  author       = {Zhenghong Wang and Ruby B. Lee},
+  booktitle    = {Annual Computer Security
+                  Applications Conference},
+  series       = {ACSAC'06},
+  title        = {Covert and Side Channels Due to Processor
+                  Architecture},
+  year         = 2006,
+}
+
+@inproceedings{DBLP:conf/pldi/Chaudhuri09,
+  author       = {Chaudhuri, Avik},
+  title        = {Language-based security on {Android}},
+  booktitle    = {ACM Workshop on
+                  Programming Languages and Analysis for Security},
+  series       = {PLAS'09},
+  year         = 2009,
+}
+
+@article{DBLP:journals/tse/Girling87,
+  author       = {C. Gray Girling},
+  title        = {{Covert Channels in LAN's}},
+  journal      = {IEEE Transactions on Software Engineering},
+  volume       = 13,
+  number       = 2,
+  year         = 1987,
+}
+
+@inproceedings{DD2SW010,
+  author       = {Davi, Lucas and Dmitrienko, Alexandra and Sadeghi,
+                  Ahmad-Reza and Winandy, Marcel},
+  title        = {Privilege escalation attacks on {Android}},
+  booktitle    = {International Conference on
+                  Information Security},
+  series       = {ISC'10},
+  year         = 2011,
+  isbn         = {978-3-642-18177-1},
+  location     = {Boca Raton, FL, USA},
+}
+
+@article{Denning:1979:DS:356778.356782,
+  author       = {Denning, Dorothy E. and Denning, Peter J.},
+  title        = {Data Security},
+  journal      = {ACM Comput. Surv.},
+  issue_date   = {Sept. 1979},
+  volume       = 11,
+  number       = 3,
+  month        = sep,
+  year         = 1979,
+}
+
+@inproceedings{Enck:2009:LMP:1653662.1653691,
+  author       = {Enck, William and Ongtang, Machigar and McDaniel,
+                  Patrick},
+  title        = {On lightweight mobile phone application
+                  certification},
+  booktitle    = {{ACM} Conference on Computer
+                  and Communications Security},
+  series       = {CCS'09},
+  year         = 2009,
+}
+
+@article{Lampson:note_on_confinment,
+  author       = {Lampson, Butler W.},
+  title        = {A note on the confinement problem},
+  journal      = {Commun. ACM},
+  issue_date   = {Oct. 1973},
+  volume       = 16,
+  number       = 10,
+  month        = oct,
+  year         = 1973,
+}
+
+@inproceedings{Lipner:comment_on_confinment,
+  author       = {Lipner, Steven B.},
+  title        = {A comment on the confinement problem},
+  booktitle    = {ACM Symposium on Operating
+                  Systems Principles},
+  series       = {SOSP'75},
+  year         = 1975,
+}
+
+@inproceedings{Mobile_harder_than_fixed,
+  author       = {Oberheide, Jon and Jahanian, Farnam},
+  title        = {When mobile is harder than fixed (and vice versa):
+                  demystifying security challenges in mobile
+                  environments},
+  booktitle    = {Workshop on Mobile Computing
+                  Systems and Applications},
+  series       = {HotMobile'10},
+  year         = 2010,
+}
+
+@article{Petitcolas99informationhiding,
+  author       = {Petitcolas, Fabien A.P. and Anderson, Ross J. and
+                  Kuhn, Markus G.},
+  journal      = {Proceedings of the {IEEE}, special issue on protection of multimedia content},
+  title        = {Information hiding---a survey},
+  year         = 1999,
+  month        = jul,
+  volume       = 87,
+  number       = 7,
+}
+
+@inproceedings{Reducing_timing_channels_with_fuzzy_time,
+  author       = {Hu, Wei-Ming},
+  title        = {Reducing Timing Channels with Fuzzy Time},
+  booktitle    = {{IEEE} Symposium on Security and Privacy},
+    series = {SP'91},
+  year         = 1991,
+}
+
+@inproceedings{Shaffer:2008:SDM:1375696.1375703,
+  author       = {Shaffer, Alan B. and Auguston, Mikhail and Irvine,
+                  Cynthia E. and Levin, Timothy E.},
+  title        = {A security domain model to assess software for
+                  exploitable covert channels},
+  booktitle    = {ACM Workshop on
+                  Programming Languages and Analysis for Security},
+  series       = {PLAS'08},
+  year         = 2008,
+}
+
+@techreport{Smobile_android_market_Analysis,
+  author       = {Troy Vennon and David Stroop},
+  title        = {Threat Analysis of the {Android} Market},
+  year         = 2010,
+  institution  = {GTC},
+  month        = {June},
+  note         = {Smobile systems technical report, Available at
+                  \url{http://threatcenter.smobilesystems.com/wp-content/uploads/2010/06/Android-Market-Threat-Analysis-6-22-10-v1.pdf}}
+}
+
+@inproceedings{Stajano_inglorious_installers,
+  author       = {Jonathan Anderson and Joseph Bonneau and Frank
+                  Stajano},
+  title        = {{Inglorious Installers: Security in the Application
+                  Marketplace}},
+  year         = 2010,
+  location     = {Cambridge, Massachusetts, USA},
+  series       = {WEIS '10},
+  booktitle    = {Workshop on the Economics of Information Security}
+}
+
+@techreport{TUD-CS-2011-0127,
+  author       = {Sven Bugiel and Lucas Davi and Alexandra Dmitrienko
+                  and Thomas Fischer and Ahmad-Reza Sadeghi},
+  title        = {{XManDroid}: A New {Android} Evolution to Mitigate
+                  Privilege Escalation Attacks},
+  month        = {April},
+  year         = 2011,
+  institution  = {Technische Universit{\"a}t Darmstadt},
+  number       = {TR-2011-04},
+  keywords     = {Android, Privilege Escalation},
+  type         = {Technical Report},
+  pubkey       = {TUD-CS-2011-0127},
+  research_area= {CASED, System Security Lab},
+  research_sub_area= {Secure Things},
+}
+
+@article{Tsai:1990:ICS:79215.79217,
+  author       = {Tsai, Chii-Ren and Gligor, Virgil D. and
+                  Shandersekaran, C. S.},
+  title        = {On the Identification of Covert Storage Channels in
+                  Secure Systems},
+  journal      = {IEEE Transactions on Software Engineering},
+  volume       = 16,
+  issue        = 6,
+  month        = {June},
+  year         = 1990,
+}
+
+@misc{androidsurgery,
+  title        = {Developing Secure Mobile Applications for {Android}},
+  author       = {Jesse Burns},
+  note =
+                  {\url{https://www.nccgroup.trust/globalassets/our-research/us/whitepapers/isec_securing_android_apps.pdf}},
+  year         = 2008
+}
+
+@inproceedings{barrera:android,
+  author       = {Barrera, David and Kayacik, H. G\"{u}ne\c{s} and van
+                  Oorschot, Paul C. and Somayaji, Anil},
+  title        = {A methodology for empirical analysis of
+                  permission-based security models and its application
+                  to {Android}},
+  booktitle    = {{ACM} Conference on Computer
+                  and Communications Security},
+  series       = {CCS'10},
+  year         = 2010,
+}
+
+@inproceedings{crafting_etc_information_flow,
+  author       = {Tiwari, Mohit and Oberg, Jason K. and Li, Xun and
+                  Valamehr, Jonathan and Levin, Timothy and Hardekopf,
+                  Ben and Kastner, Ryan and Chong, Frederic T. and
+                  Sherwood, Timothy},
+  title        = {Crafting a usable microkernel, processor, and {I/O}
+                  system with strict and provable information flow
+                  security},
+  booktitle    = {Annual International
+                  Symposium on Computer Architecture},
+  series       = {ISCA'11},
+  year         = 2011,
+}
+
+@misc{grsecurity,
+  title        = {The {GRSecurity} project},
+  note         = {\url{http://grsecurity.net/features.php}},
+  author       = {{GRSecurity}},
+  year = {last access 2015}
+}
+
+@inproceedings{limits,
+  author       = {Cavallaro, Lorenzo and Saxena, Prateek and Sekar,
+                  R.},
+  title        = {On the Limits of Information Flow Techniques for
+                  Malware Analysis and Containment},
+  booktitle    = {International Conference on
+                  Detection of Intrusions and Malware, and
+                  Vulnerability Assessment},
+  series       = {DIMVA'08},
+  year         = 2008,
+}
+
+@misc{lookout_privacy_advisor,
+  title        = {{Lookout's} Privacy Advisor Protects your Private
+                  Information},
+  author       = {{The Lookout Blog}},
+  note         =
+                  {\url{http://blog.mylookout.com/2010/11/lookout%E2%80%99s-privacy-advisor-protects-your-private-information/}},
+                  year = 2010
+}
+
+@inproceedings{newxmandroid,
+  author       = {Sven Bugiel and Lucas Davi and Alexandra Dmitrienko
+                  and Thomas Fischer and Ahmad-Reza Sadeghi and
+                  Bhargava Shastry},
+  title        = {Towards Taming Privilege-Escalation Attacks on
+                  {Android}},
+  year         = 2012,
+  booktitle    = {Annual Network and Distributed System Security Symposium},
+  series       = {NDSS'12},
+}
+
+@misc{os-android,
+  title        = {Android {OS}},
+  note = {\url{http://developer.android.com/}},
+  author       = {{Google Inc.}},
+  year = {last access 2015}
+}
+
+@misc{os-wp7,
+  title        = {{Security for Windows Phone}},
+  note =
+                  {\url{https://msdn.microsoft.com/library/windows/apps/ff402533(v=vs.105).aspx}},
+  author       = {{Microsoft Inc.}},
+  year = {last access 2015}
+}
+
+@inproceedings{paranoid:acsac10,
+  author       = {Portokalidis, Georgios and Homburg, Philip and
+                  Anagnostakis, Kostas and Bos, Herbert},
+  title        = {Paranoid {Android}: versatile protection for
+                  smartphones},
+  booktitle    = {Annual Computer Security
+                  Applications Conference},
+  series       = {ACSAC'10},
+  year         = 2010,
+}
+
+@misc{permissions-browser,
+  title        = {These Aren't the Permissions You're Looking For},
+  author       = {Anthony McKay Lineberry},
+  year         = 2010,
+  howpublished = {BlackHat USA}
+}
+
+@misc{seandroid,
+  author       = {Stephen Smalley and {NSA} and {Trust Mechanisms (R2X)}},
+  title        = {{SEAndroid}},
+  note = {\url{http://seandroid.bitbucket.org}},
+  year = {last access 2015}
+}
+
+@inproceedings{soundcomber-ndss,
+  author       = {Roman Schlegel and Kehuan Zhang and Xiaoyong Zhou
+                  and Mehool Intwala and Apu Kapadia and XiaoFeng
+                  Wang},
+  title        = "{Soundcomber: A Stealthy and Context-Aware Sound
+                  Trojan for Smartphones}",
+  booktitle    = {Annual Network and
+                  Distributed System Security Symposium},
+  series       = {NDSS'11},
+  year         = 2011,
+}
+
+@inproceedings{taintdroid,
+  author       = {Enck, William and Gilbert, Peter and Chun, Byung-Gon
+                  and Cox, Landon P. and Jung, Jaeyeon and McDaniel,
+                  Patrick and Sheth, Anmol N.},
+  title        = {{TaintDroid}: an information-flow tracking system
+                  for realtime privacy monitoring on smartphones},
+  booktitle    = {USENIX Conference on
+                  Operating Systems Design and Implementation},
+  series       = {OSDI'10},
+  year         = 2010,
+}
+
+@misc{tomoyo,
+  author       = {T. Harada and T. Horie and K. Tanaka},
+  title        = {Task Oriented Management Obviates Your Onus on Linux
+                  {(TOMOYO Linux)}},
+  year         = 2004,
+  note = {Linux Conference}
+}
+
+@article{vmifc,
+  author       = {Nair, Srijith K. and Simpson, Patrick N. D. and
+                  Crispo, Bruno and Tanenbaum, Andrew S.},
+  title        = {A Virtual Machine Based Information Flow Control
+                  System for Policy Enforcement},
+  journal      = {Electron. Notes Theor. Comput. Sci.},
+  issue_date   = {February, 2008},
+  volume       = 197,
+  number       = 1,
+  month        = feb,
+  year         = 2008,
+}
+
+@inproceedings {ramyaheat,
+author = {Ramya Jayaram Masti and Devendra Rai and Aanjhan Ranganathan and Christian M{\"u}ller and Lothar Thiele and Srdjan Capkun},
+title = {Thermal Covert Channels on Multi-core Platforms},
+booktitle = {USENIX Security Symposium},
+series = {USENIX'15},
+year = {2015},
+}

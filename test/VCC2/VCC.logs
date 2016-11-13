@@ -1,0 +1,1511 @@
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\juhaszu>d:
+
+D:\>cd work\Slicer\trunk
+
+D:\work\Slicer\trunk>dir
+ Volume in drive D is Data
+ Volume Serial Number is 0ECC-E232
+
+ Directory of D:\work\Slicer\trunk
+
+12-Jul-16  17:21    <DIR>          .
+12-Jul-16  17:21    <DIR>          ..
+12-Jun-16  03:05             4,356 77.proof.log
+08-Jul-16  12:23            11,038 boogie.timings.log
+04-Jul-16  16:20                93 command.txt
+04-Jul-16  16:20            26,969 cvc4.params
+19-May-16  08:50            14,273 debug.txt
+26-May-16  21:49                90 debug2.txt
+26-Jun-16  01:52             5,453 debug3.txt
+26-Apr-16  19:27    <DIR>          doc
+06-Nov-14  12:41    <DIR>          lib
+28-May-16  14:46             6,418 seq axioms.txt
+03-Jun-16  01:37             6,795 seqAxioms.txt
+26-Jun-16  01:52             1,074 seqAxioms_ext.txt
+14-Jul-16  02:55    <DIR>          src
+28-Jul-16  14:53    <DIR>          test
+04-Jul-16  16:20                49 timings.txt
+25-Apr-16  02:37               203 TODO.txt
+12-Jun-16  03:05               756 TODO2.txt
+12-Jul-16  17:21             1,414 z3cmd.txt
+              14 File(s)         78,981 bytes
+               6 Dir(s)  740,699,537,408 bytes free
+
+D:\work\Slicer\trunk>cd test
+
+D:\work\Slicer\trunk\test>dir
+ Volume in drive D is Data
+ Volume Serial Number is 0ECC-E232
+
+ Directory of D:\work\Slicer\trunk\test
+
+28-Jul-16  14:53    <DIR>          .
+28-Jul-16  14:53    <DIR>          ..
+27-Apr-16  13:28        17,126,325 boogie.log
+13-Jul-16  11:01    <DIR>          BytecodeTranslation
+17-Jul-16  19:45    <DIR>          Chalice
+17-Jul-16  20:47    <DIR>          Collection
+06-Nov-14  12:41    <DIR>          Dafny
+03-Jul-15  23:37    <DIR>          DLLDiamonds
+17-Jul-16  19:45    <DIR>          FrozenObjects
+11-Jul-16  21:17    <DIR>          misc
+11-Jul-16  21:17    <DIR>          notUsefull
+06-Nov-14  12:41    <DIR>          Stereotypes
+28-Jul-16  14:53            51,843 summaries.txt
+11-Jul-16  21:17    <DIR>          Unsoundness
+11-Jul-16  21:17    <DIR>          VCC
+               2 File(s)     17,178,168 bytes
+              13 Dir(s)  740,699,537,408 bytes free
+
+D:\work\Slicer\trunk\test>cd VCC
+
+D:\work\Slicer\trunk\test\VCC>dir
+ Volume in drive D is Data
+ Volume Serial Number is 0ECC-E232
+
+ Directory of D:\work\Slicer\trunk\test\VCC
+
+11-Jul-16  21:17    <DIR>          .
+11-Jul-16  21:17    <DIR>          ..
+11-Jul-16  21:17           208,919 vcc2_comp.1.bpl
+11-Jul-16  21:17           208,919 vcc2_comp.bpl
+11-Jul-16  21:17           528,446 vcc2_RedBlackTree.bpl
+11-Jul-16  21:17    <DIR>          vccbpl
+               3 File(s)        946,284 bytes
+               3 Dir(s)  740,699,537,408 bytes free
+
+D:\work\Slicer\trunk\test\VCC>cd vccbpl
+
+D:\work\Slicer\trunk\test\VCC\vccbpl>dir
+ Volume in drive D is Data
+ Volume Serial Number is 0ECC-E232
+
+ Directory of D:\work\Slicer\trunk\test\VCC\vccbpl
+
+11-Jul-16  21:17    <DIR>          .
+11-Jul-16  21:17    <DIR>          ..
+06-Nov-14  12:41               410 README.txt
+17-Jul-16  19:45    <DIR>          vcc2bpl
+11-Jul-16  21:17           156,518 Vcc2Prelude.bpl
+17-Jul-16  19:45    <DIR>          vcc3bpl
+07-Jul-16  04:27           122,953 Vcc3Prelude.bpl
+               3 File(s)        279,881 bytes
+               4 Dir(s)  740,699,537,408 bytes free
+
+D:\work\Slicer\trunk\test\VCC\vccbpl>cd vcc2bpl
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>for %f in (*.bpl) do boogie /trace /traceTimes ..\Vcc2Prelude.bpl %f
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl ArrayList.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing ArrayList.bpl
+>>> Starting resolution   [0.244014 s]
+>>> Starting typechecking   [0.3130179 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.52503 s]
+
+Running abstract interpretation...
+  [0.0960055 s]
+>>> Starting implementation verification   [0.6400366 s]
+>>> Starting live variable analysis   [0.6730385 s]
+>>> Finished implementation verification   [1.0240586 s]
+
+Verifying ArrayList#adm ...
+  [0.386 s, 15 proof obligations]  verified
+>>> Starting implementation verification   [1.0330591 s]
+>>> Starting live variable analysis   [1.0340591 s]
+>>> Finished implementation verification   [1.0930625 s]
+
+Verifying Length ...
+  [0.060 s, 5 proof obligations]  verified
+>>> Starting implementation verification   [1.0950626 s]
+>>> Starting live variable analysis   [1.0960627 s]
+>>> Finished implementation verification   [1.2020688 s]
+
+Verifying CreateArrayList ...
+  [0.107 s, 34 proof obligations]  verified
+>>> Starting implementation verification   [1.2040689 s]
+>>> Starting live variable analysis   [1.2050689 s]
+>>> Finished implementation verification   [1.2810733 s]
+
+Verifying MakeEmpty ...
+  [0.077 s, 23 proof obligations]  verified
+>>> Starting implementation verification   [1.2830734 s]
+>>> Starting live variable analysis   [1.2840734 s]
+>>> Finished implementation verification   [1.347077 s]
+
+Verifying Select ...
+  [0.065 s, 7 proof obligations]  verified
+>>> Starting implementation verification   [1.3490772 s]
+>>> Starting live variable analysis   [1.3500772 s]
+>>> Finished implementation verification   [1.4570833 s]
+
+Verifying Update ...
+  [0.108 s, 46 proof obligations]  verified
+>>> Starting implementation verification   [1.4590835 s]
+>>> Starting live variable analysis   [1.4600835 s]
+>>> Finished implementation verification   [1.5550889 s]
+
+Verifying DisposeArrayList ...
+  [0.097 s, 27 proof obligations]  verified
+>>> Starting implementation verification   [1.5570891 s]
+>>> Starting live variable analysis   [1.5610893 s]
+>>> Finished implementation verification   [2.9781703 s]
+
+Verifying Add ...
+  [1.421 s, 88 proof obligations]  verified
+>>> Starting implementation verification   [2.9801705 s]
+>>> Starting live variable analysis   [2.9811705 s]
+>>> Finished implementation verification   [3.0691755 s]
+
+Verifying main_test ...
+  [0.089 s, 15 proof obligations]  verified
+
+Boogie program verifier finished with 9 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl BitMap.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0.0010001 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing BitMap.bpl
+>>> Starting resolution   [0.1520087 s]
+>>> Starting typechecking   [0.2130122 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4130236 s]
+
+Running abstract interpretation...
+  [0.0770044 s]
+>>> Starting implementation verification   [0.5020287 s]
+>>> Starting live variable analysis   [0.5330305 s]
+>>> Finished implementation verification   [0.8610492 s]
+
+Verifying Add64 ...
+  [0.359 s, 3 proof obligations]  verified
+>>> Starting implementation verification   [0.8690497 s]
+>>> Starting live variable analysis   [0.8690497 s]
+>>> Finished implementation verification   [0.927053 s]
+
+Verifying InSet64 ...
+  [0.058 s, 3 proof obligations]  verified
+>>> Starting implementation verification   [0.9280531 s]
+>>> Starting live variable analysis   [0.9290531 s]
+>>> Finished implementation verification   [0.9850563 s]
+
+Verifying Toggle64 ...
+  [0.057 s, 3 proof obligations]  verified
+>>> Starting implementation verification   [0.9860564 s]
+>>> Starting live variable analysis   [0.9870564 s]
+>>> Finished implementation verification   [1.04906 s]
+
+Verifying Add32 ...
+  [0.063 s, 3 proof obligations]  verified
+>>> Starting implementation verification   [1.0500601 s]
+>>> Starting live variable analysis   [1.0500601 s]
+>>> Finished implementation verification   [1.1060633 s]
+
+Verifying InSet32 ...
+  [0.056 s, 3 proof obligations]  verified
+>>> Starting implementation verification   [1.1070633 s]
+>>> Starting live variable analysis   [1.1080634 s]
+>>> Finished implementation verification   [1.1660667 s]
+
+Verifying Toggle32 ...
+  [0.059 s, 3 proof obligations]  verified
+>>> Starting implementation verification   [1.1670667 s]
+>>> Starting live variable analysis   [1.1670667 s]
+>>> Finished implementation verification   [1.2250701 s]
+
+Verifying SpecialValues64 ...
+  [0.058 s, 5 proof obligations]  verified
+>>> Starting implementation verification   [1.2260701 s]
+>>> Starting live variable analysis   [1.2270702 s]
+>>> Finished implementation verification   [1.2840734 s]
+
+Verifying SpecialValues32 ...
+  [0.058 s, 5 proof obligations]  verified
+>>> Starting implementation verification   [1.2850735 s]
+>>> Starting live variable analysis   [1.2860736 s]
+>>> Finished implementation verification   [1.3940797 s]
+
+Verifying FortyTwo64 ...
+  [0.109 s, 11 proof obligations]  verified
+>>> Starting implementation verification   [1.3950798 s]
+>>> Starting live variable analysis   [1.3950798 s]
+>>> Finished implementation verification   [1.4930854 s]
+
+Verifying FortyTwo32 ...
+  [0.099 s, 11 proof obligations]  verified
+>>> Starting implementation verification   [1.4940855 s]
+>>> Starting live variable analysis   [1.4950855 s]
+>>> Finished implementation verification   [1.5680897 s]
+
+Verifying test ...
+  [0.074 s, 16 proof obligations]  verified
+
+Boogie program verifier finished with 11 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl ClaimOnGroup.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing ClaimOnGroup.bpl
+>>> Starting resolution   [0.1420082 s]
+>>> Starting typechecking   [0.2010115 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.3970228 s]
+
+Running abstract interpretation...
+  [0.0780045 s]
+>>> Starting implementation verification   [0.4870279 s]
+>>> Starting live variable analysis   [0.5190297 s]
+>>> Finished implementation verification   [0.8430483 s]
+
+Verifying F#adm ...
+  [0.357 s, 9 proof obligations]  verified
+>>> Starting implementation verification   [0.8510487 s]
+>>> Starting live variable analysis   [0.8520488 s]
+>>> Finished implementation verification   [0.9110522 s]
+
+Verifying test ...
+  [0.060 s, 7 proof obligations]  verified
+
+Boogie program verifier finished with 2 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl ClaimPassing.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing ClaimPassing.bpl
+>>> Starting resolution   [0.1440083 s]
+>>> Starting typechecking   [0.2030117 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.401023 s]
+
+Running abstract interpretation...
+  [0.0790046 s]
+>>> Starting implementation verification   [0.4920282 s]
+>>> Starting live variable analysis   [0.52403 s]
+>>> Finished implementation verification   [0.8450484 s]
+
+Verifying A#adm ...
+  [0.354 s, 9 proof obligations]  verified
+>>> Starting implementation verification   [0.8530488 s]
+>>> Starting live variable analysis   [0.8540489 s]
+>>> Finished implementation verification   [0.9290532 s]
+
+Verifying incr ...
+  [0.076 s, 25 proof obligations]  verified
+>>> Starting implementation verification   [0.9300532 s]
+>>> Starting live variable analysis   [0.9310533 s]
+>>> Finished implementation verification   [1.1200641 s]
+
+Verifying use_case ...
+  [0.190 s, 48 proof obligations]  verified
+
+Boogie program verifier finished with 3 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl Composite.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing Composite.bpl
+>>> Starting resolution   [0.1520087 s]
+>>> Starting typechecking   [0.2120121 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4230242 s]
+
+Running abstract interpretation...
+  [0.0810046 s]
+>>> Starting implementation verification   [0.5170296 s]
+>>> Starting live variable analysis   [0.5490314 s]
+>>> Finished implementation verification   [0.9580548 s]
+
+Verifying Node#adm ...
+  [0.441 s, 31 proof obligations]  verified
+>>> Starting implementation verification   [0.9660552 s]
+>>> Starting live variable analysis   [0.9670553 s]
+>>> Finished implementation verification   [1.0580605 s]
+
+Verifying Mgr#adm ...
+  [0.093 s, 20 proof obligations]  verified
+>>> Starting implementation verification   [1.0590606 s]
+>>> Starting live variable analysis   [1.0620607 s]
+>>> Finished implementation verification   [7.0314022 s]
+
+Verifying update ...
+  [5.972 s, 77 proof obligations]  verified
+
+Boogie program verifier finished with 3 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl Handles.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing Handles.bpl
+>>> Starting resolution   [0.156009 s]
+>>> Starting typechecking   [0.2250129 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4250244 s]
+
+Running abstract interpretation...
+  [0.0790045 s]
+>>> Starting implementation verification   [0.5160296 s]
+>>> Starting live variable analysis   [0.5490314 s]
+>>> Finished implementation verification   [0.9010516 s]
+
+Verifying Data#adm ...
+  [0.385 s, 14 proof obligations]  verified
+>>> Starting implementation verification   [0.908052 s]
+>>> Starting live variable analysis   [0.909052 s]
+>>> Finished implementation verification   [0.9820562 s]
+
+Verifying Handle#adm ...
+  [0.074 s, 14 proof obligations]  verified
+>>> Starting implementation verification   [0.9830563 s]
+>>> Starting live variable analysis   [0.9840563 s]
+>>> Finished implementation verification   [1.0590606 s]
+
+Verifying Container#adm ...
+  [0.077 s, 11 proof obligations]  verified
+>>> Starting implementation verification   [1.0600607 s]
+>>> Starting live variable analysis   [1.0610607 s]
+>>> Finished implementation verification   [1.468084 s]
+
+Verifying wrapped_use ...
+  [0.408 s, 63 proof obligations]  verified
+>>> Starting implementation verification   [1.4690841 s]
+>>> Starting live variable analysis   [1.4690841 s]
+>>> Finished implementation verification   [1.5650896 s]
+
+Verifying init ...
+  [0.096 s, 24 proof obligations]  verified
+>>> Starting implementation verification   [1.5650896 s]
+>>> Starting live variable analysis   [1.5660896 s]
+>>> Finished implementation verification   [1.6700956 s]
+
+Verifying closed_use ...
+  [0.105 s, 26 proof obligations]  verified
+
+Boogie program verifier finished with 6 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl Heap.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing Heap.bpl
+>>> Starting resolution   [0.1870107 s]
+>>> Starting typechecking   [0.2520144 s]
+Heap.bpl(1273,12): Error: mismatched types in assignment command (cannot assign real to int)
+Heap.bpl(1475,12): Error: mismatched types in assignment command (cannot assign real to int)
+Heap.bpl(1803,4): Error: mismatched types in assignment command (cannot assign real to int)
+Heap.bpl(1846,37): Error: invalid type for argument 0 in application of F#mark3: real (expected: int)
+Heap.bpl(1848,37): Error: invalid type for argument 0 in application of F#mark3: real (expected: int)
+Heap.bpl(1887,12): Error: mismatched types in assignment command (cannot assign real to int)
+6 type checking errors detected in Heap.bpl
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl Iterator.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing Iterator.bpl
+>>> Starting resolution   [0.1540088 s]
+>>> Starting typechecking   [0.2240128 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4250243 s]
+
+Running abstract interpretation...
+  [0.0800046 s]
+>>> Starting implementation verification   [0.5170295 s]
+>>> Starting live variable analysis   [0.5490314 s]
+>>> Finished implementation verification   [0.8990514 s]
+
+Verifying Collection#adm ...
+  [0.383 s, 13 proof obligations]  verified
+>>> Starting implementation verification   [0.9070519 s]
+>>> Starting live variable analysis   [0.9080519 s]
+>>> Finished implementation verification   [0.9770559 s]
+
+Verifying Collection##Shadow#adm ...
+  [0.070 s, 15 proof obligations]  verified
+>>> Starting implementation verification   [0.9780559 s]
+>>> Starting live variable analysis   [0.9810561 s]
+>>> Finished implementation verification   [1.0610607 s]
+
+Verifying Iterator#adm ...
+  [0.083 s, 15 proof obligations]  verified
+>>> Starting implementation verification   [1.0620607 s]
+>>> Starting live variable analysis   [1.0630608 s]
+>>> Finished implementation verification   [1.1580662 s]
+
+Verifying init ...
+  [0.096 s, 29 proof obligations]  verified
+>>> Starting implementation verification   [1.1590663 s]
+>>> Starting live variable analysis   [1.1590663 s]
+>>> Finished implementation verification   [1.294074 s]
+
+Verifying add ...
+  [0.135 s, 37 proof obligations]  verified
+>>> Starting implementation verification   [1.295074 s]
+>>> Starting live variable analysis   [1.2960741 s]
+>>> Finished implementation verification   [1.4670839 s]
+
+Verifying get_iter ...
+  [0.172 s, 37 proof obligations]  verified
+>>> Starting implementation verification   [1.4680839 s]
+>>> Starting live variable analysis   [1.469084 s]
+>>> Finished implementation verification   [1.5590891 s]
+
+Verifying iterate ...
+  [0.091 s, 22 proof obligations]  verified
+
+Boogie program verifier finished with 7 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl List.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing List.bpl
+>>> Starting resolution   [0.1700097 s]
+>>> Starting typechecking   [0.2420138 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4630265 s]
+
+Running abstract interpretation...
+  [0.0900052 s]
+>>> Starting implementation verification   [0.5650323 s]
+>>> Starting live variable analysis   [0.5980342 s]
+>>> Finished implementation verification   [1.0570604 s]
+
+Verifying _LIST_MANAGER#adm ...
+  [0.492 s, 24 proof obligations]  verified
+>>> Starting implementation verification   [1.0650609 s]
+>>> Starting live variable analysis   [1.0660609 s]
+>>> Finished implementation verification   [1.3010744 s]
+
+Verifying InitializeListHead ...
+  [0.236 s, 47 proof obligations]  verified
+>>> Starting implementation verification   [1.3020744 s]
+>>> Starting live variable analysis   [1.3030745 s]
+>>> Finished implementation verification   [1.3850792 s]
+
+Verifying IsListEmpty ...
+  [0.083 s, 6 proof obligations]  verified
+>>> Starting implementation verification   [1.3860792 s]
+>>> Starting live variable analysis   [1.3870793 s]
+>>> Finished implementation verification   [4.1532375 s]
+
+Verifying RemoveEntryList ...
+  [2.767 s, 85 proof obligations]  verified
+>>> Starting implementation verification   [4.1542376 s]
+>>> Starting live variable analysis   [4.1552376 s]
+>>> Finished implementation verification   [6.5893769 s]
+
+Verifying RemoveHeadList ...
+  [2.435 s, 90 proof obligations]  verified
+>>> Starting implementation verification   [6.5903769 s]
+>>> Starting live variable analysis   [6.591377 s]
+>>> Finished implementation verification   [8.7935029 s]
+
+Verifying RemoveTailList ...
+  [2.203 s, 89 proof obligations]  verified
+>>> Starting implementation verification   [8.794503 s]
+>>> Starting live variable analysis   [8.795503 s]
+>>> Finished implementation verification   [13.0317453 s]
+
+Verifying InsertTailList ...
+  [4.238 s, 110 proof obligations]  verified
+>>> Starting implementation verification   [13.0327454 s]
+>>> Starting live variable analysis   [13.0337455 s]
+>>> Finished implementation verification   [16.7599586 s]
+
+Verifying InsertHeadList ...
+  [3.727 s, 101 proof obligations]  verified
+
+Boogie program verifier finished with 8 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl Lock.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing Lock.bpl
+>>> Starting resolution   [0.1790102 s]
+>>> Starting typechecking   [0.2380136 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4470255 s]
+
+Running abstract interpretation...
+  [0.0850049 s]
+>>> Starting implementation verification   [0.5450311 s]
+>>> Starting live variable analysis   [0.577033 s]
+>>> Finished implementation verification   [0.909052 s]
+
+Verifying _LOCK#adm ...
+  [0.364 s, 6 proof obligations]  verified
+>>> Starting implementation verification   [0.9170524 s]
+>>> Starting live variable analysis   [0.9180525 s]
+>>> Finished implementation verification   [0.9810561 s]
+
+Verifying _DATA#adm ...
+  [0.064 s, 8 proof obligations]  verified
+>>> Starting implementation verification   [0.9820561 s]
+>>> Starting live variable analysis   [0.9820561 s]
+>>> Finished implementation verification   [1.0530602 s]
+
+Verifying _DATA_CONTAINER#adm ...
+  [0.071 s, 11 proof obligations]  verified
+>>> Starting implementation verification   [1.0540603 s]
+>>> Starting live variable analysis   [1.0550603 s]
+>>> Finished implementation verification   [1.1350649 s]
+
+Verifying InitializeLock ...
+  [0.081 s, 19 proof obligations]  verified
+>>> Starting implementation verification   [1.1360649 s]
+>>> Starting live variable analysis   [1.1390651 s]
+>>> Finished implementation verification   [1.2260701 s]
+
+Verifying Acquire ...
+  [0.090 s, 21 proof obligations]  verified
+>>> Starting implementation verification   [1.2270701 s]
+>>> Starting live variable analysis   [1.2280702 s]
+>>> Finished implementation verification   [1.3140751 s]
+
+Verifying Release ...
+  [0.087 s, 20 proof obligations]  verified
+>>> Starting implementation verification   [1.3150752 s]
+>>> Starting live variable analysis   [1.3160752 s]
+>>> Finished implementation verification   [1.4180811 s]
+
+Verifying testit ...
+  [0.103 s, 31 proof obligations]  verified
+>>> Starting implementation verification   [1.4190811 s]
+>>> Starting live variable analysis   [1.4200812 s]
+>>> Finished implementation verification   [1.522087 s]
+
+Verifying boot ...
+  [0.103 s, 39 proof obligations]  verified
+
+Boogie program verifier finished with 8 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl LockFreeIncr.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0.001 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing LockFreeIncr.bpl
+>>> Starting resolution   [0.140008 s]
+>>> Starting typechecking   [0.1980113 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.3940225 s]
+
+Running abstract interpretation...
+  [0.0810047 s]
+>>> Starting implementation verification   [0.4880279 s]
+>>> Starting live variable analysis   [0.5210298 s]
+>>> Finished implementation verification   [0.8430482 s]
+
+Verifying A#adm ...
+  [0.356 s, 9 proof obligations]  verified
+>>> Starting implementation verification   [0.8500486 s]
+>>> Starting live variable analysis   [0.8510487 s]
+>>> Finished implementation verification   [1.0550603 s]
+
+Verifying LockFreeIncr ...
+  [0.205 s, 60 proof obligations]  verified
+
+Boogie program verifier finished with 2 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl LockFreeStack.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing LockFreeStack.bpl
+>>> Starting resolution   [0.1600092 s]
+>>> Starting typechecking   [0.2220127 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.437025 s]
+
+Running abstract interpretation...
+  [0.0900052 s]
+>>> Starting implementation verification   [0.5400309 s]
+>>> Starting live variable analysis   [0.5730328 s]
+>>> Finished implementation verification   [0.9160524 s]
+
+Verifying Node#adm ...
+  [0.376 s, 9 proof obligations]  verified
+>>> Starting implementation verification   [0.9240529 s]
+>>> Starting live variable analysis   [0.9250529 s]
+>>> Finished implementation verification   [1.013058 s]
+
+Verifying Stack#adm ...
+  [0.089 s, 16 proof obligations]  verified
+>>> Starting implementation verification   [1.014058 s]
+>>> Starting live variable analysis   [1.0170582 s]
+>>> Finished implementation verification   [1.3520773 s]
+
+Verifying push ...
+  [0.338 s, 56 proof obligations]  verified
+
+Boogie program verifier finished with 3 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl PageSet.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing PageSet.bpl
+>>> Starting resolution   [0.1510086 s]
+>>> Starting typechecking   [0.2090119 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4070232 s]
+
+Running abstract interpretation...
+  [0.0780044 s]
+>>> Starting implementation verification   [0.4980284 s]
+>>> Starting live variable analysis   [0.5300303 s]
+>>> Finished implementation verification   [0.8630493 s]
+
+Verifying _PAGE_SET#adm ...
+  [0.366 s, 13 proof obligations]  verified
+>>> Starting implementation verification   [0.8710498 s]
+>>> Starting live variable analysis   [0.8720498 s]
+>>> Finished implementation verification   [0.9540545 s]
+
+Verifying Init ...
+  [0.083 s, 24 proof obligations]  verified
+>>> Starting implementation verification   [0.9550546 s]
+>>> Starting live variable analysis   [0.9560546 s]
+>>> Finished implementation verification   [1.0550603 s]
+
+Verifying CallInit ...
+  [0.100 s, 13 proof obligations]  verified
+
+Boogie program verifier finished with 3 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl RedBlackTrees.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing RedBlackTrees.bpl
+>>> Starting resolution   [0.2000115 s]
+>>> Starting typechecking   [0.2740157 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.5450312 s]
+
+Running abstract interpretation...
+  [0.0920053 s]
+>>> Starting implementation verification   [0.6500372 s]
+>>> Starting live variable analysis   [0.6830391 s]
+>>> Finished implementation verification   [1.4800847 s]
+
+Verifying Tree#adm ...
+  [0.830 s, 46 proof obligations]  verified
+>>> Starting implementation verification   [1.4880851 s]
+>>> Starting live variable analysis   [1.4880851 s]
+>>> Finished implementation verification   [1.6120922 s]
+
+Verifying tree_init ...
+  [0.124 s, 40 proof obligations]  verified
+>>> Starting implementation verification   [1.6130923 s]
+>>> Starting live variable analysis   [1.6160925 s]
+>>> Finished implementation verification   [1.7290989 s]
+
+Verifying tree_find ...
+  [0.116 s, 19 proof obligations]  verified
+>>> Starting implementation verification   [1.7290989 s]
+>>> Starting live variable analysis   [1.730099 s]
+>>> Finished implementation verification   [1.8331049 s]
+
+Verifying tree_lookup ...
+  [0.104 s, 8 proof obligations]  verified
+>>> Starting implementation verification   [1.8341049 s]
+>>> Starting live variable analysis   [1.836105 s]
+>>> Finished implementation verification   [120.8229107 s]
+
+Verifying tree_insert ...
+  [118.989 s, 231 proof obligations]  verified
+>>> Starting implementation verification   [120.8239107 s]
+>>> Starting live variable analysis   [120.8249108 s]
+>>> Finished implementation verification   [307.2085395 s]
+
+Verifying left_rotate ...
+  [186.385 s, 140 proof obligations]  verified
+>>> Starting implementation verification   [307.2085395 s]
+>>> Starting live variable analysis   [307.2241395 s]
+>>> Finished implementation verification   [476.6088405 s]
+
+Verifying right_rotate ...
+  [169.400 s, 140 proof obligations]  verified
+
+Boogie program verifier finished with 7 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl Reserve.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing Reserve.bpl
+>>> Starting resolution   [0.1716003 s]
+>>> Starting typechecking   [0.2340004 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4368008 s]
+
+Running abstract interpretation...
+  [0.0780001 s]
+>>> Starting implementation verification   [0.530401 s]
+>>> Starting live variable analysis   [0.561601 s]
+>>> Finished implementation verification   [0.9828017 s]
+
+Verifying _RESERVE#adm ...
+  [0.452 s, 26 proof obligations]  verified
+>>> Starting implementation verification   [0.9828017 s]
+>>> Starting live variable analysis   [0.9984018 s]
+>>> Finished implementation verification   [1.0764019 s]
+
+Verifying Check ...
+  [0.094 s, 23 proof obligations]  verified
+
+Boogie program verifier finished with 2 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl Rundown.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing Rundown.bpl
+>>> Starting resolution   [0.1716003 s]
+>>> Starting typechecking   [0.2340004 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4992009 s]
+
+Running abstract interpretation...
+  [0.0936002 s]
+>>> Starting implementation verification   [0.5928011 s]
+>>> Starting live variable analysis   [0.6314024 s]
+>>> Finished implementation verification   [0.974603 s]
+
+Verifying _Rundown#adm ...
+  [0.382 s, 31 proof obligations]  verified
+>>> Starting implementation verification   [0.990203 s]
+>>> Starting live variable analysis   [0.990203 s]
+>>> Finished implementation verification   [1.0838032 s]
+
+Verifying _RundownContainer#adm ...
+  [0.094 s, 35 proof obligations]  verified
+>>> Starting implementation verification   [1.0838032 s]
+>>> Starting live variable analysis   [1.0838032 s]
+>>> Finished implementation verification   [1.3334036 s]
+
+Verifying InitializeRundown ...
+  [0.250 s, 98 proof obligations]  verified
+>>> Starting implementation verification   [1.3334036 s]
+>>> Starting live variable analysis   [1.3490037 s]
+>>> Finished implementation verification   [1.4426038 s]
+
+Verifying ReferenceRundown ...
+  [0.109 s, 37 proof obligations]  verified
+>>> Starting implementation verification   [1.4582039 s]
+>>> Starting live variable analysis   [1.4582039 s]
+>>> Finished implementation verification   [1.551804 s]
+
+Verifying DereferenceRundown ...
+  [0.094 s, 31 proof obligations]  verified
+>>> Starting implementation verification   [1.551804 s]
+>>> Starting live variable analysis   [1.551804 s]
+>>> Finished implementation verification   [1.7702044 s]
+
+Verifying InitializeRundownContainer ...
+  [0.218 s, 38 proof obligations]  verified
+>>> Starting implementation verification   [1.7702044 s]
+>>> Starting live variable analysis   [1.7702044 s]
+>>> Finished implementation verification   [2.3318054 s]
+
+Verifying FinalizeRundownContainer ...
+  [0.562 s, 101 proof obligations]  verified
+>>> Starting implementation verification   [2.3318054 s]
+>>> Starting live variable analysis   [2.3318054 s]
+>>> Finished implementation verification   [3.798208 s]
+
+Verifying KillRundownContainerDead ...
+  [1.466 s, 102 proof obligations]  verified
+>>> Starting implementation verification   [3.798208 s]
+>>> Starting live variable analysis   [3.798208 s]
+>>> Finished implementation verification   [3.9074082 s]
+
+Verifying UseRundown ...
+  [0.109 s, 19 proof obligations]  verified
+
+Boogie program verifier finished with 9 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl SingleList.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing SingleList.bpl
+>>> Starting resolution   [0.2028003 s]
+>>> Starting typechecking   [0.2652005 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4680008 s]
+
+Running abstract interpretation...
+  [0.0936002 s]
+>>> Starting implementation verification   [0.561601 s]
+>>> Starting live variable analysis   [0.6240011 s]
+>>> Finished implementation verification   [0.9984017 s]
+
+Verifying _SINGLE_LIST_MANAGER#adm ...
+  [0.437 s, 22 proof obligations]  verified
+>>> Starting implementation verification   [1.0140018 s]
+>>> Starting live variable analysis   [1.0140018 s]
+>>> Finished implementation verification   [1.3260023 s]
+
+Verifying InitializeSingleListHead ...
+  [0.312 s, 50 proof obligations]  verified
+>>> Starting implementation verification   [1.3260023 s]
+>>> Starting live variable analysis   [1.3260023 s]
+>>> Finished implementation verification   [2.4492043 s]
+
+Verifying PopEntryList ...
+  [1.123 s, 86 proof obligations]  verified
+>>> Starting implementation verification   [2.4492043 s]
+>>> Starting live variable analysis   [2.4492043 s]
+>>> Finished implementation verification   [4.7268083 s]
+
+Verifying PushEntryList ...
+  [2.278 s, 101 proof obligations]  verified
+
+Boogie program verifier finished with 4 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl SparseArray.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing SparseArray.bpl
+>>> Starting resolution   [0.1560003 s]
+>>> Starting typechecking   [0.2184004 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4212007 s]
+
+Running abstract interpretation...
+  [0.0780002 s]
+>>> Starting implementation verification   [0.5148009 s]
+>>> Starting live variable analysis   [0.546001 s]
+>>> Finished implementation verification   [0.8892016 s]
+
+Verifying Array#adm ...
+  [0.374 s, 14 proof obligations]  verified
+>>> Starting implementation verification   [0.8892016 s]
+>>> Starting live variable analysis   [0.8892016 s]
+>>> Finished implementation verification   [0.9828017 s]
+
+Verifying init ...
+  [0.094 s, 20 proof obligations]  verified
+>>> Starting implementation verification   [0.9828017 s]
+>>> Starting live variable analysis   [0.9828017 s]
+>>> Finished implementation verification   [1.2948023 s]
+
+Verifying set ...
+  [0.312 s, 49 proof obligations]  verified
+>>> Starting implementation verification   [1.2948023 s]
+>>> Starting live variable analysis   [1.2948023 s]
+>>> Finished implementation verification   [1.3728024 s]
+
+Verifying get ...
+  [0.078 s, 15 proof obligations]  verified
+>>> Starting implementation verification   [1.3728024 s]
+>>> Starting live variable analysis   [1.3728024 s]
+>>> Finished implementation verification   [2.3088041 s]
+
+Verifying sparseArrayTestHarness ...
+  [0.936 s, 38 proof obligations]  verified
+
+Boogie program verifier finished with 5 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl StackArray.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing StackArray.bpl
+>>> Starting resolution   [0.1560003 s]
+>>> Starting typechecking   [0.2184004 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4212007 s]
+
+Running abstract interpretation...
+  [0.0936002 s]
+>>> Starting implementation verification   [0.5148009 s]
+>>> Starting live variable analysis   [0.5460009 s]
+>>> Finished implementation verification   [0.8736015 s]
+
+Verifying Stack#adm ...
+  [0.359 s, 10 proof obligations]  verified
+>>> Starting implementation verification   [0.8736015 s]
+>>> Starting live variable analysis   [0.8736015 s]
+>>> Finished implementation verification   [0.9360016 s]
+
+Verifying IsEmpty ...
+  [0.062 s, 5 proof obligations]  verified
+>>> Starting implementation verification   [0.9360016 s]
+>>> Starting live variable analysis   [0.9360016 s]
+>>> Finished implementation verification   [0.9984017 s]
+
+Verifying IsFull ...
+  [0.062 s, 5 proof obligations]  verified
+>>> Starting implementation verification   [0.9984017 s]
+>>> Starting live variable analysis   [0.9984017 s]
+>>> Finished implementation verification   [1.0452018 s]
+
+Verifying Length ...
+  [0.047 s, 5 proof obligations]  verified
+>>> Starting implementation verification   [1.0452018 s]
+>>> Starting live variable analysis   [1.0452018 s]
+>>> Finished implementation verification   [1.1076019 s]
+
+Verifying CreateStack ...
+  [0.062 s, 13 proof obligations]  verified
+>>> Starting implementation verification   [1.1076019 s]
+>>> Starting live variable analysis   [1.1076019 s]
+>>> Finished implementation verification   [1.1856021 s]
+
+Verifying DisposeStack ...
+  [0.078 s, 10 proof obligations]  verified
+>>> Starting implementation verification   [1.1856021 s]
+>>> Starting live variable analysis   [1.1856021 s]
+>>> Finished implementation verification   [1.2480022 s]
+
+Verifying MakeEmpty ...
+  [0.062 s, 19 proof obligations]  verified
+>>> Starting implementation verification   [1.2480022 s]
+>>> Starting live variable analysis   [1.2480022 s]
+>>> Finished implementation verification   [1.3104023 s]
+
+Verifying Push ...
+  [0.062 s, 25 proof obligations]  verified
+>>> Starting implementation verification   [1.3260023 s]
+>>> Starting live variable analysis   [1.3260023 s]
+>>> Finished implementation verification   [1.3728024 s]
+
+Verifying Top ...
+  [0.047 s, 8 proof obligations]  verified
+>>> Starting implementation verification   [1.3728024 s]
+>>> Starting live variable analysis   [1.3728024 s]
+>>> Finished implementation verification   [1.4352025 s]
+
+Verifying Pop ...
+  [0.062 s, 23 proof obligations]  verified
+>>> Starting implementation verification   [1.4508025 s]
+>>> Starting live variable analysis   [1.4508025 s]
+>>> Finished implementation verification   [1.5132026 s]
+
+Verifying test_main ...
+  [0.062 s, 22 proof obligations]  verified
+>>> Starting implementation verification   [1.5288027 s]
+>>> Starting live variable analysis   [1.5288027 s]
+>>> Finished implementation verification   [1.5756028 s]
+
+Verifying Length#reads ...
+  [0.062 s, 4 proof obligations]  verified
+>>> Starting implementation verification   [1.5912028 s]
+>>> Starting live variable analysis   [1.5912028 s]
+>>> Finished implementation verification   [1.6380029 s]
+
+Verifying IsFull#reads ...
+  [0.047 s, 4 proof obligations]  verified
+>>> Starting implementation verification   [1.6380029 s]
+>>> Starting live variable analysis   [1.6380029 s]
+>>> Finished implementation verification   [1.700403 s]
+
+Verifying IsEmpty#reads ...
+  [0.062 s, 4 proof obligations]  verified
+
+Boogie program verifier finished with 14 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl StackAsArray.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing StackAsArray.bpl
+>>> Starting resolution   [0.1716003 s]
+>>> Starting typechecking   [0.2340004 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4524008 s]
+
+Running abstract interpretation...
+  [0.0780001 s]
+>>> Starting implementation verification   [0.5460009 s]
+>>> Starting live variable analysis   [0.577201 s]
+>>> Finished implementation verification   [0.9204016 s]
+
+Verifying AbsStack#adm ...
+  [0.374 s, 10 proof obligations]  verified
+>>> Starting implementation verification   [0.9360016 s]
+>>> Starting live variable analysis   [0.9360016 s]
+>>> Finished implementation verification   [1.0140017 s]
+
+Verifying Stack#adm ...
+  [0.078 s, 24 proof obligations]  verified
+>>> Starting implementation verification   [1.0140017 s]
+>>> Starting live variable analysis   [1.0140017 s]
+>>> Finished implementation verification   [1.0764019 s]
+
+Verifying IsEmpty ...
+  [0.062 s, 5 proof obligations]  verified
+>>> Starting implementation verification   [1.0764019 s]
+>>> Starting live variable analysis   [1.0764019 s]
+>>> Finished implementation verification   [1.138802 s]
+
+Verifying IsFull ...
+  [0.062 s, 7 proof obligations]  verified
+>>> Starting implementation verification   [1.138802 s]
+>>> Starting live variable analysis   [1.138802 s]
+>>> Finished implementation verification   [1.2012021 s]
+
+Verifying Length ...
+  [0.062 s, 5 proof obligations]  verified
+>>> Starting implementation verification   [1.2012021 s]
+>>> Starting live variable analysis   [1.2012021 s]
+>>> Finished implementation verification   [1.6224028 s]
+
+Verifying CreateStack ...
+  [0.421 s, 77 proof obligations]  verified
+>>> Starting implementation verification   [1.6224028 s]
+>>> Starting live variable analysis   [1.6224028 s]
+>>> Finished implementation verification   [1.7628031 s]
+
+Verifying DisposeStack ...
+  [0.140 s, 30 proof obligations]  verified
+>>> Starting implementation verification   [1.7628031 s]
+>>> Starting live variable analysis   [1.7628031 s]
+>>> Finished implementation verification   [1.8876033 s]
+
+Verifying MakeEmpty ...
+  [0.125 s, 48 proof obligations]  verified
+>>> Starting implementation verification   [1.8876033 s]
+>>> Starting live variable analysis   [1.8876033 s]
+>>> Finished implementation verification   [1.9656034 s]
+
+Verifying Top ...
+  [0.078 s, 11 proof obligations]  verified
+>>> Starting implementation verification   [1.9656034 s]
+>>> Starting live variable analysis   [1.9656034 s]
+>>> Finished implementation verification   [2.1216037 s]
+
+Verifying Pop ...
+  [0.156 s, 56 proof obligations]  verified
+>>> Starting implementation verification   [2.1216037 s]
+>>> Starting live variable analysis   [2.1216037 s]
+>>> Finished implementation verification   [2.3868042 s]
+
+Verifying Push ...
+  [0.265 s, 92 proof obligations]  verified
+>>> Starting implementation verification   [2.3868042 s]
+>>> Starting live variable analysis   [2.3868042 s]
+>>> Finished implementation verification   [2.4648043 s]
+
+Verifying IsIn ...
+  [0.078 s, 15 proof obligations]  verified
+>>> Starting implementation verification   [2.4648043 s]
+>>> Starting live variable analysis   [2.4648043 s]
+>>> Finished implementation verification   [2.5428044 s]
+
+Verifying IsFull#reads ...
+  [0.078 s, 4 proof obligations]  verified
+>>> Starting implementation verification   [2.5428044 s]
+>>> Starting live variable analysis   [2.5428044 s]
+>>> Finished implementation verification   [2.6052045 s]
+
+Verifying IsEmpty#reads ...
+  [0.062 s, 4 proof obligations]  verified
+
+Boogie program verifier finished with 14 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl VolatileAbstractState.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing VolatileAbstractState.bpl
+>>> Starting resolution   [0.1404002 s]
+>>> Starting typechecking   [0.1872003 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.3900006 s]
+
+Running abstract interpretation...
+  [0.0780002 s]
+>>> Starting implementation verification   [0.4836008 s]
+>>> Starting live variable analysis   [0.5148009 s]
+>>> Finished implementation verification   [0.8424014 s]
+
+Verifying AbstractStruct#adm ...
+  [0.359 s, 12 proof obligations]  verified
+>>> Starting implementation verification   [0.8580015 s]
+>>> Starting live variable analysis   [0.8580015 s]
+>>> Finished implementation verification   [0.9204016 s]
+
+Verifying ConcreteStruct#adm ...
+  [0.062 s, 18 proof obligations]  verified
+>>> Starting implementation verification   [0.9204016 s]
+>>> Starting live variable analysis   [0.9204016 s]
+>>> Finished implementation verification   [1.0764018 s]
+
+Verifying writeStruct ...
+  [0.156 s, 64 proof obligations]  verified
+
+Boogie program verifier finished with 3 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl vscomp2010_p1_v0.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing vscomp2010_p1_v0.bpl
+>>> Starting resolution   [0.1248002 s]
+>>> Starting typechecking   [0.1872003 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.3900007 s]
+
+Running abstract interpretation...
+  [0.0780001 s]
+>>> Starting implementation verification   [0.4836008 s]
+>>> Starting live variable analysis   [0.5148009 s]
+>>> Finished implementation verification   [0.8424014 s]
+
+Verifying sum_max ...
+  [0.359 s, 39 proof obligations]  verified
+
+Boogie program verifier finished with 1 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl vscomp2010_p1_v1.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing vscomp2010_p1_v1.bpl
+>>> Starting resolution   [0.1404003 s]
+>>> Starting typechecking   [0.2028004 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.3900007 s]
+
+Running abstract interpretation...
+  [0.0936002 s]
+>>> Starting implementation verification   [0.4836009 s]
+>>> Starting live variable analysis   [0.530401 s]
+>>> Finished implementation verification   [0.8424015 s]
+
+Verifying sum_max ...
+  [0.359 s, 35 proof obligations]  verified
+
+Boogie program verifier finished with 1 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl vscomp2010_p1_v2.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing vscomp2010_p1_v2.bpl
+>>> Starting resolution   [0.1404003 s]
+>>> Starting typechecking   [0.2028004 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4056007 s]
+
+Running abstract interpretation...
+  [0.0780002 s]
+>>> Starting implementation verification   [0.4992009 s]
+>>> Starting live variable analysis   [0.530401 s]
+>>> Finished implementation verification   [0.8424015 s]
+
+Verifying fsum ...
+  [0.343 s, 2 proof obligations]  verified
+>>> Starting implementation verification   [0.8424015 s]
+>>> Starting live variable analysis   [0.8424015 s]
+>>> Finished implementation verification   [1.138802 s]
+
+Verifying fsum_lemma ...
+  [0.296 s, 8 proof obligations]  verified
+>>> Starting implementation verification   [1.138802 s]
+>>> Starting live variable analysis   [1.138802 s]
+>>> Finished implementation verification   [1.9812035 s]
+
+Verifying sum_max ...
+  [0.842 s, 33 proof obligations]  verified
+
+Boogie program verifier finished with 3 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl vscomp2010_p2_v1.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing vscomp2010_p2_v1.bpl
+>>> Starting resolution   [0.2340004 s]
+>>> Starting typechecking   [0.2964005 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4836009 s]
+
+Running abstract interpretation...
+  [0.0780001 s]
+>>> Starting implementation verification   [0.577201 s]
+>>> Starting live variable analysis   [0.6084011 s]
+>>> Finished implementation verification   [0.9360017 s]
+
+Verifying invert ...
+  [0.359 s, 15 proof obligations]  verified
+
+Boogie program verifier finished with 1 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl vscomp2010_p3_v0.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing vscomp2010_p3_v0.bpl
+>>> Starting resolution   [0.1560002 s]
+>>> Starting typechecking   [0.2184004 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4212007 s]
+
+Running abstract interpretation...
+  [0.0780001 s]
+>>> Starting implementation verification   [0.5148009 s]
+>>> Starting live variable analysis   [0.5460009 s]
+>>> Finished implementation verification   [0.9672017 s]
+
+Verifying List#adm ...
+  [0.452 s, 30 proof obligations]  verified
+>>> Starting implementation verification   [0.9828017 s]
+>>> Starting live variable analysis   [0.9828017 s]
+>>> Finished implementation verification   [250.1808465 s]
+
+Verifying find ...
+  [249.198 s, 19 proof obligations]  verified
+
+Boogie program verifier finished with 2 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl vscomp2010_p3_v1.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing vscomp2010_p3_v1.bpl
+>>> Starting resolution   [0.1404003 s]
+>>> Starting typechecking   [0.2028004 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4056007 s]
+
+Running abstract interpretation...
+  [0.0780002 s]
+>>> Starting implementation verification   [0.4836009 s]
+>>> Starting live variable analysis   [0.5148009 s]
+>>> Finished implementation verification   [0.8424015 s]
+
+Verifying List#adm ...
+  [0.359 s, 8 proof obligations]  verified
+>>> Starting implementation verification   [0.8580015 s]
+>>> Starting live variable analysis   [0.8580015 s]
+>>> Finished implementation verification   [0.9516017 s]
+
+Verifying find ...
+  [0.094 s, 26 proof obligations]  verified
+
+Boogie program verifier finished with 2 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl vscomp2010_p3_v2.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing vscomp2010_p3_v2.bpl
+>>> Starting resolution   [0.1560003 s]
+>>> Starting typechecking   [0.2184004 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4212007 s]
+
+Running abstract interpretation...
+  [0.0780002 s]
+>>> Starting implementation verification   [0.5148009 s]
+>>> Starting live variable analysis   [0.546001 s]
+>>> Finished implementation verification   [1.0140018 s]
+
+Verifying _LIST_MANAGER#adm ...
+  [0.499 s, 18 proof obligations]  verified
+>>> Starting implementation verification   [1.0140018 s]
+>>> Starting live variable analysis   [1.0140018 s]
+>>> Finished implementation verification   [1.1076019 s]
+
+Verifying _LIST#adm ...
+  [0.094 s, 14 proof obligations]  verified
+>>> Starting implementation verification   [1.1076019 s]
+>>> Starting live variable analysis   [1.123202 s]
+>>> Finished implementation verification   [1.2480022 s]
+
+Verifying find ...
+  [0.140 s, 21 proof obligations]  verified
+
+Boogie program verifier finished with 3 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl vscomp2010_p4_v1.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing vscomp2010_p4_v1.bpl
+>>> Starting resolution   [0.1404003 s]
+>>> Starting typechecking   [0.2028004 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4056007 s]
+
+Running abstract interpretation...
+  [0.0780002 s]
+>>> Starting implementation verification   [0.4992009 s]
+>>> Starting live variable analysis   [0.5304009 s]
+>>> Finished implementation verification   [0.8424015 s]
+
+Verifying IsConsistent ...
+  [0.343 s, 22 proof obligations]  verified
+>>> Starting implementation verification   [0.8580015 s]
+>>> Starting live variable analysis   [0.8580015 s]
+>>> Finished implementation verification   [1.154402 s]
+
+Verifying Search ...
+  [0.296 s, 26 proof obligations]  verified
+
+Boogie program verifier finished with 2 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>boogie /trace /traceTimes ..\Vcc2Prelude.bpl vscomp2010_p5_v1.bpl
+[TRACE] Using prover: C:\Program Files\Microsoft Research\z3-4.4.1-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing ..\Vcc2Prelude.bpl
+Parsing vscomp2010_p5_v1.bpl
+>>> Starting resolution   [0.1560002 s]
+>>> Starting typechecking   [0.2184003 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [0.4368007 s]
+
+Running abstract interpretation...
+  [0.0780002 s]
+>>> Starting implementation verification   [0.5304009 s]
+>>> Starting live variable analysis   [0.5616009 s]
+>>> Finished implementation verification   [0.9204016 s]
+
+Verifying List#adm ...
+  [0.390 s, 13 proof obligations]  verified
+>>> Starting implementation verification   [0.9204016 s]
+>>> Starting live variable analysis   [0.9204016 s]
+>>> Finished implementation verification   [1.0140017 s]
+
+Verifying Queue#adm ...
+  [0.094 s, 22 proof obligations]  verified
+>>> Starting implementation verification   [1.0140017 s]
+>>> Starting live variable analysis   [1.0140017 s]
+>>> Finished implementation verification   [1.1076019 s]
+
+Verifying ListNew ...
+  [0.094 s, 21 proof obligations]  verified
+>>> Starting implementation verification   [1.1076019 s]
+>>> Starting live variable analysis   [1.1076019 s]
+>>> Finished implementation verification   [1.2480021 s]
+
+Verifying Cons ...
+  [0.140 s, 30 proof obligations]  verified
+>>> Starting implementation verification   [1.2480021 s]
+>>> Starting live variable analysis   [1.2480021 s]
+>>> Finished implementation verification   [1.8096031 s]
+
+Verifying Concat ...
+  [0.562 s, 34 proof obligations]  verified
+>>> Starting implementation verification   [1.8096031 s]
+>>> Starting live variable analysis   [1.8096031 s]
+>>> Finished implementation verification   [2.1996038 s]
+
+Verifying Reverse ...
+  [0.390 s, 27 proof obligations]  verified
+>>> Starting implementation verification   [2.1996038 s]
+>>> Starting live variable analysis   [2.2152038 s]
+>>> Finished implementation verification   [2.293204 s]
+
+Verifying Tail ...
+  [0.094 s, 15 proof obligations]  verified
+>>> Starting implementation verification   [2.293204 s]
+>>> Starting live variable analysis   [2.293204 s]
+>>> Finished implementation verification   [2.4648043 s]
+
+Verifying QueueNew ...
+  [0.172 s, 25 proof obligations]  verified
+>>> Starting implementation verification   [2.4648043 s]
+>>> Starting live variable analysis   [2.4648043 s]
+>>> Finished implementation verification   [3.6368065 s]
+
+Verifying QueueBuild ...
+  [1.172 s, 44 proof obligations]  verified
+>>> Starting implementation verification   [3.6368065 s]
+>>> Starting live variable analysis   [3.6368065 s]
+>>> Finished implementation verification   [3.6992066 s]
+
+Verifying QueueFront ...
+  [0.062 s, 8 proof obligations]  verified
+>>> Starting implementation verification   [3.7148066 s]
+>>> Starting live variable analysis   [3.7148066 s]
+>>> Finished implementation verification   [4.1672074 s]
+
+Verifying QueueTail ...
+  [0.452 s, 30 proof obligations]  verified
+>>> Starting implementation verification   [4.1672074 s]
+>>> Starting live variable analysis   [4.1672074 s]
+>>> Finished implementation verification   [4.4012078 s]
+
+Verifying Enqueue ...
+  [0.234 s, 30 proof obligations]  verified
+
+Boogie program verifier finished with 12 verified, 0 errors
+
+D:\work\Slicer\trunk\test\VCC\vccbpl\vcc2bpl>

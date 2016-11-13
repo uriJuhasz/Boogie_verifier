@@ -1,0 +1,4 @@
+* SSA and loops
+	- Adopt and adapt Barnett et al solution
+* 
+	

@@ -1,0 +1,233 @@
+
+\subsection{Improved justification extraction}\label{appendix:gamma_approximation}
+In this section we show an alternative encoding of the approximation $\Gamma$ of the equivalence relation of successor CFG-nodes.
+This alternative encoding uses a hierarchical structure of EC-graphs rather than a single EC-graph for approximation, and hence can help us reduce the size of the interpolants we produce.
+
+In this sub-section we describe an improvement of the part of the algorithm that over-approximates $\Gamma$ - 
+it mostly replaces \m{g_n^i} in deciding \eqg{} and especially in generating interpolation clauses (ensuring optimal clauses) and justifications.
+We have seen sub-optimal interpolation clauses in the example in figure \ref{example_4.2.1.3}.
+We assume a given EC-graph \m{g^t} and the set of equations $\Gamma$ over \m{I^t}, which over-approximates the equations of all suffix paths restricted to \m{I^t}.\\
+\textbf{Basic idea:}\\
+Instead of the graph \m{g_n^i}, we create a tree of EC-graphs, where the root is \m{g^t} and each tree-node is an EC-graph obtained from its parent by \lstinline|assuming| one relevant equation from $\Gamma$ - this equation is the label of the parent edge.
+The leaves are the EC-graphs with no relevant equalities or that are in conflict (that is, an EC-node has a dis-equality self-loop).
+At each tree-node we have an EC-graph g obtained from its tree-parent EC-graph by \lstinline|assuming| the edge label of its parent edge (the edge label is an equation of two EC-nodes of \m{g^t}, we follow the source-edges backwards from \m{g^p} to \m{g^t} (selecting one representative when there are several options) in order to translate the equation to be over two EC-nodes of \m{g^p}).
+Each such tree-node g is associated with the sequence S of interface equations on the path leading to it from the tree-root.
+We establish the source invariant between each EC-graph g and the EC-graph \m{g^p} of its parent tree-node.\\
+\textbf{Extracting interpolants:}\\
+For each such tree-node g we may output some interpolation clause-ECs:
+The body is always the disjunction of the negation of all equations on the DAG-path leading to g.
+If g is in conflict, we output only the body.
+Otherwise, we basically want to output one interpolation clause for each pair of interface terms \m{s,t \in \terms{g^t}} s.t. \m{g \models s=t \land g^p \not\models s=t}. This set of pairs of terms can be infinite if g has cycles (e.g. a=f(a)), but we can output a sufficient number of clauses that imply any such equality.\\
+The set of heads of Horn clauses for g is defined as follows:\\
+The simple case is when two interface nodes \m{u,v \in g^p} are merged into one interface node \m{w \in g} by congruence closure - for example, in \ref{f.fs.ug.rc.1}, the tree has one tree-node beside the root - \m{g_{a=b}} (as a=b is the only relevant equality - in fact it is \m{[a]^t=[b]^t}). 
+At \m{g^t}, \m{[c]^t \neq [d]^t} while at \m{g_1}, \m{[c]_{a=b} = [d]_{a=b}}, hence we output the interpolation clause 
+\m{[a]^t \neq [b]^t \lor [c]^t = [d]^t}.\\
+Looking at example \ref{example_4.2.1.3}, out tree will have four non-root nodes - \\
+\m{g_{a=b},g_{a=b,c=d},g_{c=d},g_{c=d,a=b}}\\ 
+We only consider here \m{g_{a=b},g_{c=d}} as we will show below how to avoid adding the other two.\\
+At \m{g_{a=b}} we output \m{[a]^t \neq [b]^t \lor [e_1]^t = [e_2]^t} 
+while at \m{g_{c=d}} we output \\
+\m{[c]^t \neq [d]^t \lor [e_3]^t = [e_4]^t} - so we have produced the optimal interpolation clauses.\\
+The second case for the head of an interpolation clause is when, for some EC-node \m{n \in g},
+we have a pair of interface \GFAs{} \m{\fa{f}{s},\fa{g}{t} \in n}, s.t. at least one of the \GFAs{} has no source in \m{g^p} that is an interface gfa.\\
+In example \ref{example_4.2.1.3_0}, at the graph \m{g_{a=b}} with the parent \m{g^t},
+the EC-node \m{[e]_{a=b}} has two interface gfas, \s{f([e,\textcolor{red}{y}]),e()} where the first \GFA{} has just one source in \m{g^t} - \m{f([\textcolor{red}{y}])}, which is not an interface gfa, and hence we output the interpolation clause \m{[a]^t \neq [b]^t \lor [e]^t = [f(e)]^t}.
+ Note that \m{[f(e)]^t} does not exist in \m{g^t} and has to be added.\\
+The way we choose which EC-nodes to add to \m{g^t} is as follows - we define a total order on ground terms s.t. all interface terms are smaller than all non-interface terms (described later), each \GFA{} is represented by its minimal term and each EC-node is represented by the minimum on terms representing its gfas. If the representatives of our interface \GFAs{} at g do not appear in \m{g^t}, we add them. In the above example, \\
+\m{\terms{[e]_{a=b}} = \s{f^k(e),f^k(\textcolor{red}{y}) \mid k \geq 0} \cup \s{h(a,\textcolor{red}{x}),h(b,\textcolor{red}{x})}} - the smallest interface term is e. \\
+For the \GFA{} \m{f([e])} the representative is \m{f(\rep{[e]})=f([e])}, which has to be added to \m{g^t}.
+
+\subsubsection*{Reducing redundancy using a DAG}
+Evidently, as described above, the algorithm is very inefficient, as each set of interface equalities can be reached on several paths - one for each order of \lstinline|assuming| the equalities - we could use sets instead of sequences to characterize tree-nodes.\\
+Hence we use a DAG rather than a tree, where each DAG-node that represents the set of equalities S will have, for each \m{u=v \in S}, 
+a parent DAG-edge to the DAG-node that represents \m{S \setminus \s{u=v}}.
+We avoid creating a child node if \emph{any} of its parents are in conflict, as it will not produce any new interpolation clauses.\\
+Additionally, we only output interpolation clauses as above if the conditions for generating the clause hold for \emph{all} parents.\\
+For example, in figure \ref{example_4.2.1.4}, the root of the DAG is the graph \m{g^t}.\\
+The root has two depth-1 children - \m{g_{a=b},g_{c=d}}, as per the relevant equalities - producing the interpolation clauses 
+\m{a\neq b \lor e_1=e_2,c\neq d \lor e_3=e_4} respectively.\\
+Each of these children has a relevant equality, producing the DAG-node \\
+\m{g_{a=b,c=d}}.
+%and hence we are done. 
+%Even if we had a reason to add the DAG-node \m{g_{a=b,c=d}} 
+%(e.g. if we were to add \m{h(a,b,b,\textcolor{red}{x})\neq h(c,d,c,\textcolor{red}{x})} to \m{N^t}),
+However, we will not produce the interpolation clauses \\
+\m{a\neq b \lor c\neq d \lor e_1=e_2,a\neq b \lor c\neq d \lor e_3=e_4} because
+\m{g_{a=b} \models e_1=e_2} and\\
+ \m{g_{c=d} \models e_3=e_4}.
+
+%\textbf{Extracting interpolants:}\\
+%In order to extract interpolants, we use the definition of the sources function. For each DAG-node EC-graph \m{g_S}, for each parent DAG-node EC-graph \m{g_p} we can calculate the sources function between \m{g_S} and \m{g_p} as usual, except that in this case the multiple parents represent a meet rather than a join (we enforce the sequential invariant in each case). We refer to the sources of EC-nodes and \GFAs{} as defined in chapter \ref{chapter:ugfole}.\\
+%Each EC-graph \m{g_S} at a DAG-node generates the following Horn clauses, each with the antecedent of the disjunction of the negation of all equalities in S:
+%\begin{itemize}
+	%\item If \m{g_S} is in conflict, we produce only the head-less Horn-clause, otherwise
+	%\item For each EC-node \m{u \in g_S} with two \GFAs{} \m{\fa{f}{s} \neq \fa{g}{t} \in u} that each have an interface representative and, for each parent EC-graph \m{g_p} of \m{g_S}, the sources of the \GFAs{} are in separate EC-nodes, we produce the Horn clause with the head 
+	%\m{\rep{\fa{f}{s}}=\rep{\fa{g}{t}}} (this covers examples e.g. \ref{example_4.2.1.4}, \ref{f.fs.ug.rc.1}).
+	%\item For each EC-node \m{u \in g_S} with two \GFAs{} \m{\fa{f}{s} \neq \fa{g}{t} \in u} that each have an interface representative and, for each parent EC-graph \m{g_p} of \m{g_S}, the source of \fa{f}{s} has no interface representative, we produce the Horn clause with the head 
+	%\m{\rep{\fa{f}{s}}=\rep{\fa{g}{t}}} (This covers e.g. example \ref{example_4.2.1.2_0}).
+%\end{itemize}
+%
+%The algorithm described above will generate all possible optimal interpolation clauses for any \m{g^b}.
+
+\subsubsection*{Reducing redundancy using disjoint parts}
+Looking at example \ref{example_4.2.1.3}, we see that the equalities \m{a=b,c=d} are independent in the following sense:
+If we \lstinline|assume(a=b)|, we have not modified the part of the EC-graph which is the (\GFA{}) downward closure of \m{[e_3],[e_4]} and vice versa, where \lstinline|assume(c=d)| does not affect \m{[e_1],[e_2]}.\\
+In this case, although \m{g_{a=b}} has a relevant equality \m{c=d} and \m{g_{c=d}} has a relevant equality \m{a=b}, we will not gain any new interpolation clause by calculating \m{g_{a=b,c=d}} because each interpolation clause is subsumed by one of its parents.
+In order to take advantage of this fact, for each EC-graph \m{g_{u=v}} of depth one in the DAG, we trim any EC-node that is not in the down-closure of the up-closure of u,v - that is any term that is not needed to represent any super-term of u,v.\\
+In our example the sub-term closure of the super-term closure of \s{[a],[b]} is \s{[a],[b],[e_1],[e_2],[\textcolor{red}{x}]} 
+and similarly for \s{[c],[d]} it is \s{[c],[d],[e_3],[e_4],[\textcolor{red}{x}]}.\\
+After trimming \m{g_{a=b},g_{c=d}}, they both have no more relevant equalities, and hence we avoid adding the meet DAG-node \m{g_{a=b,c=d}}.\\
+In order to maintain completeness, we must, besides super-term closure, also maintain closure w.r.t. \eqg - consider the example in figure \ref{example_4.2.1.6}:
+\begin{figure}[H]
+\m{N^t=\s{\textcolor{red}{y_0}=g(a,\textcolor{red}{x}),\textcolor{red}{y_1}=g(b,\textcolor{red}{x})=h(c,\textcolor{red}{x}),
+\textcolor{red}{y_2}=h(d,\textcolor{red}{x}),\textcolor{red}{y_0} \neq \textcolor{red}{y_2}}}
+\caption{Example for different upward closures\\
+Without \eqg closure:\\
+The graph \m{g_{a=b}} will include \s{[a],[b],[c],[\textcolor{red}{x}],[\textcolor{red}{y_0},\textcolor{red}{y_1}]}\\
+The graph \m{g_{c=d}} will include \s{[b],[c],[d],[\textcolor{red}{x}],[\textcolor{red}{y_1},\textcolor{red}{y_2}]}\\
+Both graphs will be leaves - we are missing the closure with \m{\textcolor{red}{y_0} \eqg \textcolor{red}{y_2}}.
+}
+\label{example_4.2.1.6}
+\end{figure}
+
+
+It is also sufficient to include in each DAG-node only the EC-nodes that can be merged by one application of congruence closure, which are sufficient for calculating the relevant equalities, and only transitive super-terms once congruence closure is performed.
+
+\textbf{Reducing redundancy using path compression:}\\
+One case we have not yet covered is an asymmetric meet - consider the example in figure \ref{example_4.2.1.7}
+\begin{figure}[H]
+\m{N^t=\s{b_0=g(a_0,\textcolor{red}{x}),b_1=g(a_1,\textcolor{red}{x}),
+\textcolor{red}{y_0}=h(b_0,c,\textcolor{red}{x}),\textcolor{red}{y_1}=h(b_1,d,\textcolor{red}{x}),
+\textcolor{red}{y_0}\neq \textcolor{red}{y_1}}}
+\caption{Example for an asymmetric meet\\
+The graph \m{g_{a_0=a_1}} will have a node \m{[b_0,b_1]} and hence is effectively also \m{g_{a_0=a_1,b_0=b_1}}\\
+The graph \m{g_{b_0=b_1}} will have \m{g_{a_0=a_1}} as a child.\\
+The interpolation clauses will be:\\
+\s{a_0 \neq a_1 \lor b_0=b_1,b_0 \neq b_1 \lor c \neq d}
+}
+\label{example_4.2.1.7}
+\end{figure}
+Here we can compress the DAG-path \m{a_0=a_1.b_0=b_1} to \m{a_0=a_1} because of the implication.\\
+When extracting interpolation clauses we can skip \m{a_0 \neq a_1 \lor c \neq d} because it is derivable from the other two 
+- this is detected because \m{g_{b_0=b_1} \models c=d} and \m{g_{b_0=b_1}} is a parent to \m{g_{a_0=a_1}} which is, in fact, \m{g_{a_0=a_1,b_0=b_1}}. We do not reject the interpolation clause \m{a_0 \neq a_1 \lor b_0=b_1} although \m{g_{b_0=b_1} \models b_0=b_1} because \m{[b_0]=[b_1]} is a consequence of \m{[a_0]=[a_1]} in \m{g_{a_0=a_1}} and \emph{directly} assumed in \m{g_{b_0=b_1}}.
+
+Another instance of path compression is shown in figure \ref{example_4.2.1.8}:
+\begin{figure}[H]
+\m{N^t=\s{c=g(a_0,b_0,\textcolor{red}{x}),d=g(a_1,b_1,\textcolor{red}{x})}}\\
+\m{N^b=\s{a_0=a_1,b_0=b_1,c \neq d}}
+\caption{Example for path compression\\
+There is no need for the graphs \m{g_{a_0=a_1},g_{b_0=b_1}}, only \m{g_{a_0=a_1,b_0=b_1}}.
+}
+\label{example_4.2.1.8}
+\end{figure}
+\noindent
+We can skip any DAG-node where no congruence closure has been performed in comparison with \emph{all} parents - any interpolation clause derived by transitive closure is not needed (e.g. if \m{g^t \models a=b,c=d} and \m{g^b \models b=c} then there is no need for the clause \m{b\neq c \lor a=d} because we use the clauses \m{a=b,c=d} which are on the interface (which is transitively closed).\\
+In the incremental case, we might encounter a non-incremental interpolant - for example, in \ref{example_4.2.1.8}, 
+if we were to remove \m{c\neq d} from \m{N^b}, derive the interpolation clause \m{a_0 \neq a_1 \lor b_0 \neq b_1 \lor c=d},
+and later derive in \m{N^t} (in another fragment) \m{c=f(a_0,\textcolor{red}{x}),d=f(a_1,\textcolor{red}{x})}, then our interpolation clause is obsolete and should be replaced (subsumed) by \m{a_0 \neq a_1 \lor c=d} - as we have stated before, 
+removing the old clause from all successors is not very efficient, but, in the case where we have several successors,
+we cannot skip adding the smaller clause, as some successors might only entail \m{a_0=a_1} and not \m{b_0=b_1} e.g. \m{N^t = \s{a_0=a_1,c\neq d}}.
+Hence, we add and propagate the shorter clause as well and rely on subsumption to eliminate the unnecessary clauses 
+(although at the price of some redundant derivations). \\
+We can, however, eliminate the DAG node \m{g_{a_0=a_1,b_0=b_1}} as it has been subsumed.\\
+Using the above described path compression we ensure that, for each DAG-node, 
+at least one pair of non-interface \GFAs{} is merged that was not merged in \emph{all} parents.
+
+\subsubsection*{Complexity}
+The DAG can have, in the worst case, a single DAG-node per any subset of the possible interface-node equalities - hence \bigO{2^n} complexity for the set of interpolation clauses.\\
+An example that achieves exponential complexity:\\
+\m{N^t =\s{\bigwedge\limits_{i\in I,j \in J} (f(a_{i,j},\textcolor{red}{x})=\textcolor{red}{y_i} \land f(b_i,\textcolor{red}{x})=\textcolor{red}{z_i}), c = f(\textcolor{red}{\tup{z}}), d = f(\textcolor{red}{\tup{y}})}}\\
+Here the non-redundant interpolants are:\\
+\s{\bigwedge\limits_{\tup{k} \in J^{\size{I}}} (c = d \lor \bigvee\limits_{i \in I} a_{i,{k_i}} \neq b_i) }\\
+A total of \m{\theta(\size{J}^{\size{I}})} clauses for an input size of \bigO{\size{I} \times \size{J}}.
+
+\textbf{Worst case lower space bound, non-unit case:}\\
+The worst case complexity for any interpolant between two sets of ground (not necessarily unit) clauses is exponential, as expected from the propositional case (e.g. pigeon-hole principle).
+Even if the first set of clauses includes only unit ground clauses, the worst case minimal CNF interpolant is still exponential - for example:\\
+\m{N^t =\s{\bigwedge\limits_{i\in I,j \in J} (f(a_{i,j},\textcolor{red}{x})=\textcolor{red}{y_i} \land f(b_{i},\textcolor{red}{x})=\textcolor{red}{z_i}), c = f(\textcolor{red}{\tup{z}}), d = f(\textcolor{red}{\tup{y}})}}\\
+\m{N^b =\s{\bigwedge\limits_{i \in I} (\bigvee\limits_{j\in J} a_{i,j} = b_{i}), c \neq d}}\\
+Where the minimal CNF interpolant is:\\
+\s{\bigwedge\limits_{\tup{k} \in J^n} (c = d \lor \bigvee\limits_{i \in I} a_{i,k_i} \neq b_i)}\\
+As above, the minimal CNF interpolant is exponential in the input size.
+
+\textbf{Worst case upper space bound, unit case, binary:}\\
+The maximal space complexity of a minimal interpolant between two sets of unit ground clauses is polynomial, based on our above algorithm (the basic algorithm without the EC-graph DAG):\\
+We let k be the number of EC-nodes in the larger between \m{g^t} and \m{g^b}. At each step we transfer at least one equality from \m{g^b} to \m{g^t}, hence decreasing the number of nodes by at at least one, and at least one equality from \m{g^t} to \m{g^b} - hence the number of literals of each interpolation clause (Horn clause) is at most k and we have at most k Horn clauses - hence the interpolant (conjunction of above Horn clauses) is of at most \m{k^2} size as a function of interface nodes (clause ECs).\\
+An interpolant over terms rather than EC-nodes could be exponential - for example:\\
+\m{N^t = \s{\bigwedge\limits_{i \in 1..n} \textcolor{red}{x_{i+1}} = f(\textcolor{red}{x_{i}},\textcolor{red}{x_{i}}),\textcolor{red}{x_0}=a,\textcolor{red}{x_n} \neq b}}\\
+\m{N^b = \s{\bigwedge\limits_{i \in 1..n} \textcolor{blue}{m_{i+1}} = f(\textcolor{blue}{m_{i}},\textcolor{blue}{m_{i}}),\textcolor{blue}{m_{0}}=a,\textcolor{blue}{m_{n}} = b}}\\
+Here, the size of the minimal representative term of \m{[\textcolor{red}{x_n}]^t} is exponential in n, 
+and similarly for \m{[\textcolor{blue}{m_n}]^b}. However, if we allow shared representation (so that we count only distinct sub-terms), then the representation is polynomial.
+
+\textbf{Worst case lower space bound, unit case, CFG:}\\
+The problem of calculating an interpolant between a CFG node and all paths from it to assertions is equivalent to the non-unit case,
+even if each CFG-node only contains unit clauses - we can simulate an n-literal CNF clause by an n-branch with each literal assumed in one arm of the branch, which is immediately joined. Hence in this case the complexity is exponential.
+
+\textbf{Bounded fragments:}\\
+In realistic scenarios, we do not expect the above worst case example to be common, as e.g. examples of the pigeon-hole principle are not common as a verification condition for propositional programs.\\
+In order to ensure a time and space complexity bound we simply limit the depth of any path in the DAG - as the out-degree of each DAG-node of depth k is at most \m{\binom{\size{g^t} - k}{2}} (quadratic), it is easy to calculate the maximal size of the DAG up to any given depth n, 
+with path compression we would not expect the necessary depth to be high for most realistic examples.
+
+\subsubsection*{Unit disequalities}
+The algorithm for verification with only ground unit equalities presented in chapter \ref{chapter:ugfole} assumed (for simplicity) that all dis-equalities occur at assertion nodes. We have seen how dis-equalities can be represented in the EC-graph using dis-equality edges between EC-nodes. Propagating dis-equalities using sources is simple - for a CFG-node n, and two EC-nodes u,v,  if in all predecessors there is a dis-equality edge between a source of u and a source of v, we can add the edge also between u and v. We also need to propagate dis-equalities on super-terms of EC-nodes with more than one source - but we omit the details here. 
+In this section we are interested in the effect of scoping on the propagation of dis-equalities. 
+We show that our technique for generating interpolants can be used to generate dis-equality interpolants that strengthens the EC-graph based verification algorithm by allowing it to propagate more dis-equalities.
+
+For a unit dis-equality at a CFG-node n that includes a sub-term that is not in scope in a successor CFG-node s, we can have several options for a unit interpolant - for example:\\
+\s{g(f^7(a),\textcolor{red}{x}) \neq g(f^6(a),\textcolor{red}{x})} \\
+implies each of \s{f^{i+1}(a) \neq f^{i}(a) \mid 0\leq i <7}\\
+While \\
+\s{g(f^7(a),\textcolor{red}{x}) \neq g(f(a),\textcolor{red}{x})} \\
+implies the following (direct implication graph):
+\begin{figure}[H]
+\begin{tikzpicture}
+	\node (1)                      {$\m{f^7(a) \neq f(a)}$};
+	
+	\node (2a)[below       = 1cm of 1 ]     {$\m{f^6(a) \neq a}$};
+	\node (2b)[below left  = of 1 ] {$\m{f^4(a) \neq f(a)}$};
+	\node (2c)[below right = of 1 ]     {$\m{f^3(a) \neq f(a)}$};
+	
+	\node (3a)[below left  = 1cm and 0.2cm of 2a] {$\m{f^3(a) \neq a}$};
+	\node (3b)[below right = 1cm and 0.2cm of 2a] {$\m{f^2(a) \neq a}$};
+	
+	\node (3c)[below       = 1cm of 2a] {$\m{f^2(a) \neq f(a)}$};
+
+	\node (4a)[below       = 1cm of 3c] {$\m{f(a) \neq a}$};
+	\draw[double,->] (1) to  (2a);
+	\draw[double,->] (1) to  (2b);
+	\draw[double,->] (1) to  (2c);
+	\draw[double,->] (2a) to  (3a);
+	\draw[double,->] (2a) to  (3b);
+	\draw[double,->] (2b) to  (3a);
+	\draw[double,->] (2b) to  (3c);
+	\draw[double,->] (2c) to  (3b);
+	\draw[double,->] (2c) to  (3c);
+	\draw[double,->] (3a) to  (4a);
+	\draw[double,->] (3b) to  (4a);
+	\draw[double,->] (3c) to  (4a);
+\end{tikzpicture}
+\caption{
+Unit disequalities
+}
+\label{example_4.2.5}
+\end{figure}
+
+Intuitively, the simplest inteprolant is \m{f^7(a) \neq f(a)}.
+In the set of unit dis-equalities implied by one top unit dis-equality, 
+the \emph{top disequalities} are those that are not implied by any other dis-equality in the set - in the above \\
+\s{f^4(a) \neq f(a),f^3(a) \neq f(a),f^6(a) \neq a}
+
+Consider the following example:\\
+\m{\clauses{p} = \s{f^7(a) \neq f(a),f^4(a)=y,f^7(b) \neq f(b),f^4(b)=z}}\\
+\m{\clauses{n} = \s{f^3(a)=a \lor f^2(b)=b}}\\
+Here, the interpolants \s{f^7(a) \neq f(a),f^7(b) \neq f(b)} imply all the others.\\
+For EC-graphs with a depth bound of 1 and relative depth (as described in chapter \ref{chapter:bounds}), 
+we cannot represent \m{f^7(a),f^7(b)} at n, but we can represent \m{f^3(a)\neq a} and \m{f^2(b)\neq b} - 
+hence we want to generate the top dis-equalities for each dis-equality that is too deep for the successor.
+
+\textbf{Algorithm:}\\
+We can easily use our DAG-based algorithm to find the unit disequalities as follows:\\
+We develop our DAG for a depth of 1, using only dis-equalities as goals (that is, we do not use pairs in \m{I^{\Gamma}} in order to calculate G).\\
+Each conflicting EC-graph at a DAG-node represents one unit disequality.\\
+This can be done incrementally, using any variant of $\Gamma$ (over-approximation of equalities in transitive successors).
+

@@ -1,0 +1,65 @@
+\newpage
+
+\section{Completeness}
+In this section we sketch the completeness argument for our verification algorithm, and show what is required for completeness from the clause propagation mechanism and calculus.
+
+As a clause is propagated, some path literals are added to it to ensure soundness - specifically, 
+at a join point that joins a branch with the branch condition c, if the clause D is propagated from the \lstinline|then| joinee it will be propagated as \m{\lnot c \lor D}, and similarly from the \lstinline|else| joinee as \m{c \lor D}.\\
+When a clause is propagated on a path it may "collect" several such branch conditions. As these branch conditions are always strictly smaller (in $\succ$) than any non-branch literal in D (discussed in section \ref{section:gfole:ordering}), these additional literals do not affect a calculus where the validity of an instance of an inferences rule is determined only by maximal literals, as in the superposition calculus, until all non branch condition literals are eliminated and we are left with an ordered resolution proof.
+We define the set of branch literals that a clause collects as follows:\\
+Given a path P in the CFG starting at the root, the set of \newdef{path conditions on P}, \pc{P}, 
+is the set of branch conditions taken on the path \emph{for branches that are joined on the path}. 
+A clause path prefix for a path P in the CFG is a clause
+
+\bigskip
+
+\noindent\m{\bigvee\limits_{A \in S} \lnot A} for some \m{S \subseteq pc(P)}.
+
+\bigskip
+
+Intuitively, a clause-path-prefix for P is a clause made of only branch literals that do not hold in P.  
+We do not use simply \m{S=pc(P)} in the above definition as simplifications (e.g. unit propagation) and joins can generalize the clause-path-prefix part of a clause to include more paths (reducing the number of literals). 
+
+\begin{figure}
+\begin{lstlisting}
+$\node{n_0}:$
+if ($\m{c_1}$)
+	$\node{n_1}:$	
+	if ($\m{c_2}$)
+		$\node{n_2}:$
+	else
+		$\node{n_3}:$
+	$\node{n_4}:$
+else	
+	$\node{n_5}:$
+$\node{n_6}:$
+if ($\m{c_3}$)
+	$\node{n_7}:$
+else
+	$\node{n_8}:$
+$\node{n_9}:$
+\end{lstlisting}
+\caption{Example for branch conditions on a path\\
+}
+\label{snippet4.1.4.4}
+\end{figure}
+
+For example, in figure \ref{snippet4.1.4.4}:\\
+For the path \m{P=n_0.n_1.n_2}, \m{pc(P)=\emptyset} as no branches are joined on the path.\\
+For the path \m{P=n_0.n_1.n_2.n_4.n_6.n_7}, \m{pc(P)=\s{c_1,c_2}}.\\
+For the path \m{P=n_0.n_1.n_3.n_4.n_6.n_8.n_9}, \m{pc(P)=\s{c_1,\lnot c_2,\lnot c_3}}.\\
+Evidently the disjunction of the negation of any subset of \m{pc(P)} implies that the path P was not taken.
+We use joins in order to eliminate some of the literals in \m{\lnot pc(P)}.
+
+A property of clause-path-prefixes is as follows:
+Given a node n, if we select a set of clauses S s.t. each path from the root to the node has a clause-path-prefix in S, then S is inconsistent.
+The reason is that any model of the set of clauses defines a value for each branch condition and hence defines a path from the root to the node.
+
+\bigskip
+We say that a clause \textcolor{blue}{occurs at a node} if it is in the \lstinline|done| set of the node, and \textcolor{blue}{occurs on a path} if it occurs at a node on the path.
+
+\bigskip
+Our reasoning for completeness is intuitively as follows: for any path P in the CFG that starts at the root, 
+for any instance of a binary inference with premises C,D in the calculus for which both premises occur on the path where the earliest (in distance from the root) occurrence of C is at \m{n_C} and of D at \m{n_D}, and w.l.o.g. \m{n_C} is earlier, C is propagated (relativized) to \m{n_D} and the inference takes place at \m{n_D} (relativized).
+The idea is that if a node is infeasible (w.l.o.g. one of its predecessors is feasible) then for any path reaching the node from the root the empty clause can be derived from the clauses occurring on the path (as the calculus is complete), and hence, if the propagation criterion is complete (always propagates a clause relevant for an inference), the algorithm derives a relativized empty clause which is a clause-prefix-path on some node on the path (the earliest node that is infeasible on the path). The set of clause-prefix-paths for all paths reaching a node is inconsistent and hence the algorithm derives the empty clause at the infeasible node. Note that a join node with one infeasible predecessor has to propagate the relativized empty clause - in practice we simply eliminate the infeasible predecessor and trim the CFG, and the node stops being a join.
+

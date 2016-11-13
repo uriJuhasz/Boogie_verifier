@@ -1,0 +1,235 @@
+	
+	\subsection{Locality and Scope}
+	When inspecting the reasoning about a statement \statement{s} in a program \program{p} (in SSA form), we can discern some interesting characteristics:
+		The (SSA versions of) program variables that are referenced are only the ones that appear in some path leading to \statement{s} - specifically, we do not have any information about program variables whose scope is only "after" \statement{s} or only in a branch parallel to \statement{s} - we can use this to reduce the set of logical constant symbols (and hence ground terms) over which we search for the relevant Hoare triples over \statement{s}.
+		This could reduce also the set of relevant axioms in the search for such triples if, for example, \program{p} includes sequences but non is in scope for \statement{s} then we could disregard sequence axioms when looking for Hoare triples over \statement{s}.
+		For example, in the following program:
+\begin{lstlisting}
+function f1()
+{
+	x := 0
+	if (c)
+		y := 5
+	else
+		z := 6
+		y := z+1
+	u := y
+	v := x+u+4
+	assert v>=9
+}
+\end{lstlisting}		
+	When looking at the statement \statement{y:=5} we do not need to consider the variables \variable{z},\variable{u}, \variable{v} at all.
+	For the variable \variable{x} we only need to consider preservation of the value (or a more coarse property such as \assertion{$x \geq 0$}.
+	As quantifier can take up a significant portion of the time spent by a theorem prover, reducing the set of relevant ground terms can reduce the overall proof time.
+	
+	In figure \ref{fig:1} we can see the minimal definition scopes for some cases:
+	\begin{figure}[ht]
+	\centering
+		\begin{subfigure}[b]{0.28\textwidth}
+			\includegraphics[width=\textwidth,page=1]{"scoping-figure-1"}
+			\caption{\tiny minimal scope for \variable{x}}
+		\end{subfigure}
+		%
+		\begin{subfigure}[b]{0.28\textwidth}
+			\includegraphics[width=\textwidth,page=2]{"scoping-figure-1"}
+			\caption{\tiny maximal scope for \variable{x}}
+		\end{subfigure}
+		%
+		\begin{subfigure}[b]{0.28\textwidth}
+			\includegraphics[width=\textwidth,page=3]{"scoping-figure-1"}
+			\caption{\tiny minimal scope for \variable{y}}
+		\end{subfigure}
+		\\
+		%
+		\begin{subfigure}[b]{0.28\textwidth}
+			\includegraphics[width=\textwidth,page=4]{"scoping-figure-1"}
+			\caption{\tiny minimal scope for \variable{z}}
+		\end{subfigure}
+		%
+		\begin{subfigure}[b]{0.28\textwidth}
+			\includegraphics[width=\textwidth,page=5]{"scoping-figure-1"}
+			\caption{\tiny minimal scope for \variable{u}}
+		\end{subfigure}
+		%
+		\begin{subfigure}[b]{0.28\textwidth}
+			\includegraphics[width=\textwidth,page=6]{"scoping-figure-1"}
+			\caption{\tiny minimal scope for \variable{v}}
+		\end{subfigure}
+		\\
+		\begin{subfigure}[b]{0.33\textwidth}
+			\includegraphics[width=\textwidth,page=7]{"scoping-figure-1"}
+			\caption{\tiny minimal scope for \variable{w}}
+		\end{subfigure}
+		\begin{subfigure}[b]{0.33\textwidth}
+			\includegraphics[width=\textwidth,page=8]{"scoping-figure-1"}
+			\caption{\tiny minimal scope for \variable{x},\variable{y}}
+		\end{subfigure}
+		\caption{Definition scopes for variables}
+		\label{fig:1}
+	\end{figure}
+	
+	The interesting property here, is that we can conceive a proof with minimal scope in which each variable is mentioned only in its minimal scope, and thus the set of potential ground terms up to some given depth n is vastly reduced as the proof only contains ground terms in which all the constants have a common basic block in their minimal scope.
+	So, for example, in \ref{fig:1}, there cannot be any ground term (or atom or clause) containing both \variable{x} and \variable{z}, or \variable{z} and \variable{w}.
+	As we'll see later, it is not always advantageous to look for such a scope-minimal proof, as removing a variable from the scope might sometimes be done only by existential quantification, which is usually not desirable and would often get skolemized anyway, thus not reducing the scope - in this case we may allow the variable to appear up to its maximal scope, which is still less than the whole program.
+	Note also, that in a strictly scope-minimal proof, if a variable that is not mentioned in one of the blocks in its minimal scope - for example \variable{y} on both sides of the branch - should only be mentioned in preservation Hoare triples (e.g. framing) - and so only in combination with variables with which it is mentioned in the same basic block.
+	In our example, this means for example, that for the variable \variable{y} we may only preserve the property \assertion{$y > 0$} or \assertion{$y = z$} but won't be mentioned together with \variable{u} or \variable{v}.
+	Again, this is not always better (for more concise proofs), as we may be able to establish a lemma that relates two variables that are not mentioned together and that would be used, for example, on both sides of a branch - and thus inferred twice in two different contexts, rather than infer the lemma earlier only once.
+
+
+
+	For a given program \program{p}, looking at a given statement \statement{s} in \program{p}, we try to limit the set of potential Hoare triple in an "optimized" program proof (containing no superfluous triples) by limiting the set of ground terms that can appear in them - thus reducing the proof search space.
+	Consider the following function:
+\begin{lstlisting}
+function f1()
+{
+	x := 0
+	if (c)
+		y := 5
+	else
+		z := 6
+		y := z+1
+	u := y
+	v := x+u+4
+	assert v>=9
+}
+\end{lstlisting}		
+	\begin{itemize}
+		\item If a variable \variable{v} appears neither in \statement{s} nor later in the program (e.g. the variable \variable{y} in \function{f1} does not appear in or after \statement{v:=x+u+4} ) then any occurrence of this variable in a Hoare triple after \statement{s} can be, in theory,  eliminated by existential quantification - however, as many theorem provers use sklomization this is may not be very useful.
+		For example:
+\begin{lstlisting}
+function f2(Sequence<int> s, int x)
+	require !s.contains(x)
+{
+	s0 := s
+	s1 := s0.insertAt(i,x)
+	j := i * i + i + 2
+	k = s1.findFirst(x)
+	assert k*k+k+2 == j
+}
+\end{lstlisting}		
+		Here, if we wanted to forget \variable{i} after the assignment to \variable{j}, we would need something of the sort of \\ \hoareTriple{s1[i]=x}{j:=$i \times i + i+2$}{ $\exists l : l \times l + l + 2=j \land s1[l]=x$} \\
+		rather than the simpler \\
+		\hoareTriple{$s1[i]=x$}{j:=$i \times i + i+2$}{$s1[i]=x$} and \\
+		\hoareTriple{$true$}{j:=$i \times i + i+2$}{$j=i \times i+i+2$}
+		
+		For the case of branches, consider the following example:
+\begin{lstlisting}
+function f3(Sequence<int> s, int x)
+	require !s.contains(x)
+{
+	s0 := s
+	s1 := s0.insertAt(i+1,x)
+	if (c)
+		j := 2*i + 1
+	else
+		j := 2*i + 2
+			
+	k = j-1 div 2 //round down
+	assert s1[k+1]=x
+}
+\end{lstlisting}		
+		
+		In this case, if we remove \variable{i} from scope:
+		\begin{itemize}
+		
+		\item In forward semantics, we would have to replace it with an existential of the form \\
+			\assertion{$      c \implies \exists l : j=2 \times l + 1 \land s1[l+1]=x$}  \\
+			\assertion{$\lnot c \implies \exists l : j=2 \times l + 2 \land s1[l+1]=x$}  \\
+			which will usually get skolemized to: \\
+			\assertion{$      c \implies j=2 \times l1 + 1 \land s1[l1+1]=x$}  \\
+			\assertion{$\lnot c \implies j=2 \times l2 + 2 \land s1[l2+1]=x$}  \\
+			Note that here we cannot expect the prover to join \assertion{$s1[l1+1]=x$} and \assertion{$s1[l2+1]=x$} in any straightforward way.
+			and then after the assignment to \variable{k} and the addition of the negated assertion\\
+			\assertion{$      c \implies j=2 \times l1 + 1 \land s1[l1+1]=x$}  \\
+			\assertion{$\lnot c \implies j=2 \times l2 + 2 \land s1[l2+1]=x$}  \\
+			\assertion{$k = (j-1) ~ div ~ 2$}  \\
+			\assertion{$\lnot s1[k+1]=x$} \\
+			Here we have several options, we could resolve on \assertion{$\lnot s1[k+1]=x$} or case split on c to get \\
+			\assertion{$      c \implies j=2 \times l1 + 1 \land k=l1 \land s1[l1+1]=x$}  \\
+			\assertion{$\lnot c \implies j=2 \times l2 + 2 \land k=l2 \land s1[l2+1]=x$}  \\
+			\assertion{$k = (j-1) ~ div ~ 2$}  \\
+			\assertion{$\lnot s1[k+1]=x$} \\
+			and then \\
+			\assertion{$      c \implies s1[k+1]=x$} \\
+			\assertion{$\lnot c \implies s1[k+1]=x$} \\
+			\assertion{$\lnot s1[k+1]=x$} \\
+			and finally resolve on \variable{c} or on \assertion{$\lnot s1[k+1]=x$} to get a refutation
+			
+			Skolemization will create a different constant for each branch, and the prover will have to show that they are equal, which is already explicit if we let \variable{i} live on: \\
+			\assertion{$      c \implies j=2 \times i + 1$}  \\
+			\assertion{$\lnot c \implies j=2 \times i + 2$}  \\
+			\assertion{$s1[i+1]=x$}  \\
+			and then after the assignment to \variable{k} and the negated assertion\\
+			\assertion{$      c \implies j=2 \times i + 1$}  \\
+			\assertion{$\lnot c \implies j=2 \times i + 2$}  \\
+			\assertion{$s1[i+1]=x$} \\
+			\assertion{$k=j-1 ~ div ~ 2$} \\
+			\assertion{$\lnot s1[k+1]=x$} \\
+			And then its enough to perform the case split on \variable{c} to get \\
+			\assertion{$c \implies k=i$} \\
+			\assertion{$\lnot c \implies k=i$} \\
+			\assertion{$s1[i+1]=x$} \\
+			\assertion{$\lnot s1[k+1]=x$} \\
+			And then resolve on \variable{c} to get \\
+			\assertion{$k=i$} \\
+			\assertion{$s1[i+1]=x$} \\
+			\assertion{$\lnot s1[k+1]=x$} \\
+			Which gives us a refutation immediately with congruence closure - the advantage here, besides simpler formulae and less variable, is that we can reuse k=i for later, while we have not established in the first case that k is the same on both branches, and we can drop both \variable{c} and \variable{j} from the scope \\
+			A somewhat more eager join might already case split on the assignment to k giving:\\
+			\assertion{$      c \implies k=i$} \\
+			\assertion{$\lnot c \implies k=i$} \\
+			\assertion{$s1[i+1]=x$} \\
+			and then \\
+			\assertion{$s1[k+1]=x$} \\
+			Which immediately refutes with the negated assertion and gives us information which is potentially useful for further assertions.
+
+
+		\item In reverse semantics, we will get on the \variable{c} branch (assuming we don't kill k - "backward liveness" is discussed later):
+			\assertion{$k=j-1 ~ div ~ 2$} \\
+			\assertion{$\lnot s1[k+1]=x$} \\
+			and then, after the assignment to \variable{j} \\
+			\assertion{$j=2 \times i + 1$} \\
+			\assertion{$k=j-1 ~ div ~ 2$} \\
+			\assertion{$\lnot s1[k+1]=x$} \\
+			and similarly for $\lnot \variable{c}$ to get at the join: \\
+			\assertion{$      c \implies j=2 \times i + 1 \land k=j-1 ~ div ~ 2 \land \lnot s1[k+1]=x$} \\
+			\assertion{$\lnot c \implies j=2 \times i + 2 \land k=j-1 ~ div ~ 2 \land \lnot s1[k+1]=x$} \\
+			which still requires us to reason separately on the two branches without benefiting from the common part of the computation.
+			A smart tool might be expected to transform this to : \\
+			\assertion{$      c \implies j=2 \times i + 1 $} \\
+			\assertion{$\lnot c \implies j=2 \times i + 2 $} \\
+			\assertion{$k=j-1 ~ div ~ 2$} \\
+			\assertion{$\lnot s1[k+1]=x$} \\
+			And then after the sequence insertion (assuming some useful axiomatization): \\
+			\assertion{$      c \implies j=2 \times i + 1 $} \\
+			\assertion{$\lnot c \implies j=2 \times i + 2 $} \\
+			\assertion{$k=j-1 ~ div ~ 2$} \\
+			\assertion{$\lnot s1[k+1]=x$} \\
+			\assertion{$\lnot (k+1 = i+1)$} \\
+			\assertion{$s0[k+1]=x)$} \\
+			Which, may or may not be worse than the above, but probably not better.\\
+			An eager join (actually branch) in this case, might give: \\
+			\assertion{$      c \implies k=i $} \\
+			\assertion{$\lnot c \implies k=i $} \\
+			\assertion{$k=j-1 ~ div ~ 2$} \\
+			\assertion{$\lnot s1[k+1]=x$} \\
+			And then \\
+			\assertion{$k=i$} \\
+			\assertion{$\lnot s1[k+1]=x$} \\
+			Which after the sequence insertion gives us an immediate refutation - this is probably as good as above.
+		\end{itemize}
+
+	In both cases, we did forget variables for which we had a newer "name" (e.g. \variable{k} is the new name for \variable{i} after the equality is established).
+		On the other hand, rather than promoting the value of the variable itself, we could promote the property we actually use it for (e.g. in \function{f1}, for the statement \statement{u:=y}, rather than generating both \hoareTriple{$y=5 \lor y=7$}{u:=y}{$u=5 \lor u=7$} and  \hoareTriple{T}{u:=y}{y=u} we could generate \hoareTriple{$y=5 \lor y=7$}{u:=y}{$u=5 \lor u=7$} and forget \variable{y}'s value (and take it out of scope), or we could weaken it further and have \hoareTriple{y>=7}{u:=y}{u>=7} and again forget and remove \variable{y}.
+		The choice between these triples is often decided by the semantics used (strongest (liberal) post-condition or weakest (liberal) precondition), but there is a whole range of such triples that might be relevant.
+		In terms of proof search efficiency neither of these is always more efficient, and so we try, in a later section, to guide the choice in a goal directed way which is more akin to weakest precondition, but other factors are also taken into account, so the choice is not fixed.
+		The advantage in forgetting a variable is having a smaller vocabulary for Hoare triple search in the following statements, but the disadvantages may be a more complicated property (e.g. when eliminating the variable using an existential) and potentially a lose of accuracy or efficiency (larger formulae) at join points (where forgetting a variable from before the branch means some correlation between the branches is lost).
+		In the general case we cannot dispose of the variable without introducing an existential, but in many cases this is possible and when possible it is in general preferable for the theorem prover.
+		For example when we know the exact value of a variable we can substitute the value for any future reference to the variable, or when we can deduce a sufficient property from the knowledge we have about the value of the variable - for example, with the triple  \hoareTriple{$x \geq 5$}{y:=x+1}{$y \geq 6$} we can forget \variable{x} after this statement if it is no longer referenced.
+
+		\item If a variable \variable{v} appears before and after a statement \statement{s} but not in \statement{s} then we would have to use some form of a frame rule to preserve the value of \variable{v} across \statement{s} (i.e. generate, for some value t, \hoareTriple{v=t}{s}{v=t}), or as before, preserve only the desired property - (e.g. in our example, to preserve \variable{x} across the statement \statement{y:=5} we could either generate  \hoareTriple{x=0}{y:=5}{x=0} or \hoareTriple{x>=0}{y:=5}{x>=0} or even \hoareTriple{x>=0}{y:=5}{x+y>=5} or \hoareTriple{x>=0}{y:=5}{x+y+4>=9})
+		Again, the exact choice of which triple to use is usually guided by the "direction" the semantics takes (forward or backward), but can also be tuned by analyzing the rest of the program.
+		We could refrain from promoting the variable value over the statement if its value is not needed later in the program - by data dependency analysis from assertions of interest, but also by a goal directed search for a proof.
+		Over branches it seems often advantageous to keep the variable "alive" until the join point as it can make it easier to correlate facts about it from the different branches.
+		
+\end{itemize})

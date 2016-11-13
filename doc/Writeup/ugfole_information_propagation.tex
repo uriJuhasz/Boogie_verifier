@@ -1,0 +1,2109 @@
+\newpage
+\section{Information Propagation}\label{section:ugfole:propagation}
+We have seen in the previous section that verification using a DPLL or CDCL based solvers suffers from some inherent problems when joins are concerned, even when all clauses are unit ground clauses. 
+While the example program we have seen (figure \ref{linear_join_proof}) is a synthetic example that we do not expect to see as a real program, we have encountered the same problem when quantifiers are involved - namely, 
+when a solver explores the search space of a program proof by enumerating program paths, and when quantifier instantiation is involved, 
+if the CDCL part of the prover cannot learn a lemma (clause that holds at the join) that involves an instance of a quantified clause, the number of times a quantifier is instantiated can grow exponentially with the number of sequential joins in the program.
+
+We have run the Boogie program in figure \ref{fig_diamond_ROW} for different versions of k using Z3, and counted the number of instantiations of heap axioms (both read-over-write with equal and non-equal indices) - the results are detailed below.\\
+We run this program for different values of k with the following results:\\
+\begin{tabular}{c|c|c}
+  k & ROW= & ROW$\neq$\\
+  0 & 3 & 2 \\
+  1 & 6 & 8 \\
+  2 & 12 & 24 \\
+  4 & 88 & 352 \\
+  10 & 2868 & 20480\\
+  10h & 182 & 172
+\end{tabular}\\
+The first column shows the number of consecutive branch-join pairs - the meaning of the last row is described below.\\
+The second and third columns show the number of instances of the following axioms (heap axioms):\\
+ROW=:$\m{\forall h,x,v \cdot h[x:=v][x] = v}$\\
+ROW$\neq$:$\m{\forall h,x,y,v \cdot x\neq y \Rightarrow h[y:=v][x] = h[x]}$\\
+The last row is a version of the program where k=10 but we have added a copy of the assertion after each join as a hint for the prover - this hint adds a literal to the input that the prover can use in learned lemmas, hence the significant reduction in axiom instances.\\
+The results show that heap manipulating programs with many joins can benefit from calculating joins, at least for the prover Z3. We have experienced similar performance with other axioms as well in programs with complicated CFGs.
+We have tried the example below also with the SMT solver CVC4. For CVC4 we did not see such an increase in quantifier instantiations for low values of k, but with \m{k=20} the solver timed out after two minutes, while it took less than a second to prove the case of \m{k=10} (similar to the example in figure \ref{linear_join_proof}). The SMTlib input includes no other quantified axioms but the above two. Our verification algorithm presented in this chapter, together with the heap fragment presented in section \ref{section:heaps} solve this problem for \m{k=40} in less than a second.
+
+\begin{figure}
+\begin{lstlisting}
+	assume r0$\neq$r1
+	assume r0$\neq$r2
+	assume r1$\neq$r2
+	
+	heap[r0] := 0;
+	heap[r1] := 1;
+	heap[r2] := 2;
+	
+	heap[r1] := 1;
+	if (*)
+		heap[r1] := 1;
+	else
+		heap[r2] := 1;
+	
+	....
+	
+	heap[r1] := k;
+	if (*)
+		heap[r1] := k;
+	else
+		heap[r2] := k;
+	assert heap[r0] == 0;
+
+\end{lstlisting}
+\caption{Number of read-over-write axiom instantiations with branch-join pairs.}
+\label{fig_diamond_ROW}
+\end{figure}
+
+
+\subsection{A verification algorithm}
+We have seen in the last section and above that enumerating program paths has some inherent weaknesses when join nodes are present in the program, not all of which are mitigated by current CDCL technology.
+In addition, we have seen that for a set of ground equalities, we have a method to select a sub-set that is sufficient to decide whether a given equation is entailed, as shown in the algorithm in figure \ref{fig_lazy_congruence}.
+
+We have also seen in some examples for unit equalities, such as \ref{snippet3.30a}, that in order to calculate an approximation of the join that is sufficient to prove the assertions following the join (a fragment interpolant), we need information both from the transitive successors and transitive predecessors of the join, hence the join cannot be calculated in a single backward or forward pass of the program.
+
+In this section we propose a verification algorithm that aims to avoid the above-mentioned shortcomings.
+The algorithm is based on a traversal of the CFG in topological order, but it behaves lazily in propagating information forward in the CFG.
+While our algorithm of figure \ref{fig_DPLL_style_verification} which mimics, to a degree, the behavior of DPLL on a certain encoding of VCs, carries the EC-graph of each CFG-node to each of its successors, we propose to propagate this information lazily - initially each CFG-node constructs an EC-graph that contains only its own clauses, and later, when needed, it requests more clauses from its predecessors, with a mechanism similar to the one in figure \ref{fig_lazy_congruence}.
+
+The algorithm is presented for verifying programs with arbitrary sets of clauses, and we show how it is specialized to work with EC-graphs. In this section we discuss the mechanism for propagating clauses.
+
+The outline of the algorithm is shown in figure \ref{verification_algorithm_v2}. 
+The algorithm traverses the CFG in topological order and verifies each CFG-node in turn.\\
+For each node, the algorithm maintains two sets of clauses, as is common in saturation provers:\\
+The first set, \lstinline|todo|, contains clauses that are yet to be processed.\\
+The second set, \lstinline|done|, contains clauses that are inter-saturated w.r.t. the logical calculus, 
+and also for which all relevant clauses from predecessors have been propagated.\\
+The algorithm begins with only the clauses that belong to the node, and gradually propagates clauses from predecessor nodes as they are needed.
+For each clause that is selected to be processed, the algorithm first propagates all relevant clauses from predecessors, 
+and then performs all inferences with the already saturated clauses.
+The process terminates when there are no more non-saturated clauses.
+
+\subsubsection*{The request mechanism}
+In figure \ref{clause_import_global} we show the algorithm that imports the relevant clauses for a given clause from all of its transitive predecessors.\\
+The algorithm uses the method \lstinline|traverseBF| shown in figure \ref{fig_traverseBF} - 
+this method performs a traversal of the CFG starting at n and going backwards and then forward - we present an implementation simply to disambiguate its semantics, the algorithm itself is mostly standard DAG traversal.\\
+At each CFG-node in the backwards traversal, the method calls a visitor \\
+\lstinline|bVisitor| which returns a set of predecessors relevant for traversal - in our case, each CFG-node may decide not to propagate the request backwards.\\
+After backward traversal, the method traverses forward in reverse order, calling the visitor \lstinline|fVisitor| - in our case, this visitor propagates clauses matching the request from direct predecessors.
+
+Our backward visitor \lstinline|importBW| subtracts from a request all cached requests, and if any uncached requests are left it propagates them to its direct predecessor. The cache is updated accordingly.\\
+Our forward visitor \lstinline|importFW| propagates all relevant clauses from the direct predecessors and adds them to the current CFG-node.
+
+
+\subsubsection*{Clause relevance}
+Essentially, a clause is relevant for another clause in a calculus if there is an inference in the calculus where both clauses are premises. For a simple example, consider propositional ordered resolution - as resolution is allowed only between clauses with maximal literals with opposing polarity but the same atom, a clause \m{C \lor \underline{A}} (A maximal) is relevant for a clause \m{D \lor \underline{B}} iff \m{A\equiv \lnot B}. \\
+For each logical fragment, we have a \lstinline|Request| data structure that encodes the information needed to determine the relevant clauses for a clause (or set of clauses) - for example, for ground ordered resolution, we only need the maximal literal of a clause, hence the request structure includes a set of literals.\\
+The relevance criterion for each fragment is implemented in the \lstinline|isRelevant| method referenced in the code - in this section we describe the criterion for EC-graphs and for unit ground superposition - for ordered resolution, for a request \lstinline|r| which is a set of literals and a clause \m{C \lor \underline{A}} (A maximal),  \lstinline|isRelevant| returns  \m{A \in} \lstinline{r}.
+
+\subsubsection*{The request Cache}
+The algorithm maintains a cache at each CFG-node, which remembers which requests have already been answered for that node.
+When a new request arrives at a node, the cache is subtracted from the request (in order not to re-request previously answered requests from predecessors) and if there are any un-answered requests they are sent to the predecessors. The cache is updated accordingly.
+Generally, the request cache structure is identical to a request structure. For ordered resolution, the request cache is a request - a set of literals, the operations \lstinline|add| and \lstinline|subtract| for the cache are simply set union and difference and the \lstinline|isEmpty| operation for the requests simply checks if the set is empty.
+
+The important property of the cache is that a node that has a certain request cached has already imported all relevant clauses (added to the \lstinline|done| set) from all its transitive predecessors.
+
+For ordered resolution, if the request cache at a CFG-node n includes the literal \m{A}, it means that all clauses in all transitive predecessors of n with a maximal literal \m{\lnot A} have been propagated to \lstinline|n.done|.\\
+For some fragments, the requests and caches over-approximate the set of relevant clauses (we give an example later in this section) - 
+the intuition behind over-approximating the request is that, for most clauses, most CFG-nodes do not have a relevant clause, 
+and hence if our cached propagation criterion over-approximates the set of clauses that need to be propagated, it can reduce the number of CFG traversals for later requests. 
+In addition, when we apply our algorithm incrementally, a predecessor node can derive a clause that is relevant for a clause already saturated in a previous pass in some successor. The cache allows us to propagate the newly derived clause during the CFG traversal in \lstinline|CFG.verify|, without having to request it again in the successor - we describe this process for EC-graphs in the next section.
+
+\subsubsection*{Clause propagation}
+The algorithm propagates clauses (in the method \lstinline|importFW|), by selecting the relevant clauses from the predecessor's \lstinline|done| set, and adding them, relativized as described in \ref{section_path_condition}, to the \lstinline|done| set.
+The reason clauses are added to the \lstinline|done| set is to prevent any inference between two imported clauses - such an inference is performed at an earlier node. 
+ (we discuss relativization in chapter \ref{chapter:gfole} - for ground unit clauses, we only propagate clauses we can join, and hence, in practice, no relativization takes place - we only mention it here as otherwise the algorithm is unsound). 
+
+\begin{figure}
+\begin{lstlisting}
+CFG.verify() : Set of unverified assertions
+	foreach node n in topological order
+		n.verify()
+		if (!n.isInfeasible and n.isLeaf)
+			result.add(n)
+
+Node.verify()
+	todo.enqueue( $\clauses{n}$ )
+	while !todo.isEmpty
+		c = todo.dequeue
+		done.add(c)
+		importRelevantClauses(c)
+		foreach (d $\in$ inferences(c,done))
+			if (d $\notin$ done)
+				todo.enqueue(d)
+\end{lstlisting}
+\caption{Verification algorithm with lazy propagation\\
+}
+\label{verification_algorithm_v2}
+\end{figure}
+
+\begin{figure}
+\begin{lstlisting}
+Node.importRelevantClauses(c : Clause)
+	requestMap := new Map[Node,Request]
+	requestMap[this] := makeRequest(c)
+		
+	traverseBF(this, importBW, importFW)
+
+importBW(n : CFGNode) : Set[CFGNode]
+	var r := requestMap[n]
+	r.subtract(n.requestCache)
+	if (!r.isEmpty && n!=root)
+		foreach (p $\in$ $\preds{n}$)
+			requestMap[p].add(r)
+		return predecessors
+	else
+		return $\emptyset$
+
+importFW(n : CFGNode)
+	r := requestMap[n]
+	n.requestCache.add(r)
+	foreach (p $\in$ $\preds{n}$)
+		foreach (pc $\in$ p.done)
+			c := relativize(p,n,pc)
+			if (isRelevant(r,c))
+				n.done.add(c)
+					
+\end{lstlisting}
+\caption{Basic clause propagation\\
+The implementation of \lstinline|traverseBF| is shown in figure \ref{fig_traverseBF}.\\
+The clause propagation algorithm first traverses the CFG in reverse topological order, 
+starting at the current node. The traversal stops at any CFG-node that already has all relevant clauses cached.\\
+After the reverse traversal, the algorithm traverses the CFG forward, propagating relativized clauses 
+and updating the cache.
+}
+\label{clause_import_global}
+\end{figure}
+
+\begin{figure}
+\begin{lstlisting}
+traverseBF(n : CFGNode, bVisitor, fVisitor)
+	todoBW = new Set[Node]
+	todoBW.add(n)
+	todoFW = new Stack[Node]
+	while (!todoBW.isEmpty)
+		var n := todoBW.removeMax (topological order)
+		var ps := bVisitor(n)
+		if (ps==$\emptyset$)
+			todoFW.push(n)
+		else
+			todoBW.add(ps)
+
+	while (!todoFW.isEmpty)
+		n := todoFW.pop
+		fVisitor(n)
+			
+\end{lstlisting}
+\caption{CFG traversal back and forth\\
+The implementation is shown only to clarify any ambiguities.\\
+The algorithm traverses the CFG backwards from \lstinline|n|, calling \lstinline|bVisitor| on each node traversed.\\
+\lstinline|bVisitor| returns the set of predecessors relevant for traversal - if none are returned then traversal does not continue beyond the node (in a DAG a branch node may be relevant for only one successor, in which case it is traversed.)\\
+The algorithm then traverses forward from each node where traversal ended, calling \lstinline|fVisitor|.
+}
+\label{fig_traverseBF}
+\end{figure}
+
+
+In the rest of this section we present the propagation criteria for superposition and for EC-graphs, and compare them.
+Our algorithm uses the EC-graph criterion for unit equalities and the superposition criterion for the non-unit and non-ground fragments.
+
+\subsection{Clause propagation criteria}
+In this section we compare the propagation criteria for ground unit superposition and for EC-graphs.
+
+\subsubsection*{Superposition based propagation}\label{section:superposition_based_propagation}
+We look now at the ground superposition calculus, restricted to unit clauses, shown in figure \ref{gusp_calculus}.
+
+\begin{figure}
+$
+\begin{array}[c]{llll}
+%\vspace{10pt}
+\mathrm{res_{=}} &\vcenter{\infer[]{\m{\emptyClause       }                               }{\m{s\neq s}                   }} & 
+\parbox[c][1.5cm]{5cm}{}
+\\
+\mathrm{sup_{=}} &\vcenter{\infer[]{\m{\termRepAt{s}{r}{p} =    t}}{\m{\underline{l}=r} & \m{\underline{s} =    t}}} & 
+\parbox[c][1.8cm]{5cm}{
+	\m{\sci{1}l = \termAt{s}{p}}\\
+	\m{\sci{2}l \succ r}\\
+	\m{\sci{3}s \succ t}\\
+	\m{\sci{4}s=t \succ l=r}}\\
+\mathrm{sup_{\neq}} &\vcenter{\infer[]{\m{\termRepAt{s}{r}{p} \neq t}}{\m{\underline{l}=r} & \m{\underline{s} \neq t}}} & 
+\parbox[c][1.8cm]{5cm}{
+	\m{\sci{1}l = \termAt{s}{p}}\\
+	\m{\sci{2}l \succ r}\\
+	\m{\sci{3}s \succ t}}\\
+\end{array}
+$
+\caption{The unit ground superposition calculus \SPU\\
+Maximal literals are underlined for clarity}
+\label{gusp_calculus}
+\end{figure}
+
+It is apparent from the formulation of the ground superposition calculus, that the relevance of a clause for any binary inference depends mostly on its maximal term - similar to ordered resolution where relevance depends on the maximal literal.
+
+For a clause \m{\underline{l}=r} (\m{l \succ r}), the clauses that can participate in an inference with \m{l=r} as the left premise are those in which \m{l} is a sub-term of the maximal term - formally:\\
+\m{\underline{s} \bowtie t} where \m{s \succ t}, \m{l \unlhd s},  \m{s \bowtie t \succ l=r} (s is a super-term of \m{l})\\
+The clauses that can participate where \m{\underline{l}=r} is the right premise are those in which the maximal term is a sub-term of \m{l} - formally:\\
+\m{\underline{s} = t} where \m{s \succ t}, \m{s \unlhd l}, \m{l=r \succ s=t}    (s is a sub-term of \m{l})\\
+The clause \m{s \neq t} can only be a right  premise, and then the maximal term of the left premise must be a subterm of \m{s} - formally:\\
+\m{l = r} where \m{l \unlhd s}, \m{l \succ r} (includes also \m{s=t})
+
+We can see from the above formulation that for a positive clause \m{l=r} where l is maximal we want all clauses where the maximal term is a sub- or super-term of \m{l}, and for a negative clause \m{s\neq t} (s maximal) we want all positive clauses where the maximal term is a sub-term of s.\\
+For example - for the clause \m{\underline{f(b)}=a}, the clauses \m{\underline{f(b)}=b, \underline{g(f(b))}=c,}\\
+\m{\underline{b}=a} are all relevant, 
+but the clauses \m{\underline{b} \neq a, \underline{f(c)}=f(b),\underline{c}=b, \underline{f(c)}\neq f(b)} are not.
+
+The method \lstinline|isRelevant| for the ground superposition fragment implements the criteria described above.
+
+For ground superposition the requests and cache is implemented as follows:\\
+The cache includes two sets of terms, \lstinline|ts$_{\m{lhs}}$| and \lstinline|ts$_{\m{rhs}}$| - the first for terms that occur as maximal positive terms and the second for terms that occur as a sub-term of a maximal term in a clause of any polarity.
+If a term t is in \lstinline|ts$_{\m{lhs}}$|, then any clause with a maximal term a (non-strict) super-term of t is propagated.\\
+For a term t in \lstinline|ts$_{\m{rhs}}$|, any positive clause with a maximal term that is a (non-strict) sub-term of t is propagated.\\
+The \lstinline|subtract| method is simply set difference on each of the two sets.\\
+When updating the cache in \lstinline|requestFW|, for a positive clause \m{\underline{l}=r} we add l to \lstinline|ts$_{\m{lhs}}$| and the sub-term closure of \m{l} to \lstinline|ts$_{\m{rhs}}$|. For a clause \m{\underline{s}\neq t} we add the sub-term closure of s to \lstinline|ts$_{\m{rhs}}$|.\\
+A clause \m{\underline{s} \bowtie t} is relevant for a request \lstinline|r| (\lstinline|isRelevant(r,C)|) if it is positive and a (non-strict) sub-term of \m{s} is in \lstinline|ts$_{\m{lhs}}$|, or if C is of any polarity and a (non-strict) sub-term s is in \lstinline|ts$_{\m{rhs}}$|.
+
+For example, if we request propagation for the clauses \m{\underline{f(b)}=a} at the CFG-node n, \lstinline|ts$_{\m{lhs}}$| of the cache will include, after propagation, the term \m{f(b)}, and \lstinline|ts$_{\m{rhs}}$| will include \m{b,f(b)} so that if, at a later stage, any CFG-node requests relevant clauses for the clause \m{\underline{b}\neq a}, the request will not be propagated further.\\
+The advantage of such a formulation for the cache is that, when we limit the set of terms that can occur at a CFG-node (in all clauses at that node), we can bound the number of times this node has to answer requests. We limit the set of terms both by size bounds and by scoping, as detailed in chapters \ref{chapter:bounds} and \ref{chapter:scoping}.
+
+\subsubsection*{Congruence closure based propagation}
+Even for a large set of equalities without any dis-equality,
+many superposition derivations can take place, although the set is trivially satisfiable.
+More generally, even in a set with dis-equalities, we can find a subset of the equalities that is sufficient to show a refutation if there is one - as we have done in the algorithm in figure \ref{fig_lazy_congruence}.
+
+\bigskip
+
+\noindent
+For EC-graph based propagation, assume we have the EC-graph \m{g_n} at node n and the graph \m{g_p} at its direct predecessor p.
+Our criterion for propagation from figure \ref{fig_lazy_congruence} is that any equality on a term represented in \m{g_n} be propagated - for each \GT{} \m{u \in g_n} and \GT{} \m{v \in g_p}, the equalities in \eqs{v} are relevant iff \m{\terms{u} \cap \terms{v} \neq \emptyset}.\\
+We can send a request that contains all the \GTs{} of \m{g_n}, and return any \GT{} of \m{g_p} that shares a term with any of the requested \GTs{} - \m{g_n} then \lstinline|assumes| \eqs{v} for each such propagated \GT{}. In the next section we show how to decide this criterion efficiently.
+
+
+\subsubsection*{Comparison of the propagation criteria}
+In this sub-section we motivate our choice for using the EC-graph based propagation mechanism rather than superposition for unit ground clauses. The main reason for this choice is that join calculations, and especially incremental join calculations, are more efficient using EC-graphs than ground unit superposition. A second reason is that the representation of a propagation cache is more efficient with EC-graphs as we need to index one object for an entire EC, while for superposition we need to index each term separately, even if two terms were proven equal in the CFG-nodes where they are cached. We demonstrate these two reasons below.
+
+The main difference between the two approaches is that superposition only considers one side of an equation for propagation but must import both sub-terms and super-terms, while the congruence closure (EC-graph) based approach considers both sides of an equation, but only imports sub-terms.
+
+Consider the case where the predecessor clause set is \\
+\m{\{\underline{d}=a, \underline{f(b)}=e,\underline{f(c)}=a\}},
+and the clause set at n is \m{\{\underline{b}=a,\underline{d} \neq b\}}.\\
+Superposition imports \m{\underline{d}=a, \underline{f(b)}=e} while an EC-graph imports \\
+\m{d=a, f(c)=a} - only \m{d=a} is actually needed, so both approaches imported (different) useless clauses.
+
+\subsubsection*{Joins}
+For CFGs with joins, we cannot simply propagate a clause from the predecessor of a join to the join node, as the clause might not hold in the other joinee. Instead, we can only propagate equalities agreed by both joinees or relativized clauses, which are clauses guarded by the branch condition of the corresponding branch for the join. We have discussed the problem of joining two congruences in the previous section, and we show here an example that compares how EC-graphs and superposition differ in handling joins. The main outcome is that superposition requires more CFG-traversals in order to calculate a join, while the congruence closure based relevance criterion suffices for joins, when there is a join in the unit-ground fragment.
+
+Saturating a set of equalities with superposition essentially establishes a rewrite relation for ground terms at every node which has a unique normal form for each ground term. The relation is only partially represented (by equalities) at the node (similar to the congruence being approximated by an EC-graph), and when a term is requested in the CFG-node, we ensure that the relevant part of the rewrite relation is propagated from predecessors.\\
+The main issue we have encountered is joins - the problem is, given two strongly normalizing rewrite relations which agree on an ordering, and given a term t, find the normal form of t at the intersection of the rewrite relations. \\
+The intersection of the rewrite relations of two strongly normalizing rewrite systems that agree with the same total well founded ordering and are finitely generated is also strongly normalizing, by the simple argument that the normal form of a term t at the intersection is the minimum of the intersection of the equivalence classes of t in each rewrite relation, where the part of the equivalence class of t at the intersection that is smaller or equal to t is finite because that part of the rewrite relation is also finitely generated and agrees with a well founded ordering).
+
+The critical difference between EC-graphs and superposition is that EC-graphs represent a fully-reduced rewrite system - the set of rewrite rules rewrite each term to its normal form in one step - while superposition constructs a left-reduced rewrite system - each term is the left-hand-side of exactly one rewrite rule, but the right hand side is not necessarily reduced (unit ground superposition constructs the left-reduced rewrite system when we can eliminate clauses using the simplification rule \m{simp_=} from figure \ref{fig_superposition_simp} - for our purpose it is only important that the right hand side is not fully reduced) .\\
+For example, the rewrite system \s{\underline{d}=c,\underline{c}=b} is not fully reduced but is left reduced, while the (unique) fully reduced versions is \s{\underline{d}=b, \underline{c}=b}. A non-left-reduced system is, for example \s{\underline{d}=c,\underline{d}=b}, from which superposition (with simplification) derives \s{\underline{d}=c,\underline{c}=b}. With a fully reduced system, we can reach any member of the EC of a term t in two steps (two equations) - one step finds the normal form, and the second step uses any rule with the normal form as a right hand side. When the system is only left reduced, we might need more steps - e.g. for \m{d=c,c=b,b=a,e=a} we need four steps to reach d from e. When looking for the normal form of a term at a join, we have to consider all members of the EC of that term on both joinees and select the minimum of the intersection - hence the number of steps needed to find this minimum is important.\\
+Obviously, constructing a fully reduced rewrite system is costlier than a left-reduced one, but, in our experience, it pays off in more efficient join operations.
+
+
+\begin{figure}
+\begin{lstlisting}
+$\m{b:}$
+if (c1)
+	$\m{p_{0}}:$
+	assume $\m{\underline{f(b)}=a}$
+	assume $\m{\underline{c}=b}$
+	assume $\m{\underline{d}=c}$
+	assume $\m{\underline{e}=d}$
+	$\m{p_{1}}:$
+	... //unrelated clauses
+else
+	$\m{p_{2}}:$
+	assume $\m{\underline{f(e)}=a}$
+	$\m{p_3}:$
+	... //unrelated clauses
+$\m{n}:$
+assume $\m{\underline{f(e)}=x}$
+// Here $\comm{\m{f(e)=a}}$ holds
+$\m{na:}$
+	assert $\m{\underline{a}=x}$ //negated $\comm{\m{\underline{a} \neq x}}$
+\end{lstlisting}
+\caption{Propagation condition comparison with joins}
+\label{snippet3.14.0}
+\end{figure}
+
+\noindent
+Consider the example in figure \ref{snippet3.14.0}.\\
+For superposition, we can propagate relativized (non-unit) clauses (assuming the joined branch condition \m{C}) as follows:
+
+\bigskip
+\noindent
+Initially, no CFG-node has any valid inference, and, except for \m{n,n_a}, no clauses to import - we look at the proof process in \m{n}.
+
+\bigskip
+\noindent
+Initially we request (rhs) \s{f(e),e} and propagate the relativized clauses:\\
+\s{\lnot C \lor \underline{e}=d, C \lor \underline{f(e)}=a}
+
+\bigskip
+\noindent
+We use these to derive:\\
+\s{\lnot C \lor \underline{f(d)} = x, C \lor a = x}
+
+\bigskip
+\noindent
+Next we request (rhs) \s{d,f(d),a} and propagate:\\
+\s{\lnot C \lor \underline{d} = c}
+
+\bigskip
+\noindent
+Which allows us to derive:\\
+\s{\lnot C \lor \underline{f(c)} = x}
+
+\bigskip
+\noindent
+Next we request \s{c,f(c)} and propagate:\\
+\s{\lnot C \lor \underline{c}=b}
+
+\bigskip
+\noindent
+Which allows us to derive:\\
+\s{\lnot C \lor \underline{f(b)} = x}
+
+\bigskip
+\noindent
+Next we request \s{b,f(b)} and propagate:\\
+\s{\lnot C \lor \underline{f(b)}=a}
+
+\bigskip
+\noindent
+Which allows us to derive:\\
+\s{\lnot C \lor \underline{a} = x}
+
+\bigskip
+\noindent
+Finally, at \m{na}:\\
+We request \s{a,x} and propagate:\\
+\s{\lnot C \lor \underline{a} = x,C \lor \underline{a} = x}\\
+We then derive, together with \m{a \neq x}:\\
+\s{\lnot C \lor x \neq x,C \lor x \neq x} which allow us to find the refutation.
+
+\bigskip
+\noindent
+Note that we needed to traverse the CFG several times.\\
+Note also that if we apply our simplification inference \m{simp_{res}} from figure \ref{fig_superposition_simp} - \\
+$\vcenter{\infer[]{\m{C}                      }{\cancel{\m{C \lor A }} & \cancel{\m{C \lor \lnot A}}}} \parbox[c][1.2cm]{3cm}{}$,\\
+we can derive:\\
+$\vcenter{\infer[]{\m{\underline{a}=x}                      }{\cancel{\m{C \lor \underline{a} = x}} & \cancel{\m{\lnot C \lor \underline{a} = x}}}} \parbox[c][1.2cm]{3cm}{}$\\
+And save some derivation steps. This simplification rule is designed exactly for such cases.
+
+\bigskip
+\noindent
+For EC-graph, we show in the next section a join algorithm that derive \m{a=f(e)} at the join, 
+and can prove the program without any non-unit clauses. 
+In addition, the superposition approach traversed the CFG several times, while our approach requires just one traversal.
+
+
+\bigskip
+\noindent
+\textbf{Summary:}\\
+While both propagation criteria have advantages and disadvantages, and both propagate useless clauses, in our setting we have found the congruence closure based approach to be more suitable in the unit ground equality case.
+For larger fragments (non ground and/or non-unit) we will use a hybrid method, where the unit fragment will serve as a base.
+In this chapter we only discuss unit ground equalities using EC-graphs from now on, and in chapter \ref{chapter:gfole} we handle joining non-unit clauses.
+
+\newpage
+\subsection{Ground unit equality propagation}
+In this section we describe the data structure and algorithm used to propagate ground unit equalities.
+This algorithm and data structure form the basis of all the other fragments we consider in this thesis.
+
+
+\bigskip
+\noindent
+We use the verification algorithm described in figures \ref{verification_algorithm_v2} and \ref{clause_import_global} with the following changes:
+\begin{itemize}
+\item An EC-graph is used to represent the set \lstinline|done|
+\item Requests are represented as sets of \GFAs{} over the EC-graph of the relevant CFG-node
+\item The request cache is a set of \GFAs{}, which includes all \GFAs{} in the EC-graph and an additional set of \GFAs{}
+\item Each request is translated before being sent to the predecessors, so that the EC-tuple in the \GFA{} is over \GTs{} of the predecessor's EC-graph
+\item Instead of propagating relativized clauses from predecessors, each node performs a \emph{meet} of its EC-graph with the join of the EC-graphs of the predecessors, for the requested \GFAs{} (this is just an intuitive description - described in detail later)
+\item We maintain a links between each \GT{} in the EC-graph of each CFG-node and the corresponding \GTs{} of EC-graphs of predecessor CFG-nodes. Corresponding \GTs{} are those that share a term. We use these links to translate requests quickly, and also to perform the join and meet
+\end{itemize}
+
+We describe first our data-structure and algorithm for sequential nodes (without any join) and in the next section show the needed changes to support joins.
+
+\subsubsection*{Completeness}
+Our algorithm aims to propagate equality information in the CFG so that dis-equalities can be refuted and other logical fragments can use the equality information. Equality information should be propagated on-demand, so we have to define how equality information is requested. For EC-graphs, we request equality information by adding terms to the EC-graph. 
+In general, we assume each CFG-node n has a set of requests \m{R_n} which are clauses (in our case, unit equalities).
+
+An equality \m{s=t} \newdef{holds} at a CFG-node n (\m{n \models s=t}) iff it holds on all paths leading to n, and it holds on a path P (\m{P \models s=t}) if it is entailed by the clauses on the path (\m{\clauses{P}}).\\
+We define soundness and completeness for any algorithm that, given a set of requests \m{R_n} per CFG-node, annotates each CFG-node with a set of clauses \m{\phi_n}  - in our algorithm from figure \ref{verification_algorithm_v2} this is the set \m{done_n}, and for the ground unit equality fragment it is represented using an EC-graph.\\
+An equality \m{s=t} is \newdef{proved} at a CFG-node n if \m{s=t \in \phi_n}.\\
+An annotation for a CFG-node n is \newdef{sound} if, for each CFG-node n and equality \m{s=t \in R_n}, \m{s=t \in \phi_n \Rightarrow n \models s=t}.\\
+An annotation for a CFG-node n is \newdef{complete} if, for each CFG-node n, for each \m{s=t \in R_n}, \m{n \models s=t \Rightarrow s=t \in \phi_n}.\\
+For EC-graphs, we use the notation \m{g_n} for the EC-graph of a node \m{n} and \m{[t]_n} for the \GT{} (EC-node in the graph) that represents t in \m{g_n}, if \m{t \in \terms{g_n}}.\\
+We use the notation \m{g_n \models s=t} to denote that the equality s=t is entailed by the graph \m{g_n} and that \m{s,t} are represented in \m{g_n} - formally \m{s,t \in \terms{g_n}} and \m{[s]_n = [t]_n}. For a node n, \m{s=t \in \phi_n} is defined as \m{g_n \models s=t}. 
+
+Equality information is requested for EC-graphs by adding the terms to the graph - so, by definition, \m{s=t \in R_n \Rightarrow s,t \in \terms{g_n}}.\\
+Soundness for EC-graph annotations is, hence: \m{g_n \models s=t \Rightarrow n \models s=t}.\\
+Completeness for EC-graphs is, for each \m{s=t \in R_n}, \m{n \models s=t \Rightarrow g_n \models s=t}.\\
+In fact, the completeness definition is too strong for CFGs with joins, we use this definition for CFGs without joins and discuss a weaker condition for DAGs in the next section. \\
+A CFG-node with exactly one predecessor is a \newdef{sequential node} while a CFG-node with two or more predecessors is a join node.
+
+Our data-structure and algorithm are incremental in two ways:\\
+We can run the algorithm with a certain set of requests \m{R_n}, and guarantee completeness for the resulting annotation (for join-less CFGs, otherwise a weaker guarantee). 
+At this stage we can add more requests to \m{R_n} (that is, add more terms to the EC-graphs of some nodes) and the algorithm manipulates our data structure to ensure that the completeness guarantee is re-established.\\
+The other option is to add more assumptions (invoke \lstinline|assume(s=t)| for some equations \m{s=t} in some of the CFG-nodes) in which case the algorithm again re-establishes the completeness guarantee (as the relation \m{n \models s=t} might have changed for some n and \m{s=t \in R_n}). Both the above operations model the way other fragments communicate with our fragment.
+
+\subsubsection*{Source links}\label{section:ugfole:sources}
+In order to facilitate efficient equality propagation and efficient incremental updates, we maintain a link between each \GT{} (EC-node) in the EC-graph of each CFG-node and the \GTs{} of the EC-graphs of its direct predecessors that share a term with it. These links allow us to translate requests to predecessors and translate responses from predecessors, and also allow us to determine quickly if there is any relevant equality information in any of the transitive predecessors of a CFG-node.\\
+We also use these links for incremental updates of CFG-nodes, where a stale link (an edge to a \GT{} that has been merged with another \GT{}) allows us to update the EC-graph of a CFG-node incrementally after the EC-graphs of direct predecessors have been updates (using the \lstinline|mergeMap|).
+
+\noindent
+The sources function is part of the state of an EC-graph which is maintained by our algorithm. The function returns, for a CFG-node n, a direct predecessor p and \GT{} \m{u \in g_n} a set of \GTs{}.\\
+We use the notation \sources{n}{p}{u} for the source of \m{u \in g_n} in the predecessor p.
+When there is no ambiguity, we use \sources{n}{}{u}, \sources{}{p}{u} or \sources{}{}{u}.\\
+We extend the sources function to tuples, where the sources of a tuple are the Cartesian product of the tuple of sources.
+For example,\\
+if \m{\sources{}{}{[a,b]}=\s{[a],[b]}} \\
+then \m{\sources{}{}{([a,b],[a,b])}=\s{([a],[a]),([a],[b])([b],[a])([b],[b])}}.
+
+\noindent
+The intended invariant of the sources function states that the sources of a \GT{} \m{u \in g_n} are the \GTs{} \m{v \in g_p} s.t. u and v share a term - formally:\\
+For a CFG-node n and a direct predecessor p,\\
+\m{\forall u \in g_n \cdot}\\
+\m{~~~\sources{n}{p}{u} = \s{v \in g_p \mid \terms{u} \cap \terms{v} \neq \emptyset}}
+
+
+
+%
+%\noindent
+%\textbf{Notation}\\
+%We write \m{p.P.n} for a CFG-path of length at least two that starts at \m{p} and ends at \m{n} (so \m{n \neq p}).\\
+
+\begin{figure}
+\begin{lstlisting}
+$\node{n_0}:$
+assume $\m{f(a)=g(a)}$
+	// $\m{\GFAs{}: a(),f([a]), g([a])}$
+	// $\m{\GTs{}:[a],[f(a),g(a)]}$
+$\node{n_1}:$
+assume $\m{a=b}$
+	// $\m{\GFAs{}: a(),b()}$
+	// $\m{\GTs{}:[a,b]}$
+	// $\m{\sources{}{}{[a,b]_1}=\s{[a]_0}}$
+$\node{n_2}:$
+assert $\m{f(b)=g(b)}$ //negated $\comm{\m{f(b) \neq g(b)}}$
+	// $\m{\GFAs{}: b()}$
+	// $\m{\GTs{}:[b]}$
+	// $\m{\sources{}{}{[b]_2}=\s{[a,b]_1}}$
+\end{lstlisting}
+\caption{propagation sources\\
+The state before $\m{n_2.}$\lstinline|makeTerm(f([b]))|\\
+We list the sources for each EC at each CFG-node.\\
+The source invariant holds for the above example.
+}
+\label{snippet3.16b}
+\end{figure}
+
+\noindent
+An example for the sources function is shown in figure \ref{snippet3.16b}.
+
+\bigskip
+\noindent
+We present now a formulation of this invariant that drives the way our algorithm establishes the invariant.
+The formulation is local in the sense that, for each \GT{}, detecting a violation of the invariant or fixing a violated invariant involves traversing only a constant number of edges (both \GFA{} and source edges). 
+The above formulation does not satisfy locality as calculating the set \terms{u} requires recursive descent in the structure of \m{u} of non-constant depth. In addition, we present the invariant as a conjunction of quantified implications. 
+If the invariant does not hold for some assignment to the quantified variables, it is fixed by changing the right-hand-side of the implication. We present several such conjuncts in this section that together form the invariant established by our algorithm and are presented in a way that suggests how the algorithm establishes them.
+
+\begin{figure}[H]
+\textbf{The source invariant:}\\
+For a CFG-node n and a direct predecessor p.\\
+\m{\forall u \in g_n, \fa{f}{t} \in u, \tup{s} \in \sources{}{}{\tup{t}} \cdot}\\
+\m{~~~\fa{f}{s} \in \gfas{p} \Rightarrow [\fa{f}{s}] \in \sources{n}{p}{u}}
+\end{figure}
+
+\noindent
+For example, consider the state in figure \ref{snippet3.16b_graph}. \\
+The figure shows the state of three consecutive CFG-nodes - \m{n_0,n_1,n_2}.\\
+Source edges are marked in blue. \\
+Consider the following assignment to the quantified variables:\\
+The CFG-node n is \m{n_1} and the predecessor p is \m{n_0},\\
+The \GT{} \m{[f(a)]_1} (assigned to u) contains the \GFA{} \m{f([a,b])_1)} (assigned to \fa{f}{t}) 
+where the tuple \m{([a]_0)} (assigned to \tup{s}) satisfies \m{([a]_0) \in \sources{n}{p}{[a,b]_1}} and also 
+\m{f([a]_0) \in \gfas{0}} - hence the invariant implies that there is a source edge between the \GTs{} \m{[f(a)]_1} and \m{[f(a)]_0} (\m{[f([a]_0)]_0 \in \sources{n}{p}{[f([a])]_1}}).\\
+In our example the invariant holds.
+The main loop of the algorithm fixes such local inconsistencies (that arise from node \GT{} merging and other operations).
+In our example, if the condition does not hold during the run of our algorithm (that is, there was no source edge from \m{[f(a)]_1} to \m{[f(a)]_0}), our algorithm would establish the invariant locally by adding that edge.
+
+\subsection{Propagation using sources}
+We show now show how the sources function is used for information propagation.
+In the example in figure \ref{snippet3.16b}, we have not yet added the terms \m{f(b),g(b)} to \m{g_2} and hence we are missing some equality information at \m{n_2} in order to prove the assertion (namely, \m{n_2 \models f(b)=g(b)} - but \m{g_2 \not\models f(b)=g(b)}.
+
+In order to ensure that the information is propagated, we use a local propagation invariant, that works together with the source correctness invariant to ensure that enough information is propagated. 
+The local propagation invariant for sequential nodes (with one predecessor) ensures that, for an CFG-node n and a \GT{} \m{u \in g_n}, u 
+has all the terms of all its sources - formally:
+
+
+\begin{figure}[H]
+\textbf{The sequential propagation invariant, part 1:}\\
+For a sequential CFG-node n and a direct predecessor p.\\
+\m{\forall u \in g_n, v \in \sources{}{}{u}, \fa{f}{s} \in v \cdot}\\
+\m{~~~\exists \fa{f}{t} \in u \cdot \tup{s} \in \sources{}{}{\tup{t}}}
+\end{figure}
+
+\noindent
+We use the notation \m{\fa{f}{t} \in u} to denote that the \GFA{} \fa{f}{t} is in the \lstinline|gfas| field of the \GT{} u.\\
+The invariant states that each \GFA{} in each source of u has a corresponding \GFA{} in u.
+This invariant is maintained by our algorithm and ensures that the set of terms of each \GT{} is a superset of the union of sets of terms of all its sources. 
+Note that as our EC-graph is kept congruence closed, this invariant implies that no two \GTs{} share the same source (in a sequential node) - otherwise two \GTs{} that share a source would share a \GFA{}.
+
+In our example in figure \ref{snippet3.16b}, we can see that this invariant does not hold - the EC \m{[b]_2} does not contain the \GFA{} \m{a()}. Our algorithm fixes the invariant when invoking \lstinline|makeTerm(b,())|, so that essentially the equality \m{a=b} is propagated eagerly. We detail in the next section how this invariant is established, for now we just assume that whenever a \GT{} is missing some \GFAs{} according to our invariant, the algorithm adds the missing \GFAs{}. Note that the invariant is phrased in terms of the sources function and refers only to \GTs{} that are a constant distance from each other (in terms of \GFA{} and source edges).
+
+
+%\noindent
+%We now detail the working of our algorithm when we invoke \\
+%\lstinline|n$\m{_2}$.makeTerm(f,$\m{[b]}$)|.\\
+%We assume the invariant for \m{[b]_2} has been fixed and so \m{\terms{[b]_2} = \s{a,b}}.\\
+%In addition, we assume that the \GTs{} \m{[f(b)]_2,[g(b)]_2} have not yet been added to \m{g_2}.
+%
+%\bigskip
+%\noindent
+%The first step the algorithm makes is send a request for the set of \GFAs{} \\
+%\s{f([a,b]_2)}.\\
+%This request is propagated through the sources function to \m{n_1} as \s{f([a,b]_1)} 
+%and to \m{n_0} as \s{f([a]_0)}.\\
+%The response to the request (a set of \GTs{}) from \m{n_0} is \m{[f(a),g(a)]_0}.\\
+%We can find the response easily - for each \GFA{} \fa{f}{s} in the request, 
+%we can use the \lstinline|p.superTerms| field to look for e.g. the super-terms of \m{s_0} and look for the \GFA{} \fa{f}{s} (we give some details on how we implement the \lstinline|superTerms| field in the implementation section) - we only need a constant number of lookups to find the right \GFA{}, while if we did not translate the request through the sources function we would have had to match the request with our request \GFAs{} from the constants up - at a complexity that depends on number of all \GFAs{} used to construct the \GT{}.\\
+%Our response is the \GT{} \m{[f(a),g(a)]_0}.\\
+%\m{n_1} sees a positive response (non-empty set) and adds a new singleton \GT{} to \m{g_1} that contains the \GFA{} \m{f([a]_1)} (from the request) and adds a source edge from the new \GT{} \m{[f(a)]_1} to \m{[f(a),g(a)]_0}.\\
+%Now our sequential propagation invariant is broken at \m{n_1}: there is no \GFA{} in \m{[f(a)]_1} that corresponds with the \GFA{} \m{g([a]_0)}.\\
+%Our algorithm fixes the invariant locally by adding the \GFA{} - we do this by using the inverse of the source function - \m{[a]_0} has an inverse source \m{[a,b]_1} and hence we add the \GFA{} \m{g([a,b]_1} to \m{[f(a)]_1}.\\
+%The \lstinline|superTerms| field of \m{g_1} is updated appropriately.\\
+%Next, we perform similar steps at \m{g_2} and end up with the following ECs:\\
+%\m{[a,b]_2, [f(a),g(a)]_2}.
+%
+%\noindent
+%A graphic representation of the final state of the system is shown in figure \ref{snippet3.16b_graph}.
+%We show source edges using blue dashed arrows.
+%We also show the dis-equality encoded as an edge in the graph.
+%
+%\bigskip
+%\noindent
+%We have used the sources edges both to translate the request, to translate the response and to propagate equality information.\\
+%We have not yet described how our request cache works, how incremental updates are performed and how the propagation invariant is established. 
+
+
+\begin{figure}
+\begin{tikzpicture}
+  \node[gttn] (1)              {$$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_0}};
+
+  \node[gtn,label=center:\scriptsize\m{a}]  (2) [above = 0.5cm of 1] {\phantom{a,b}};
+
+	\node[gtn]  (6)  [above = 2.5cm of 1] {$\stackB{f(a)}{g(a)}$};
+	\draw[gfa]  (6) to[out=-100 , in=100] node[el,anchor=east]  {\m{f}} (2);
+	\draw[gfa]  (6) to[out= -80 , in= 80] node[el,anchor=west] {\m{g}} (2);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 3cm of 1] {$$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_1}};
+
+	\node[gtn]  (12) [above = 0.5cm of 11] {\m{a,b}};
+
+	\node[gtn]  (16)  [above = 2.5cm of 11] { $\stackB{f(a),f(b)}{g(a),g(b)}$};
+	\draw[gfa]  (16) to[out=-100 , in=100] node[el]             {\m{f}} (12);
+	\draw[gfa]  (16) to[out=- 80 ,in=  80] node[el,anchor=west] {\m{g}} (12);
+				
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\node[gttn] (21)  [right = 3.5cm of 11] {$$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{n_2}};
+
+	\node[gtn]  (22) [above = 0.5cm of 21] {\m{a,b}};
+
+	\node[gtn]  (26)  [above = 2.5cm of 21] {$\stackB{f(a),f(b)}{g(a),g(b)}$};
+	\draw[gfa]  (26) to[out=-100 ,in= 100] node[el]             {\m{f}} (22);
+	\draw[gfa]  (26) to[out=- 80 ,in=  80] node[el,anchor=west] {\m{g}} (22);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\node(12a) [left = 0.5cm of 12] {};
+	\draw[se] ( 12.180) to (   2.0);
+
+	\draw[se] (22) to  (12);
+
+	\draw[se] (16) to  ( 6);
+	\draw[se] (26) to  (16);
+
+	\draw[ie] (26) to[loop] node[el,above] {\m{\neq}} (26);
+
+\end{tikzpicture}
+\caption{
+Source edges\\
+We omit tuples as we only use unary functions.\\
+Dashed arrows represent dis-equalities.\\
+\textcolor{blue}{ Blue dashed arrows} represent source edges.
+}
+\label{snippet3.16b_graph}
+\end{figure}
+
+\bigskip
+
+\noindent
+We now demonstrate how equalities are actually propagated by our algorithm.
+Consider the example in figure \ref{snippet3.17_graph}.\\
+We describe how our algorithm performs \m{n_1.}\lstinline|makeTerm(f,($\m{[a]_1}$))|, ensuring that \m{g_1 \models f(a)=g(a)}.\\
+First, the \GFA{} \m{f([a]_0)} is searched in the \lstinline|superTerms| field of \m{n_1}, and not found.\\
+As the \GFA{} does not yet exist (the term \m{f(a)} is not represented in \m{g_1}), we create a new \GT{} that includes that \GFA{} and map it in the \lstinline|superTerms| field as a super-term of \m{[a]_0}. We also add a source-edge to the new \GT{}, as mandated by the source invariant.\\
+The state is shown in figure \ref{snippet3.17_graph.1}, we mark in red the missing parts of the EC-graph that are needed in order to propagate the equality \m{f(a)=g(a)}.\\
+For each source-edge added to a \GT{}, our algorithm looks at each \GFA{} of the new source, and adds the missing ones (in order to establish the propagation invariant).\\
+In our case, the \GFA{} \m{f([a]_1)} is present but the \GFA{} \m{g([a]_1)} is missing.\\
+We look at the source \GFA{} \m{g([a]_0)} and look at the inverse source of the tuple \m{([a]_0)} - in this case \m{([a]_1)}.\\
+We add the \GFA{} \m{g([a]_1)} to our new \GT{} and we are done. The result is shown in figure \ref{snippet3.17_graph.2}.\\
+In the next example, we show what happens when the inverse source of the tuple is empty.
+
+
+
+\begin{figure}
+\begin{subfigure}[t]{0.49\textwidth}
+\framebox[\textwidth]{
+\raisebox{0pt}[0.2\textheight][0pt]
+{
+\begin{tikzpicture}
+  \node[gttn] (1)              {$$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_0}};
+
+  \node[gtn,label=center:\scriptsize\m{a}]  (2) [above = 0.5cm of 1] {\phantom{b}};
+
+	\node[gtn]  (6)  [above = 2.5cm of 1] {$\stackB{f(a)}{g(a)}$};
+	\draw[gfa]  (6) to[out=-100 , in=100] node[el,anchor=east]  {\m{f}} (2);
+	\draw[gfa]  (6) to[out= -80 , in= 80] node[el,anchor=west] {\m{g}} (2);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 3cm of 1] {$$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_1}};
+
+	\node[gtn,label=center:\scriptsize\m{a}]  (12) [above = 0.5cm of 11] {\phantom{b}};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\draw[se] ( 12.180) to (   2.0);
+\end{tikzpicture}
+}}
+\caption{
+Before \m{n_1.}\lstinline|makeTerm(f,($\m{[a]_1}$))|
+}
+\label{snippet3.17_graph}
+\end{subfigure}
+\begin{subfigure}[t]{0.49\textwidth}
+\framebox[\textwidth]{
+\raisebox{0pt}[0.2\textheight][0pt]
+{
+\begin{tikzpicture}
+  \node[gttn] (1)              {$$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_0}};
+
+  \node[gtn,label=center:\scriptsize\m{a}]  (2) [above = 0.5cm of 1] {\phantom{b}};
+
+	\node[gtn]  (6)  [above = 2.5cm of 1] {$\stackB{f(a)}{g(a)}$};
+	\draw[gfa]  (6) to[out=-100 , in=100] node[el,anchor=east]  {\m{f}} (2);
+	\draw[gfa]  (6) to[out= -80 , in= 80] node[el,anchor=west] {\m{g}} (2);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 3cm of 1] {$$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_1}};
+
+	\node[gtn,label=center:\scriptsize\m{a}]  (12) [above = 0.5cm of 11] {\phantom{b}};
+
+	\node[gtn]  (16)  [above = 2.5cm of 11] {\stackB{f(a)}{\textcolor{red}{g(a)}}};
+	\draw[gfa]  (16) to[out=-100 , in=100] node[el]             {\m{f}} (12);
+	\draw[mgfa]  (16) to[out=- 80 ,in=  80] node[ml,anchor=west] {\m{g}} (12);
+				
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\draw[se] ( 12.180) to (   2.0);
+
+	\draw[se] (16.180) to ( 6.0);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\end{tikzpicture}
+}}
+\caption{
+After adding \m{f([a]_1)}\\
+\m{g([a]_1)} is missing
+}
+\label{snippet3.17_graph.1}
+\end{subfigure}
+
+\begin{subfigure}[t]{0.49\textwidth}
+\framebox[\textwidth]{
+\raisebox{0pt}[0.2\textheight][0pt]
+{
+\begin{tikzpicture}
+  \node[gttn] (1)              {$$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_0}};
+
+  \node[gtn,label=center:\scriptsize\m{a}]  (2) [above = 0.5cm of 1] {\phantom{b}};
+
+	\node[gtn]  (6)  [above = 2.5cm of 1] {$\stackB{f(a)}{g(a)}$};
+	\draw[gfa]  (6) to[out=-100 , in=100] node[el,anchor=east]  {\m{f}} (2);
+	\draw[gfa]  (6) to[out= -80 , in= 80] node[el,anchor=west] {\m{g}} (2);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 3cm of 1] {$$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_1}};
+
+	\node[gtn,label=center:\scriptsize\m{a}]  (12) [above = 0.5cm of 11] {\phantom{b}};
+
+	\node[gtn]  (16)  [above = 2.5cm of 11] {\stackB{f(a)}{g(a)}};
+	\draw[gfa]  (16) to[out=-100 , in=100] node[el]             {\m{f}} (12);
+	\draw[gfa]  (16) to[out=- 80 ,in=  80] node[el,anchor=west] {\m{g}} (12);
+				
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\draw[se] ( 12.180) to (   2.0);
+
+	\draw[se] (16.180) to ( 6.0);
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\end{tikzpicture}
+}}
+\caption{
+After adding \m{g([a]_1)}\\
+Invariant is satisfied
+}
+\label{snippet3.17_graph.2}
+\end{subfigure}
+
+\caption{Example for the propagation invariant\\
+Missing parts of the graph are in red}
+\end{figure}
+
+
+
+\bigskip
+\noindent
+Consider the state in figure \ref{snippet3.18_graph.0}.\\
+We add the \GT{} for \m{h(a)} - shown in figure \ref{snippet3.18_graph.1}.\\
+We now proceed as before, looking for an inverse source for \m{[f(a)]_0} - none is found.\\
+In this case we add a new empty \GT{}, and attach it with a source-edge to \m{[f(a)]_0}.\\
+The result is shown in figure \ref{snippet3.18_graph.2}.\\
+This \GT{} has no members yet, but it has a source - so the propagation invariant forces us to look for an inverse source for the \GFA{} 
+\m{f([a]_0)} with which propagation is complete - shown in figure \ref{snippet3.18_graph.3}.
+
+\bigskip
+\noindent
+The process of completing \GFAs{} helps us ensure that all relevant equality information is propagated, and only relevant equality information (by the congruence closure propagation criterion - we propagate all equality information for sub-terms). This is the implementation of the algorithm in figure \ref{fig_lazy_congruence}.\\
+The algorithm adds at most one \GT{} per predecessor \GT{}.\\
+We note here that, in some cases, we may create empty \GTs{} as above and they will never become actual \GTs{} (will never represent any term). This can happen in the case of joins, and also for bounded fragments and scoping - we give an example when discussing joins.
+ %- consider the case where the function \m{f} is not in scope at \m{n_1} - we will remain with the empty \GT{} with inverse source \m{[f(a)]_0}. We do not remove these empty \GTs{} as they allow us efficient incremental updates, for example if later \m{n_0} learns (e.g. through quantifier instantiation) that \m{f(a)=b} and b is in scope at \m{n_1}, then we do not need to look at \m{[g(f(a))]_0} again, but rather only at the new source \GFA{} for the empty simply connect 
+
+\bigskip
+\noindent
+In the above description we have implicitly assumed one important property of source-edges - namely, that each \GT{} can have at most one source - formally:
+\begin{figure}[H]
+\textbf{The sequential propagation invariant part 2:}\\
+For a sequential node n and a predecessor p.\\
+\m{\forall u,v \in g_n \cdot}\\
+\m{~~~\sources{n}{}{u} \cap \sources{n}{}{v} \neq \emptyset \Rightarrow u=v}
+\end{figure}
+
+\noindent
+This invariant comes up whenever one of the other invariants forces us to add a source-edge - if that source already has an inverse-source, instead of adding another inverse source we merge the two \GTs{}. 
+Note that the first part of the propagation invariant is insufficient here, as the empty \GT{} has no \GFAs{} to operate on. In the above case that would not be a problem, but if the predecessor had a cycle in the EC-graph - e.g. \m{a=h(a)} - we could add an unbounded number of empty \GTs{}, while part two of the propagation invariant (when enforced eagerly) prevents that as we can add at most as many \GTs{} as there are in our predecessor graph.
+
+\begin{figure}
+\begin{subfigure}[t]{0.49\textwidth}
+\framebox[\textwidth]{
+\raisebox{0pt}[0.2\textheight][0pt]
+{
+\begin{tikzpicture}
+  \node[gttn] (1)              {$$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_0}};
+
+  \node[gtn,label=center:\scriptsize\m{a}]  (2) [above = 0.5cm  of 1] {\phantom{b}};
+
+	\node[gtn]  (4)  [above right = 0.7cm and 0.3cm of 2] {\m{f(a)}};
+	\draw[gfa]  (4) to node[el,anchor=west]  {\m{f}} (2);
+
+	\node[gtn]  (6)  [above = 2.5cm of 1] {$\stackB{g(f(a))}{h(a)}$};
+	\draw[gfa]  (6) to[] node[el,anchor=west] {\m{g}} (4);
+	\draw[gfa]  (6) to[] node[el,anchor=east] {\m{h}} (2);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 3cm of 1] {$$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_1}};
+
+	\node[gtn,label=center:\scriptsize\m{a}]  (12) [above = 0.5cm of 11] {\phantom{b}};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\draw[se] ( 12.180) to (   2.0);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+%\begin{pgfinterruptboundingbox}
+%	\draw[separator] (2.0cm,-0.7cm) to (2.0cm,3.5cm);
+%	\draw[separator] (5.5cm,-0.7cm) to (5.5cm,3.5cm);
+%\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+}}
+\caption{
+Before \m{n_1.}\lstinline|makeTerm(h,($\m{[a]_1}$))|
+}
+\label{snippet3.18_graph.0}
+\end{subfigure}
+\begin{subfigure}[t]{0.49\textwidth}
+\framebox[\textwidth]{
+\raisebox{0pt}[0.2\textheight][0pt]
+{
+\begin{tikzpicture}
+  \node[gttn] (1)              {$$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_0}};
+
+  \node[gtn,label=center:\scriptsize\m{a}]  (2) [above = 0.5cm  of 1] {\phantom{b}};
+
+	\node[gtn]  (4)  [above right = 0.7cm and 0.3cm of 2] {\m{f(a)}};
+	\draw[gfa]  (4) to node[el,anchor=west]  {\m{f}} (2);
+
+	\node[gtn]  (6)  [above = 2.5cm of 1] {$\stackB{g(f(a))}{h(a)}$};
+	\draw[gfa]  (6) to[] node[el,anchor=west] {\m{g}} (4);
+	\draw[gfa]  (6) to[] node[el,anchor=east] {\m{h}} (2);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 3cm of 1] {$$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_1}};
+
+	\node[gtn,label=center:\scriptsize\m{a}]  (12) [above = 0.5cm of 11] {\phantom{b}};
+
+	\node[gtn]  (16)  [above = 2.5cm of 11] {$\stackB{\textcolor{red}{g(f(a))}}{h(a)}$};
+%	\draw[gfa]  (16) to[] node[el,anchor=west] {\m{g}} (14);
+	\draw[gfa]  (16) to[] node[el,anchor=east] {\m{h}} (12);
+				
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\draw[se] ( 12.180) to (   2.0);
+
+	\draw[se] (16.180) to ( 6.0);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\end{tikzpicture}
+}}
+\caption{
+After adding \m{h([a]_1)}\\
+\m{g(f(a))} is missing
+}
+\label{snippet3.18_graph.1}
+\end{subfigure}
+
+\begin{subfigure}[t]{0.49\textwidth}
+\framebox[\textwidth]{
+\raisebox{0pt}[0.2\textheight][0pt]
+{
+\begin{tikzpicture}
+  \node[gttn] (1)              {$$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_0}};
+
+  \node[gtn,label=center:\scriptsize\m{a}]  (2) [above = 0.5cm  of 1] {\phantom{b}};
+
+	\node[gtn]  (4)  [above right = 0.7cm and 0.3cm of 2] {\m{f(a)}};
+	\draw[gfa]  (4) to node[el,anchor=west]  {\m{f}} (2);
+
+	\node[gtn]  (6)  [above = 2.5cm of 1] {$\stackB{g(f(a))}{h(a)}$};
+	\draw[gfa]  (6) to[] node[el,anchor=west] {\m{g}} (4);
+	\draw[gfa]  (6) to[] node[el,anchor=east] {\m{h}} (2);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 3cm of 1] {$$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_1}};
+
+	\node[gtn,label=center:\scriptsize\m{a}]  (12) [above = 0.5cm of 11] {\phantom{b}};
+
+	\node[gtn,label=center:\scriptsize\m{\textcolor{red}{f(a)}}]  (14)  [above right = 0.7cm and 0.3cm of 12] {\phantom{f(a)}};
+	\draw[mgfa] (14) to node[ml,anchor=west]  {\m{f}} (12);
+
+	\node[gtn]  (16)  [above = 2.5cm of 11] {$\stackB{{g(f(a))}}{h(a)}$};
+	\draw[gfa]  (16) to[] node[el,anchor=west] {\m{g}} (14);
+	\draw[gfa]  (16) to[] node[el,anchor=east,pos=0.25] {\m{h}} (12);
+				
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\draw[se] (12) to ( 2.0);
+	\draw[se] (14) to ( 4.0);
+	\draw[se] (16) to ( 6.0);
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\end{tikzpicture}
+}}
+\caption{
+After adding an \\
+inverse source for \m{g(f([a]_0))}
+}
+\label{snippet3.18_graph.2}
+\end{subfigure}
+\begin{subfigure}[t]{0.49\textwidth}
+\framebox[\textwidth]{
+\raisebox{0pt}[0.2\textheight][0pt]
+{
+\begin{tikzpicture}
+  \node[gttn] (1)              {$$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_0}};
+
+  \node[gtn,label=center:\scriptsize\m{a}]  (2) [above = 0.5cm  of 1] {\phantom{b}};
+
+	\node[gtn]  (4)  [above right = 0.7cm and 0.3cm of 2] {\m{f(a)}};
+	\draw[gfa]  (4) to node[el,anchor=west]  {\m{f}} (2);
+
+	\node[gtn]  (6)  [above = 2.5cm of 1] {$\stackB{g(f(a))}{h(a)}$};
+	\draw[gfa]  (6) to[] node[el,anchor=west] {\m{g}} (4);
+	\draw[gfa]  (6) to[] node[el,anchor=east] {\m{h}} (2);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 3cm of 1] {$$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_1}};
+
+	\node[gtn,label=center:\scriptsize\m{a}]  (12) [above = 0.5cm of 11] {\phantom{b}};
+
+	\node[gtn,label=center:\scriptsize\m{f(a)}]  (14)  [above right = 0.7cm and 0.3cm of 12] {\phantom{f(a)}};
+	\draw[gfa]  (14) to node[el,anchor=west]  {\m{f}} (12);
+
+	\node[gtn]  (16)  [above = 2.5cm of 11] {$\stackB{g(f(a))}{h(a)}$};
+	\draw[gfa]  (16) to[] node[el,anchor=west] {\m{g}} (14);
+	\draw[gfa]  (16) to[] node[el,anchor=east,pos=0.25] {\m{h}} (12);
+				
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\draw[se] (12) to ( 2.0);
+	\draw[se] (14) to ( 4.0);
+	\draw[se] (16) to ( 6.0);
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\end{tikzpicture}
+}}
+\caption{
+Final state
+}
+\label{snippet3.18_graph.3}
+\end{subfigure}
+
+\caption{Example for deep propagation}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsubsection*{The request cache}
+In order to reduce the number of traversals of the CFG, we cache at each CFG-node the previous requests, so that no CFG-node propagates the same request twice. The cache for a CFG-node n consists of all the \GFAs{} of \m{g_n} - \gfas{n} - together with another set of \GFAs, \rgfas{n}. We call a member of \rgfas{n} an \RGFA{} (A rejected \GFA{}). For each \GFA{} in the cache $\fa{f}{t} \in \gfas{n} \cup \rgfas{n}$, the members of the EC-tuple \tup{t} are all in \m{g_n} - \m{\tup{t} \in g_n} - this means that we can only cache direct super-terms of terms represented in \m{g_n}. 
+The idea is that if a request for a term t has returned an empty response, a request for any super-term of t will also be empty.
+
+
+\begin{figure}
+\begin{lstlisting}
+$\node{n_0}:$
+assume $\m{b=b}$
+	// $\m{\GFAs{}: b()}$
+	// $\m{ECs:[b]}$
+	// $\m{\rgfas{}: \emptyset}$
+$\node{n_1}:$
+assume $\m{b=b}$
+	// $\m{\GFAs{}: b()}$
+	// $\m{ECs:[b]}$
+	// $\m{\sources{}{}{[b]_1}=\s{[b]_0}}$
+	// $\m{\rgfas{}: \emptyset}$
+if (*)
+	$\node{n_2}:$
+	assert $\m{f(b)=b}$ //negated $\comm{\m{f(b) \neq b}}$
+		// $\m{\GFAs{}: \emptyset}$
+		// $\m{ECs:\emptyset}$
+else
+	$\node{n_3}:$
+	assert $\m{f(b)=g(b)}$ //negated $\comm{\m{f(b) \neq g(b)}}$
+		// $\m{\GFAs{}: b()}$
+		// $\m{ECs:[b]}$
+		// $\m{\sources{}{}{[b]_2}=\s{[b]_1}}$
+\end{lstlisting}
+\caption{propagation sources\\
+The state before $\m{n_2.}$\lstinline|makeTerm(f([b]))|\\
+The local source correctness invariant holds for the above example.
+}
+\label{snippet3.16c}
+\end{figure}
+
+\bigskip
+\noindent
+Consider the example in figure \ref{snippet3.16c}.\\
+The example shows the state before we invoke \lstinline|makeTerm(f,([b]))| on \m{n_2} (and before adding \m{f(b),g(b)} to \m{n_3}).\\
+The initial state (excluding \m{n_3}) is shown in figure \ref{snippet3.16c_graph.0}.
+
+\bigskip
+\noindent
+We now show the operation of \m{n_2.}\lstinline|makeTerm(f([b]))|:\\
+As in the previous example, \m{n_2} sends a request for \m{f([b]_2)} which gets translated
+down the line to \m{f([b]_0),f([a]_0)}.\\
+In this case, \m{n_0} has no information about either of the requested \GFAs{}, and has no predecessors, so it adds the \GFAs{} to the cache by adding an \RGFA{} for each.\\
+For \m{n_1} the situation is the same - the predecessor has no information about the request, so we add it to the cache.\\
+Finally, \m{n_2} adds the \GFA{} as a singleton \GT{}.\\
+The final state, after adding also \m{n_2.}\lstinline|makeTerm(g([b]))|, is shown in figure \ref{snippet3.16c_graph.1}.
+
+
+\begin{figure}
+\begin{subfigure}[t]{0.99\textwidth}
+\framebox[\textwidth]{
+\begin{tikzpicture}
+  \node[gttn] (1)              {$$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_0}};
+
+  \node[gtn]  (2) [above = 0.5cm of 1] {\m{b}};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 3cm of 1] {$$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_1}};
+
+	\node[gtn]  (12) [above = 0.5cm of 11] {\m{b}};
+				
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\node[gttn] (21)  [right = 3.5cm of 11] {$$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{n_2}};
+
+	\node[gtn]  (22) [above = 0.5cm of 21] {\m{b}};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\node(12a) [left = 0.5cm of 12] {};
+	\draw[se] ( 12.180) to (   2.0);
+
+	\draw[se] (22) to  (12);
+
+\end{tikzpicture}
+}
+\caption{The initial state for figure \ref{snippet3.16c}}
+\label{snippet3.16c_graph.0}
+\end{subfigure}
+
+
+\begin{subfigure}[t]{0.99\textwidth}
+\framebox[\textwidth]{
+\begin{tikzpicture}
+  \node[gttn] (1)              {$$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_0}};
+
+  \node[gtn]  (2) [above = 0.5cm of 1] {\m{b}};
+%  \node[gtn,label=center:\scriptsize\m{b}]  (3) [above right = 0.57cm and 0.3cm of 1] {\phantom{a,b}};
+
+%	\draw[gfa] (2) to node[el]             {\m{a}} (1.90);
+  
+%	\node[gttn] (4)  [above = 0.5cm of 2]    {\m{(a)}};
+
+%	\draw[sgtt] (4) to node[el] {0} (2);
+
+	\node[rgtn]  (6)  [above = 1.5cm of 1] { \m{f(b)}};
+%	\node[rgtn]  (7)  [above right = 1.5cm and 0.3cm of 1] { \m{g(b)}};
+	\draw[rgfa]  (6) to[out=270, in=90] node[rl,anchor=east]  {\m{f}} (2);
+%	\draw[rgfa]  (7) to[out=270, in= 90] node[rl,anchor=west] {\m{g}} (2);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 3cm of 1] {$$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_1}};
+
+	\node[gtn]  (12) [above = 0.5cm of 11] {\m{b}};
+
+%	\draw[gfa] (12) to[out=-110,in=110] node[el]             {\m{a}} (11.90);
+%	\draw[gfa] (12) to[out=- 70,in= 70] node[el,anchor=west] {\m{b}} (11.90);
+
+%	\node[gttn] (14)  [above = 0.5cm of 12]    {\m{(a),(b)}};
+
+%	\draw[sgtt] (14) to node[el] {0} (12);
+
+	\node[rgtn]  (16)  [above = 1.5cm of 11] { \m{f(b)}};
+	\draw[rgfa]  (16) to[out=270, in=90] node[rl,anchor=east]  {\m{f}} (12);
+				
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\node[gttn] (21)  [right = 3.5cm of 11] {$$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{n_2}};
+
+	\node[gtn]  (22) [above = 0.5cm of 21] {\m{b}};
+
+	\node[gtn]  (26)  [above = 1.5cm of 21] {\m{f(b)}};
+	\draw[gfa]  (26) to[out=270 ,in= 90] node[el]             {\m{f}} (22);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\node(12a) [left = 0.5cm of 12] {};
+	\draw[se] ( 12.180) to (   2.0);
+
+	\draw[se] (22) to  (12);
+
+	\draw[re] (16) to  ( 6);
+	\draw[re] (26) to  (16);
+
+
+\end{tikzpicture}
+}
+\caption{The state after \m{n_2}.\lstinline|makeTerm(f,([b]))| in \ref{snippet3.16c}}
+\label{snippet3.16c_graph.1}
+\end{subfigure}
+
+\begin{subfigure}[t]{0.99\textwidth}
+\framebox[\textwidth]{
+\begin{tikzpicture}
+  \node[gttn] (1)              {$$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_0}};
+
+  \node[gtn]  (2) [above = 0.5cm of 1] {\m{b}};
+%  \node[gtn,label=center:\scriptsize\m{b}]  (3) [above right = 0.57cm and 0.3cm of 1] {\phantom{a,b}};
+
+%	\draw[gfa] (2) to node[el]             {\m{a}} (1.90);
+  
+%	\node[gttn] (4)  [above = 0.5cm of 2]    {\m{(a)}};
+
+%	\draw[sgtt] (4) to node[el] {0} (2);
+
+	\node[gtn]  (6)  [above = 1.5cm of 1] { \stackB{f(b)}{g(b)}};
+%	\node[gtn]  (7)  [above right = 1.6cm and 0.3cm of 1] { \m{f(b)}};
+	\draw[gfa]  (6) to[bend left] node[el,anchor=west]  {\m{g}} (2);
+	\draw[gfa]  (6) to[bend right] node[el,anchor=east] {\m{f}} (2);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 3cm of 1] {$$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_1}};
+
+	\node[gtn]  (12) [above = 0.5cm of 11] {\m{b}};
+
+	\node[rgtn]  (16)  [above = 1.725cm of 11] { \m{f(b)}};
+%	\node[rgtn]  (17)  [above right = 1.5cm and 0.3cm of 1] { \m{g(b)}};
+	\draw[rgfa]  (16) to[out=270, in=90] node[rl,anchor=east]  {\m{f}} (12);
+%	\draw[rgfa]  (17) to[out=270, in= 90] node[rl,anchor=west] {\m{g}} (12);
+				
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\node[gttn] (21)  [right = 3.5cm of 11] {$$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{n_2}};
+
+	\node[gtn]  (22) [above = 0.5cm of 21] {\m{b}};
+
+	\node[gtn]  (26)  [above = 1.725cm of 21] {\m{f(b)}};
+	\draw[gfa]  (26) to[out=270 ,in= 90] node[el]             {\m{f}} (22);
+%	\draw[gfa]  (26) to[out=- 80 ,in=  80] node[el,anchor=west] {\m{g}} (22);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\draw[se] (11) to  ( 1);
+%	\draw[se] (21) to  (11);
+
+	\node(12a) [left = 0.5cm of 12] {};
+%	\node(7u) [above= 0.1cm of 7.90] {};
+%	\node(7r) [right= 0.3cm of 7] {};
+%	\draw[me] ( 16.180) to[out=180,in=0] (7r) to[out=180,in=0] (7u) to[out=180,in=0] (   6.0);
+	\draw[me] ( 16.180) to (   6.0);
+
+	\draw[se] (12) to  ( 2);
+	\draw[se] (22) to  (12);
+
+%	\draw[se] (14.180) to ( 4.0);
+%	\draw[re] (16) to  ( 6);
+	\draw[re] (26) to  (16);
+
+%	\draw[se] (16) to  ( 6);
+%	\draw[se] (26) to  (16);
+
+%	\draw[ie] (26) to[loop] node[el,above] {\m{\neq}} (26);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+%\begin{pgfinterruptboundingbox}
+%	\draw[separator] (2.0cm,-0.7cm) to (2.0cm,3.5cm);
+%	\draw[separator] (5.5cm,-0.7cm) to (5.5cm,3.5cm);
+%\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+}
+\caption{
+The state after \m{n_0}.\lstinline|assumeEqual(f(b),g(b))| in \ref{snippet3.16c}.\\
+\textcolor{red} {Red dashed arrows} represent inconsistent sources - \RGFA{} to \GFA{} \\
+(only for illustration, not actually included in data structure)
+}
+\label{snippet3.16c_graph.2}
+\end{subfigure}
+
+\begin{subfigure}[t]{0.99\textwidth}
+\framebox[\textwidth]{
+\begin{tikzpicture}
+  \node[gttn] (1)              {$$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_0}};
+
+  \node[gtn]  (2) [above = 0.5cm of 1] {\m{b}};
+%  \node[gtn,label=center:\scriptsize\m{b}]  (3) [above right = 0.57cm and 0.3cm of 1] {\phantom{a,b}};
+
+%	\draw[gfa] (2) to node[el]             {\m{a}} (1.90);
+  
+%	\node[gttn] (4)  [above = 0.5cm of 2]    {\m{(a)}};
+
+%	\draw[sgtt] (4) to node[el] {0} (2);
+
+	\node[gtn]  (6)  [above = 1.5cm of 1] { \stackB{f(b)}{g(b)}};
+%	\node[gtn]  (7)  [above right = 1.6cm and 0.3cm of 1] { \m{f(b)}};
+	\draw[gfa]  (6) to[bend left] node[el,anchor=west]  {\m{g}} (2);
+	\draw[gfa]  (6) to[bend right] node[el,anchor=east] {\m{f}} (2);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 3cm of 1] {$$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_1}};
+
+	\node[gtn]  (12) [above = 0.5cm of 11] {\m{b}};
+
+%	\draw[gfa] (12) to[out=-110,in=110] node[el]             {\m{a}} (11.90);
+%	\draw[gfa] (12) to[out=- 70,in= 70] node[el,anchor=west] {\m{b}} (11.90);
+
+%	\node[gttn] (14)  [above = 0.5cm of 12]    {\m{(a),(b)}};
+
+%	\draw[sgtt] (14) to node[el] {0} (12);
+
+	\node[gtn]  (16)  [above = 1.5cm of 11] { \stackB{f(b)}{g(b)}};
+%	\node[rgtn]  (17)  [above right = 1.5cm and 0.3cm of 1] { \m{g(b)}};
+	\draw[gfa]  (16) to[bend left] node[el,anchor=west]  {\m{g}} (12);
+	\draw[gfa]  (16) to[bend right] node[el,anchor=east] {\m{f}} (12);
+				
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\node[gttn] (21)  [right = 3.5cm of 11] {$$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{n_2}};
+
+	\node[gtn]  (22) [above = 0.5cm of 21] {\m{b}};
+
+%	\draw[gfa] (22) to[out=-110,in=110] node[el]             {\m{a}} (21.90);
+%	\draw[gfa] (22) to[out=- 70,in= 70] node[el,anchor=west] {\m{b}} (21.90);
+
+%	\node[gttn] (24)  [above = 0.5cm of 22]    {\m{(a),(b)}};
+
+%	\draw[sgtt] (24) to node[el] {0} (22);
+
+	\node[gtn]  (26)  [above = 1.725cm of 21] {\m{f(b)}};
+	\draw[gfa]  (26) to[out=270 ,in= 90] node[el]             {\m{f}} (22);
+%	\draw[gfa]  (26) to[out=- 80 ,in=  80] node[el,anchor=west] {\m{g}} (22);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\draw[se] (11) to  ( 1);
+%	\draw[se] (21) to  (11);
+
+	\node(12a) [left = 0.5cm of 12] {};
+%	\node(7u) [above= 0.1cm of 7.90] {};
+%	\node(7r) [right= 0.3cm of 7] {};
+%	\draw[me] ( 16.180) to[out=180,in=0] (7r) to[out=180,in=0] (7u) to[out=180,in=0] (   6.0);
+	\draw[se] ( 16.180) to (   6.0);
+
+	\draw[se] (12) to  ( 2);
+	\draw[se] (22) to  (12);
+
+%	\draw[se] (14.180) to ( 4.0);
+%	\draw[re] (16) to  ( 6);
+	\draw[me] (26) to  (16);
+
+%	\draw[se] (16) to  ( 6);
+%	\draw[se] (26) to  (16);
+
+%	\draw[ie] (26) to[loop] node[el,above] {\m{\neq}} (26);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+%\begin{pgfinterruptboundingbox}
+%	\draw[separator] (2.0cm,-0.7cm) to (2.0cm,3.5cm);
+%	\draw[separator] (5.5cm,-0.7cm) to (5.5cm,3.5cm);
+%\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+}
+\caption{
+The state after \m{n_1}.\lstinline|update|.\\
+\m{n_1} is now consistent - but \m{n_2} is not.
+}
+\label{snippet3.16c_graph.3}
+\end{subfigure}
+
+
+\begin{subfigure}[t]{0.99\textwidth}
+\framebox[\textwidth]{
+\begin{tikzpicture}
+  \node[gttn] (1)              {$$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_0}};
+
+  \node[gtn]  (2) [above = 0.5cm of 1] {\m{b}};
+
+	\node[gtn]  (6)  [above = 1.5cm of 1] { \stackB{f(b)}{g(b)}};
+	\draw[gfa]  (6) to[bend left] node[el,anchor=west]  {\m{g}} (2);
+	\draw[gfa]  (6) to[bend right] node[el,anchor=east] {\m{f}} (2);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 3cm of 1] {$$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_1}};
+
+	\node[gtn]  (12) [above = 0.5cm of 11] {\m{b}};
+
+	\node[gtn]  (16)  [above = 1.5cm of 11] { \stackB{f(b)}{g(b)}};
+	\draw[gfa]  (16) to[bend left] node[el,anchor=west]  {\m{g}} (12);
+	\draw[gfa]  (16) to[bend right] node[el,anchor=east] {\m{f}} (12);
+				
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\node[gttn] (21)  [right = 3.5cm of 11] {$$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{n_2}};
+
+	\node[gtn]  (22) [above = 0.5cm of 21] {\m{b}};
+
+	\node[gtn]  (26)  [above = 1.5cm of 21] { \stackB{f(b)}{g(b)}};
+	\draw[gfa]  (26) to[bend left] node[el,anchor=west]  {\m{g}} (22);
+	\draw[gfa]  (26) to[bend right] node[el,anchor=east] {\m{f}} (22);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\node(12a) [left = 0.5cm of 12] {};
+	\draw[se] ( 16.180) to (   6.0);
+
+	\draw[se] (12) to  ( 2);
+	\draw[se] (22) to  (12);
+
+	\draw[se] (26) to  (16);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\end{tikzpicture}
+}
+\caption{
+The state after \m{n_2}.\lstinline|update|.\\
+All nodes are now consistent
+}
+\label{snippet3.16c_graph.4}
+\end{subfigure}
+
+\caption{.\\
+\textcolor{gray} {Gray dashed circles} represent \RGFAs{}.\\
+\textcolor{gray} {Gray dashed arrows} represent source edges to \RGFAs{} \\
+(only for illustration, not actually included in data structure)}
+\end{figure}
+
+\bigskip
+\noindent
+After \m{n_2.}\lstinline|makeTerm(f([b]))|, we also invoke\\
+\m{n_2.}\lstinline|makeTerm(g([b]))| adding the corresponding \GFAs{} as in the previous case.\\
+Now we are done with \m{n_2}.
+
+\bigskip
+\noindent
+When \m{n_3} performs \m{n_3.}\lstinline|makeTerm(f([b]))|:\\
+The request sent to \m{n_1} is \s{f([b]_3} which is translated to \s{f([b]_1)}.\\
+As \m{n_1} has this \RGFA{}, we subtract it from the request and now the request is $\emptyset$.\\
+The request is not propagated further and we are done with \m{n_3}.
+
+
+\bigskip
+\noindent
+\subsubsection*{Incremental updates}
+Assume that we have performed the operations for our last example as described, and completed one pass of \lstinline|CFG.verify()| with the EC-graph fragment.
+Now another logical fragment has produced the equality \m{f(b)=g(b)} at \m{n_0}, for example using quantifier instantiation.\\
+The state is depicted in figure \ref{snippet3.16c_graph.2}.\\
+We can see that now there is information about \m{f(b)} at \m{n_0} that was not propagated to where it is needed at \m{n_2} (and \m{n_3}).
+We call such a state inconsistent, and we say that locally, \m{n_1} is inconsistent (shown in red) - on the next pass of verification for our fragment (which again traverses the CFG in topological order), our algorithm invokes an \lstinline|update| on each CFG node before invoking \lstinline|Node.verify|. 
+The \lstinline|update| method, when invoked on a CFG-node all of whose predecessors are consistent, ensures that CFG-node is also consistent (and does not break consistency for predecessors, although it might for successors). We do not \lstinline|update| all successors eagerly on every change as it is extremely inefficient - instead, when traversing the CFG in topological order for any fragment, we \lstinline|update| each CFG-node before performing any inferences on it.
+
+\bigskip
+\noindent
+In order to support an efficient incremental \lstinline|update| method, each CFG-node keeps some history information that allows it to summarize to successors the changes to its EC-graph since the last time the successor was updated.\\
+The history is kept mainly in two fields:
+\begin{itemize}
+	\item The \lstinline|mergeMap| field that was used for merging, including an inverse map
+	\item A map that assigns a \lstinline|generation| for each \GT{}. Roughly, each time \lstinline|assumeEqual| or \lstinline|update| are called on a CFG-node, a new generation starts. The idea is that if a \GT{} u exists in the EC-graph at some generation, if u is merged into v then the merged node is of a strictly higher generation. 
+	Each CFG-node remembers the last generation of its predecessors for which it is up-to-date, and only considers newer \GTs{} when invoking \lstinline|update|
+\end{itemize}
+
+\noindent
+In our example, \m{[b]_0} is of generation 1 while \m{[f(b)]_0} is of generation 2. The last predecessor generation of \m{n_1} is 1 (that is, \m{n_1} has all the information of generations up to 1 from predecessors). When \m{n_1} invokes \m{n_1.}\lstinline|update|, it requests a list of changes from \m{n_0} later than generation 1, and receives the list that includes only the \GT{} \m{[f(b)_0]}.
+The \lstinline|update| method collects all changes from predecessors.\\
+For each new or updated predecessor \GT{}, we check if the corresponding \GT{} is in our cache (using the inverse source-edges) - in our case, for the new \GT{} \m{[f(b)]_0}, the inverse source of the tuple \m{([b]_0)} is \m{([b]_1)}. We check if we have the \GFA{} \m{f([b]_1)} in the cache and we find we have it as an \RGFA{}. Hence we replace the \RGFA{} with a \GT{} that contains the \GFA{} \m{f([b]_1)}, add the source-edge and propagate equality information. The state after \m{n_1.}\lstinline|update| is shown in figure \ref{snippet3.16c_graph.3}.\\
+For \m{n_3}, the operation of the \lstinline|update| method is similar, except that here the updated predecessor \GT{} matches a \GT{} rather than an \RGFA{} - hence we simply add the corresponding source-edge and propagate equalities. The final state is shown in figure \ref{snippet3.16c_graph.4}
+
+\bigskip
+\noindent
+We formalize now two parts (conjuncts) of the local CFG-node invariant that ensures that an \RGFA{} exists in CFG-node only if none of the terms it represents occurs in all its predecessors. The first part is the part that is broken in figure \ref{snippet3.16c_graph.2} (marked in red), where the \RGFA{} \m{[f(b)]_1} should instead be added to a \GT{} as \m{n_0} has the \GT{} \m{[f(b)]_0}.
+
+\begin{figure}[H]
+For a CFG node n with one prededessor p.\\
+%\textbf{The sequential response invariant:}\\
+\m{\forall \tup{t} \in g_n, \tup{s} \in \sources{n}{}{\tup{t}}, f \cdot}\\
+\m{~~~\fa{f}{s} \in \gfas{p} \Rightarrow \fa{f}{t} \notin \rgfas{n}}\\
+And\\
+%\textbf{The sequential request invariant:}\\
+\m{\forall \fa{f}{t} \in \gfas{n} \cup \rgfas{n}, \tup{s} \in \sources{n}{}{\tup{t}} \cdot}\\
+\m{~~~\fa{f}{s} \in \gfas{p} \cup \rgfas{p}}
+\end{figure}
+
+
+
+\bigskip
+\noindent
+The first part of the invariant prevents the situation in figure \ref{snippet3.16c_graph.2} - its violation is fixed by replacing the \RGFA{} \m{[f(b)]_1} with the \GT{} that includes the \GFA{} \m{[f(b)]_1} (the algorithm never removes an \RGFA{} without replacing it with a \GFA{} - the only exception is in a very specific garbage collection process).\\
+The second part of the invariant ensures that if some term is in the request cache (\m{\gfas{n} \cup \rgfas{n}}), then it is also in the request cache of the predecessor. 
+This invariant is enforced by sending a request for the offending \GFA{}, as we have shown above for invocations of \lstinline|makeTerm|.
+The second part of the invariant can also be violated when a new source-edge is added or when two \GTs{} are merged.
+
+\subsection{The equality propagation algorithm}
+We have seen now the main points of the algorithm and the reasoning behind them, and now we present the algorithm for sequential nodes in more detail. In the next section we present the changes needed in order to support joins.
+
+\noindent
+\textbf{The high-level view}\\
+The main part of the algorithm is shared between \lstinline|makeTerm|, \lstinline|assumeEqual| and \lstinline|update|.\\
+For each operation, we modify or add some \GTs{} in the EC-graph and add them to a queue of modified \GTs{}.\\
+Our main loop maintains two queues - the \lstinline|mergeQ| we have seen for monolithic EC-graphs for \GTs{} that need to be merged and the \lstinline|propQ| (propagation queue) that contains all \GTs{} that have been modified, where modifications include the addition of \GFAs{} and source-edges.
+The main loop of the algorithm simply processes both queues and propagates changes from each \GT{} to its neighbours as needed, until the graph is consistent - all conjuncts of our invariant are satisfied. Changes include adding \GFAs{} or sources to \GTs{}, and merging \GTs{}. 
+
+\bigskip
+\noindent
+For \lstinline|makeTerm| and \lstinline|assumeEqual|, we assume that in the pre-state all parts of the invariant hold, we add information to the graph which might violate the invariant, and then the main loop of the algorithm fixes the broken part.\\
+For \lstinline|update|, we assume that all predecessors of the node are consistent, and furthermore we assume that the predecessors have changed only monotonically (adding information) since the last time our node was up-to-date.
+
+\bigskip
+\noindent
+\lstinline{makeTerm}\\
+The algorithm for \lstinline|makeTerm| is presented in figure \ref{EC_makeTerm}, it is an extension of the algorithm for monolithic EC-graphs (which simply adds a singleton \GT{} if it does not already exist).\\
+The algorithm first checks if the term already exists (using \lstinline|findGT|), in which case it is simply returned. 
+The check is at the cost of a constant number of searches in maps (we simplify here the implementation of the \lstinline|superTerms| field). 
+The \lstinline|addGT| method enqueues the newly added \GT{} in \lstinline|propQ|.
+
+
+\begin{figure}
+\begin{lstlisting}
+method makeTerm(f:Function, tt : Tuple[GT]) : GT
+	t:=addGT(f,tt)
+	mainLoop
+	return transitiveMerge(t)
+	
+method addGT(f:Function, tt: Tuple[GT) : GT
+	var t := findGT(f,tt)
+	if (t!=null)
+		return t
+	t := addNewSinlgeton(f,tt)
+
+method findGT(f:Function,tt:Tuple[GT]) : GT
+	t := null
+	if (tt=())
+		if (f$\in$constants.keys)
+			t := constants[f]
+	else
+		t := superTerms[tt[0]].findOrNull(t $\Rightarrow$ f(tt)$\in$t.gfas)
+	return t
+	
+method addNewSingleton(f,tt)
+	t := new GT(new GFA(f,tt))
+	if (tt=())
+		constants[f] := t
+	else
+		foreach (ti$\in$tt)
+			superTerms[ti].add(t)
+	rgfas.remove(f(tt))
+	propQ.enqueue(t)
+\end{lstlisting}
+\caption{The algorithm for \lstinline|makeTerm|\\
+The method checks if the \GFA{} already exists, 
+and otherwise creates a new singleton \GT{} and invokes the main loop
+}
+\label{EC_makeTerm}
+\end{figure}
+
+\bigskip
+\noindent
+\lstinline|assumeEqual|\\
+The algorithm for  \lstinline|assumeEqual| is shown in figure \ref{EC_assumeEqual}, it is an extension of the algorithm for monolithic EC-graphs. The method simply enqueues a merge between the two input \GTs{}.
+
+\begin{figure}
+\begin{lstlisting}
+method assumeEqual(gt1,gt2:GT)
+	if (gt1==gt2)
+		return
+		
+	enqueueMerge(gt1,gt2)
+	
+	mainLoop
+\end{lstlisting}
+\caption{The algorithm for \lstinline|assumeEqual|\\
+}
+\label{EC_assumeEqual}
+\end{figure}
+
+\bigskip
+
+\noindent
+\lstinline|update|\\
+The algorithm for \lstinline|update| is shown in figure \ref{EC_update}.\\
+The algorithm receives a set of new \GTs{} in the predecessor (since the last generation in which we have sampled the predecessor), and a list of predecessor \GTs{} that have new information (that is, have added \GFAs{} since the last sampled generation).\\
+The method searches the inverse source of each updated \GT{} and, if found, updates the source edge (using the predecessors \lstinline|mergeMap|) and enqueues the relevant \GT{}.\\
+For new \GTs{}, we only check if there is a new predecessor \GT{} that has an inverse source \GFA{} or \RGFA{} in our graph - in which case we add it as a source (converting an \RGFA{} to a singleton \GT{}) and enqueue the corresponding \GT{}.
+
+\begin{figure}
+\begin{lstlisting}
+method update(updatedGTs : Set[GT], newGTs : Set[GT])
+	
+	foreach pgt$\in$updatedGTs 
+		if sources$^{-1}$.hasKey(pgt)
+			gt := sources$^{-1}$[pgt]
+			removeSource(gt,pgt)
+			addSource(gt,predecessor.transitiveMerge(pgt))
+	
+	foreach pgt$\in$newGTs
+		foreach f(ptt)$\in$pgt.gfas
+			if sources$^{-1}$.hasKey(ptt)
+				tt := sources$^{-1}$[ptt]
+				if rgfas.conatins(f(tt))
+					gt := addSingleton(f,tt)
+					addSource(gt,pgt)
+				else
+					gt := findGT(f,tt)
+					if (gt!=null)
+						addSource(gt,pgt)
+				
+	mainLoop
+\end{lstlisting}
+\caption{The algorithm for \lstinline|update|\\
+The inputs are the set of predecessor \GTs{} updated (that is, that have been merged with another \GT{} or have had a \GFA{} added)
+and the set of new \GTs{} added to \m{g_p}.
+}
+\label{EC_update}
+\end{figure}
+
+
+
+\bigskip
+\noindent
+\textbf{The main loop:}\\
+The code for the main loop is shown in figure \ref{EC_mainLoop}.\\
+For each \GT{}, we maintain a list of new \GFAs{} and new or updated source edges.\\
+The main loop basically merges \GTs{} until there are none left to merge and then propagates information from each merged or modified \GT{}.
+The method \lstinline|mergeOne| merges two \GTs{} as we have seen before in figure \ref{fig_basic_ECGraph_mergeOne}.
+The only difference is that each \GFA{} or source-edge added to the merge target is marked as new, and the merge target is added to \lstinline|propQ|.\\
+The method \lstinline|propagateOne| propagates all latest changes to a \GT{} to its adjacent \GTs{} - it updates the source-edges 
+of the \GT{} and propagates any new source information to super-terms (up). Added source may force us to add new \GFAs{}, which may, in turn, force us to add new sources edges - hence the loop.\\ 
+The method also propagates source information for super-terms from new source edges.
+
+
+\begin{figure}
+\begin{lstlisting}
+method mainLoop
+	while (!mergeQueue.isEmpty || !propQ.isEmpty)
+		while (!mergeQ.isEmpty)
+			mergeOne(mergeQ.dequeue)
+		while (!propQ.isEmpty)
+			propagateOne(propQ.dequeue)
+	
+method propagateOne(gt:GT)
+	if (mergeQ.contains(gt))
+		return
+		
+	while (!gt.newGFAs.isEmpty || !gt.newSources.isEmpty)
+		updateForNewGFAs(gt)
+		completeDownNewSources(gt)
+	
+	propagateUpNewSources(gt)
+\end{lstlisting}
+\caption{The algorithm for \lstinline|mainLoop|\\
+The algorithm processes both queues until no work is left.
+Merging is done as shown for the monolithic EC-graph.
+}
+\label{EC_mainLoop}
+\end{figure}
+
+The pseudo-code for the incremental update of a \GT{} is shown in figure \ref{EC_propagate_GT}.
+\lstinline|updateForNewGFAs| first ensures that all required equality information is propagated to the predecessor (we describe requests below),
+and then adds all relevant source-edges, for example, in figure \ref{snippet3.18_graph.1}, the source edge between \m{[h(a)]_1} and \m{[h(a)]_0} is added after the \GFA{} \m{h([a]_1)} is added to the new \GT{}.
+
+The \lstinline|propagateUpNewSources| method looks at all cached requests that are direct super-terms of the \GT{} with an added source, 
+and ensure first that all relevant equality information for these super-terms is added to the predecessor. 
+Next, we add new source-edges to super-terms, and in the case the super-term is an \RGFA{}, we convert it to a \GT{} - as described in the example in \ref{snippet3.16c_graph.3}.
+
+\begin{figure}
+\begin{lstlisting}
+method updateForNewGFAs(gt : GT)
+	foreach f(tt)$\in$gt.newGFAs //only process new GFAs
+		var pgts := predecessor.requestGTs(f,sources[tt])
+		addSources(gt,pgts)
+	
+method completeDownNewSources(gt)
+	foreach pgt in gt.newSources //only new sources
+		foreach f(ss)$\in$pgt.gfas
+			var tt := makeInverseSource(ss)
+				addGFA(gt,f,tt)
+
+method propagateUpNewSources(gt)
+	foreach pgt in newSources[gt] //only new sources
+		foreach f(tt)$\in$superGFAs(gt)$\cup$rgfas[gt]
+			var pgts := predecessor.requestGTs(f,sources[tt])
+			var gt:=findGT(f,tt)
+			if (gt!=null) 
+				addSources(gt,pgts)
+			else if (!pgts.isEmpty)
+				addSingleton(f,tt)
+\end{lstlisting}
+\caption{The algorithm for propagating changes from a \GT{}\\
+New sources may add new \GFAs{} and vice-versa.\\
+After all \GFAs{} and sources are added, \\
+we propagate source information to super-terms.\\
+The methods \lstinline|addSource| and \lstinline|addGFA| are detailed in figure \ref{EC_propagate_helpers}.
+}
+\label{EC_propagate_GT}
+\end{figure}
+
+\begin{figure}
+\begin{lstlisting}
+method makeInverseSource(pgt:GT) : GT
+	var gt:=sources$^{-1}$[pgt]
+	if (gt==null)
+		gt := new GT()
+		addSource(gt,pgt)
+	return gt
+
+method addSource(gt:GT,pgt:GT)
+	sources[gt].add(pgt)
+	sources$^{-1}$[pgt].add(gt)
+	propQ.enqueue(gt)
+				
+method addGFA(gt,f,tt)
+	gt2 := findGT(f,tt)
+	if (gt2!=null)
+		equeueMerge(gt,gt2)
+	else
+		gfa := new GFA(f,tt)
+		gt.gfas.add(gfa)
+		foreach (gt2 in tt)
+			superTerms[gt2].add(gt)
+		propQ.enqueue(gt)
+\end{lstlisting}
+\caption{Helper functions for the propagation algorithm\\
+}
+\label{EC_propagate_helpers}
+\end{figure}
+
+\noindent
+\textbf{Requests:}\\
+The algorithm for servicing a request is shown in figure \ref{EC_propagate_request}.\\
+The algorithm is basically an extension of the generic algorithm from figure \ref{clause_import_global}.
+The algorithm traverses the CFG in reverse topological order starting at n,
+where the request (a function symbol and set of tuples of \GTs{}) is filtered through the 
+cache at each CFG-node (in \lstinline|requestBW| - any \GFA{} that already exists in \m{g_n} or \rgfas{n} is removed),
+and then translated through source-edges to the predecessor.\\
+The predecessor is traversed only if the filtered translated request is not empty - this is the key to reducing CFG-traversals.\\
+We then traverse the CFG in topological order (\lstinline|requestFW|), starting at each CFG-node that sent no request to its predecessor (or the root), and ending at n.\\
+Each CFG-node adds to its cache all the requested \GFAs{} - those for which there are no sources in the predecessor are added to \rgfas{n} (ensuring this request is never again propagated from this CFG-node) and the others are added to \m{g_n} as new \GTs{} using the \lstinline|makeTerm| method (this invocation of \lstinline|makeTerm| will send a new request for the same set of \GFAs{}, but that request is answered immediately as the response is cached in the predecessor - however, it may send further new requests triggered by congruence closure - we discuss this case below).
+
+\begin{figure}
+\begin{lstlisting}
+method requestGTs(f,tts:Set[Tuple[GT]]) : Set[GT]
+	var requestMap := new Map[Set[Tuple[GT]]]
+	requestMap[this] := (f,tts)
+	
+	traverseBF(this,requestBW,requestFW)
+	
+	return findGTs(f,tts)
+
+method requestBW(n:CFGNode) : Set[CFGNode] 
+	(f,tts) := requestMap[n]
+	//The request for the predecessor
+	var ptts := new Set[Tuple[GT]]
+	foreach tt$\in$tts
+		t := findGT(f,tt)
+		if (t==null) 
+			if (f(tt)$\notin$rgfas) 
+				ptts.add(sources[tt]) //request not in cache
+		
+		if (ptts.isEmpty)
+			return $\emptyset$ //no request to predecessor
+		else  //propagate request to predecessor
+			requestMap[predecessor].add((f,ptts))
+			return Set(predecessor)
+		
+method requestFW(n:CFGNode) 
+	(f,tts) = requestMap[n]
+	foreach tt$\in$tts
+		var pgts := predecessor.findGTs(f,sources[tt])
+		if (!pgts.isEmpty)
+			makeTerm(f,tt)
+		else
+			rgts.add(f(tt))
+\end{lstlisting}
+\caption{The algorithm for \lstinline|requestGTs|\\
+The method \lstinline|requestGTs(f,tts)| propagates equality information for all terms in f(tt) for tt$\in$tts.\\
+}
+\label{EC_propagate_request}
+\end{figure}
+
+
+\subsubsection*{An example}
+We describe now an example that shows that the main loop of our algorithm may need several up and down propagation in order to ensure consistency. Consider the state in figure \ref{fig_makeTerm_up_down.0}.\\
+We now perform \m{n_1.}\lstinline|makeTerm(f,$\m{([a]_1)}$)|.\\
+The steps are shown in figures \ref{fig_makeTerm_up_down.0} to \ref{fig_makeTerm_up_down.3} and \ref{fig_makeTerm_up_down.4}, annotated with the method in the algorithm used for each step. We can see why we have a loop in \lstinline|propagateOne| - we may need several steps until one \GT{} is consistent.
+
+In the case where \m{n_0} is a transitive predecessor rather than a direct predecessor (assuming no other equlities on intermediate nodes), the process will be similar, except that each time we draw a new source-edge, we send a request to predecessors that propagates all relevant equality information to the direct predecessor.
+In the case of deeper terms, for example, if we replace, in the example above, \m{g(b),g(c)} with 
+\m{g(f(b)),g(f(c))} resp. - the process is again similar except that the loop between updating source-edges and completing \GFAs{} happens accross more than one \GT{} and hence more than one call to \lstinline|propagateOne|.
+
+
+\begin{figure}
+\begin{subfigure}[t]{0.99\textwidth}
+\framebox[\textwidth]{
+\begin{tikzpicture}
+	\node[gttn] (1)              {$$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_0}};
+
+	\node[gtn,label=center:\m{a}]  (2) [above left = 0.5cm and 1.8cm of 1] {\phantom{B}};
+	\node[gtn,label=center:\m{b}]  (3) [above left = 0.5cm and 0.4cm of 1] {\phantom{B}};
+	\node[gtn,label=center:\m{c}]  (4) [above right= 0.5cm and 0.4cm of 1] {\phantom{B}};
+	\node[gtn,label=center:\m{d}]  (5) [above right= 0.5cm and 1.8cm of 1] {\phantom{B}};
+
+	\node[gtn]  (6)  [above right = 1.5cm and 0.3cm of 2] {\stackB{f(a)}{g(b)}};
+	\draw[gfa]  (6) to node[el,anchor=east] {\m{f}} (2);
+	\draw[gfa]  (6) to node[el,anchor=west] {\m{g}} (3);
+
+	\node[gtn]  (7)  [above left = 1.5cm and 0.3cm of 5] {\stackB{g(c)}{h(d)}};
+	\draw[gfa]  (7) to node[el,anchor=east] {\m{g}} (4);
+	\draw[gfa]  (7) to node[el,anchor=west] {\m{h}} (5);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 7cm of 1] {$$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_1}};
+
+	\node[gtn,label=center:\m{a}]  (12) [above left = 0.5cm and 1.0cm of 11] {\phantom{B,B}};
+	\node[gtn,label=center:\m{b,c}]  (13) [above = 0.43cm of 11] {\phantom{B,B}};
+
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\node (5au) [above = 0.2 of 5a] {};
+%	\node (3au) [above = 0.2 of 3a] {};
+%	\draw[se] (12a) to (5au) to (3au) to (2a);
+
+	\node (12u) [above = 0.2 of 12] {};
+	\node (5u) [above = 0.2 of 5] {};
+	\node (4u) [above = 0.2 of 4] {};
+
+	\draw[se] (13) to (12u) to (5u) to (4u) to (3);
+	\draw[se] (13) to (12u) to (5u) to (4);
+
+	\node (5r1) [right = 1.0 of 5] {};
+	\node (5d1) [below = 0.2 of 5] {};
+%	\node (5u1) [above = 0.2 of 5] {};
+	\node (4d1) [below = 0.2 of 4] {};
+	\node (3d1) [below = 0.2 of 3] {};
+
+	\draw[se] (12) to (5r1) to[out=180,in=0] (5d1) to (4d1) to (3d1) to (2);
+
+\end{tikzpicture}
+}\caption{
+The state before \m{n_1}.\lstinline{makeTerm(f,(a))}
+}
+\label{fig_makeTerm_up_down.0}
+\end{subfigure}
+
+\begin{subfigure}[t]{0.99\textwidth}
+\framebox[\textwidth]{
+\begin{tikzpicture}
+	\node[gttn] (1)              {$$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_0}};
+
+	\node[gtn,label=center:\m{a}]  (2) [above left = 0.5cm and 1.8cm of 1] {\phantom{B}};
+	\node[gtn,label=center:\m{b}]  (3) [above left = 0.5cm and 0.4cm of 1] {\phantom{B}};
+	\node[gtn,label=center:\m{c}]  (4) [above right= 0.5cm and 0.4cm of 1] {\phantom{B}};
+	\node[gtn,label=center:\m{d}]  (5) [above right= 0.5cm and 1.8cm of 1] {\phantom{B}};
+
+	\node[gtn]  (6)  [above right = 1.5cm and 0.3cm of 2] {\stackB{f(a)}{g(b)}};
+	\draw[gfa]  (6) to node[el,anchor=east] {\m{f}} (2);
+	\draw[gfa]  (6) to node[el,anchor=west] {\m{g}} (3);
+
+	\node[gtn]  (7)  [above left = 1.5cm and 0.3cm of 5] {\stackB{g(c)}{h(d)}};
+	\draw[gfa]  (7) to node[el,anchor=east] {\m{g}} (4);
+	\draw[gfa]  (7) to node[el,anchor=west] {\m{h}} (5);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 7cm of 1] {$$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_1}};
+
+	\node[gtn,label=center:\m{a}]  (12) [above left = 0.5cm and 1.0cm of 11] {\phantom{B,B}};
+	\node[gtn,label=center:\m{b,c}]  (13) [above = 0.43cm of 11] {\phantom{B,B}};
+
+	\node[gtn]  (16)  [above = 2.13cm of 11] {\stackB{f(a)}{\textcolor{red}{g(b)}}};
+	\draw[gfa]  (16) to node[el,anchor=east] {\m{f}} (12);
+	\draw[mgfa]  (16) to node[ml,anchor=west] {\m{g}} (13);
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\node (5au) [above = 0.2 of 5a] {};
+%	\node (3au) [above = 0.2 of 3a] {};
+%	\draw[se] (12a) to (5au) to (3au) to (2a);
+
+	\node (12u) [above = 0.2 of 12] {};
+	\node (5u) [above = 0.2 of 5] {};
+	\node (4u) [above = 0.2 of 4] {};
+
+	\draw[se] (13) to (12u) to (5u) to (4u) to (3);
+	\draw[se] (13) to (12u) to (5u) to (4);
+
+	\node (5r1) [right = 1.0 of 5] {};
+	\node (5d1) [below = 0.2 of 5] {};
+%	\node (5u1) [above = 0.2 of 5] {};
+	\node (4d1) [below = 0.2 of 4] {};
+	\node (3d1) [below = 0.2 of 3] {};
+
+	\draw[se] (12) to (5r1) to[out=180,in=0] (5d1) to (4d1) to (3d1) to (2);
+
+	\node (7r) [right = 1.2 of 7.0] {};
+	\node (7l) [left = 1.6 of 7.180] {};
+	\node (7u) [above = 0.2 of 7] {};
+	\draw[se] (16) to (7r) to (7u) to (7l) to (6);
+
+\end{tikzpicture}
+}
+\caption{
+The state after \lstinline|makeSingleton(f,$\m{[a]_1}$)|
+}
+\label{fig_makeTerm_up_down.1}
+\end{subfigure}
+
+\begin{subfigure}[t]{0.99\textwidth}
+\framebox[\textwidth]{
+\begin{tikzpicture}
+	\node[gttn] (1)              {$$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_0}};
+
+	\node[gtn,label=center:\m{a}]  (2) [above left = 0.5cm and 1.8cm of 1] {\phantom{B}};
+	\node[gtn,label=center:\m{b}]  (3) [above left = 0.5cm and 0.4cm of 1] {\phantom{B}};
+	\node[gtn,label=center:\m{c}]  (4) [above right= 0.5cm and 0.4cm of 1] {\phantom{B}};
+	\node[gtn,label=center:\m{d}]  (5) [above right= 0.5cm and 1.8cm of 1] {\phantom{B}};
+
+	\node[gtn]  (6)  [above right = 1.5cm and 0.3cm of 2] {\stackB{f(a)}{h(b)}};
+	\draw[gfa]  (6) to node[el,anchor=east] {\m{f}} (2);
+	\draw[gfa]  (6) to node[el,anchor=west] {\m{g}} (3);
+
+	\node[gtn]  (7)  [above left = 1.5cm and 0.3cm of 5] {\stackB{g(c)}{h(d)}};
+	\draw[gfa]  (7) to node[el,anchor=east] {\m{g}} (4);
+	\draw[gfa]  (7) to node[el,anchor=west] {\m{h}} (5);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 7cm of 1] {$$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_1}};
+
+	\node[gtn,label=center:\m{a}]  (12) [above left = 0.5cm and 1.0cm of 11] {\phantom{B,B}};
+	\node[gtn,label=center:\m{b,c}]  (13) [above = 0.43cm of 11] {\phantom{B,B}};
+
+	\node[gtn]  (16)  [above = 2.13cm of 11] {\stackB{f(a),g(b)}{g(c)}};
+	\draw[gfa]  (16) to node[el,anchor=east] {\m{f}} (12);
+	\draw[gfa]  (16) to node[el,anchor=west] {\m{g}} (13);
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\node (5au) [above = 0.2 of 5a] {};
+%	\node (3au) [above = 0.2 of 3a] {};
+%	\draw[se] (12a) to (5au) to (3au) to (2a);
+
+	\node (12u) [above = 0.2 of 12] {};
+	\node (5u) [above = 0.2 of 5] {};
+	\node (4u) [above = 0.2 of 4] {};
+
+	\draw[se] (13) to (12u) to (5u) to (4u) to (3);
+	\draw[se] (13) to (12u) to (5u) to (4);
+
+	\node (5r1) [right = 1.0 of 5] {};
+	\node (5d1) [below = 0.2 of 5] {};
+%	\node (5u1) [above = 0.2 of 5] {};
+	\node (4d1) [below = 0.2 of 4] {};
+	\node (3d1) [below = 0.2 of 3] {};
+
+	\draw[se] (12) to (5r1) to[out=180,in=0] (5d1) to (4d1) to (3d1) to (2);
+
+	\node (7r) [right = 1.2 of 7.0] {};
+	\node (7l) [left = 1.6 of 7.180] {};
+	\node (7u) [above = 0.2 of 7] {};
+	\draw[se] (16) to (7r) to (7u) to (7l) to (6);
+
+	\draw[me] (16) to (7);
+
+\end{tikzpicture}
+}
+\caption{
+The state after \lstinline|completeDownNewSources|
+}
+\label{fig_makeTerm_up_down.2}
+\end{subfigure}
+
+\begin{subfigure}[t]{0.99\textwidth}
+\framebox[\textwidth]{
+\begin{tikzpicture}
+	\node[gttn] (1)              {$$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_0}};
+
+	\node[gtn,label=center:\m{a}]  (2) [above left = 0.5cm and 1.8cm of 1] {\phantom{B}};
+	\node[gtn,label=center:\m{b}]  (3) [above left = 0.5cm and 0.4cm of 1] {\phantom{B}};
+	\node[gtn,label=center:\m{c}]  (4) [above right= 0.5cm and 0.4cm of 1] {\phantom{B}};
+	\node[gtn,label=center:\m{d}]  (5) [above right= 0.5cm and 1.8cm of 1] {\phantom{B}};
+
+	\node[gtn]  (6)  [above right = 1.5cm and 0.3cm of 2] {\stackB{f(a)}{h(b)}};
+	\draw[gfa]  (6) to node[el,anchor=east] {\m{f}} (2);
+	\draw[gfa]  (6) to node[el,anchor=west] {\m{g}} (3);
+
+	\node[gtn]  (7)  [above left = 1.5cm and 0.3cm of 5] {\stackB{g(c)}{h(d)}};
+	\draw[gfa]  (7) to node[el,anchor=east] {\m{g}} (4);
+	\draw[gfa]  (7) to node[el,anchor=west] {\m{h}} (5);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 7cm of 1] {$$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_1}};
+
+	\node[gtn,label=center:\m{a}]  (12) [above left = 0.5cm and 1.0cm of 11] {\phantom{B,B}};
+	\node[gtn,label=center:\m{b,c}]  (13) [above = 0.43cm of 11] {\phantom{B,B}};
+	\node[mgtn,label=center:\m{\textcolor{red}{d}}]  (15) [above right= 0.5cm and 1.0cm of 11] {\phantom{B,B}};
+
+	\node[gtn]  (16)  [above = 2.13cm of 11] {\stackB{f(a),g(b)}{g(c),\textcolor{red}{h(d)}}};
+	\draw[gfa]  (16) to node[el,anchor=east] {\m{f}} (12);
+	\draw[gfa]  (16) to node[el,anchor=west] {\m{g}} (13);
+	\draw[mgfa]  (16) to node[ml,anchor=west] {\m{h}} (15);
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\node (5au) [above = 0.2 of 5a] {};
+%	\node (3au) [above = 0.2 of 3a] {};
+%	\draw[se] (12a) to (5au) to (3au) to (2a);
+
+	\node (12u) [above = 0.2 of 12] {};
+	\node (5u) [above = 0.2 of 5] {};
+	\node (4u) [above = 0.2 of 4] {};
+
+	\draw[se] (13) to (12u) to (5u) to (4u) to (3);
+	\draw[se] (13) to (12u) to (5u) to (4);
+
+	\node (5r1) [right = 1.0 of 5] {};
+	\node (5d1) [below = 0.2 of 5] {};
+%	\node (5u1) [above = 0.2 of 5] {};
+	\node (4d1) [below = 0.2 of 4] {};
+	\node (3d1) [below = 0.2 of 3] {};
+
+	\draw[se] (12) to (5r1) to[out=180,in=0] (5d1) to (4d1) to (3d1) to (2);
+
+	\node (7r) [right = 1.2 of 7.0] {};
+	\node (7l) [left = 1.6 of 7.180] {};
+	\node (7u) [above = 0.2 of 7] {};
+	\draw[se] (16) to (7r) to (7u) to (7l) to (6);
+
+	\draw[se] (16) to (7);
+
+\end{tikzpicture}
+}
+\caption{
+The state after \lstinline|updateForNewGFAs|
+}
+\label{fig_makeTerm_up_down.3}
+\end{subfigure}
+\end{figure}
+
+\begin{figure}
+\begin{tikzpicture}
+	\node[gttn] (1)              {$$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{n_0}};
+
+	\node[gtn,label=center:\m{a}]  (2) [above left = 0.5cm and 1.8cm of 1] {\phantom{B}};
+	\node[gtn,label=center:\m{b}]  (3) [above left = 0.5cm and 0.4cm of 1] {\phantom{B}};
+	\node[gtn,label=center:\m{c}]  (4) [above right= 0.5cm and 0.4cm of 1] {\phantom{B}};
+	\node[gtn,label=center:\m{d}]  (5) [above right= 0.5cm and 1.8cm of 1] {\phantom{B}};
+
+	\node[gtn]  (6)  [above right = 1.5cm and 0.3cm of 2] {\stackB{f(a)}{h(b)}};
+	\draw[gfa]  (6) to node[el,anchor=east] {\m{f}} (2);
+	\draw[gfa]  (6) to node[el,anchor=west] {\m{g}} (3);
+
+	\node[gtn]  (7)  [above left = 1.5cm and 0.3cm of 5] {\stackB{g(c)}{h(d)}};
+	\draw[gfa]  (7) to node[el,anchor=east] {\m{g}} (4);
+	\draw[gfa]  (7) to node[el,anchor=west] {\m{h}} (5);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 7cm of 1] {$$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{n_1}};
+
+	\node[gtn,label=center:\m{a}]  (12) [above left = 0.5cm and 1.0cm of 11] {\phantom{B,B}};
+	\node[gtn,label=center:\m{b,c}]  (13) [above = 0.43cm of 11] {\phantom{B,B}};
+	\node[gtn,label=center:\m{d}]  (15) [above right= 0.5cm and 1.0cm of 11] {\phantom{B,B}};
+
+	\node[gtn]  (16)  [above = 2.13cm of 11] {\stackB{f(a),g(b)}{g(c),h(d)}};
+	\draw[gfa]  (16) to node[el,anchor=east] {\m{f}} (12);
+	\draw[gfa]  (16) to node[el,anchor=west] {\m{g}} (13);
+	\draw[gfa]  (16) to node[el,anchor=west] {\m{h}} (15);
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\node (5au) [above = 0.2 of 5a] {};
+%	\node (3au) [above = 0.2 of 3a] {};
+%	\draw[se] (12a) to (5au) to (3au) to (2a);
+
+	\node (12u) [above = 0.2 of 12] {};
+	\node (5u) [above = 0.2 of 5] {};
+	\node (4u) [above = 0.2 of 4] {};
+
+	\draw[se] (13) to (12u) to (5u) to (4u) to (3);
+	\draw[se] (13) to (12u) to (5u) to (4);
+
+	\node (5r1) [right = 1.0 of 5] {};
+	\node (5d1) [below = 0.2 of 5] {};
+%	\node (5u1) [above = 0.2 of 5] {};
+	\node (4d1) [below = 0.2 of 4] {};
+	\node (3d1) [below = 0.2 of 3] {};
+
+	\draw[se] (12) to (5r1) to[out=180,in=0] (5d1) to (4d1) to (3d1) to (2);
+
+	\node (13d) [below = 0.1 of 13] {};
+	\node (5dr) [below right = 0.2 and 0.5 of 5] {};
+	\draw[se] (15) to (13d) to (5dr) to (5);
+
+
+	\node (7r) [right = 1.2 of 7.0] {};
+	\node (7l) [left = 1.6 of 7.180] {};
+	\node (7u) [above = 0.2 of 7] {};
+	\draw[se] (16) to (7r) to (7u) to (7l) to (6);
+
+	\draw[se] (16) to (7);
+
+\end{tikzpicture}
+\caption{
+The final state
+}
+\label{fig_makeTerm_up_down.4}
+\end{figure}
+
+
+
+
+
+\subsection*{Algorithm properties}
+We have sketched an algorithm for the incremental, on-demand propagation of equality information in a CFG without joins.
+The condition the algorithm aims to satisfy is that, for a consistent CFG (that is, where all CFG-nodes are consistent w.r.t. the invariants we have shown above), for any CFG-node, any two terms that are represented in the EC-graph of the node are equal in the EC-graph iff it holds at the node that they are equal - \\
+\m{\forall n \in \cfg, s,t\in \terms{g_n} \cdot n \models s=t \Leftrightarrow [s]_n=[t]_n}. \\
+We have not proved this completeness property formally, our informal argument runs as follows:\\
+For a pair of consecutive CFG-nodes, the property holds by strong induction on the maximal depth d of \m{s,t} - the induction hypothesis is that, for all terms smaller than d, both the source edges are correct (that is, there is a source edge iff there is an intersection in the represented terms) and that \m{n \models u=v \Rightarrow [u]_n=[v]_n} holds for all u,v of depth up to d. 
+Together with the property that each EC-graph is congruence and transitive closed, and that we merge two \GTs{} that share a source (essentially transitive closure) and together with the invariant conjuncts (ensuring the propagation of all \GFAs{} and the addition of source-edges), we should be able to show that the induction property holds also for depth d.\\
+For a CFG of depth more than two (linear or tree-shaped), we need another property, essentially that if a term is represented at some CFG-node and is also represented by some transitive predecessor, then it is represented on all the path between the node and the transitive predecessor. This property is ensured by our request cache - each term represented at a node is either represented in the direct predecessor, one of its sub-terms is not represented, or it is represented by some \RGFA{} in the predecessor. 
+Because we disallow an \RGFA{} if it has a \GT{} source, strong induction on both the term depth and the length of the source-edge chain should show that there is a chain of source-edges between each pair of nodes with the same term represented, that are on the same CFG-path.
+A formal proof of the above remains as future work.
+
+Another important property is incrementallity - no operation (congruence closure, comparison of function symbols) happens twice for the same inputs, unless one of the participants of the operation has changed. We achieve this property by marking any change in the structure and only operating on modified parts of the structure. We also ensure that equality information is propagated eagerly from predecessors, so that the same congruence closure operation is not performed at a CFG-node and any of its successor. 
+We have not performed a formal complexity analysis on the algorithm, and some finer detail of the algorithm are not shown above (e.g. how to find the inverse sources of tuples and how to represent requests that are Cartesian products) can affect the worst case complexity.\\
+However, we can see that the total size of each EC-graph is at most the sum of sizes of all the clauses in all its CFG-node's predecessors (no operation in our algorithm adds a \GFA{} that does not come from some input clause) - which suggests a quadratic space complexity and between quadratic and cubic time-complexity (with some logarithmic factor from table lookups).
+
+In the chapters \ref{chapter:scoping} and \ref{chapter:bounds} we show two improvements on the algorithm, namely restricting the set of constants allowed at each CFG-node and restricting the depth of represented term. Both restrictions are enforced at the construction level of the algorithm and so hold at any intermediate state, and allow us to give a strict space bound on the algorithm.
+Completeness can be preserved in the first case by generating some non-unit clauses (as we show) and in the second case we can incrementally increase the allowed depth to allow completeness.
+
+
+
+
+
+

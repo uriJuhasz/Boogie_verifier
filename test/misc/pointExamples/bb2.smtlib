@@ -1,0 +1,62 @@
+(set-option :print-success false)
+(set-info :smt-lib-version 2.0)
+(set-option :AUTO_CONFIG false)
+(set-option :pp.bv_literals false)
+(set-option :MODEL.V2 true)
+(set-option :smt.PHASE_SELECTION 0)
+(set-option :smt.RESTART_STRATEGY 0)
+(set-option :smt.RESTART_FACTOR |1.5|)
+(set-option :smt.ARITH.RANDOM_INITIAL_VALUE true)
+(set-option :smt.CASE_SPLIT 3)
+(set-option :smt.DELAY_UNITS true)
+(set-option :NNF.SK_HACK true)
+(set-option :smt.MBQI false)
+(set-option :smt.QI.EAGER_THRESHOLD 100)
+(set-option :TYPE_CHECK true)
+(set-option :smt.BV.REFLECT true)
+(set-option :TIMEOUT 0)
+; done setting options
+
+
+(declare-fun tickleBool (Bool) Bool)
+(assert (and (tickleBool true) (tickleBool false)))
+(declare-fun %lbl%+72 () Bool)
+(declare-fun z@1 () Int)
+(declare-fun x@2 () Int)
+(declare-fun %lbl%@178 () Bool)
+(declare-fun %lbl%+70 () Bool)
+(declare-fun b () Bool)
+(declare-fun z@0 () Int)
+(declare-fun z () Int)
+(declare-fun x@0 () Int)
+(declare-fun %lbl%+68 () Bool)
+(declare-fun x@1 () Int)
+(declare-fun %lbl%+66 () Bool)
+(declare-fun y () Int)
+(declare-fun %lbl%+89 () Bool)
+(push 1)
+(set-info :boogie-vc-id m)
+(
+	assert(
+		not
+		(
+			let ((anon3_correct  (=> (! (and %lbl%+72 true) :lblpos +72) (=> (= z@1 (+ x@2 1)) (! (or %lbl%@178 (> z@1 0)) :lblneg @178)))))
+			(
+				let ((anon4_Else_correct  (=> (! (and %lbl%+70 true) :lblpos +70) (=> (not b) (=> (and (= z@0 (+ z 1)) (= x@2 x@0)) anon3_correct)))))
+				(
+					let ((anon4_Then_correct  (=> (! (and %lbl%+68 true) :lblpos +68) (=> b (=> (and (= x@1 (+ x@0 1)) (= x@2 x@1)) anon3_correct)))))
+					(
+						let ((anon0_correct  (=> (! (and %lbl%+66 true) :lblpos +66) (=> (= x@0 (+ (* y y) 5)) (and anon4_Then_correct anon4_Else_correct)))))
+						(
+							let ((PreconditionGeneratedEntry_correct  (=> (! (and %lbl%+89 true) :lblpos +89) anon0_correct)))
+							PreconditionGeneratedEntry_correct
+						)
+					)
+				)
+			)
+		)
+	)
+)
+(check-sat)
+(pop 1)
+; Valid

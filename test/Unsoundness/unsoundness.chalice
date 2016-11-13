@@ -1,0 +1,33 @@
+class Cell {
+  var x: int;
+
+  predicate valid {
+    acc(this.x) && 0<=x
+  }
+
+  function get(): int
+    requires valid;
+    ensures 0<=result;
+  {
+    unfolding valid in x
+  }
+
+  method set(v: int)
+    requires valid && 0<=v;
+    ensures valid && get()==v;
+  {
+    unfold valid;
+    x := v;
+    fold valid;
+  }
+
+  method test()
+    requires valid;
+    ensures false;
+  {
+    call set(1);
+    call set(2);
+    // 1==get()==2
+  }
+
+}

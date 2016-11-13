@@ -1,0 +1,186 @@
+
+Scenario:
+Join:
+	0: [a,b],[c]
+	1: [a],[b],[c]
+	
+successor add (a,c)
+
+join: addRGTT ([a],[c])
+
+successor add f(a,c)
+
+cleanup: join, removeRGTT([a],[c])
+
+1:addGT([f(a,c),f(b,c)])
+invariant broken
+
+
+
+
+
++		this	{C<7>(5)}	Slicer.Analyzers.FOLConverter.CanonicalForms.Universe {Slicer.Analyzers.FOLConverter.CanonicalForms.SU}
++		gt	{Heap@1[this,AVLTreeNode.key]} {$2}	Slicer.Analyzers.FOLConverter.CanonicalForms.GT
+		gt.index	733	int
++		gtMergeMap[gt]	{Heap@1[this,AVLTreeNode.key]} {$1}	Slicer.Analyzers.FOLConverter.CanonicalForms.GT
+		gtMergeMap[gt].index	16223	int
+-		gt.gfas	{Slicer.Analyzers.FOLConverter.CanonicalForms.GFA[1]}	Slicer.Analyzers.FOLConverter.CanonicalForms.GFA[]
++		[0]	{Heap@1[this,AVLTreeNode.key]}	Slicer.Analyzers.FOLConverter.CanonicalForms.GFA
+-		$1.gfas	{Slicer.Analyzers.FOLConverter.CanonicalForms.GFA[2]}	Slicer.Analyzers.FOLConverter.CanonicalForms.GFA[]
++		[0]	{Heap@1[this,AVLTreeNode.key]}	Slicer.Analyzers.FOLConverter.CanonicalForms.GFA
++		[1]	{Heap[this,AVLTreeNode.key]}	Slicer.Analyzers.FOLConverter.CanonicalForms.GFA
+-		JU.m[8].sources.gts.jtToJECMap[1][gt]	{JECGT<534>}	Slicer.Analyzers.FOLConverter.CanonicalForms.JECGT
+		index	534	int
++		jts	Count = 1	System.Collections.Generic.IEnumerable<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
+-		pJTs	Count = 1	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
++		[0]	{Heap@1[this,AVLTreeNode.key]} {$2}	Slicer.Analyzers.FOLConverter.CanonicalForms.GT
++		Raw View		
++		pTIs	Count = 1	System.Collections.Generic.ISet<int> {System.Collections.Generic.HashSet<int>}
++		tis	Count = 1	System.Collections.Generic.ISet<int> {System.Collections.Generic.HashSet<int>}
++		Static members		
+
+
+
+
++		this	{J<5>(3,4)}	Slicer.Analyzers.FOLConverter.CanonicalForms.Universe {Slicer.Analyzers.FOLConverter.CanonicalForms.JU}
++		JU.m[5].getGTPGTs(0,GT.m[16223])	'JU.m[5].getGTPGTs(0,GT.m[16223])' threw an exception of type 'System.Collections.Generic.KeyNotFoundException'	System.Collections.Generic.IEnumerable<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.KeyNotFoundException}
++		gt	{Heap@1[this,AVLTreeNode.key]}	Slicer.Analyzers.FOLConverter.CanonicalForms.GT
++		mgt	{Heap@1[this,AVLTreeNode.key]}	Slicer.Analyzers.FOLConverter.CanonicalForms.GT
++		et	{ET(J<5>(3,4)):53570}	Slicer.Analyzers.FOLConverter.CanonicalForms.Universe.IEmbedTemplate {Slicer.Analyzers.FOLConverter.CanonicalForms.Universe.EmbedTemplate}
++		gtt	{(Heap@1,this,AVLTreeNode.key)}	Slicer.Analyzers.FOLConverter.CanonicalForms.GTT
+-		JU.m[5].sources.gts.tiToTDMap[680]	{JGTD<680>}	Slicer.Analyzers.FOLConverter.CanonicalForms.JGTSD
+		depth	1	int
+		flags	1026	int
++		getGFAFunctions	Count = 1	System.Collections.Generic.IEnumerable<Slicer.Analyzers.FOLConverter.Formulae.Function> {System.Collections.Generic.Dictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, System.Collections.Generic.ISet<int>>.KeyCollection}
++		gfas	{System.Linq.Enumerable.<SelectManyIterator>d__22<System.Collections.Generic.KeyValuePair<Slicer.Analyzers.FOLConverter.Formulae.Function, System.Collections.Generic.ISet<int>>, int, System.Tuple<Slicer.Analyzers.FOLConverter.Formulae.Function, int>>}	System.Collections.Generic.IEnumerable<System.Tuple<Slicer.Analyzers.FOLConverter.Formulae.Function, int>> {System.Linq.Enumerable.<SelectManyIterator>d__22<System.Collections.Generic.KeyValuePair<Slicer.Analyzers.FOLConverter.Formulae.Function, System.Collections.Generic.ISet<int>>, int, System.Tuple<Slicer.Analyzers.FOLConverter.Formulae.Function, int>>}
+		gti	680	int
+		hasActualGFAs	true	bool
+		hasNewSources	false	bool
+		isActual	true	bool
+		isActualTDUpdated	false	bool
+		isActualUpdated	false	bool
+		isAnyUpdated	false	bool
+		isDepthDownUpdated	false	bool
+		isDepthUpdated	false	bool
+		isFeasible	true	bool
+		isFeasibleUpdated	false	bool
+		isGoal	false	bool
+		isOriginal	false	bool
++		jecA	{Slicer.Analyzers.FOLConverter.CanonicalForms.JECGT[2]}	Slicer.Analyzers.FOLConverter.CanonicalForms.JECGT[]
+		jn	2	int
+-		jss	{Slicer.Analyzers.FOLConverter.CanonicalForms.JSources<Slicer.Analyzers.FOLConverter.CanonicalForms.GT, Slicer.Analyzers.FOLConverter.CanonicalForms.JECGT>}	Slicer.Analyzers.FOLConverter.CanonicalForms.JSources<Slicer.Analyzers.FOLConverter.CanonicalForms.GT, Slicer.Analyzers.FOLConverter.CanonicalForms.JECGT>
++		jecA	{Slicer.Analyzers.FOLConverter.CanonicalForms.JECGT[2]}	Slicer.Analyzers.FOLConverter.CanonicalForms.JECGT[]
+		jn	2	int
++		pJECs	{Slicer.Analyzers.FOLConverter.CanonicalForms.JECGT[2]}	Slicer.Analyzers.FOLConverter.CanonicalForms.JECGT[]
++		pLTs	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
++		pNJTs	{System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>[2]}	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>[] {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>[]}
++		lgts	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
++		lts	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
+		maxDepth	5	int
+		minDepth	-5	int
++		ngfas	{System.Linq.Enumerable.<SelectManyIterator>d__22<System.Collections.Generic.KeyValuePair<Slicer.Analyzers.FOLConverter.Formulae.Function, System.Collections.Generic.ISet<int>>, int, System.Tuple<Slicer.Analyzers.FOLConverter.Formulae.Function, int>>}	System.Collections.Generic.IEnumerable<System.Tuple<Slicer.Analyzers.FOLConverter.Formulae.Function, int>> {System.Linq.Enumerable.<SelectManyIterator>d__22<System.Collections.Generic.KeyValuePair<Slicer.Analyzers.FOLConverter.Formulae.Function, System.Collections.Generic.ISet<int>>, int, System.Tuple<Slicer.Analyzers.FOLConverter.Formulae.Function, int>>}
++		nlts	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
+		pDepth	1	int
++		pGFAs	Count = 1	System.Collections.Generic.IDictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, System.Collections.Generic.ISet<int>> {System.Collections.Generic.Dictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, System.Collections.Generic.ISet<int>>}
++		pLTs	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
++		pNGFAs	Count = 0	System.Collections.Generic.IDictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, System.Collections.Generic.ISet<int>> {System.Collections.Generic.Dictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, System.Collections.Generic.ISet<int>>}
++		pNLTs	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
++		pSGTTIs	Count = 0	System.Collections.Generic.ISet<int> {System.Collections.Generic.HashSet<int>}
++		pjss	{Slicer.Analyzers.FOLConverter.CanonicalForms.JSources<Slicer.Analyzers.FOLConverter.CanonicalForms.GT, Slicer.Analyzers.FOLConverter.CanonicalForms.JECGT>}	Slicer.Analyzers.FOLConverter.CanonicalForms.JSources<Slicer.Analyzers.FOLConverter.CanonicalForms.GT, Slicer.Analyzers.FOLConverter.CanonicalForms.JECGT>
++		sgttis	Count = 0	System.Collections.Generic.IEnumerable<int> {System.Collections.Generic.HashSet<int>}
+		ti	680	int
+		tiP	680	int
+		topDepth	536870911	int
++		@type	{Integer}	Slicer.StateSpace.Types.IType {Slicer.StateSpace.Types.IntegerType}
++		Static members		
+		gti	680	int
++		mgts	Count = 0	System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>
+
+
++		et	{ET(J<5>(3,4)):53570}	Slicer.Analyzers.FOLConverter.CanonicalForms.Universe.IEmbedTemplate {Slicer.Analyzers.FOLConverter.CanonicalForms.Universe.EmbedTemplate}
+
+
+SU(3) gt.index==339 (Heap,Heap@1)
+
+SU(4) gt.index==15447 {Heap@0[this,AVLTreeNode.key]}
++		[0]	{Heap@0[this,AVLTreeNode.key]}	Slicer.Analyzers.FOLConverter.CanonicalForms.GFA
++		[1]	{Heap[this,AVLTreeNode.key]}	Slicer.Analyzers.FOLConverter.CanonicalForms.GFA
+
+
+
++		this	{TM[53570](J<5>(3,4))}	Slicer.Analyzers.FOLConverter.CanonicalForms.JTemplateMaker {Slicer.Analyzers.FOLConverter.CanonicalForms.JImportTemplateMaker}
+		X	1	int
+		Y	0	int
++		jgtECX	{JECGT<18778>}	Slicer.Analyzers.FOLConverter.CanonicalForms.JECGT
+-		ujgts	Count = 1	System.Collections.Generic.IEnumerable<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
++		[0]	{Heap@0[this,AVLTreeNode.key]}	Slicer.Analyzers.FOLConverter.CanonicalForms.GT
++		Raw View		
+-		jgtECY	{JECGT<18776>}	Slicer.Analyzers.FOLConverter.CanonicalForms.JECGT
+		index	18776	int
++		jts	Count = 0	System.Collections.Generic.IEnumerable<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
++		pJTs	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
++		pTIs	Count = 1	System.Collections.Generic.ISet<int> {System.Collections.Generic.HashSet<int>}
++		tis	Count = 1	System.Collections.Generic.ISet<int> {System.Collections.Generic.HashSet<int>}
++		Static members		
++		gtiMergeToMap	Count = 0	System.Collections.Generic.IDictionary<int, int> {System.Collections.Generic.Dictionary<int, int>}
++		gtiMergeMap	Count = 0	System.Collections.Generic.IDictionary<int, int> {System.Collections.Generic.Dictionary<int, int>}
++		njgfa	{Heap[this,AVLTreeNode.key]}	Slicer.Analyzers.FOLConverter.CanonicalForms.GFA
++		jgttX	{(Heap,this,AVLTreeNode.key)}	Slicer.Analyzers.FOLConverter.CanonicalForms.GTT
+		jgfasY.ToArray()	{Slicer.Analyzers.FOLConverter.CanonicalForms.GFA[0]}	Slicer.Analyzers.FOLConverter.CanonicalForms.GFA[]
+		gtti	1279	int
++		gttSS.tiToTDMap[1279].jecA[0]	{JECGTT<28884>}	Slicer.Analyzers.FOLConverter.CanonicalForms.JECGTT
++		gtSS.tiToTDMap[38]	{JGTD<38>|Heap@1|}	Slicer.Analyzers.FOLConverter.CanonicalForms.JGTSD
++		gtSS.tiToTDMap[412]	{JGTD<412>|Heap|}	Slicer.Analyzers.FOLConverter.CanonicalForms.JGTSD
++		gttSS.tiToTDMap[1279].jecA[1]	{JECGTT<28886>}	Slicer.Analyzers.FOLConverter.CanonicalForms.JECGTT
+-		gttSS.tiToTDMap[1279]	{JGTTD<1279>[38,0,28]}	Slicer.Analyzers.FOLConverter.CanonicalForms.JGTTSD
++		allSGFAs	Count = 1	System.Collections.Generic.ICollection<Slicer.Analyzers.FOLConverter.Formulae.Function> {System.Collections.Generic.Dictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, int>.KeyCollection}
++		allSGTIs	Count = 1	System.Collections.Generic.ICollection<int> {System.Collections.Generic.Dictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, int>.ValueCollection}
+		depth	0	int
+		flags	2	int
++		gtiT	{int[3]}	int[]
+		gtti	1279	int
+		hasActualGFAs	false	bool
+		hasNewSources	false	bool
+		isActual	true	bool
+		isActualTDUpdated	false	bool
+		isActualUpdated	false	bool
+		isAnyUpdated	false	bool
+		isDepthDownUpdated	false	bool
+		isDepthUpdated	false	bool
+		isFeasible	true	bool
+		isFeasibleUpdated	false	bool
+		isGoal	false	bool
+		isOriginal	false	bool
++		jecA	{Slicer.Analyzers.FOLConverter.CanonicalForms.JECGTT[2]}	Slicer.Analyzers.FOLConverter.CanonicalForms.JECGTT[]
+		jn	2	int
++		jss	{Slicer.Analyzers.FOLConverter.CanonicalForms.JSources<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT, Slicer.Analyzers.FOLConverter.CanonicalForms.JECGTT>}	Slicer.Analyzers.FOLConverter.CanonicalForms.JSources<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT, Slicer.Analyzers.FOLConverter.CanonicalForms.JECGTT>
++		lgtts	Count = 1	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
++		lts	Count = 1	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
+		maxDepth	5	int
+		minDepth	-5	int
++		nlts	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
+		pDepth	0	int
++		pLTs	Count = 1	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
++		pNLTs	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
++		pSGFAs	Count = 1	System.Collections.Generic.IDictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, int> {System.Collections.Generic.Dictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, int>}
++		pjss	{Slicer.Analyzers.FOLConverter.CanonicalForms.JSources<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT, Slicer.Analyzers.FOLConverter.CanonicalForms.JECGTT>}	Slicer.Analyzers.FOLConverter.CanonicalForms.JSources<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT, Slicer.Analyzers.FOLConverter.CanonicalForms.JECGTT>
+		ti	1279	int
+		tiP	1279	int
+		topDepth	536870911	int
++		Static members		
++		gtd.jecA[1].jts	Count = 1	System.Collections.Generic.IEnumerable<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
++		SU.m[4].getGTPGTs(0,GT.m[15447])	Count = 0	System.Collections.Generic.IEnumerable<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
+
+
+
++		SU.m[6].gttMergeMap[GTT.m[1200]]	{(Heap@1,this,AVLTreeNode.key)} {$1}	Slicer.Analyzers.FOLConverter.CanonicalForms.GTT
++		SU.m[6].gttData[GTT.m[1200]].rgfas	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.Formulae.Function> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.Formulae.Function>}
++		JU.m[5].gttData[GTT.m[1200]].sgfas	Count = 0	System.Collections.Generic.IDictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, Slicer.Analyzers.FOLConverter.CanonicalForms.GFA> {System.Collections.Generic.Dictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, Slicer.Analyzers.FOLConverter.CanonicalForms.GFA>}
++		SU.m[6].gttData[GTT.m[1200]].sgfas	Count = 0	System.Collections.Generic.IDictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, Slicer.Analyzers.FOLConverter.CanonicalForms.GFA> {System.Collections.Generic.Dictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, Slicer.Analyzers.FOLConverter.CanonicalForms.GFA>}
+-		SU.m[7].gttData[GTT.m[1200]].sgfas	Count = 1	System.Collections.Generic.IDictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, Slicer.Analyzers.FOLConverter.CanonicalForms.GFA> {System.Collections.Generic.Dictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, Slicer.Analyzers.FOLConverter.CanonicalForms.GFA>}
+-		[0]	{[MapRead$$@Map_$a_$ref$Field$a$$To$_a$$Int$, Heap@1[this,AVLTreeNode.key]]}	System.Collections.Generic.KeyValuePair<Slicer.Analyzers.FOLConverter.Formulae.Function, Slicer.Analyzers.FOLConverter.CanonicalForms.GFA>
++		Key	{MapRead$$@Map_$a_$ref$Field$a$$To$_a$$Int$}	Slicer.Analyzers.FOLConverter.Formulae.Function {Slicer.Analyzers.FOLConverter.Formulae.UFunction}
++		Value	{Heap@1[this,AVLTreeNode.key]}	Slicer.Analyzers.FOLConverter.CanonicalForms.GFA
++		key	{MapRead$$@Map_$a_$ref$Field$a$$To$_a$$Int$}	Slicer.Analyzers.FOLConverter.Formulae.Function {Slicer.Analyzers.FOLConverter.Formulae.UFunction}
++		value	{Heap@1[this,AVLTreeNode.key]}	Slicer.Analyzers.FOLConverter.CanonicalForms.GFA
++		Raw View		

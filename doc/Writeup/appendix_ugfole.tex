@@ -1,0 +1,673 @@
+\section{Unit ground first order logic with equality}
+\subsection{Completeness for the top-down weak join}
+\subsection{Bottom up weak join}
+An alternative to the top-down process described above could be more similar to the sequential case - 
+we would mark relevant terms (top-down) as in the sequential case \emph{per predecessor} instead of as source-pairs, 
+and then mark (bottom up) only feasible pairs of two relevant terms.\\
+We continue as above by marking relevant feasible source-pairs and adding the corresponding nodes.\\
+We denote the set of relevant terms of predecessor i as \rt{n}{i}, and the formalization is as follows:
+\begin{figure}[H]
+\begin{enumerate}
+	\item All sources are marked as relevant terms:\\
+		\m{\forall t \in g_n, p_i \in \preds{n},s \in \sources{n}{p_i}{t} \cdot }\\
+		\m{s \in \rt{n}{i}}
+	\item All relevant terms are downward closed:\\
+		\m{\forall p_i \in \preds{n},s \in \rt{n}{i}, \fa{f}{u} \in s \cdot }\\
+		\m{\tup{u} \in \rt{n}{i}}
+\end{enumerate}
+\caption{weak join relevant terms}
+\label{wj_relevant_terms}
+\end{figure}
+And the relevant feasible source-pairs:
+\begin{figure}[H]
+\begin{enumerate}
+	\item \m{\forall t \in g_n, s_0,s_1, \gta{s_0}{s_1} \in \sourcesB{n}{t} \cdot}\\
+		\m{\gta{s_0}{s_1} \in \fsps{n}}
+	\item \m{\forall \gta{\tup{s_0}}{\tup{s_1}} \in \fsps{n}, \fa{f}{s_0} \in \gfas{p_0}, \fa{f}{s_1} \in \gfas{p_1} \cdot}\\
+		\m{\bigwedge\limits_i \fa{f}{s_i} \in \rt{n}{i} \Rightarrow \gta{\fa{f}{s_0}}{\fa{f}{s_1}} \in \fsps{n}}
+\end{enumerate}
+%\m{\feasible{\gta{s_0}{s_1}} \triangleq }\\
+%\m{(\exists t \in g_n \cdot \gta{s_0}{s_1} \in \sourcesB{n}{t})}\\
+%\m{ \lor ((\exists \fa{f}{u_0} \in s_0,\fa{f}{u_1} \in s_1 \cdot (\feasible{\gta{\tup{u_0}}{\tup{u_1}}}) \land \bigwedge\limits_i s_i \in \rt{n}{i}))}
+\caption{Weak join - bottom up relevant feasible source pairs}
+\label{wj_alternative_relevant_feasible_source_pairs}
+\end{figure}
+The alternative invariant is the least fixed point of the conjunction of \ref{wj_relevant_source_pairs},
+
+\ref{wj_relevant_terms} and \ref{wj_alternative_relevant_feasible_source_pairs}.
+
+The potential benefit of this approach is that the size of the set of potential source-pairs is potentially 
+quadratic in the sum of sizes of the sets of relevant terms for the same join. 
+On the other hand, the potential set of feasible source-pairs calculated in this approach may be quadratically larger than the one for first approach, as we will show in the following sub-section.
+
+\subsubsection{Complexity}
+We will present now some examples to show how the two above approaches differ in complexity.\\
+First, consider the example below:
+\begin{figure}[H]
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 2.5cm and 0cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+	\node[gtn]              (12) [above left  = 1cm and 1cm of 11] {\s{a}};
+	\node[gtn,ultra thick]  (14) [above right = 1cm and 1cm of 11] {\s{b}};
+	
+	\draw[gfa]              (12)  to node[el,anchor=east]  {\m{a}} (11);
+	\draw[mgfa,ultra thick] (14)  to node[el,anchor=west]  {\color{red}\m{\mathbf{b}}} (11);
+
+	\node[gttn]             (12a)  [above = 1cm of 12]    {\m{(a)}};
+	\node[gttn,ultra thick] (14a)  [above = 1cm of 14]    {\m{(b)}};
+
+	\draw[sgtt]             (12a) to node[el,anchor=east] {0} (12);
+	\draw[sgtt,ultra thick] (14a) to node[el,anchor=west] {\textbf{0}} (14);
+
+	\node[gtn,ultra thick]  (15) [above = 3cm of 11] {\tiny$\faB{f}{a}{b}$};
+	\draw[gfa]              (15) to node[el,anchor=east] {\m{f}} (12a);
+	\draw[gfa,ultra thick]  (15) to node[el,anchor=south west] {\m{\mathbf{f}}} (14a);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (21)  [below right= 3.0cm and 0cm of 1] {$()$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+  \node[gtn,ultra thick]  (22) [above  = 1.0cm of 21] {\s{a,c}};
+	
+  \draw[gfa]              (22) to[bend right] node[el,anchor=east] {\m{a}} (21);
+  \draw[mgfa,ultra thick] (22) to[bend left]  node[el,anchor=west] {\color{red}\m{c}} (21);
+
+	\node[gttn,ultra thick] (22a)  [above = 1cm of 22]    {\m{(\s{a,c})}};
+
+	\draw[sgtt,ultra thick] (22a) to node[el,anchor=west] {\textbf{0}} (22);
+
+  \node[gtn,ultra thick]  (25) [above = 1cm of 22a] {\tiny$\faB{f}{a}{c}$};
+	\draw[gfa,ultra thick]  (25) to node[el,anchor=west] {\m{\mathbf{f}}} (22a);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 6cm of 1] {$()$};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+  \node[gtn]  (32) [above = 1cm of 31] {\s{a}};
+
+  \draw[gfa]  (32)  to node[el,anchor=east]  {\m{a}} (31);
+
+	\node[gttn] (32a)  [above = 1cm of 32]    {\m{(a)}};
+
+	\draw[sgtt] (32a) to node[el] {0} (32);
+
+	\node[gtn]  (35) [above = 1cm of 32a] {$\m{f(a)}$};
+	\draw[gfa]  (35) to node[el,anchor=east] {\m{f}} (32a);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\node (18a) [right = 0.5cm of 18] {};
+	\node (35b) [above left = 0.2cm and 1.5cm of 35] {};
+	\node (35c) [below left = 0.2cm and 1.5cm of 35] {};
+	\draw[se] (35) to (35b) to (15);
+	\draw[se] (35) to (35c) to (25);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (3.5cm,-3.3cm) to (3.5cm,6.5cm);
+\end{pgfinterruptboundingbox}
+\end{tikzpicture}
+\caption{
+Join \GFA{} completeness\\
+downward propagation path infeasible
+}
+\label{snippet3.19_graph}
+\end{figure}
+Here we can see that the infeasible source-pair \gta{b}{\s{a,c}} will only be considered in the first approach.
+Compare this to the following case:
+\begin{figure}[H]
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 2.5cm and 0cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+	\node[gtn]              (12) [above left  = 1cm and 1cm of 11] {\s{a}};
+	\node[gtn,ultra thick]  (14) [above right = 1cm and 1cm of 11] {\s{b}};
+	
+	\draw[gfa]              (12)  to node[el,anchor=east]  {\m{a}} (11);
+	\draw[gfa,ultra thick] (14)  to node[el,anchor=west]  {\m{\mathbf{b}}} (11);
+
+	\node[gttn]             (12a)  [above = 1cm of 12]    {\m{(a)}};
+	\node[gttn,ultra thick] (14a)  [above = 1cm of 14]    {\m{(b)}};
+
+	\draw[sgtt]             (12a) to node[el,anchor=east] {0} (12);
+	\draw[sgtt,ultra thick] (14a) to node[el,anchor=west] {\textbf{0}} (14);
+
+	\node[gtn,ultra thick]  (15) [above = 3cm of 11] {\tiny$\faB{f}{a}{b}$};
+	\draw[gfa]              (15) to node[el,anchor=east] {\m{f}} (12a);
+	\draw[mgfa,ultra thick]  (15) to node[ml,anchor=south west] {\m{\mathbf{g}}} (14a);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (21)  [below right= 3.0cm and 0cm of 1] {$()$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+  \node[gtn,ultra thick]  (22) [above  = 1.0cm of 21] {\s{a,b}};
+	
+  \draw[gfa]             (22) to[bend right] node[el,anchor=east] {\m{a}} (21);
+  \draw[gfa,ultra thick] (22) to[bend left]  node[el,anchor=west] {\m{b}} (21);
+
+	\node[gttn,ultra thick] (22a)  [above = 1cm of 22]    {\m{(\s{a,b})}};
+
+	\draw[sgtt,ultra thick] (22a) to node[el,anchor=west] {\textbf{0}} (22);
+
+  \node[gtn,ultra thick]  (25) [above = 1cm of 22a] {\tiny$\faB{f}{a}{b}$};
+	\draw[mgfa,ultra thick]  (25) to node[ml,anchor=west] {\m{\mathbf{f}}} (22a);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 6cm of 1] {$()$};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+  \node[gtn]  (32) [above = 1cm of 31] {\s{a}};
+
+  \draw[gfa]  (32)  to node[el,anchor=east]  {\m{a}} (31);
+
+	\node[gttn] (32a)  [above = 1cm of 32]    {\m{(a)}};
+
+	\draw[sgtt] (32a) to node[el] {0} (32);
+
+	\node[gtn]  (35) [above = 1cm of 32a] {$\m{f(a)}$};
+	\draw[gfa]  (35) to node[el,anchor=east] {\m{f}} (32a);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\node (18a) [right = 0.5cm of 18] {};
+	\node (35b) [above left = 0.2cm and 1.5cm of 35] {};
+	\node (35c) [below left = 0.2cm and 1.5cm of 35] {};
+	\draw[se] (35) to (35b) to (15);
+	\draw[se] (35) to (35c) to (25);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (3.5cm,-3.3cm) to (3.5cm,6.5cm);
+\end{pgfinterruptboundingbox}
+\end{tikzpicture}
+\caption{
+Join \GFA{} completeness\\
+downward propagation path infeasible
+}
+\label{snippet3.19_graph3}
+\end{figure}
+Here the useless source-pair \gta{b}{\s{a,b}} will only be considered in the second approach.
+
+The following example illustrates how the top-down (first) approach might consider a quadratic number of useless source-pairs:
+\begin{figure}[H]
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 2.5cm and 0cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+  \node[gtn]  (13) [above left  = 1cm and 1cm of 11] {\s{b}};
+  \node[gtn]  (14) [above       = 0.95cm      of 11] {\s{c}};
+  \node[gtn]  (15) [above right = 1cm and 1cm of 11] {\s{d}};
+	
+  \draw[gfa] (13)  to node[el]             {\m{b}} (11);
+  \draw[gfa] (14)  to node[el,anchor=west] {\m{c}} (11);
+  \draw[gfa] (15)  to node[el,anchor=west] {\m{d}} (11);
+
+  \node[gttn] (13a) [above =1.0cm of 13] {$\m{(b)}$};
+  \node[gttn] (14a) [above =1.0cm of 14] {$\m{(c)}$};
+  \node[gttn] (15a) [above =1.0cm of 15] {$\m{(d)}$};
+	
+  \draw[sgtt] (13a)  to node[el]          {\m{0}} (13)
+						  (14a)  to node[el]          {\m{0}} (14)
+	            (15a)  to node[el]          {\m{0}} (15);
+	
+  \node[gtn] (16)  [above = 1cm of 14a] {\s{a,f(b),f(c),f(d)}};
+  \draw[gfa] (16)  to node[el,anchor=east] {\m{f}} (13a);
+  \draw[gfa] (16)  to node[el,anchor=west] {\m{f}} (14a);
+  \draw[gfa] (16)  to node[el,anchor=west] {\m{f}} (15a);
+	\draw[gfa] (16)  to[bend right=35] node[el,anchor=east] {\m{a}} (11);
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (21)  [below right= 2.5cm and 0cm of 1] {$()$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+  \node[gtn]  (23) [above left  = 1cm and 1cm of 21] {\s{x}};
+  \node[gtn]  (24) [above       = 0.95cm      of 21] {\s{y}};
+  \node[gtn]  (25) [above right = 1cm and 1cm of 21] {\s{z}};
+	
+  \draw[gfa] (23)  to node[el]             {\m{x}} (21);
+  \draw[gfa] (24)  to node[el,anchor=west] {\m{y}} (21);
+  \draw[gfa] (25)  to node[el,anchor=west] {\m{z}} (21);
+
+  \node[gttn] (23a) [above =1.0cm of 23] {$\m{(x)}$};
+  \node[gttn] (24a) [above =1.0cm of 24] {$\m{(y)}$};
+  \node[gttn] (25a) [above =1.0cm of 25] {$\m{(z)}$};
+	
+  \draw[sgtt] (23a)  to node[el]          {\m{0}} (23)
+						  (24a)  to node[el]          {\m{0}} (24)
+	            (25a)  to node[el]          {\m{0}} (25);
+	
+  \node[gtn] (26)  [above = 1cm of 24a] {\s{a,f(x),f(y),f(z)}};
+  \draw[gfa] (26)  to node[el,anchor=east] {\m{f}} (23a);
+  \draw[gfa] (26)  to node[el,anchor=west] {\m{f}} (24a);
+  \draw[gfa] (26)  to node[el,anchor=west] {\m{f}} (25a);
+	\draw[gfa] (26)  to[bend right=35] node[el,anchor=east] {\m{a}} (21);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 5cm of 1] {$()$};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+%  \node (31jl)  [above left = -0.2cm and 0cm of 31] {$\sqcup$};
+
+  \node[gtn]  (32) [above= 1.0cm of 31] {\s{a}};
+	
+%  \draw[gfa]  (32)  to[bend right] node[el,anchor=east] {\m{a}} (31);
+  \draw[gfa]  (32)  to             node[el,anchor=west] {\m{a}} (31);
+%  \draw[gfa]  (32)  to[bend left]  node[el,anchor=west] {\m{c}} (31);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[se] (31) to[out=180,in=0] (11);
+	\draw[se] (31) to[out=180,in=0] (21);
+
+	\draw[se] (32) to[out=180,in=0] (16);
+	\draw[se] (32) to[out=180,in=0] (26);
+
+	%\node (12a) [right = 0.5cm of 12] {};
+	%\node (23a) [right = 0.5cm of 23] {};
+	%\node (32b) [above left = 0.2cm and 1.0cm of 32] {};
+	%\node (32c) [below left = 0.2cm and 1.0cm of 32] {};
+	%\draw[se] (32) to[out=180,in=0] (32b) to[out=180,in=0] (12a) to[out=180,in=0] (12);
+	%\draw[se] (32) to[out=180,in=0] (32c) to[out=180,in=0] (22);
+	%\draw[se] (32) to[out=180,in=0] (32b) to[out=180,in=0] (14);
+	%\draw[se] (32) to[out=180,in=0] (32c) to[out=180,in=0] (23a) to[out=180,in=0] (23);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (4.0cm,-3.3cm) to (4.0cm,4.2cm);
+\end{pgfinterruptboundingbox}
+\end{tikzpicture}
+\caption{
+Join shared sources quadratic
+}
+\label{snippet3.20_graph}
+\end{figure}
+The graphs in ~\ref{snippet3.20_graph} are actually source and propagation complete, 
+but the top-down approach would produce nine useless potential source-pairs - each of
+\m{\s{[b]_{p_0},[c]_{p_0},[d]_{p_0}} \times \s{[x]_{p_1},[y]_{p_1},[z]_{p_1}}}.
+
+The following example is quadratic in the first approach and linear in the second approach (adding a to n, m,n co-prime):\\
+\m{\s{a=f^m(b_0),b_0=f^m(c_0),a=b_0} \sqcup}\\
+\m{\s{a=f^n(b_1),b_1=f^n(c_1),a=b_1}}\\
+And the following example is constant in the first approach and quadratic in the second:\\
+\m{\s{a=g(f^m(b_0)),b_0=f^m(c),b_0=f^m(b_0)} \sqcup }\\
+\m{\s{a=f(f^m(b_1)),b_1=f^m(c),b_1=f^m(b_1)}}
+
+\subsubsection*{incremental complexity}
+In order to see the inherent incremental complexity in source-pair based approach, we combine the above two examples to get:
+%\m{\s{a=h(c_1),c_1=f^{m}(c_1),f(c_1)=g(d_1),d_1=f^{m}(d_1),f(d_1)=b} \sqcup}\\
+%\m{\s{a=h(c_2),c_2=f^{l}(c_2),f(c_2)=\mathbf{g'}(d_2),d_2=f^{l}(d_2),f(d_2)=b}}\\
+%vs\\
+%\m{\s{a=h(c_1),c_1=f^{m}(c_1),f(c_1)=g(d_1),d_1=f^{m}(d_1),f(d_1)=b} \sqcup}\\
+%\m{\s{a=h(c_2),c_2=f^{l}(c_2),f(c_2)=\mathbf{g'}(d_2),d_2=f^{l}(d_2),f(d_2)=b}}\\
+\begin{figure}[H]
+\begin{tikzpicture}
+	\node[gttn] (1)              {$()$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{p_0}};
+
+	\node[gtn]  (2) [above = 7cm of 1] {a};
+	\node[gtn]  (3) [above right = 1cm and 1cm of 1] {\svb{b}{f(d_0)}};
+	\node[gtn]  (4) [above = 1cm of 3] {\s{d_0}};
+	\node[gtn]  (5) [above = 1cm of 4] {\svb{f(c_0)}{g(d_0)}};
+	\node[gtn]  (6) [above = 1cm of 5] {\s{c_0}};
+
+	\draw[gfa,green]  (2) to[bend right] node[el,anchor=east,text=green] {\m{a}} (1);
+	\draw[gfa,green]  (3) to node[el,anchor=west,text=green] {\m{b}} (1);
+	
+	\node (3e) [right = 0.1cm of 3] {};
+	\node (4e) [above = 1.5cm of 3e] {};
+	\draw[gfa,green]  (3) to[out=-90,in = -90] (3e) to[out=90,in = -90] node[el,anchor=west,text=green] {\m{f}} (4e) to[out=90,in = 90] (4);
+	\draw[gfa]  (4) to[bend right] node[el,anchor=east] {\m{d_0}} (1);
+	\draw[gfa,dotted,green]  (4) to node[el,anchor=west,text=green] {\m{f^{m-1}}} (3);
+
+
+	\node (5e) [right = 0.1cm of 5] {};
+	\node (6e) [above = 1.5cm of 5e] {};
+	\draw[gfa,green]  (5) to[out=-90,in = -90] (5e) to[out=90,in = -90] node[el,anchor=west,text=green] {\m{f}} (6e) to[out=90,in = 90] (6);
+	\draw[mgfa]  (5) to node[ml,anchor=west] {\m{g}} (4);
+	\draw[gfa,dotted,green]  (6) to node[el,anchor=west,text=green] {\m{f^{m-1}}} (5);
+	\draw[gfa,green]  (2) to node[el,anchor=south west,text=green] {\m{h}} (6);
+	\draw[gfa]  (6) to[bend right] node[el,anchor=east] {\m{c_0}} (1);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 7cm of 1]{$()$};
+	\node[gl]   (11l) [below = 0 of 11]  {\m{p_1}};
+
+	\node[gtn]  (12) [above = 7cm of 11] {a};
+	\node[gtn]  (13) [above left = 1cm and 1cm of 11] {\svb{b}{f(d_1)}};
+	\node[gtn]  (14) [above = 1cm of 13] {\s{d_1}};
+	\node[gtn]  (15) [above = 1cm of 14] {\svb{f(c_1)}{g'(d_1)}};
+	\node[gtn]  (16) [above = 1cm of 15] {\s{c_1}};
+
+	\draw[gfa,green]  (12) to[bend left] node[el,anchor=west,text=green] {\m{a}} (11);
+	\draw[gfa,green]  (13) to node[el,anchor=east,text=green] {\m{b}} (11);
+	
+	\node (13e) [left = 0.1cm of 13] {};
+	\node (14e) [above = 1.5cm of 13e] {};
+	\draw[gfa,green]  (13) to[out=-90,in = -90] (13e) to[out=90,in = -90] node[el,anchor=east,text=green] {\m{f}} (14e) to[out=90,in = 90] (14);
+	\draw[gfa]  (14) to[bend left] node[el,anchor=west] {\m{d_1}} (11);
+	\draw[gfa,dotted,green]  (14) to node[el,anchor=east,text=green] {\m{f^{l-1}}} (13);
+
+
+	\node (15e) [left = 0.1cm of 15] {};
+	\node (16e) [above = 1.5cm of 15e] {};
+	\draw[gfa,green]  (15) to[out=-90,in = -90] (15e) to[out=90,in = -90] node[el,anchor=east,text=green] {\m{f}} (16e) to[out=90,in = 90] (16);
+	\draw[mgfa] (15) to node[ml,anchor=west] {\m{g'}} (14);
+	\draw[gfa,dotted,green]  (16) to node[el,anchor=east,text=green] {\m{f^{l-1}}} (15);
+	\draw[gfa,green]  (12) to node[el,anchor=south east,text=green] {\m{h}} (16);
+	\draw[gfa]  (16) to[bend left] node[el,anchor=east] {\m{c_1}} (11);
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%\draw[se] (16) to  (6);
+
+\end{tikzpicture}
+
+\caption{
+\\
+\m{\s{a=h(c_0),c_0=f^{m}(c_0),f(c_0)=g(d_0),d_0=f^{m}(d_0),f(d_0)=b} \sqcup}\\
+\m{\s{a=h(c_1),c_1=f^{l}(c_1),f(c_1)=\mathbf{g'}(d_1),d_1=f^{l}(d_1),f(d_1)=b}}\\
+Tuples are omitted (but the empty tuple)\\
+Green edges match while red edges do not\\
+black edges are unique for a predecessor
+}
+\label{join3.1_graph1}
+\end{figure}
+Here, when \m{m,l} are co-prime, we would need to consider \m{m \times l} source-pairs in either of the approaches in order to determine that the EC for a is a singleton at the join.\\
+In this specific case, we could do some pre-processing to see that the function symbols \m{g,g'} are unique to each of \m{p_0,p_1},
+but we have not found a way to do this in the general case. \\
+This might not make a big difference in the non-incremental case, where the worst case complexity is anyway quadratic, but in the incremental case, it could increase significantly the asymptotic as well as practical complexity:\\
+For example, assume we have calculated the join above at the cost of at least \m{m \times l} steps.\\
+At the next pass, \m{p_1} performs \lstinline{assume $\m{g(d_1)=g'(d_1)}$}.\\
+When \m{n} performs an \lstinline{update} operation, it would need to recognize that now, at the join,
+ \m{a=h(f^{ml-1}(g(f^{ml-1}(b))))}.\\
+This would cost at least \m{\theta(ml)} operations as we have to add more than \m{2ml} nodes to \m{g_n}.\\
+Compare this with the case where the first pass is the same, but in the second pass \m{p_1} performs instead
+$\m{g''(d_1)=g'(d_1)}$\\
+In both cases we can expect the change-set that \m{g_{p_1}} supplies to \m{g_n} to contain at least \m{[g(d_1)]_{p_1}}, 
+and possibly the entire chain of EC-nodes up to \m{[a]_{p_1}} (as in each case all \gfas{} in this chain have changed).\\
+The question is what will be the cost for \m{g_n} to determine, in the second case, that the join has not changed 
+(essentially except for the source edge of \m{[a]_n} which points to an old version of \m{[a]_{p_1}} - an \bigO{1} difference).\\
+In both approaches, if we just recalculate all relevant, potential and feasible pairs we would need \m{\theta{ml}} operations.\\
+Now, assume that in both approaches we keep all auxiliary data - \prgtas{n}, \gtas{n}, \rt{i}{n} and \fsps{n} (in both cases we keep \bigO{ml} elements):
+\begin{itemize}
+	\item In the top-down approach we would need to update \m{ml} potential source-pairs to their up-to-date versions of nodes in \m{g_{p_1}}
+	\item In the bottom-up approach we would need to update \bigO{m+l} relevant terms (from \sourcesB{n}{[a]_{n}} and down), and perform one comparison of function symbols (\m{[g(d_0)]_{p_0}} vs \m{[g''(d_1)]_{p_1}})
+\end{itemize}
+In the top-down approach, if we add a mechanism to allow lazy updates of potential source-pairs when one member of the pair had been modified only indirectly through congruence closure (that is, no \GFAs{} were added or merged to it - this means the updated sub-nodes would be also in the change-set and so we only need to consider directly updated source EC-nodes),
+then we could limit the cost of checking the above change to also \bigO{m} - 
+there is only one directly changed source node (\m{[g'(d_1)]_{p_1}}) that participates in m potential source-pairs (we will detail this optimization in the implementation section).\\
+If we adopt a similar optimization for the bottom-up approach, we would need only \bigO{1} operations, as only one source is modified.
+
+Over the whole verification process, if at \m{n} we have to re-check these \bigO{ml}
+source-pairs in each one of \m{o} \lstinline{update} operations on \m{g_n} that occur after \m{o} such \lstinline{assume} operations on \m{g_{p_1}} (each time with \m{g''},\m{g'''} etc), 
+we would get \m{\theta(o \times m \times l)} operations if we do not keep the auxiliary data, while the optimized bottom-up approach above would allow us \bigO{m \times l + o} operations.
+
+Essentially, the overall algorithm for the ground unit fragment with auxiliary data would ensure that each instance of each conjunct in the invariant is checked exactly once - for example:\\
+If we look at the rule for top-down feasible source pairs (~\ref{wj_alternative_relevant_feasible_source_pairs}), 
+we would evaluate this rule once for each pair of \GFAs{} when \m{\gta{s_0}{s_1} \in \fsps{n}} is established (indexing by function symbol etc), where evaluating \m{\gta{\tup{u_0}}{\tup{u_1}} \in \fsps{n}} proceeds left to right and stops at the first infeasible or irrelevant pair, indexing the blocking pair so that we only recheck this \GFA{} pair if the blocking pair becomes feasible or relevant.\\
+We will describe the details in the implementation section.
+
+An example for auxiliary data:
+\begin{figure}[H]
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 2.5cm and 0cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+	\node[gtn]  (12) [above left  = 1cm and 0.5cm of 11] {\s{a}};
+	\node[gtn]  (14) [above right = 1cm and 0.5cm of 11] {\s{b}};
+	
+	\draw[gfa]  (12)  to node[el,anchor=east]  {\m{a}} (11);
+	\draw[gfa]  (14)  to node[el,anchor=west]  {\m{b}} (11);
+
+	\node[gttn] (12a)  [above = 1cm of 12]    {\m{(a)}};
+	\node[gttn] (14a)  [above = 1cm of 14]    {\m{(b)}};
+
+	\draw[sgtt] (12a) to node[el,anchor=east] {0} (12);
+	\draw[sgtt] (14a) to node[el,anchor=west] {0} (14);
+
+	\node[gtn]  (16) [above = 3cm of 11] {\tiny$\faB{f}{a}{b}$};
+	\draw[gfa]  (16) to node[el,anchor=east] {\m{f}} (12a);
+	\draw[gfa]  (16) to node[el,anchor=west] {\m{f}} (14a);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (21)  [below right= 3.0cm and 0cm of 1] {$()$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+	\node[gtn]  (22) [above left  = 1cm and 0.5cm of 21] {\s{a}};
+	\node[gtn]  (24) [above right = 1cm and 0.5cm of 21] {\s{c}};
+	
+	\draw[gfa]  (22)  to node[el,anchor=east]  {\m{a}} (21);
+	\draw[gfa]  (24)  to node[el,anchor=west]  {\m{c}} (21);
+
+	\node[gttn] (22a)  [above = 1cm of 22]    {\m{(a)}};
+	\node[gttn] (24a)  [above = 1cm of 24]    {\m{(c)}};
+
+	\draw[sgtt] (22a) to node[el,anchor=east] {0} (22);
+	\draw[sgtt] (24a) to node[el,anchor=west] {0} (24);
+
+	\node[gtn]  (26) [above = 3cm of 21] {\tiny$\faB{f}{a}{c}$};
+	\draw[gfa]  (26) to node[el,anchor=east] {\m{f}} (22a);
+	\draw[gfa]  (26) to node[el,anchor=west] {\m{f}} (24a);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 6.5cm of 1] {$()$};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+	\node[gtn]  (32) [above left  = 1cm and 0.5cm of 31] {\s{a}};
+	\node[pgtn] (33) [above right = 2cm and 0.5cm of 31] {\s{[b,c]}};
+	\node[gtn]  (34) [above right = 1cm and 0.0cm of 31] {\s{b}};
+	\node[gtn]  (35) [above right = 1cm and 1.5cm of 31] {\s{c}};
+	
+	\draw[gfa]  (32)  to node[el,anchor=east]  {\m{a}} (31);
+	\draw[gfa]  (34)  to node[el,anchor=west]  {\m{b}} (31);
+	\draw[gfa]  (35)  to node[el,anchor=west]  {\m{c}} (31);
+
+	\node[gttn] (32a)  [above = 1cm of 32]    {\m{(a)}};
+	\node[pgttn](33a)  [above = 0.5cm of 33]    {\m{(b)}};
+
+	\draw[sgtt] (32a) to node[el,anchor=east] {0} (32);
+	\draw[psgtt] (33a) to node[pl,anchor=west] {0} (33);
+
+	\node[gtn]  (36) [above = 3.5cm of 31] {\tiny$\m{f(a)}$};
+%	\node[gtn]  (36) [above = 1cm of 32a] {\tiny$\m{f(a)}$};
+	\draw[gfa]  (36) to node[el,anchor=east] {\m{f}} (32a);
+	\draw[pgfa] (36) to node[pl,anchor=west] {\m{f}} (33a);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node (32u) [above left = 0.2cm and 1.0cm of 32] {};
+	\node (32d) [below left = 0.2cm and 1.0cm of 32] {};
+%	\draw[se] (32) to (32u) to (12);
+%	\draw[se] (32) to (32d) to (22);
+
+	\node (34u) [above left = 0.2cm and 2.5cm of 34] {};
+	\node (35d) [below left = 0.3cm and 1.5cm of 35] {};
+%	\draw[se] (34) to (34u) to (14);
+%	\draw[se] (35) to (35d) to (23);
+	\draw[se] (34.180) to[out=160] (14);
+	\draw[se] (35.180) to[out=195] (24);
+
+	\node (33w) [left = 0.9cm of 33] {};
+	\draw[pe] (33) to (33w) to (14);
+	\draw[pe] (33) to (33w) to (24);
+
+%	\node (32au) [above left = 2.0cm and 2.2cm of 32a] {};
+%	\draw[se] (32a) to (32au) to (12a);
+
+%	\node (34au) [above left = 0.0cm and 2.0cm of 34a] {};
+%	\draw[se] (34a) to (34au) to (14a);
+
+%	\node (36u) [above left = 0.2cm and 1.0cm of 35] {};
+%	\draw[se] (36) to (16);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (3.5cm,-3.3cm) to (3.5cm,6.5cm);
+\end{pgfinterruptboundingbox}
+\end{tikzpicture}
+\caption{
+Join source pairs incremental\\
+before $\m{n}$.\lstinline{assume(b=c)}
+}
+\label{snippet3.23_graph1}
+\end{figure}
+Here the gray dashed lines represent the relevant source-pairs that we keep at the join.\\
+Notice that the relevant source-pair \m{[b,c]} shares a source in each predecessor with a non-potential EC-node, 
+but does not share a source with any EC-node in \emph{all} predecessors.\\
+If we now \lstinline{assume(b=c)} at the cfg-node n, we would initially get the state in ~\ref{snippet3.23_graph2}
+\begin{figure}[H]
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 2.5cm and 0cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+	\node[gtn]  (12) [above left  = 1cm and 0.5cm of 11] {\s{a}};
+	\node[gtn]  (14) [above right = 1cm and 0.5cm of 11] {\s{b}};
+	
+	\draw[gfa]  (12)  to node[el,anchor=east]  {\m{a}} (11);
+	\draw[gfa]  (14)  to node[el,anchor=west]  {\m{b}} (11);
+
+	\node[gttn] (12a)  [above = 1cm of 12]    {\m{(a)}};
+	\node[gttn] (14a)  [above = 1cm of 14]    {\m{(b)}};
+
+	\draw[sgtt] (12a) to node[el,anchor=east] {0} (12);
+	\draw[sgtt] (14a) to node[el,anchor=west] {0} (14);
+
+	\node[gtn]  (16) [above = 3cm of 11] {\tiny$\faB{f}{a}{b}$};
+	\draw[gfa]  (16) to node[el,anchor=east] {\m{f}} (12a);
+	\draw[gfa]  (16) to node[el,anchor=west] {\m{f}} (14a);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (21)  [below right= 3.0cm and 0cm of 1] {$()$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+	\node[gtn]  (22) [above left  = 1cm and 0.5cm of 21] {\s{a}};
+	\node[gtn]  (24) [above right = 1cm and 0.5cm of 21] {\s{c}};
+	
+	\draw[gfa]  (22)  to node[el,anchor=east]  {\m{a}} (21);
+	\draw[gfa]  (24)  to node[el,anchor=west]  {\m{c}} (21);
+
+	\node[gttn] (22a)  [above = 1cm of 22]    {\m{(a)}};
+	\node[gttn] (24a)  [above = 1cm of 24]    {\m{(c)}};
+
+	\draw[sgtt] (22a) to node[el,anchor=east] {0} (22);
+	\draw[sgtt] (24a) to node[el,anchor=west] {0} (24);
+
+	\node[gtn]  (26) [above = 3cm of 21] {\tiny$\faB{f}{a}{c}$};
+	\draw[gfa]  (26) to node[el,anchor=east] {\m{f}} (22a);
+	\draw[gfa]  (26) to node[el,anchor=west] {\m{f}} (24a);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 6.5cm of 1] {$()$};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+	\node[gtn]  (32) [above left  = 1cm and 0.5cm of 31] {\s{a}};
+	\node[pgtn] (33) [above right = 2cm and 0.5cm of 31] {\s{[b,c]}};
+	\node[gtn]  (34) [above right = 1cm and 0.5cm of 31] {\s{b,c}};
+%	\node[gtn]  (35) [above right = 1cm and 1.5cm of 31] {\s{c}};
+	
+	\draw[gfa]  (32)  to node[el,anchor=east]  {\m{a}} (31);
+	\draw[gfa]  (34)  to[bend right] node[el,anchor=west]  {\m{b}} (31);
+	\draw[gfa]  (34)  to[bend left]  node[el,anchor=west]  {\m{c}} (31);
+
+	\node[gttn] (32a)  [above = 1cm of 32]    {\m{(a)}};
+	\node[pgttn](33a)  [above = 0.5cm of 33]    {\m{(b)}};
+
+	\draw[sgtt] (32a) to node[el,anchor=east] {0} (32);
+	\draw[psgtt] (33a) to node[pl,anchor=west] {0} (33);
+
+	\node[gtn]  (36) [above = 3.5cm of 31] {\tiny$\m{f(a)}$};
+%	\node[gtn]  (36) [above = 1cm of 32a] {\tiny$\m{f(a)}$};
+	\draw[gfa]  (36) to node[el,anchor=east] {\m{f}} (32a);
+	\draw[pgfa] (36) to node[pl,anchor=west] {\m{f}} (33a);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node (32u) [above left = 0.2cm and 1.0cm of 32] {};
+	\node (32d) [below left = 0.2cm and 1.0cm of 32] {};
+%	\draw[se] (32) to (32u) to (12);
+%	\draw[se] (32) to (32d) to (22);
+
+	\node (34u) [above left = 0.2cm and 2.5cm of 34] {};
+	\node (35d) [below left = 0.3cm and 1.5cm of 35] {};
+	\node (34w) [left = 0.0 of 34] {};
+%	\draw[se] (34) to (34u) to (14);
+%	\draw[se] (35) to (35d) to (23);
+	\draw[se] (34) to (34w) to (14);
+	\draw[se] (34) to (34w) to (24);
+%	\draw[se] (34.180) to[out=195] (24);
+
+	\node (33w) [left = 0.9cm of 33] {};
+	\draw[pe] (33) to (33w) to (14);
+	\draw[pe] (33) to (33w) to (24);
+
+%	\node (32au) [above left = 2.0cm and 2.2cm of 32a] {};
+%	\draw[se] (32a) to (32au) to (12a);
+
+%	\node (34au) [above left = 0.0cm and 2.0cm of 34a] {};
+%	\draw[se] (34a) to (34au) to (14a);
+
+%	\node (36u) [above left = 0.2cm and 1.0cm of 35] {};
+%	\draw[se] (36) to (16);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (3.5cm,-3.3cm) to (3.5cm,6.5cm);
+\end{pgfinterruptboundingbox}
+\end{tikzpicture}
+\caption{
+Join source pairs incremental\\
+before $\m{n}$.\lstinline{assume(b=c)}
+}
+\label{snippet3.23_graph2}
+\end{figure}
+
+Now we can see that the node \s{b,c} at \m{n} shares the relevant source-pair \m{[b,c]} and so this source-pair becomes feasible.
+With the proper lookup tables this can be done in time loglinear to the change in the auxiliary data.
+
+
+\subsubsection*{Weak join summary}
+We have seen two approaches to the weak join, both approaches need more than one pass in order to determine all nodes that need to be added at the join, and both approaches have the same worst case complexity. For each of the approaches there were cases where it was at least quadratically faster than the other.\\
+The incremental complexity, when auxiliary state is kept at each EC-graph, was somewhat in favour of the bottom up approach.\\
+We have found that in practice, the top-down approach tends to filter out more cases than the bottom up approach as long as scoping was not involved, and as long as we do not perform currying to get only binary functions (discussed in the implementation chapter). \\
+When the top-down approach is very effective in filtering (that is, we do not create many relevant source-pairs), 
+it might actually be advantageous not to keep the potential source-pair state but rather recalculate it when needed - we will discuss this in the implementation chapter.\\
+The only actual case we have encountered where the top down approach was inefficient was when several heap locations had the same value (e.g. null or 0), 
+and then we get an EC-node with many map-read gfas. Mostly the \GFAs{} would be quite similar in both joinees, 
+so that there were actually a linear number of feasible source-pairs but a quadratic number of relevant source-pairs, where the bottom up approach would not encounter this problem.\\
+The complexity issue we have not discussed, and that in practice often dominates the algorithm, is that of matching source pairs of tuples, as for example at ~\ref{wj_alternative_relevant_feasible_source_pairs} rule 2. These have only a potential for local polynomial explosion but are somewhat delicate for the implementation - we discuss this in the implementation chapter.\\
+Scoping is naturally easier to enforce bottom up, although also top-down optimizations will be discussed in the next chapter.\\
+Term  depth restrictions are more natural bottom-up, but can be implemented top-down for the same worst-case complexity bounds as we will discuss in the next chapter.
+
+On the theoretic level, while the join problem of two EC-graphs is of \\ quadratic time and space complexity, 
+we have encountered several related problems:
+
+\begin{itemize}
+	\item The complexity of a one-time join as a function of the size the result (or, more accurately, as a function of the sizes of the result and the relevant sub-graphs of the joinees) we have only shown a quadratic worst case algorithm and are not aware of a result that shows either such a lower bound or a better upper bound
+	\item The cost of an incremental join - the overall worst case cost of updating the join EC-graph after each of a sequence of sets of \lstinline{assume}/\lstinline{add} operations on each of the three involved graphs, as a function of the total number and size of the operations, compared to the complexity of calculating the join once after all operations have been applied - we have shown that both our algorithms would need additional state in order avoid adding a factor of the number of operations to the cost, 
+	but other forms of additional state could be better - we are not aware of any results in that area
+\end{itemize}
+
+\newpage
+\subsection{Strong join}
+The strong join differs from the weak join in that it does not depend on the set of terms represented in each joinee.
+For example, in the join $\{a=b\}\sqcup\{f(a)=f(b)\}$ where the term $f(a)$ is needed at the join, the week join will produce $\{[a],[f(a)]\}$ while the strong join produces $\{[a],[b],[f([a]),f([b])]\}$. Essentially the strong join calculates $(A\sqcap B) \sqcup (A\sqcap C)$ rather than $(B\sqcup C) \sqcap A$ for a join of $A,B$ to $C$ where $\sqcup$ is the weak join and $\sqcap$ is a meet.
+We have implemented the top-down algorithm for the strong-join. The algorithm is similar to the one for the weak join, except that we maintain, in addition to the simplified EC-graph, the sets of ECs for $A\sqcap B$ and $A\sqcap C$, and saturate accordingly.
+While not common, we have encountered cases where the strong join found more equalities than the weak join.
+Most importantly, the weak join does not have the property that, given a saturated (for congruence closure, sources and propagation) CFG,
+only adding terms to the EC-graphs of CFG-nodes (without assuming any equality) cannot introduce any equality in any CFG-node.
+In our example of $\{a=b\}\sqcup\{f(a)=f(b)\}$, if the EC-graph of a transitive successor $n$ of the join includes the term-ECs $[f(a)],[f(b)]$ then adding the EC $[f([a,b])]$ to the first joinee introduces the equality $[f(a)]=[f(b)]$ to $n$. 
+This is a problem because requests and response propagations may introduce new terms, but they do not modify existing EC-nodes in the EC-graph. 
+We rely on the invariant that the EC-nodes in a CFG-node need to be merged only if an EC-node was merged in some transitive predecessor.

@@ -1,0 +1,90 @@
+\section{Weight bounds}\label{appendix:weight_bounds}
+We introduce another incomparable measure of complexity for EC-graphs (and similarly for terms), that we call weight.
+This measure allows a more fine-grained control on the complexity of bounded terms, but enforcing weight bounds is more expensive.
+We have not implemented this fragment.
+
+The reason we consider another size measure is that the weight measure corresponds more directly with the intuitive notion of size - it is basically the number of function symbols appearing in a term - we show here the relative measure \m{w_n} for EC-nodes:\\
+\m{w_n(t) = \begin{cases} 1 & \m{t \in o_n}\\  \m{\min\limits_{\fa{f}{s} \in t}(w_n(\fa{f}{s}))} & \m{t \notin o_n}\end{cases}}\\
+%\m{w_n(n) = \mathbf{if~} n \in o_n \mathbf{~then~} 1 \mathbf{~else~} min_{\fa{f}{t} \in n}(w_n(\fa{f}{t}))}\\
+\m{w_n(\fa{f}{s}) = 1+\sum\limits_{i}w_n(s_i)}\\
+\m{w_n(x) = 1}\\
+Again we assume that the function\m{w(\cdot)}is defined a-priori for function and variable symbols, and again we only use the constant 1 function for all symbols.
+
+Note that the above definition for the weight of a node differs from the size (number of gfas) of the sub-graph in that it sums the number of \emph{appearances} of a sub-term while the sub-graph size \size{t} only sums the number of distinct sub-terms - e.g.\m{3=w(f(a,a))\neq\size{f(a,a)}=2}, and if\m{a=b}\m{3=w(f(a,b))\neq\size{f(a,b)}=2}. \\
+Clearly, the weight of a term is always greater or equal to the sub-graph-size, and the sub-graph-size seems like a more natural complexity measure to use as a bound, however, calculating the sub-graph-size is not as straightforward, as it is not additive (the sub-graph-size of a term is not a function of the sum of sub-graph-sizes of its direct sub-terms, rather a union operation is needed), and incremental updates are expensive - hence it is left as future work.
+
+The exact complexity bound using weights is somewhat more involved than the one for depth as it depends on the exact arities of functions in the signature - for example, without unary functions there is no term of weight 2, but with only two unary functions and one constant we can construct \m{2^w} terms of weight w.
+
+A term\fa{f}{s}is of weight\m{w+1}if the sum of weights of\tup{s}is w. 
+We denote by \m{S_{n,w}} the set of all functions that assign the first n integers each a weight, such that the sum of the weights is w - formally:\\
+\m{S_{n,w} \triangleq \s{g \in \mathbb{Z}_n \rightarrow \mathbb{N} \mid \sum ran(g)=w}}\\
+Formally, the number of terms of weight w is:\\
+\m{G(1) = c}\\
+\m{G(w+1) = (\sum\limits_{n\leq m} \size{F_n} \sum\limits_{g \in S_{n,w}} \prod\limits_{l < n} G(g(l))) + G(w)}\\
+That is, for any top function symbol of arity n, for any combination f of n weights that sums up to w-1, we can choose any sub-term of weight f(i) for the direct sub-term at position i.
+
+A rough over-approximation, completely ignoring function arities, is:\\
+\m{G(w) \leq \size{F}^w C_w}\\
+Where\m{C_n}is the nth Catalan number, if we treat the term as a string with n matched parentheses and n function symbols.\\
+This gives us a roughly exponential upper bound, but it is not tight - a tighter bound remains as future work.
+We can see here that the number of constants (or original terms) is less significant than in the depth case.
+
+Clearly, a term of weight w is at most of depth w, so if we have a weight bound w and a depth bound d 
+the bound combination is only meaningful if\m{w>d}and\m{w<m^d.}
+
+Enforcing the weight restriction in the bottom-up versions of the join algorithm is similar to the case for depth, 
+although the actual cost is slightly higher as we cannot rule out a tuple (as too heavy) by looking only at individual members, but must look at the sum of weights.\\
+For the top-down version of the algorithm we can also calculate an inverse weight (i.e. weight of chain from top term to current term), but it would not be a very effective filter as it does not take into account other members of super-tuples - a possible solution would be to evaluate tuples e.g. left to right, and then the inverse weight of each member\m{s_i}of a tuple would be the sum of the inverse weights of the lightest super-term and sum of weights of\m{s_j}for\m{j<i}- 
+however, we believe that this introduces more complexity than it saves.
+
+\subsection{Discussion}
+The restrictions above take effect mostly in three cases:
+\begin{itemize}
+	\item When ensuring \GFA{} completeness we can discard many members of an equivalence class if their depth (at the importing node) is greater than the bound
+	\item When our propagation invariant forces us to propagate information from transitive predecessors, we can avoid requesting any information (gfa) that would be of more than the maximal depth
+	\item When using superposition and resolution, especially non-ground, we can avoid generating very deep terms - this essentially means that we avoid the problem of matching loops
+\end{itemize}
+
+Both restrictions are a form of coercing the proof search to BFS - this is somewhat opposite to the case of DPLL that searches for counter examples in DFS. 
+The main intuition is that many assertions can be proven with a very low bound, and each such proven assertion can be pruned from the CFG allowing more optimizations to be performed on the CFG (e.g. CFG-node merging and branch elimination) and even on the signature, which ultimately allows the verifier to concentrate purely on the harder assertions (with higher bounds), and also it allows us to search "harder" for narrow proofs
+(e.g. a deeper narrow proof DAG rather than a shallower wide proof dag).
+
+Both restrictions are not sufficient for efficient verification as the degree of the polynomial of the bound on the number of \GFAs{} at each CFG-node EC-graph is quite high, but serve as a "last resort" rough measure to prevent exponential run-times as in many of the examples of chapter \ref{chpater:ugfole}, and to prevent common divergence in proof search as in e.g. matching loops - ultimately allowing for a more robust verifier.
+
+In experiments we have found that, although the actual signature of program VCs can be quite large, 
+if we use minimal scoping and the above restrictions with relatively low bounds, the actual set of possible \GFAs{} at each CFG-node is quite small and often sufficient for a proof. 
+
+We have not analyzed precisely the overall complexity of the ground unit fragment with depth bounds, which remains as future work.
+In the appendix we show that the ground unit fragment with the weak join can be saturated with a low polynomial time complexity.
+Here we give an argument to show that the unit ground fragment with depth bounds can be saturated in overall polynomial time even in interaction with other fragments - we look at the run-time of the following process, repeated an unbounded number of times:
+\begin{enumerate}
+\item Saturate the bounded ground unit fragment.
+\item \lstinline|add| arbitrary terms and \lstinline|assume| arbitrary ground (dis)equalities (that satisfy the bounds) in any subset of the CFG-nodes. (this simulates the interaction with any other fragment)
+\end{enumerate}
+We look at the total time of all iterations of the above two steps, where, for the second step, we only count the time for the non-redundant \lstinline|assume| and \lstinline|add| calls and not the time the other fragments take.\\ 
+The argument is that, for any sequence of operations (\lstinline|assume,add|) initiated by the other fragment, the sequence is of polynomial length as, if the maximal number of \GFAs{} is n, we can have at most n \lstinline|add| operations and at most n non-redundant \lstinline|assume(s=t)| operations until there is exactly one EC-node left that includes all possible \GFAs{} within the bound.\\
+The second part of the state that is updated is the source-function. For two consecutive CFG-nodes p,n, in the sequential case we may have up to\size{g_p}source edges because of the propagation invariant - two EC-nodes in\m{g_n}are merged if they have the same source.
+In the join case (if n has another predecessor), each EC-node of\m{g_n}can have each EC-node of\m{g_p}as a source, hence we may have up to\m{\size{g_p}\times\size{g_n}}source edges. The only update to source-edges, besides moving source-edges when nodes are merged, is the addition of edges - hence the total number of edge addition operations is at most quadratic in the maximal number of EC-nodes per EC-graph.\\
+The third part of the state is dis-equality edges. For n \GFAs{} there can be at \bigO{\m{n^2}} dis-equality edges and the operation \lstinline|assume(s$\neq$t)| is monotonic. Merging nodes can only merge dis-equality edges - hence the total number of these \lstinline|assume(s$\neq$t)| operations is polynomial.\\
+It remains to show that the overall number of operations needed to saturate the ground unit fragment from an arbitrary state is polynomial.\\
+We have described the join and propagation algorithm as a set of conjuncts, repeated here for the sequential case in figures \ref{sequential_weak_source_invariant_2}.
+\begin{figure}
+\begin{enumerate}
+	\item \m{\forall \fa{f}{t} \in \gfasA{g_n}, \tup{s} \in \sources{n}{p}{\tup{t}} \cdot }\\
+		\m{\fa{f}{s} \in \gfasA{g_p} \Rightarrow [\fa{f}{s}]_{g_p} \in \sources{n}{p}{[\fa{f}{t}]_{g_n}}}
+	\item \m{\forall \fa{f}{t} \in \gfasA{g_n} \cup \rgfas{n}, \tup{s} \in \sources{n}{p}{\tup{t}} \cdot}\\
+		\m{ \fa{f}{s} \in \gfasA{g_p} \cup \rgfas{p}}
+	\item \m{\forall \tup{t} \in g_n, \tup{s} \in \sources{n}{p}{\tup{t}},\fa{f}{s} \in \gfasA{g_p} \cdot}\\
+		\m{\fa{f}{t} \notin \rgfas{n}} 
+\end{enumerate}
+\caption{Sequential graph based source invariant}
+\label{sequential_weak_source_invariant_2}
+\end{figure}
+Each conjunct in the invariant is an implication (in some the antecedent is in the quantifier bounds), 
+where the consequent implies one of the three operations - \lstinline|add|,\lstinline|assume| and adding a source-edge.
+By showing that each antecedent can apply to at most a polynomial number of parameters (quantified variables), 
+we show that any algorithm to enforce the invariant need not check more than a total polynomial number of conditions throughout the whole verification process, if we ensure that each such condition is checked a constant number of times.\\
+Considering figure \ref{sequential_weak_source_invariant_2}, we can see that all conjuncts accept the three parameters \m{\tup{s},\tup{t},f.} For a fixed maximal arity there are at most a polynomial number of tuples of these three parameters.\\
+For conjunct 1, we can see that, assuming that some instance of the antecedent (i.e. a selection of \tup{s},\tup{t},f) did not hold in the pre-state of some operation on\m{g_n}or\m{g_p,} the antecedent instance has to be re-checked only if\fa{f}{t}was added to\m{g_n,}\fa{f}{s}was added to\m{g_p,} or a source edge was added that connects\tup{t}and\tup{s.} Our implementation ensures that each antecedent is only checked under these conditions and hence at most three times. For the other conjuncts the situation is similar, and hence each conjunct has a polynomial number of potential parameters and is evaluated at most a constant number of times.
+
+Putting all of the above together, we see that the overall time spent on the unit ground fragment, in a setting where it interacts with any other fragments, is at most polynomial.

@@ -1,0 +1,613 @@
+\subsection{Terminology}
+We do not represent ground term equivalence classes using a representative but rather a dedicated object.
+We also include an object per ground tuple equivalence class, although it is essentially redundant - we will discuss the reasoning behind this later.
+
+We use the following sets and kinds of objects:
+\begin{itemize}
+	\item \GTEC : A ground term equivalence class
+	\item \GTTEC : A ground tuple equivalence class
+of a \GTTEC
+	\item \sig{n} : The signature of node \node{n}, specifically \Fn{n} is the set of functions in \sig{n}
+	\item \ECs{n} : The per node congruence closure data structure for node \node{n} that includes, among other details described later:
+	\begin{itemize}
+		\item \GTECs{n} : The set of ground term equivalence classes represented at the node \node{n}
+		\item \GTTECs{n}: The set of ground term tuple equivalence classes represented at \node{n}
+%		\item \GFAECs{n}: The set of ground function application equivalence classes represented at \node{n}
+	\end{itemize}
+	\item We use the following functions:
+		\subitem \gts{n}: $\cup \GTECs{n}$ - \GTECs{n} are a partition of \gts{n}
+		\subitem \Eqs{n} : The set of equalities that \GTECs{n} represents - that is
+		$\s{\term{t1=t2} \mid t1 \not\equiv t2 \land \exists \term{gt} \in \GTECs{n} \cdot (\term{t1,t2 \in gt})}$ -
+		this may be infinite if e.g. $\term(a=f(a)) \in \Eqs{n}$ which implies, for all k, $\term(a=f^k(a)) \in \Eqs{n}$
+		\subitem \Eqst{n} : The set of equalities implied by \node{n} and its predecessors at \node{n} -
+		defined recursively: \\
+		\s{t1=t2 \mid t1,t2 \in \Ts{\sig{n}} \cap (\bigcap\limits_{p \in \preds{n}} ( \mathbf{CC}(\Eqs{n} \cup \Eqst{p}) )}
+\end{itemize}
+
+We represent the congruence closure of a set of equalities \term{E} by \CC{E} (implicitly on the signature of \term{E}) and the congruence closure of \term{E} restricted to the signature \sig as $\CC{E}{F}=\left.\CC{E}\right|_{\Ts{\sig}}$.\\
+We sometimes treat each equivalence class object as a set of its members, for example, when we create a new term from a \GTTEC gtt and a function \function{f} we define the new equivalence class as \s{f(tt) \mid tt \in gtt}.
+We say a term equivalence class \term{t} \emph{exists} at a node \node{n} if $\term{t} \in \GTECs{n}$
+
+Our per-node data structure supports the following basic operations for the node \node{n}:
+\begin{itemize}
+	\item \lstinline{makeTerm(f : $\Fn{n}$,gtt : $\GTTECs{n}$)} : \GTEC \\
+		Create the \GTEC \term{f(gtt)} from the existing \term{gtt} in \GTTECs{n} and add it to \GTECs{n}.
+	\item \lstinline{makeTuple(gts : $\GTTECs{n}*$)} : \GTTEC
+		Create the t\GTTEC \term{gts} from existing ground term ECs, and add it it to \GTTECs{n}
+	\item \lstinline{merge(gt1,gt2 : \GTEC)} : \GTEC \\
+		Merge the \GTEC{s} \term{gt1} and \term{gt2}, and perform congruence closure.
+	\item \lstinline{synchronize()} \\
+		Synchronize the node \node{n} with relevant information not yet propagated from predecessors.
+\end{itemize}
+
+
+\subsection{Sequential Nodes}
+In figure \ref{ec_graph_example_sequential_1}  we show a merge operation on a node \node{n} with one predecessor \node{p}.
+Note that any number of new nodes can be created in \node{n} but only nodes that are transitive superterms of the merged nodes can be affected.
+
+\begin{figure}[!htp]
+\centering
+\begin{subfigure}[t]{\textwidth}
+	\framebox[\textwidth]{
+	\raisebox{0pt}[0.4\textheight][0pt]
+	{
+		\begin{tikzpicture}
+			\node(O) at (0,0){};
+			\node[gttn] (1)  at (2,2.5)                         {$()$};
+			\node[gtn]  (2)  [above left =0.5cm and 0.7cm of 1] {\s{a}};
+			\node[gtn]  (3)  [above right=0.5cm and 0.7cm of 1] {\s{b}};
+			\node[gttn] (4)  [above      =0.5cm           of 2] {$\s{(a)}$};
+			\node[gttn] (5)  [above      =0.5cm           of 3] {$\s{(b)}$};
+			\node[gtn]  (6)  [above      =0.5cm           of 4] {\s{f(a)}};
+			\node[gtn]  (7)  [above      =0.5cm           of 5] {\svb{f(b)}{g(f^n(f(a)))}};
+			\node[gttn] (8)  [above      =0.5cm           of 6] {$\s{(f(a))}$};
+
+			\node[gl,align=left] (1l) [below = 0cm of 1] {p};
+						
+			\draw[gfa] (2)     to node[el] {\term{a}} (1);
+			\draw[gfa] (3)     to node[el] {\term{b}} (1);
+			\draw[gfa] (6)     to node[el] {\term{f}} (4);
+			\draw[gfa] (7)     to node[el] {\term{f}} (5);
+			\draw[gfa] (6.225) to[out=225,in=135,looseness=2] node[el] {\term{f}} (8.135);
+			\draw[gfa] (7.210) to[out=210,in=45 ,looseness=3] node[el] {\term{g}} (8.45);
+
+			\draw[sgtt] (4) to node[el] {\term{0}} (2);
+			\draw[sgtt] (5) to node[el] {\term{0}} (3);
+			\draw[sgtt] (8) to node[el] {\term{0}} (6);
+
+			\node[gttn] (11)  [right      =          5.0cm of  1]   {$()$};
+			\node[gtn]  (13)  [above right=0.5cm and 0.5cm of 11]   {\s{b}};
+			\node[gtn]  (19)  [above left =0.5cm and 0.5cm of 11]   {\s{c}};
+			\node[gttn] (21)  [above      =0.5cm           of 19]   {$\s{(c)}$};
+			\node[gtn]  (17)  [above      =0.5cm           of 21]   {\s{f(c)}};
+
+			\node[gl,align=left] (11l) [below = 0cm of 11] {n};
+						
+			\draw[gfa] (13) to node[el] {\term{b}} (11);
+			\draw[gfa] (19) to node[el] {\term{c}} (11);
+			\draw[gfa] (17) to node[el] {\term{f}} (21);
+
+			\draw[sgtt] (21) to node[el] {\term{0}} (19);
+
+		\end{tikzpicture}
+	}}
+		\caption{before the \lstinline{merge} operation}
+		\label{ec_graph_example_sequential_1a}
+\end{subfigure}
+
+\begin{subfigure}[t]{\textwidth}
+	\framebox[\textwidth]{
+	\raisebox{0pt}[0.4\textheight][0pt]
+	{
+		\begin{tikzpicture}
+			\node(O) at (0,0){};
+			\node[gttn] (1)  at (2,2.5)                       {$()$};
+			\node[gtn]  (2)  [above left =0.5cm and 0.7cm of 1]   {\s{a}};
+			\node[gtn]  (3)  [above right=0.5cm and 0.7cm of 1]   {\s{b}};
+			\node[gttn] (4)  [above      =0.5cm           of 2]   {$\s{(a)}$};
+			\node[gttn] (5)  [above      =0.5cm           of 3]   {$\s{(b)}$};
+			\node[gtn]  (6)  [above      =0.5cm           of 4]   {\s{f(a)}};
+			\node[gtn]  (7)  [above      =0.5cm           of 5]   {\svb{f(b)}{g(f^n(f(a)))}};
+			\node[gttn] (8)  [above      =0.5cm           of 6]   {$\s{(f(a))}$};
+
+			\node[gl,align=left] (1l) [below = 0cm of 1] {p};
+						
+			\draw[gfa] (2)     to node[el] {\term{a}} (1);
+			\draw[gfa] (3)     to node[el] {\term{b}} (1);
+			\draw[gfa] (6)     to node[el] {\term{f}} (4);
+			\draw[gfa] (7)     to node[el] {\term{f}} (5);
+			\draw[gfa] (6.225) to[out=225,in=135,looseness=2] node[el] {\term{f}} (8.135);
+			\draw[gfa] (7.210) to[out=210,in=45 ,looseness=3] node[el] {\term{g}} (8.45);
+
+			\draw[sgtt] (4) to node[el] {\term{0}} (2);
+			\draw[sgtt] (5) to node[el] {\term{0}} (3);
+			\draw[sgtt] (8) to node[el] {\term{0}} (6);
+
+			\node[gttn] (11)  [right      =          5.0cm of  1]   {$()$};
+			\node[gtn]  (12)  [above left =0.5cm and 0.5cm of 11]   {\s{a}};
+			\node[gtn]  (13)  [above right=0.5cm and 0.5cm of 11]   {\s{b,c}};
+			\node[gttn] (14)  [above      =0.5cm           of 12]   {$\s{(a)}$};
+			\node[gttn] (15)  [above      =0.5cm           of 13]   {$\s{(b),(c)}$};
+			\node[gtn]  (16)  [above      =0.5cm           of 14]   {\s{f(a)}};
+			\node[gtn]  (17)  [above      =0.5cm           of 15]   {\svb{f(b),f(c)}{g(f^n(f(a)))}};
+			\node[gttn] (18)  [above      =0.5cm           of 16]   {$\s{(f(a))}$};
+
+			\node[gl,align=left] (11l) [below = 0cm of 11] {n};
+						
+			\draw[gfa] (12)     to[bend right]node[el] {\term{a}} (11);
+			\draw[gfa] (13)     to            node[el] {\term{b}} (11);
+			\draw[gfa] (13)     to[bend left] node[el] {\term{c}} (11);
+			\draw[gfa] (16)     to            node[el] {\term{f}} (14);
+			\draw[gfa] (17)     to            node[el] {\term{f}} (15);
+			\draw[gfa] (17.210) to[out=210,in=45, looseness=2] node[el] {\term{g}} (18.45);
+			\draw[gfa] (16.225) to[out=225,in=135,looseness=2] node[el] {\term{f}} (18.135);
+
+			\draw[sgtt] (14) to node[el] {\term{0}} (12);
+			\draw[sgtt] (15) to node[el] {\term{0}} (13);
+			\draw[sgtt] (18) to node[el] {\term{0}} (16);
+
+		\end{tikzpicture}
+	}}
+	\caption{after \lstinline{n.merge(\{b\},\{c\})}}
+	\label{ec_graph_example_sequential_1b}
+\end{subfigure}
+\caption{Sequential \lstinline{merge}}
+\label{ec_graph_example_sequential_1}
+\end{figure}
+
+In figure \ref{ec_graph_example_sequential_2} we show a \lstinline{makeTerm} operation on a node \node{n} with one predecessor \node{p}.
+Note that no pre-existing node in \node{n} can be merged by the operation, but new merged (and cyclic) nodes can be created.
+Note also that in order to determine which nodes in \node{p} are relevant, \node{n} had to lookup
+a super-edge with label \term{f} of node \s{(c)} at \node{p}, then it would need to look at all sub-edges of \s{g(b),f(c)} at \node{p},
+find the edge labled \term{g} and connect it to the corresponding \term{a,b}, and then again query \node{p} for the super-edge \term{g} of \term{a},
+after which it would get the cyclic node from \node{p} and have to add the cyclic edge labeled \term{h}.
+This up and down process (in the sense of the arrows in the diagram) shows that any number of edges and nodes may need to be added in this process.
+
+\begin{figure}[!htp]
+\centering
+\begin{subfigure}[t]{\textwidth}
+	\framebox[\textwidth]{
+	\raisebox{0pt}[0.4\textheight][0pt]
+	{
+		\begin{tikzpicture}
+			\node(O) at (0,0){};
+			\node[gttn] (0)  at (-2,1)                           {$()$};
+			\node[gtn]  (1)  [above left =1.0cm and 1.0cm of 0] {\s{a}};
+			\node[gtn]  (3)  [above      =0.85cm          of 0] {\s{b}};
+			\node[gtn]  (5)  [above right=1.0cm and 1.0cm of 0] {\s{c}};
+			\node[gttn] (2)  [above      =0.5cm           of 1] {$\s{(a)}$};
+			\node[gttn] (4)  [above      =0.5cm           of 3] {$\s{(b)}$};
+			\node[gttn] (6)  [above      =0.5cm           of 5] {$\s{(c)}$};
+			\node[gtn]  (7)  [above      =0.5cm           of 2] {\svb{g(a)}{h^n(g(a))}};
+			\node[gtn]  (9)  [above      =0.5cm           of 6] {\s{g(b),f(c)}};
+			\node[gttn] (8)  [above      =0.5cm           of 7] {$(\svb{g(a)}{h^n(g(a))})$};
+
+			\node[gl,align=left] (0l) [below = 0cm of 0] {p};
+						
+			%\draw[gfa] (1) to node[el] {\term{a}} (0);
+			%\draw[gfa] (3) to node[el] {\term{b}} (0);
+			%\draw[gfa] (5) to node[el] {\term{c}} (0);
+			%\draw[gfa] (7) to node[el] {\term{g}} (2);
+			%\draw[gfa] (9) to node[el] {\term{g}} (4);
+			%\draw[gfa] (9) to node[el] {\term{f}} (6);
+			%\draw[gfa] (7.225) to[out=210,in=120,looseness=2] node[el,anchor=west] {\term{h}} (8.135);
+
+			\draw[gfa] (1) to node[el] {\term{a}} (0)
+			           (3) to node[el] {\term{b}} (0)
+			           (5) to node[el] {\term{c}} (0)
+			           (7) to node[el] {\term{g}} (2)
+			           (9) to node[el] {\term{g}} (4)
+			           (9) to node[el] {\term{f}} (6)
+			           (7.225) to[out=210,in=120,looseness=2] node[el,anchor=west] {\term{h}} (8.135);
+
+			\draw[sgtt] (2) to node[el] {\term{0}} (1);
+			\draw[sgtt] (4) to node[el] {\term{0}} (3);
+			\draw[sgtt] (6) to node[el] {\term{0}} (5);
+			\draw[sgtt] (8) to node[el] {\term{0}} (7);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			\node[gttn] (10)  [right      =          5.0cm of  0] {$()$};
+			\node[gtn]  (11)  [above left =1.0cm and 0.7cm of 10] {\s{a,b}};
+			\node[gtn]  (15)  [above right=1.0cm and 0.7cm of 10] {\s{c}};
+			\node[gttn] (16)  [above      =0.5cm           of 15] {$\s{(c)}$};
+
+			\node[gl,align=left] (10l) [below = 0cm of 10] {n};
+						
+			\draw[gfa] (11) to[bend right] node[el] {\term{a}} (10);
+			\draw[gfa] (11) to[bend left]  node[el] {\term{b}} (10);
+			\draw[gfa] (15) to             node[el] {\term{c}} (10);
+
+			\draw (16) edge[sgtt] node[el] {\term{0}} (15);
+
+		\end{tikzpicture}
+	}}
+		\caption{before the \lstinline{makeTerm} operation}
+		\label{ec_graph_example_sequential_2a}
+\end{subfigure}
+
+\begin{subfigure}[t]{\textwidth}
+	\framebox[\textwidth]{
+	\raisebox{0pt}[0.4\textheight][0pt]
+	{
+		\begin{tikzpicture}
+			\node(O) at (0,0){};
+			\node[gttn] (0)  at (-2,1.5)                           {$()$};
+			\node[gtn]  (1)  [above left =1.0cm and 1.0cm of 0] {\s{\term{a}}};
+			\node[gtn]  (3)  [above      =0.85cm          of 0] {\s{\term{b}}};
+			\node[gtn]  (5)  [above right=1.0cm and 1.0cm of 0] {\s{\term{c}}};
+			\node[gttn] (2)  [above      =0.5cm           of 1] {$\s{\term{(a)}}$};
+			\node[gttn] (4)  [above      =0.5cm           of 3] {$\s{\term{(b)}}$};
+			\node[gttn] (6)  [above      =0.5cm           of 5] {$\s{\term{(c)}}$};
+			\node[gtn]  (7)  [above      =0.5cm           of 2] {$\s{\term{h^n(g(a))}}$};
+			\node[gtn]  (9)  [above      =0.5cm           of 6] {$\s{\term{g(b),f(c)}}$};
+			\node[gttn] (8)  [above      =0.5cm           of 7] {$\s{\term{(h^n(g(a)))}}$};
+
+			\node[gl,align=left] (0l) [below = 0cm of 0] {p};
+						
+			\draw[gfa] (1) to node[el] {\term{a}} (0);
+			\draw[gfa] (3) to node[el] {\term{b}} (0);
+			\draw[gfa] (5) to node[el] {\term{c}} (0);
+			\draw[gfa] (7) to node[el] {\term{g}} (2);
+			\draw[gfa] (9) to node[el] {\term{g}} (4);
+			\draw[gfa] (9) to node[el] {\term{f}} (6);
+			\draw[gfa] (7.210) edge[gfa,out=210,in=120,looseness=2.5] node[el] {\term{h}} (8.135);
+
+			\draw[sgtt] (2) to node[el] {\term{0}} (1);
+			\draw[sgtt] (4) to node[el] {\term{0}} (3);
+			\draw[sgtt] (6) to node[el] {\term{0}} (5);
+			\draw[sgtt] (8) to node[el] {\term{0}} (7);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			\node[gttn] (10)  [right      =          5.0cm of  0] {$()$};
+			\node[gtn]  (11)  [above left =1.0cm and 0.7cm of 10] {\s{a,b}};
+			\node[gtn]  (15)  [above right=1.0cm and 0.7cm of 10] {\s{c}};
+			\node[gttn] (14)  [above      =0.5cm           of 11] {$\s{({a},{b})}$};
+			\node[gttn] (16)  [above      =0.5cm           of 15] {$\s{(c)}$};
+			\node[gtn]  (17)  [above      =3.0cm           of 10] {$\svb{h^n(g({a,b}))}{h^n(f(c))}$};
+			\node[gttn] (18)  [above      =0.5cm           of 17] {$\svb{(h^n(g({a,b})))}{(h^n(f(c)))}$};
+
+			\node[gl,align=left] (10l) [below = 0cm of 10] {n};
+						
+			\draw (11) edge[gfa,bend right] node[el] {\term{a}} (10);
+			\draw (11) edge[gfa,bend left]  node[el] {\term{b}} (10);
+			\draw (15) edge[gfa]            node[el] {\term{c}} (10);
+			\draw (17) edge[gfa]            node[el] {\term{f}} (16);
+			\draw (17) edge[gfa]            node[el] {\term{g}} (14);
+			\draw (17.330) edge[gfa,out=330,in=45,looseness=3] node[el] {\term{h}} (18.45);
+
+			\draw (14) edge[sgtt] node[el] {\term{0}} (11);
+			\draw (16) edge[sgtt] node[el] {\term{0}} (15);
+			\draw (18) edge[sgtt] node[el] {\term{0}} (17);
+
+		\end{tikzpicture}
+	}}
+	\caption{after the \lstinline{makeTerm(f,(\{c\}))} operation}
+	\label{ec_graph_example_sequential_2b}
+\end{subfigure}
+\caption{Sequential \lstinline{makeTerm}}
+\label{ec_graph_example_sequential_2}
+\end{figure}
+
+
+In figure \ref{ec_graph_example_sequential_3} we show a \lstinline{synchronize} operation on a node \node{n} with one predecessor \node{p}.
+In figure \ref{ec_graph_example_sequential_3a} we see the state before \node{p} has performed a merge where the two nodes are synchronized.
+In figure \ref{ec_graph_example_sequential_3b} \node{p} has performed a merge and now node \node{n} is out of sync - it does not contain all equality information for its terms that \node{p} has.
+In figure \ref{ec_graph_example_sequential_3c} \node{n} has performed the synchronization operation and now it has all a merge and now node \node{n} is out of sync - it does not contain all equality information for its terms that \node{p} has.
+Note how a cycle was formed that was not in either node before.
+
+\begin{figure}[!htp]
+\centering
+\begin{subfigure}[t]{\textwidth}
+	\framebox[\textwidth]{
+	\raisebox{0pt}[0.2\textheight][0pt]
+	{
+		\begin{tikzpicture}
+			\node(O) at (0,0){};
+			\node[gttn] (0)  at (2,1)                           {$()$};
+			\node[gtn]  (1)  [above left =0.5cm and 0.5cm of 0] {\s{a}};
+			\node[gtn]  (3)  [above right=0.5cm and 0.5cm of 0] {\s{b}};
+%			\node[gttn] (2)  [above      =0.5cm           of 1] {$\s{(a)}$};
+%			\node[gttn] (4)  [above      =0.5cm           of 3] {$\s{(b)}$};
+
+			\node[gl,align=left] (0l) [below = 0cm of 0] {p};
+						
+			\draw (1) edge[gfa] node[el] {\term{a}} (0);
+			\draw (3) edge[gfa] node[el] {\term{b}} (0);
+%			\draw (3.225) edge[gfa,out=210,in=120,looseness=2] node[el,anchor=west] {\term{g}} (2.135);
+
+%			\draw (2) edge[sgtt] node[el] {\term{0}} (1);
+%			\draw (4) edge[sgtt] node[el] {\term{0}} (3);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			\node[gttn] (10)  [right      =          5.0cm of  0] {$()$};
+			\node[gtn]  (11)  [above left =0.5cm and 0.5cm of 10] {\s{a}};
+			\node[gtn]  (13)  [above right=0.5cm and 0.5cm of 10] {\s{b}};
+			\node[gttn] (12)  [above      =0.5cm           of 11] {$\s{(a)}$};
+%			\node[gttn] (14)  [above      =0.5cm           of 13] {$\s{(b)}$};
+
+			\node[gl,align=left] (10l) [below = 0cm of 10] {n};
+						
+			\draw (11) edge[gfa] node[el] {\term{a}} (10);
+			\draw (13) edge[gfa] node[el] {\term{b}} (10);
+			\draw (13.215) edge[gfa,out=215,in=45,looseness=1] node[el,anchor=west] {\term{g}} (12.45);
+
+			\draw (12) edge[sgtt] node[el] {\term{0}} (11);
+%			\draw (14) edge[sgtt] node[el] {\term{0}} (13);
+
+		\end{tikzpicture}
+	}}
+		\caption{before the \lstinline{p.merge} operation}
+		\label{ec_graph_example_sequential_3a}
+\end{subfigure}
+
+\begin{subfigure}[t]{\textwidth}
+	\framebox[\textwidth]{
+	\raisebox{0pt}[0.2\textheight][0pt]
+	{
+		\begin{tikzpicture}
+			\node(O) at (0,0){};
+			\node[gttn] (0)  at (2,1)                           {$()$};
+			\node[gtn]  (1)  [above left =0.5cm and 0.5cm of 0] {\s{a}};
+			\node[gtn]  (3)  [above right=0.5cm and 0.5cm of 0] {\s{b}};
+%			\node[gttn] (2)  [above      =0.5cm           of 1] {$\s{(a)}$};
+			\node[gttn] (4)  [above      =0.5cm           of 3] {$\s{(b)}$};
+
+			\node[gl,align=left] (0l) [below = 0cm of 0] {p};
+						
+			\draw (1) edge[gfa] node[el] {\term{a}} (0);
+			\draw (3) edge[gfa] node[el] {\term{b}} (0);
+			\draw (1.325) edge[gfa,out=325,in=135,looseness=2] node[el,anchor=west] {\term{f}} (4.135);
+
+%			\draw (2) edge[sgtt] node[el] {\term{0}} (1);
+			\draw (4) edge[sgtt] node[el] {\term{0}} (3);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			\node[gttn] (10)  [right      =          5.0cm of  0] {$()$};
+			\node[gtn]  (11)  [above left =0.5cm and 0.5cm of 10] {\s{a}};
+			\node[gtn]  (13)  [above right=0.5cm and 0.5cm of 10] {\s{b}};
+			\node[gttn] (12)  [above      =0.5cm           of 11] {$\s{(a)}$};
+%			\node[gttn] (14)  [above      =0.5cm           of 13] {$\s{(b)}$};
+
+			\node[gl,align=left] (10l) [below = 0cm of 10] {n};
+						
+			\draw (11) edge[gfa] node[el] {\term{a}} (10);
+			\draw (13) edge[gfa] node[el] {\term{b}} (10);
+			\draw (13.215) edge[gfa,out=215,in=45,looseness=1] node[el,anchor=west] {\term{g}} (12.45);
+
+			\draw (12) edge[sgtt] node[el] {\term{0}} (11);
+%			\draw (14) edge[sgtt] node[el] {\term{0}} (13);
+
+		\end{tikzpicture}
+	}}
+		\caption{after the operations \lstinline{p.makeTuple((b)),p.makeTerm(f(b)),p.merge(a,f(b))}}
+		\label{ec_graph_example_sequential_3b}
+\end{subfigure}
+
+\begin{subfigure}[t]{\textwidth}
+	\framebox[\textwidth]{
+	\raisebox{0pt}[0.2\textheight][0pt]
+	{
+		\begin{tikzpicture}
+			\node(O) at (0,0){};
+			\node[gttn] (0)  at (2,1)                           {$()$};
+			\node[gtn]  (1)  [above left =0.5cm and 0.5cm of 0] {\s{a}};
+			\node[gtn]  (3)  [above right=0.5cm and 0.5cm of 0] {\s{b}};
+%			\node[gttn] (2)  [above      =0.5cm           of 1] {$\s{(a)}$};
+			\node[gttn] (4)  [above      =0.5cm           of 3] {$\s{(b)}$};
+
+			\node[gl,align=left] (0l) [below = 0cm of 0] {p};
+						
+			\draw (1) edge[gfa] node[el] {\term{a}} (0);
+			\draw (3) edge[gfa] node[el] {\term{b}} (0);
+			\draw (1.325) edge[gfa,out=325,in=135,looseness=2] node[el,anchor=west] {\term{f}} (4.135);
+
+%			\draw (2) edge[sgtt] node[el] {\term{0}} (1);
+			\draw (4) edge[sgtt] node[el] {\term{0}} (3);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			\node[gttn] (10)  [right      =          5.0cm of  0] {$()$};
+			\node[gtn]  (11)  [above left =0.5cm and 0.5cm of 10] {\s{a}};
+			\node[gtn]  (13)  [above right=0.5cm and 0.5cm of 10] {\s{b}};
+			\node[gttn] (12)  [above      =0.5cm           of 11] {$\s{(a)}$};
+			\node[gttn] (14)  [above      =0.5cm           of 13] {$\s{(b)}$};
+
+			\node[gl,align=left] (10l) [below = 0cm of 10] {n};
+						
+			\draw (11) edge[gfa] node[el] {\term{a}} (10);
+			\draw (13) edge[gfa] node[el] {\term{b}} (10);
+			\draw (11.325) edge[gfa,out=325,in=135,looseness=1] node[el,anchor=west] {\term{f}} (14.135);
+			\draw (13.215) edge[gfa,out=215,in= 45,looseness=1] node[el,anchor=east] {\term{g}} (12.45);
+
+			\draw (12) edge[sgtt] node[el] {\term{0}} (11);
+			\draw (14) edge[sgtt] node[el] {\term{0}} (13);
+
+		\end{tikzpicture}
+	}}
+		\caption{after the \lstinline{n.synchronize} operation}
+		\label{ec_graph_example_sequential_3c}
+\end{subfigure}
+
+\caption{Sequential \lstinline{synchronize}}
+\label{ec_graph_example_sequential_3}
+\end{figure}
+
+The \lstinline{makeTuple} operation cannot create any more term and tuples than the one tuple that is created (if it does not already exist).
+However, it can modify the caches of several predecessors.
+
+
+\subsection{Join Nodes}
+For binary join nodes the
+\newpage
+\subsection{Formal Operations}
+\begin{itemize}
+	\item \lstinline{makeTerm(f : $\Fn{n}$,gtt : $\GTTECs{n}$)} : \GTEC \\
+	Create the \GTEC \term{f(gtt)} from the existing \term{gtt} in \GTTECs{n} and add it to \GTECs{n}.
+	We define $\term{gfa} = \s{f(tt) \mid tt \in gtt}$ and then the result represents the minimal equivalence class that includes all of \term{gfa} and respects all the equalities in \ECs{n} (and in \node{n}'s predecessors).
+	If such \GTEC exists in the prestate then nothing is modified.
+	If such a \GTEC does not exist in the prestate, the result equivalence class may include more than just \term{gfa} - if this is implied by the some equalities at predecessors of \node{n}, which may imply the creation of more terms and tuples.
+	Regardless of the arguments, no new equality information is added to existing terms in \gts{n} and globally no new equality information is added to any existing term in any node.
+	Note that by construction, for any \GTEC \term{t} in \GTECs{n},
+	$\s{f(tt) \mid tt \in gtt} \subseteq \term{t} \lor \s{f(tt) \mid tt \in gtt} \cap \term{t} = \emptyset$
+	%\requires \inSync{\predst{n}} \\
+	%\requires $\term{f} \in \scope{n}$ \\
+	%\requires $\term{gtt} \in \terms{n}$ \\
+	%\ensures  $\term{f(gtt)} \in \termsp{n}$ \\
+	%\ensures  $\forall m \cdot \inSync{m} \Rightarrow \inSyncp{m}$
+	
+	\item \lstinline{makeTuple(gts : $\GTTECs{n}*$} : \GTTEC \\
+	Create the tuple EC \term{gts} from existing ground term ECs. \\
+	As before, if this \GTTEC exists it is simply returned, otherwise it is created. No new information is added for existing terms or tuples locally or globally (although some caches are modified - described later).
+	\s{tt \in \Ts{n}^n \mid \forall i \cdot tt[i] \in gts[i]}
+	%\requires \inSync{\predst{n}} \\
+	%\requires $\dom{\term{gts}} \subseteq \terms{n}$ \\
+	%\ensures  $\term{gts} \in \termsp{n}$ \\
+	%\ensures  $\forall m \cdot \inSync{m} \Rightarrow \inSyncp{m}$
+
+	\item \lstinline{merge(gt1,gt2 : \GTEC)} : \GTEC \\
+	Merge the \GTEC \term{gt1} and \term{gt2}, and perform congruence closure.\\
+	This operation adds equality information and, depending on the current state, may cause the creation of new \GTECs and so extend \gts{n}.
+	In the poststate \ECs{n}' we get the minimal set of equalities that are implied by the prestate \ECs{n} and \term{gt1=gt2} (and the prestates of all transitive predecessors of \node{n}). No new equality information is added to any predecessor.
+	The new equality information might be relevant to some successors, and these will have to synchronize (see below) before they can perform any other operation.
+	%\requires \inSync{\predst{n}} \\
+	%\requires $\term{t1,t2} \in \terms{n}$ \\
+	%\ensures  $\term{t1=t2} \in \Eqsp{n}$ \\
+	%\ensures  $\forall m \notin \succsto{n} \cdot \inSync{m} \Rightarrow \inSyncp{m}$
+
+	\item \lstinline{synchronize()} \\
+		Synchronize the node \node{n} with information not yet propagated from predecessors.\\
+		In the poststate each of \GTECs{n} have all the members implied by the transitive predecessors.
+%	\requires \inSync{\predsto{n}} \\
+%	\ensures  \inSync{\predst{n}} \\
+%	\ensures  $\forall m \notin \succsto{n} \cdot \inSync{m} \Rightarrow \inSyncp{m}$
+\end{itemize}
+
+In addition, all operations satisfy the following monotonicity requirements:\\
+\begin{tabular}{ll}
+No terms deleted:        & $\forall \node{m} \cdot \terms{m} \subseteq \termsp{m}$ \\
+No equalities forgotten: & $\forall \node{m} \cdot \Eqs{m}   \subseteq \Eqsp{m}$ \\
+\end{tabular}
+
+In addition, for all nodes at all times, \terms{n} is always subterm-closed (and subtuple-closed)
+ and \Eqs{n} is congruence closed for \terms{n}.
+
+It is based on the following algorithmic choices:
+\begin{itemize}
+	\item Each node maintains a set of \emph{relevant terms} (subterm closed), for which it maintains full congruence information (up to scope and radius/size limitations) - including inequalities
+	\item When a term becomes relevant in a node, the node would \emph{query} its predecessors (recursively) to get all known (in)equality information in its transitive predecessors - this might, in turn, \emph{enable derivations} in some transitive predecessors. The result is that each node on each path between the node where the (in)equality was established and where the (in)equality is used will cache the (in)equality
+	\item In order to speed up propagation, each node maintains, for each relevant term, the set of \emph{corresponding terms} in its predecessors and the set of \emph{failed successor queries} that found no new information - so that transitive queries can often be avoided
+	\item When a node discovers a new (in)equality as a result of a derivation (e.g. resolution), it does not update its successors immediately, rather, before a node can perform any operation it must synchronize with its (transitive) predecessors - hence many such updates can be bunched up in one operation
+\end{itemize}
+
+
+Our data structure represents terms as equivalence classes, rather than the widely used union-find data structure - the reason is that we do not need to be able to backtrack (monotone), and that it simplifies the propagation, sharing and caching of information.
+
+Another divergence from the standard structure is that our equivalence class graph is heterogeneous - it contains nodes both for term equivalence classes and for term-tuple equivalence classes. The reason is that this simplifies the communication between nodes and the caching of queries.
+
+We have actually gone a step further, and represent also atoms, literals and clauses as equivalence classes - this has the benefit of much faster unification and easier caching and communication between nodes, but at the prices of more expensive updates when a new equality is discovered - hence we try to collect several new ground equalities before updating the data structure to account for all those equalities in one step.
+
+Formally, a k-\emph{tuple-node} $\term{ttn} \in \mathbf{tts}(G)$ in the graph has $\|\mathrm{ttn}\|=\arity{ttn}=k$ ordered outgoing edges to $k$ \emph{term-nodes}, represented by \term{tt[0]}..\term{tt[k-1]}.
+A \emph{term-node} $\term{tn}\in \mathbf{ts}(G)$ has one or more outgoing \emph{function-application} edges each targeted at a tuple-node and labeled with a function symbol with matching arity.
+We represent these edges as $\mathbf{fas}(\term{tn}) \subseteq \mathbf{ts} \times \mathbf{F} \times \mathbf{tts}$, with the label as $\fnc{fa}$ and the source,target as $\src{fa}$, $\trg{fa}$, respectively. The set of all function-application-edges of $\mathrm{G}$ is $\fas{G}$.
+
+For a tuple-node \term{ttn} we denote by $\incoming{n}{ttn}$ the set of edges targeted at it: $\incoming{n}{ttn} = \{\mathrm{fa} \in \fas{G(n)} \mid \trg{fa}=\term{ttn} \}$.
+
+We define a \emph{term-path} in the graph $\mathrm{G}$, that represents one member of an equivalence class, as a tree where each node \term{t} in the tree is labeled with a function-application edge $\mathrm{fa}(\term{t})=\term{e}$, and each such node has $\mathrm{n_t}=\arity{\func{e}}$ ordered edges \term{t_0..t_{n_t-1}} where, for $i \in 0..n_t-1$, $\trg{e}[i]=\src{\mathrm{fa}(\mathrm{target}(\mathrm{t_i}))}$ - that is, each node label represents a choice of one of the function application edges of the corresponding equivalence class, and each edge connects to the corresponding term-node for the tuple of that function application. All leaves are nodes where $\trg{\term{e}}=()$ - the empty tuple.
+The term that is represented by such a tree can be defined recursively: each leaf node \node{t} represents the constant $\mathbf{term}(\mathrm{t})=\fnc{\mathrm{fa}(\term{t})}$ and each non-leaf node \node{t} represents the term $\mathbf{term}(\mathrm{t})=\fnc{\mathrm{fa}(\term{t})}(\mathbf{term}(\mathbf{target}(t_0))...\mathbf{term}(\mathbf{target}(t_{t_n-1})))$.
+
+We designate all term paths of the graph $\mathrm{G}$ as $\mathrm{tps(G)}$.
+
+For each term-node \term{t} in the equivalence class graph $\mathrm{G}$ we denote by $\mathbf{terms}(\term{tn})$ the set of terms it represents - $\mathbf{terms}(\term{tn})=\{ \mathbf{term}(\mathrm{T}) \mid \mathrm{T} \in \mathrm{tps(G)} \land \src{\mathrm{fa(root(T))}}=\term{tn}$.\\
+Accordingly we define, for a tuple-node \term{ttn},\\
+ $\mathbf{tuples}(\term{ttn})=\{ \mathrm{tt} \in \mathbf{T(\Sigma)}^{\|\term{tt}\|} \mid \forall \mathrm{i} \in 0..\|\term{tt}\|-1 \mid \mathrm{tt}[\mathrm{i}] \in \mathbf{terms}(\mathrm{ttn}[\mathrm{i}]) \}$.
+
+
+We maintain several invariants on the above equivalence class graph $\mathrm{G}$:
+\begin{itemize}
+	\item The only leaf of the graph is the empty tuple $\mathbf{()}$
+	\item Each term-node in the graph represents one or more terms, and hence has at least one term-path
+	\item The graph is fully congruence closed: $\forall \mathrm{e_1,e_2} \in \mathrm{fas(G)} \mid ((\fnc{e_1}=\fnc{e_2} \land \trg{e_1}=\trg{e_2} ) \Rightarrow e_1=e_2)$ (each tuple has at most one incoming edge for each function symbol)
+	\item Each tuple is represented by exactly one tuple-node: $\forall \mathrm{ttn_1,ttn_2} \in \mathrm{tts(G)} \mid ((\|\term{ttn_1}\|=\|\term{ttn_2}\| \land (\forall \mathrm{i} \in 0..\|\term{ttn_1}\|-1 \mid \term{ttn_1}[\mathrm{i}]=\term{ttn_2}[\mathrm{i}])) \Rightarrow \term{ttn_1}=\term{ttn_2})$
+\end{itemize}
+
+This implies that the set of terms (resp. tuples) represented by each pair of term-nodes (resp. tuple-nodes) of $\mathrm{G}$ is disjoint.
+
+We also maintain some invariants between the equivalence class graph $\mathrm{G(n)}$ of node \node{n} and that of its predecessors. These invariants require some extra state - namely the cache for equality queries:\\
+For a node \node{n}, for each tuple-node $\term{ttn} \in \tts{G(n)}$, we maintain a set of function symbols $\rfs{n}{ttn}$ (rejected function applications) of the correct arity (applicable to the tuples represented by the equivalence class).
+This allows us to encode three mutually exclusive possible options for each such function \term{f} and tuple-equivalence-class \term{ttn}:
+\begin{itemize}
+	\item There is a known term-equivalence-class for this function application -
+	$\mathrm{f} \in \incoming{n}{ttn}$
+	\item There is no known term-equivalence-class for the function application in \node{n} or any of its transitive predecessors - $\mathrm{f} \in \rfs{n}{ttn}$
+	\item It is unknown whether this function application has any term-equivalence class in \node{n}'s transitive predecessors - $\mathrm{f} \notin \rfs{n}{ttn} \cup \incoming{n}{ttn}$
+\end{itemize}
+
+We will later refine this definition to account for term-radius and scope.
+
+The invariants that hold between nodes are:
+\begin{itemize}
+	\item Each node \node{n} has all the equivalence information from its predecessors for each term in its graph:
+	$\forall \term{t} \in \terms{G(n)} \mid [\term{t}]_{\node{n}} \supseteq \cap_{\node{p} \in \preds{n}} [\term{t}]_{\node{p}} $
+\end{itemize}
+
+In general, for a node \node{n}, the knowledge about the equality relation between two terms $\term{t},\term{t'} \in \sScope{n}$ has several options:
+\begin{itemize}
+	\item $\term{t},\term{t'} \in \terms{n}$ and $[\term{t}]_{\node{n}}=[\term{t'}]_{\node{n}}$ and not $\term{t} \neq_{\node{n}} \term{t'}$- the terms are known to be equal at \node{n}
+	\item $\term{t},\term{t'} \in \terms{n}$ and $[\term{t}]_{\node{n}} \neq [\term{t'}]_{\node{n}}$ and not $\term{t} \neq_{\node{n}} \term{t'}$ - the terms are not known to be equal or unequal at \node{n} and at any transitive predecessor cut of \node{n}
+	\item $\term{t},\term{t'} \in \terms{n}$ and $[\term{t}]_{\node{n}} \neq [\term{t'}]_{\node{n}}$ and $\term{t} \neq_{\node{n}} \term{t'}$ - the terms are known to be unequal at \node{n}
+	\item $\term{t},\term{t'} \in \terms{n}$ and $[\term{t}]_{\node{n}} = [\term{t'}]_{\node{n}}$ and $\term{t} \neq_{\node{n}} \term{t'}$ - the terms are known to be equal and unequal at \node{n} - the node is infeasible
+	\item $\term{t} \in \terms{n}$, $\term{t'} \notin \terms{n}$ - the terms are not known to be equal at \node{n} or any transitive predecessor cut, but may be known to be unequal at some such cut
+	\item $\term{t},\term{t'} \notin \terms{n}$ - it is not known at \node{n} whether the terms are equal or not, but it may be known in some transitive predecessor cut
+\end{itemize}
+
+We will first discuss the propagation of (in)equality information among nodes.
+We will present several refinements of a system for the propagation of \\
+(in)equality information along the CFG.
+
+We refer first to propagating unit (in)equalities , that could come either directly from the encoding of the original program, or could be derived using e.g. resolution  - a unit (in)equality can, in turn, allow the derivation of new clauses which could derive new
+(in)equalities and so on - in this section we only handle derivations within the fragment of unit
+(in)equalities .
+
+We denote by \relevantTerms{n} the set of terms that are deemed potentially relevant at node \node{n} at a given time during verification, this includes terms that are relevant only because of transitive successors of \node{n} - the exact definition of relevancy will be given later.
+We denote by \terms{n} the set of terms \emph{represented} at a given time at node \node{n} - this would always a superset of (or equal to) \relevantTerms{n}.
+
+For a term \term{t} represented at node \node{n}, we denote by $[\term{t}]_{\node{n}} \subseteq \terms{n}$ the currently \emph{known} equivalence class of \term{t} at node \node{n} and for another term $\term{t'} \in \terms{n}$ we denote by $\term{t} =_{\node{n}} \term{t'}$, $\term{t} \neq_{\node{n}} \term{t'}$ that at \node{n} it is known that \term{t} is equal, not equal to \term{t'}.
+
+A transitive predecessor cut of a node \node{n} is a cut in the CFG between the \node{root} and \node{n} - a clause that holds in such a cut also holds at \node{n} - this is somewhat of a generalization of the notion of a dominator of \node{n}, which would preclude the case where, e.g. an assertion does not hold in any dominator of \node{n} but holds in two direct predecessors of \node{n} joined at \node{n}.
+
+We use the following definitions to describe the stage of deriving an
+(in) equality (or any other clause) at a given node:
+\begin{itemize}
+	\item A clause \clause{C} \emph{holds at} node \node{n} if $\postcond{n} \vDash \clause{C}$
+	\item A clause \clause{C} is \emph{known at} node \node{n} if $\exists \clause{D} \in \clauses{n} \mid \clause{D} \subseteq \clause{C}$
+	\item A clause \clause{C} is \emph{derived for} node \node{n} if there is a cut $\mathrm{T}$ in the CFG dominating \node {n}, such that $\forall \node{p} \in \mathrm{T} \mid \clause{C} \in \clauses{p}$ (this definition would need some refinement to account for scoping etc) - this basically means that only propagation is needed for \clause{C} to be known at \node{n}
+	\item A clause \clause{C} is \emph{propagated for} node \node{n} if $\clauses{n} \vdash \clause{C}$ but $\clause{C} \notin \clauses{n}$ - that is, sufficient information has been propagated to \node{n} in order to derive \clause{C} in our calculus, but it has not yet been derived
+\end{itemize}
+
+\newpage
+
+\noindent
+Example 3:
+\begin{lstlisting}[caption=congruence closure eager interpolant arity,label=snippet3.29]
+$p_i$:
+assume P($a_0$,$a_6$,...,$a_{6n}$)=T
+....
+
+$p_b$:
+if (*)
+	$p_t$:
+	assume $a_0$=$a_2$
+	assume $a_2$=$a_4$
+	...
+	assume $a_{6m-2}$=$a_{6m}$
+	$p_{ta}$:
+		assert P($a_0$,$a_0$,...,$a_0$)=T
+else
+	$p_e$:
+	assume $a_0$=$a_3$
+	assume $a_3$=$a_6$
+	...
+	assume $a_{6m-3}$=$a_{6m}$
+	$p_{ea}$:
+		assert P($a_0$,$a_0$,...,$a_0$)=T
+\end{lstlisting}
+

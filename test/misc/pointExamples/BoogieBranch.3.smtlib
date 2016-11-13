@@ -1,0 +1,55 @@
+(set-option :print-success false)
+(set-info :smt-lib-version 2.0)
+(set-option :AUTO_CONFIG false)
+(set-option :MODEL_HIDE_UNUSED_PARTITIONS false)
+(set-option :ASYNC_COMMANDS false)
+(set-option :MODEL_V2 true)
+(set-option :PHASE_SELECTION 0)
+(set-option :RESTART_STRATEGY 0)
+(set-option :RESTART_FACTOR |1.5|)
+(set-option :ARITH_RANDOM_INITIAL_VALUE true)
+(set-option :CASE_SPLIT 3)
+(set-option :DELAY_UNITS true)
+(set-option :DELAY_UNITS_THRESHOLD 16)
+(set-option :NNF_SK_HACK true)
+(set-option :MBQI false)
+(set-option :QI_EAGER_THRESHOLD 100)
+(set-option :QI_COST |"(+ weight generation)"|)
+(set-option :TYPE_CHECK true)
+(set-option :BV_REFLECT true)
+(set-option :MODEL_ON_TIMEOUT true)
+(set-option :SOFT_TIMEOUT 0)
+; done setting options
+
+
+(declare-fun tickleBool (Bool) Bool)
+(assert (and (tickleBool true) (tickleBool false)))
+(declare-fun %lbl%+66 () Bool)
+(declare-fun %lbl%@124 () Bool)
+(declare-fun x@0 () Int)
+(declare-fun %lbl%+64 () Bool)
+(declare-fun b@0 () Bool)
+(declare-fun %lbl%+62 () Bool)
+(declare-fun %lbl%+79 () Bool)
+(push 1)
+(set-info :boogie-vc-id m)
+(assert (not
+(let ((anon3_correct (=> (! (and %lbl%+66 true) :lblpos +66) (and
+(! (or %lbl%@124 (> x@0 0)) :lblneg @124)
+(=> (> x@0 0) true)))))
+(let ((anon4_Else_correct (=> (! (and %lbl%+64 true) :lblpos +64) (=> (and
+(not b@0)
+(>= x@0 0)) anon3_correct))))
+(let ((anon4_Then_correct (=> (! (and %lbl%+62 true) :lblpos +62) (=> (and
+b@0
+(< x@0 1)) anon3_correct))))
+(let ((anon0_correct (=> (! (and %lbl%+79 true) :lblpos +79) (and
+anon4_Then_correct
+anon4_Else_correct))))
+anon0_correct))))
+))
+(check-sat)
+(labels)
+(assert %lbl%@124)
+(check-sat)
+(pop 1)

@@ -1,0 +1,5 @@
+C:\work\Slicer\src\Boogie2Slicer\LogCollector\LogCollector\bin\Release\LogCollector.exe.config
+C:\work\Slicer\src\Boogie2Slicer\LogCollector\LogCollector\bin\Release\LogCollector.exe
+C:\work\Slicer\src\Boogie2Slicer\LogCollector\LogCollector\bin\Release\LogCollector.pdb
+C:\work\Slicer\src\Boogie2Slicer\LogCollector\LogCollector\obj\Release\LogCollector.exe
+C:\work\Slicer\src\Boogie2Slicer\LogCollector\LogCollector\obj\Release\LogCollector.pdb

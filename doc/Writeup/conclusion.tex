@@ -1,0 +1,48 @@
+\newpage
+\chapter{Conclusion and future work}\label{chapter:conclusions}
+
+In this thesis we have proposed a novel technique for the tighter integration of a program verifier and a theorem prover.
+Our aim is an incremental and reliable verifier - a tool that a programmer can use with predictable results for simpler programs and properties, but can also be extended to more complicated programs.
+
+\section{Main contributions}
+We have developed a technique that allows incremental verification of programs, applying logical reasoning in increasing strength and providing useful intermediate results. Our technique combines ideas from verification, static analysis and compilation.
+Using our technique we can reduce the search space of the prover using knowledge from the program and simplify the program using knowledge from the prover. A global view of the program allows us to set parameters to the prover, such as the scope, ordering and relative depth of terms, which helps direct the prover towards more efficient proof search.
+
+We have instantiated our technique for several logical fragments, including ground equalities, superposition with bounded size and a simple heap analysis. 
+We have shown how scoping, taken from programming languages, can be used in the verification context of the same programs to guide the prover in the search for a proof.
+
+For the fragment of ground equalities we have shown an incremental algorithm and data structure that can deduce equality information on-demand. The algorithm can deduce equality information at program locations that is sensitive both to earlier and later parts of the program, which cannot be done by analyzers that perform a single forward or backward pass. The data structure helps derive information at specific program points lazily, and reduce the duplication of effort during the proof search. Our algorithm supports the enforcing of size and scope restrictions on construction, ensuring reliable performance.
+
+For superposition, we have shown a complete way to use superposition for verification while avoiding many inferences that are performed with VCG, using information about the structure of the program. We have shown how to use joins to reduce the proof size and how to program structure can be used to enhance redundancy elimination. We have shown how to define a total order on ground terms that is oriented for a DAG and allows interpolation in DAG shaped programs, although we have not implemented the interpolation algorithm.
+We have also shown that using bounds on the size of terms can tame superposition and allow an incomplete search for smaller proofs, more so than clause size.
+
+\section{Experience and directions for future work}
+We have found that our technique works relatively well for simpler logical fragments, especially the equality and heap fragments, and that the exchange of information between the verifier part and the prover part is beneficial for both. In addition, we have seen evidence that the size bounds on proof elements, and especially terms, is an effective tool for building logical fragments of increasing strength.
+
+As our implementation is not complete, and especially lacks integer reasoning, we have inspected many assertions that our tool could not prove to see which part of the reasoning was missing. We have not found many cases where the missing part of the proof was complicated or large, not in integer reasoning and not in the propositional part.
+
+On the other hand, we have found that superposition, even tamed by our technique, has some weaknesses that make it less efficient in its current form for verification. The main culprit, in our experience, is the propositional part of the proof. Although much smaller in our setting than in the more common VCGs, some inferences produce many propositional variants of very similar clauses. 
+In addition, even though the ordering we produce is predictable for most constants, there are still some arbitrary choices in determining the ordering that affect the proof depth of some assertions, making verification in bounded fragments less predictable to users.
+
+One important direction for future work is better handling for the propositional part of the proof.
+A large part of the proofs for all the programs we have seen is ground and propositional.
+Currently the more successful provers for verification are based on SMT technology, which is very effective on ground problems but is less predictable for unbounded problems. Superposition is based on ordered resolution, which is known to be less efficient for propositional proofs.
+An alternative that satisfies our requirements is St{\aa}lmarck's method (\cite{DBLP:conf/fmcad/SheeranS98}). The main attraction of the method is that it applies aggressive simplification and branches, but it performs joins on branches, so that a hierarchy of fragments of predictable strength can be defined, using the depth of branching, and in addition, the state needed at any time during the algorithm is proportional to the input size (for ground problems). 
+Adapting this method to our setting, and ensuring that all and only necessary information is propagated to the prover at each CFG-node, is interesting future work.
+
+Another important direction is parallelization. The verification can be split so that different threads process different program points, but also between fragments - we can let each thread perform inferences in a different fragment, sharing the verification state before the split, and only adding their conclusions at specific synchronization points. 
+For parallelization to work efficiently, the data structures will have to be developed to allow answering queries for multiple threads, while avoiding redundant work, and accepting updates from threads only at certain points in time.
+
+A third interesting direction is to use our technique for the inference of invariants using loop unrolling, as in e.g. \cite{McMillan03Interpolation}. Once we implement superposition fully, and either our interpolation calculus or one of the alternatives (\cite{BaumgartnerWaldmann13}, \cite{McMillan08}), our technique can be adapted to generate invariants using interpolation incrementally.
+Our technique allows adding program extensions at any time during the algorithm, which allows unrolling a loop incrementally. 
+In addition, our ordering is suitable for generating invariants as all loop-body internal symbols go out of scope after the loop body - the only adjustment needed is that branch conditions for branches within the loop need to be in scope only up to the end of the loop body.
+
+An additional possible line of inquiry is an improvement to the interpolation mechanism.
+Rather than make earlier DSA versions larger, which causes superposition to be somewhat less goal directed,
+we could make earlier DSA versions smaller. 
+When the prover at some CFG-node tries to unify two maximal terms, if the terms only disagree on pairs of terms that are in scope in the predecessor, we can send these pairs as proof obligations to the predecessor.
+Each such conjunction of equalities is represented by its negation at the predecessor - a disjunction of dis-equalities. If this clause can be used to derive the empty clause at the predecessor, the predecessor can remember the derived equalities and propagate them to the successor. The predecessor may have to send such requests to the successor as well for interface terms. Such a system would be nearer to IC3/PDR in the way the information is exchanged, but still operates at the syntactic level and does not require the application of an SMT solver.
+
+
+
+

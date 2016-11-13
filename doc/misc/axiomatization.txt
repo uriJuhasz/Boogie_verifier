@@ -1,0 +1,47 @@
+	0
+	s
+	forall x   :: x=0 \/ x=s(f(x))   Skolem<== forall x   :: x=0 \/ exists y :: x=s(y) 
+	forall x   :: add(0,y)=y
+	forall x,y :: add(s(x),y)=s(add(x,y))
+	forall x   :: mul(0,y)=0
+	forall x,y :: mul(s(x),y)=add(mul(x,y),x)
+	
+	
+	forall x   :: pow(x,0)=1
+	forall x,y :: pow(x,s(y))=mul(pow(x,y),x)
+	
+	1 := s(0)
+	2=s(1)
+	4=pow(2,2)
+	256=pow(4,4)
+	lots=pow(256,256)
+	
+	a_{i+1}=pow(a_i,a_i)
+	lots = a_i
+	
+	P(0)
+	forall x :: P(x)=>P(s(x))
+	forall x :: Q(s(x))=>Q(x)
+	P(lots)=>Q(lots)
+	
+	
+	|--------------------------------------
+	
+	P(1)
+	P(2)
+	
+	P(add(x,y)) => P(s(add(x,y))=>P(add(x,s(y)))
+	P(add(0,y)) <=> P(add(y))
+	y!= 0 => y=s(f(y)) => P(add(x,f(y))) => P(s(add(x,f(y)))) => P(add(x,s(f(y)))) => P(add(x,y))
+	
+	
+	to prove:
+	
+	P(x) => P(add(x,y))
+	
+	y=0       => P(x) => P(add(x,0)) => P(x)
+	y=1       => P(x) => P(s(x)) => P(s(add(x,0))) => P(add(x,s(0))) => P(add(x,1))
+	y=2       => P(x) => P(add(0,x)) => P(s(add(0,x))) => P(add(s(0),x)) => P(add(1,x))
+	y=2       => P(add(1,x)) => P(s(add(1,x))) => P(add(s(1),x)) => P(add(2,x))
+	y=2       => P(mul(2,y)) = P(add(mul(1,y),1) => P(add(mul(x,x,0)) => P(s(add(x,1))) => P(add(x,s(1))) => P(add(x,2))
+	

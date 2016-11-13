@@ -1,0 +1,48 @@
+class Test {
+	var x: int
+	var s : seq<Test>
+	var next : Test
+	
+	method consume()
+		requires acc(this.x)
+	{
+		
+	}
+
+	method test(st : seq<Test>,ss : int)
+	//		requires acc(s) && acc(s[*].x) && forall i in [0 .. |s|] :: ((s[i]!= null) ==> (s[i].x== 5))
+//		requires exists t : Test :: t!=null && acc(t.next) && t.next == this
+//		requires  acc(s) && |s|>5 && s[5]!=null && acc(s[*].x) && s[5].x == 0
+			requires ss >5;
+			requires acc (st[*].next) && forall i in [0..|st|] :: st[i]!=null
+
+			requires acc (st[*].x) && forall i in [0..|st|] :: st[i]!=null
+			requires forall i in [0..|st|] :: st[i].x>0
+			requires exists i in [0..|st|] :: st[i] == this
+			requires forall i,j in [0..|st|] :: i!=j ==> st[i]!=st[j]
+			requires forall i,j in [0..|st|] :: i!=j ==> st[i].x!=st[j].x
+			requires exists t : Test :: exists s1, s2 : seq<Test> :: ( |s1| == ss && st == s1 ++ [t] ++ s2 )
+		{
+				var t : Test;
+				var t2 : Test;
+				var s1 : seq<Test>;
+				ghost var s2 : seq<Test>;
+				
+				t := st[0];
+				call t.consume()
+//				call t.consume()
+				
+				s1 := st[0 .. ss]
+				 t := st[ss];
+				 call t.consume();
+//				(i,j,k)
+//				acc(s[e(i,j,k)])
+//				exhale acc(s[e'(i,j,k)])
+//				acc(s[e(i,j,k) && ! e'(i,j,k)])
+				
+				t2 := st[1];
+				call t2.consume();
+				
+				assert st[0].x>0;				
+		}
+}

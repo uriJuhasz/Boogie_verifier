@@ -1,0 +1,1 @@
+Boogie /enhancedErrorMessages:1  /proverLog:@PROC@.boogie.smt2 /enhancedErrorMessages:1  /trace /traceTimes  Set.bpl Heap.bpl Region.bpl Stereotype.bpl ListOperations.bpl sequenceSt.bpl sequenceBasicOp.bpl sequenceIndOp.bpl reverse.bpl

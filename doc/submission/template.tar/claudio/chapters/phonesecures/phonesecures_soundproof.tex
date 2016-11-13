@@ -1,0 +1,953 @@
+\chapter[Sound-Proof: Usable 2FA Based on Ambient Sound]{Sound-Proof: Usable Two-Factor Authentication Based on Ambient Sound}
+\label{chap:ps_soundproof}
+
+\newcommand*\rot{\rotatebox{90}}
+\newcommand*\OK{\ding{51}}
+
+\section{Introduction}
+
+Software tokens on modern phones are replacing dedicated hardware tokens in two-factor authentication (2FA) mechanisms. Using a software token, in place of a hardware one, improves deployability and usability of 2FA. For service providers, 2FA based on software tokens results in a substantial reduction of manufacturing and shipping costs.
+From the user's perspective, there is no extra hardware to carry around and phones can accommodate software tokens from multiple service providers.
+
+Despite the improvements introduced by software tokens, most users still prefer password-only authentication for services where 2FA is not mandatory~\cite{petsas15eurosec,imperi13umsurvey}.
+This is probably due to the extra burden that 2FA causes to the user~\cite{gunson11cs,weir10int}, since it typically requires the user to interact with his phone.
+
+Recent work~\cite{czeskis12ccs, shirvanian14} improves the usability of 2FA by eliminating the user-phone interaction. However, those proposals are not yet deployable as their requirements are not met by today's phones, computers or browsers.
+
+In this chapter, we focus on both the usability and deployability aspect of 2FA solutions.
+We propose Sound-Proof, a two-factor authentication mechanism that is transparent to the user and can be used with current phones and with major browsers without any plugin.
+In Sound-Proof the second authentication factor is the proximity of the user's phone to the computer being used to log in.
+When the user logs in, the two devices record the ambient noise via their microphones.
+The phone compares the two recordings, determines if the computer is located in the same environment, and ultimately decides whether the login attempt is legitimate or fraudulent.
+
+Sound-Proof does not require the user to interact with his phone. The overall user experience is, therefore, close to password-only authentication.
+Sound-Proof works even if the phone is in the user's pocket or purse, and both indoors and outdoors. Sound-Proof can be easily deployed since it is compatible with current phones, computers and browsers. In particular, it works with any HTML5-compliant browser that implements the WebRTC API~\cite{webrtc}, which is currently being standardized by the W3C~\cite{webrtcw3c}.
+Chrome, Firefox and Opera already support WebRTC, Internet Explorer plans to support it~\cite{iewebrtc}, and we anticipate that other browsers will adopt it soon.
+%In contrast, other 2FA proposals that try to minimize the interaction between the user and his phone, require modifications to the browser (e.g., special APIs~\cite{czeskis12ccs} or plugins~\cite{authy}) or dedicated hardware (like NFC chips~\cite{yepes09ercim}).
+
+Similar to other approaches that do not require user-phone interaction nor a secure channel between the phone and the computer (e.g.,~\cite{czeskis12ccs}),
+Sound-Proof is not designed to protect against targeted attacks where the attacker is co-located with the victim and has the victim's login credentials.
+%If we assume that a co-located attacker cannot read the verification code from the victim's phone, then Sound-Proof offers less security than 2FA mechanisms based on verification codes.
+Our design choice favors usability and deployability over security and we argue that this can edge for larger user adoption.
+
+We have implemented a prototype of Sound-Proof for both Android and iOS.
+Sound-Proof adds, on average, less than 5 seconds to a password-only login operation.
+This time is substantially shorter than the time overhead of 2FA mechanisms based on verification codes (roughly 25 seconds~\cite{weir09compsec}).
+We also report on a user study we conducted which shows that users prefer Sound-Proof over Google 2-Step Verification~\cite{google_authentication}.
+
+In summary, we make the following contributions:
+
+\begin{itemize}
+\item   We propose Sound-Proof, a novel 2FA mechanism that does not require user-phone interaction and is easily deployable.
+        The second authentication factor is the proximity of the user's phone to the computer from which he is logging in.
+        Proximity of the two devices is verified by comparing the ambient audio recorded via their microphones. Recording and comparison are transparent to the user.
+
+\item   We implement a prototype of our solution for both Android and iOS. We use the prototype to evaluate the effectiveness of Sound-Proof in a number of different settings.
+        We show that Sound-Proof works even if the phone is in the user's pocket or purse and that it fares well both indoors and outdoors.
+
+\item   We conducted a user study to compare the perceived usability of Sound-Proof and Google 2-Step Verification.
+        Participants ranked the usability of Sound-Proof higher than the one of Google 2-Step Verification, with a statistically significant difference.
+        More importantly, we found that most participants said that they would use Sound-Proof even if 2FA were optional.
+\end{itemize}
+
+\section{Assumptions and Goals}
+\label{sec:ps_sp_goals}
+
+\paragraph{System Model.}
+We assume the general settings of browser-based web authentication.
+The user has a username and a password to authenticate to a web server.
+The server implements a 2FA mechanism that uses software tokens on phones.
+%When the user signs up with the server, he also downloads and installs an application on his phone.
+%Right after being installed, the application and the server are paired in order to either establish a pair-wise secret or to exchange their public keys.
+%For example, the browser can display a QR-code encoding the server's public key and the user can capture the QR-code with the phone's camera.
+%The pairing between the server and the phone is a one-time operation that can use existing techniques for the initialization software tokens~\cite{google_authentication}.
+
+The user points his browser to the server's webpage and enters his username and password.
+The server verifies the validity of the password and challenges the user to prove possession of the second authentication factor.
+
+\paragraph{Threat Model.}
+We assume a remote adversary who has obtained the victim's username and password via phishing, leakage of a password database, or via other means.
+His goal is to authenticate to the server on behalf of the user.
+In particular, the adversary visits  the server's webpage and enters the username and password of the victim.
+The attack is successful if the adversary convinces the server that he also holds the second authentication factor of the victim.
+
+We further assume that the adversary cannot compromise the victim's phone.
+If the adversary gains control of the platform where the software token runs, then the security of any 2FA scheme reduces to the security of password-only authentication.
+Also, the adversary cannot compromise the victim's computer.
+The compromise of the computer allows the adversary to mount a Man-In-The-Browser attack~\cite{owasp_mitb} and hijack the victim's session with the server, therefore defeating any 2FA mechanism.
+
+We do not address targeted attacks where the adversary is co-located with the victim.
+2FA mechanisms that do not require the user to interact with his phone cannot protect against targeted, co-located attacks.
+For example, if 2FA uses unauthenticated short-range communication~\cite{czeskis12ccs}, a co-located attacker can connect to the victim's phone and prove possession of the second authentication factor to the server.
+We argue that targeted, co-located attacks are less common than non-selective, remote attacks.
+Furthermore, any 2FA mechanism may not warrant protection against powerful attackers.
+For example, if 2FA uses verification codes, a determined attacker may gain physical access to the phone or read the code from a distance~\cite{backes09sp,backes08sp,raguram11ccs}.
+
+%Two-factor authentication mechanisms that use verification codes may be secure against co-located adversaries, assuming the adversary cannot gain physical access to the user's phone.
+%However, if we do not require the user to interact with his phone, co-located attacks may be very difficult to thwart.
+%For example, if a unauthenticated Bluetooth connection is used between the phone and the computer (as in~\cite{czeskis12ccs}), the adversary can simply connect to the victim's phone and prove possession of the second authentication factor.
+
+We do not consider Man-In-The-Middle adversaries. Client authentication is not sufficient to defeat MITM attacks in the context of web applications~\cite{karapanos14usenix}.
+We also do not address active phishing attacks where the attacker lures the user into visiting a phishing website and relays the stolen credentials to the legitimate website in real-time. Such attacks can be thwarted by having the phone detect the phishing domain~\cite{czeskis12ccs,parno06fc}. This requires short-range communication between the phone and the browser. However, seamless short-range communication between the phone and the browser is currently not possible.
+
+
+
+\paragraph{Design Goals.} When designing a two-factor authentication solution for the web we had the following design goals.
+
+\begin{itemize}%[noitemsep,nolistsep]
+
+\item   \emph{Usability.}
+        Users should authenticate using only their username and password as in password-only authentication.
+        In particular, users should not be asked to interact with their phone --- not even to pick up the phone or take it out of a pocket or purse.
+\item   \emph{Deployability.}
+        The 2FA mechanism should work with common smartphones, computers and browsers.
+        It should not require additional software on the computer or the installation of browser plugins.
+        A plugin-based solution limits the usability of the system because (\emph{i}) a different plugin may be required for each server,
+        and (\emph{ii}) the user must install the plugin every time he logs in from a computer for the first time.
+        The mechanism should also work on a wide range of smartphones.
+        We therefore discard the use of special hardware on the phone like NFC chips or biometric sensors.
+\end{itemize}
+
+\section{Background on Sound Similarity}
+\label{sec:ps_sp_background}
+The problem of determining the similarity of two audio samples is close to the problem of audio fingerprinting and automatic media retrieval~\cite{chandrasekhar11ismir}.
+In media retrieval, a noisy recording is matched against a database of reference samples.
+This is done by extracting a set of relevant features from the noisy recording and comparing them against the features of the reference samples.
+The extracted features must be robust to, for example, background noise and attenuation.
+Bark Frequency Cepstrum Coefficients~\cite{haitsma02}, wavelets~\cite{baluja08pr} or peak frequencies~\cite{Wang06cacm} have been proposed as robust features for automatic media retrieval.
+Such techniques focus mostly on the frequency domain representation of the samples because they deal with time-misaligned samples.
+In our scenario, we compare two quasi-aligned samples (the offset is less than 150ms) and we therefore can also extract relevant information from their time domain representations.
+
+In order to consider both time domain and frequency domain information of the recordings, we use one-third octave band filtering and cross-correlation.
+
+\paragraph{One-third Octave Bands.}
+Octave bands split the audible range of frequencies (roughly from $20$Hz to $20$kHz) in $11$ non-overlapping bands where the ratio
+of the highest in-band frequency to the lowest in-band frequency is $2$ to $1$.
+Each octave is represented by its center frequency, where the center frequency of a particular octave is twice the center frequency of the previous octave.
+One-third octave bands split the first 10 octave bands in three and the last octave band in two, for a total of $32$ bands.
+One-third octave bands are widely used in acoustics and their frequency ranges have been standardized~\cite{ansi}.
+The center frequency of the lowest band is $16$Hz (covering from $14.1$Hz to $17.8$Hz) while the center frequency of the highest band is $20$kHz (covering from $17780$Hz to $22390$Hz).
+In the following we denote with $B=[lb-hb]$ a set of contiguous one-third octave bands, from the band that has its central frequency at $lb$Hz,
+to the band that has its central frequency at $hb$Hz.
+
+Splitting a signal in one-third octave bands provides high frequency resolution information of the original signal, while keeping its time-domain representation.
+
+\paragraph{Cross-correlation.}
+Cross-correlation is a standard measure of similarity between two time series.
+Let $x,\ y$ denote two signals represented as n-points discrete time series,\footnote{For simplicity we assume both series to have the same length.} the cross-correlation $c_{x,y}(l)$ measures their similarity as a function of the lag $l\in[0,n-1]$ applied to $y$:
+
+$$
+c_{x,y}(l)= \sum_{i=0}^{n-1}x(i)\cdot y(i-l)\\
+$$
+
+where $y(i)=0$ if $i<0$ or $i>n-1$.
+
+To accommodate for different amplitudes of the two signals, the cross correlation can be normalized as:
+
+$$
+c'_{x,y}(l)=\frac{c_{x,y}(l)}{\sqrt{c_{x,x}(0)\cdot c_{y,y}(0)}}
+$$
+
+where $c_{x,x}(l)$ is known as auto-correlation.
+
+The normalization maps $c'_{x,y}(l)$ in $[-1,1]$.
+A value of $c'_{x,y}(l)=1$ indicates that at lag $l$, the two signals have the same shape even if their  amplitudes may be different;
+a value of $c'_{x,y}(l)=-1$ indicates that the two signals have the same shape but opposite signs.
+Finally, a value of $c'_{x,y}(l)=0$ shows that the two signals are uncorrelated.
+
+If the actual lag between the two signals is unknown, we can discard the sign information and use the absolute value
+of the maximum cross-correlation $\hat{c}_{x,y}(l)=\underset{l}{\operatorname{max}}(|c'_{x,y}(l)|)$
+as a metric of similarity ($0\leq \hat{c}_{x,y}(l)\leq 1$).
+The computation overhead of $c_{x,y}(l)$ can be decreased by leveraging the cross-correlation theorem
+and computing $c_{x,y}(l)= F^{-1}(F(x)^* \cdot F(y))$, where $F()$ denotes the discrete Fourier transform and the asterisk denotes the complex conjugate.
+
+\section{Sound-Proof Architecture}
+\label{sec:ps_sp_architecture}
+
+
+The second authentication factor of Sound-Proof is the proximity of the user's phone to the computer being used to log in.
+The proximity of the two devices is determined by computing a similarity score between the ambient noise captured by their microphones.
+For privacy reasons we do not upload cleartext audio samples to the server.
+%This approach would allow the server to arbitrarily query the user's phone for a recording of the phone's ambient noise (see Section~\ref{sec:discussion}).
+In our design, the computer encrypts its audio sample under the public key of the phone.
+The phone receives the encrypted sample, decrypts it, and computes the similarity score between the received sample and the one recorded locally.
+Finally, the phone tells the server whether the two devices are co-located or not. Note that the phone never uploads its recorded sample to the server.
+Communication between the computer and the phone goes through the server.
+We avoid short-range communication between the phone and the computer  (e.g., via Bluetooth) because it requires changes to the browser or the installation of a plugin.
+
+\subsection{Similarity Score}
+\label{sec:ps_sp_similarity}
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=.9\linewidth]{figures/phonesecures/sound-proof_similarity}
+    \caption[Block diagram of the function that computes the similarity score
+    between two samples]{Block diagram of the function that computes the
+    similarity score between two samples. The computation takes place on the
+    phone. If $S_{x,y}>\tau_{C}$ and the average power of the samples is greater
+    than $\tau_{dB}$, the phone judges the login attempt as legitimate.}
+    \label{fig:ps_sp_similarity}
+\end{figure}
+
+Figure~\ref{fig:ps_sp_similarity} shows a block diagram of the function that computes the similarity score.
+Each audio signal is input to a bank of pass-band filters to obtain $n$ signal components, one per each of the one-third octave bands that we take into account.
+Let $x_i$ be the signal component for the $i$-th one-third octave band of signal $x$.
+The similarity score is the average of the maximum cross-correlation over the pairs of signal components $x_i,\ y_i$:
+
+$$S_{x,y} = \frac{1}{n}\sum_{i=1}^{i={n}}\hat{c}_{x_i,y_i}(l)$$
+
+where $l$ is bounded between $0$ and $\ell_{max}$.
+
+\subsection{Enrollment and Login}
+Similar to other 2FA mechanisms based on software tokens,
+Sound-Proof requires the user to install an application on his phone and to bind the application to his account on the server.
+This one-time operation can be carried out using existing techniques to enroll software tokens, e.g.,~\cite{google_authentication}.
+We assume that, at the end of the phone enrollment procedure, the server receives the unique public key of the application on the user's phone and binds that public key to the account of that user.
+
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=.9\linewidth]{figures/phonesecures/sound-proof_overview}
+        \caption[Sound-Proof authentication overview]{Sound-Proof authentication
+        overview. At login, the phone and the computer record ambient noise with their
+        microphones. The phone computes the similarity score between the two samples and
+        returns the result to the server.}
+        \label{fig:ps_sp_overview}
+    \end{center}
+\end{figure}
+
+Figure~\ref{fig:ps_sp_overview} shows an overview of the login procedure.
+The user points the browser to the URL of the server and enters his username and password.
+The server retrieves the public key of the user's phone and sends it to the browser.
+Both the browser and the phone start recording through their local microphones for $t$ seconds.
+During recording, the two devices synchronize their clocks with the server.
+When recording completes, each device adjusts the timestamp of its sample taking into account the clock difference with the server.
+The browser encrypts the audio sample under the phone's public key and sends it to the phone, using the server as a proxy.
+The phone decrypts the browser's sample and compares it against the one recorded locally. % to decide if the authentication attempt is legitimate or fraudulent.
+If the average power of both samples is above $\tau_{dB}$ and the similarity score is above $\tau_C$,
+the phone concludes that it is co-located with the computer from which the user is logging in and informs the server that the login is legitimate.
+
+The procedure is completely transparent to the user if the environment is sufficiently noisy.
+In case the environment is quiet, Sound-Proof requires the user to generate some noise, for example by clearing his throat.
+
+
+
+\subsection{Security Analysis}
+\label{sec:ps_sp_secanalysis}
+
+\paragraph{Remote Attacks.} The security of Sound-Proof stems from the attacker's inability to guess the sound in the victim's environment at the time of the attack.
+
+Let $x$ be the sample recorded by the victim's phone and let $y$ be the sample submitted by the attacker.
+A successful impersonation attack requires  the average power of both signals to be above $\tau_{dB}$, and each of the one-third octave band components
+of the two signals to be highly correlated.
+That is, the two samples must satisfy $Pwr(x)>\tau_{dB}$, $Pwr(y)>\tau_{dB}$ and $S_{x,y}>\tau_C$ with $l<\ell_{max}$.
+
+We bound the lag $l$ between $0$ and $\ell_{max}$ to increase the security of the scheme against an adversary that successfully guesses
+the noise in the victim's environment at the time of the attack.
+Even if the adversary correctly guesses the noise in the victim's environment and can submit a similar audio sample,
+the two samples must be synchronized with an error smaller than $\ell_{max}$.
+We also reject audio pairs where either sample has an average power below the threshold $\tau_{dB}$.
+This is in order to prevent an impersonation attack when the victim's environment is quiet (e.g., while the victim is sleeping).
+
+Quantifying the entropy of ambient noise, and hence the likelihood of the adversary guessing the signal recorded by the victim's phone, is a challenging task.
+Results are dependent on the environment, the language spoken by the victim, his gender or age to cite a few.
+In Section~\ref{sec:ps_sp_evaluation} we provide empirical evidence that Sound-Proof can discriminate between legitimate and fraudulent logins, even if the adversary correctly guesses the type of environment where the victim is located.
+
+\paragraph{Co-located Attacks.} Sound-Proof cannot withstand attackers who are co-located with the victim. A co-located attacker can capture the ambient sound in the victim's environment and thus successfully authenticate to the server, assuming that he also knows the victim's password. Sound-Proof shares this limitation with other 2FA mechanisms that do not require the user to interact with his phone and do not assume a secure channel between the phone and the computer (e.g.,~\cite{czeskis12ccs}).
+Resistance to co-located attackers requires either a secure phone-to-computer channel (as in~\cite{authy,shirvanian14}) or user-phone interaction (as in~\cite{duosecurity,google_authentication}).
+However, both techniques impose a significant usability burden.
+
+\section{Prototype Implementation}
+\label{sec:ps_sp_implementation}
+
+Our implementation works with multiple browsers. We tested it with Google Chrome (version 38.0.2125.111), Mozilla Firefox (version 33.0.2) and Opera (version 25.0.1614.68).
+We anticipate the prototype to work with different versions of these browsers, as long as they implement the \texttt{navigator.getUserMedia()} API of WebRTC.
+We tested the phone application both on Android and on iOS. For Android, on a Samsung Galaxy~S3, a Google Nexus~4 (both running Android version 4.4.4), a Sony Xperia Z3 Compact and a Motorola Nexus 6 (running Android version 5.0.2 and 5.1.1, respectively).
+We also tested different iPhone models (iPhone~4, 5 and 6) running iOS version 7.1.2 on the iPhone 4, and iOS version 8.1 on the newer models.
+The phone application should work on different phone models and with different OS versions without major modifications.
+
+
+\paragraph{Web Server and Browser.}
+The server component is implemented using the CherryPy~\cite{cherrypy} web framework and MySQL database.
+We use WebSocket~\cite{websocketsrfc} to push data from the server to the client.
+The client-side (browser) implementation is written entirely in HTML and JavaScript.
+Encryption of the audio recording uses AES256 with a fresh symmetric key; the symmetric key is encrypted under the public key of the phone using RSA2048.
+We use the HTML5 WebRTC API~\cite{webrtcw3c,webrtc}.
+In particular, we use the \texttt{navigator.getUserMedia()} API to access the local microphone from within the browser.
+Our prototype does not require browser code modifications or plugins.
+
+\paragraph{Software Token.}
+We implement the software token as an Android application as well as an iOS application. The mobile application stays idle in the background and is automatically activated when a push notification arrives. Push messages for Android and iOS use the Google GCM (Google Cloud Messaging) APIs~\cite{gcm} and
+Apple's APN (Apple Push Notifications) APIs~\cite{apn} (in particular the silent push notification feature), respectively. Phone to server communication is protected with TLS. %Cryptographic operations to decrypt the computer's recording are based on the Bouncy Castle library~\cite{bouncycastle}.
+
+
+Most of the Android code is written in Java (Android SDK), while the component that processes the audio samples is written in C (Android NDK).
+In particular, we use the ARM Ne10 library, based on the ARM NEON engine~\cite{neon} to optimize vector operations and FFT computations.
+The iOS application is written in Objective-C and uses Apple's vDSP package of the Accelerate framework~\cite{accelerate},
+in order to leverage the ARM NEON technology for vector operations and FFT computations.
+On both mobile platforms we parallelize the computation of the similarity score across the available processor cores.
+
+
+\paragraph{Time Synchronization.}
+Sound-Proof requires the recordings from the phone and the computer to be synchronized.
+For this reason, the two devices run a simple time-synchronization protocol (based on the Network Time Protocol~\cite{ntpprotocol}) with the server.
+The protocol is implemented over HTTP and allows each device to compute the difference between the local clock and the one of the server.
+Each device runs the time-synchronization protocol with the server while it is recording via its microphone.
+When recording completes, each device adjusts the timestamp of its sample taking into account the clock difference with the server.
+
+
+\paragraph{Run-time Overhead.}
+
+\begin{table}[!ht]
+    \centering
+    \scalebox{.9}{
+    {\tabulinesep = .7mm
+    \setlength{\tabcolsep}{1.2mm}
+    \begin{tabu}{|l|r|r|} \hline
+        \textbf{Operations} & Mean (ms) & Std.Dev. \\ \hline
+        Recording & 3000 & --- \\ \hline
+        Similarity score computation & 642 & $171$ \\ \hline
+        Cryptographic operations & 118 & $15$ \\ \hline
+        \multicolumn{3}{|l|}{\textbf{Networking}} \\ \hline
+        WiFi & 978 & $135$ \\ \hline
+        Cellular & 1243 & $209$ \\ \hline % \hline
+        % \multicolumn{3}{|l|}{\textbf{Total}} \\ \hline
+        % WiFi & 4677 & $181$ \\ \hline
+        % Cellular & 4944 & $233$\\ \hline
+    \end{tabu}}}
+    \caption[Overhead of the Sound-Proof prototype]{Overhead of the Sound-Proof
+    prototype. On average it takes 4677ms ($\pm$ 181ms) over WiFi and 4944ms ($\pm$
+    233ms) over Cellular to complete the 2FA verification.}
+    \label{tab:ps_sp_performance}
+\end{table}
+
+We compute the run-time overhead of Sound-Proof when the phone is connected either through WiFi or through the cellular network.
+We run 1000 login attempts with a Google Nexus 4 for each connection type, and we measure the time from the moment the user submits his username and password to the time the web server logs the user in. On average it takes 4677ms ($\pm$ 181ms) over WiFi and 4944ms ($\pm$ 233ms) over Cellular to complete the 2FA verification.
+Table~\ref{tab:ps_sp_performance} shows the average time and the standard deviation of each operation.
+The recording time is set to 3 seconds.
+The similarity score is computed over the set of one-third octave bands $B=[50\text{Hz}-4\text{kHz}]$.
+(Section~\ref{sec:ps_sp_parameters} discusses the selection of the band set.)
+After running the time-synchronization protocol, the resulting clock difference was, on average, 42.47ms ($\pm$ 30.35ms).
+
+\section{Evaluation}
+\label{sec:ps_sp_evaluation}
+
+\paragraph{Data Collection.}
+We used our prototype to collect a large number of audio pairs.
+We set up a server that supported Sound-Proof.
+Two subjects logged in using Google Chrome\footnote{We used Google Chrome since it is currently the most popular browser~\cite{statcounter}. We have also tested
+Sound-Proof with other browsers and have experienced similar performance (see Section~\ref{sec:ps_sp_discussion}).} over 4 weeks.
+At each login, the phone and the computer recorded audio through their microphones for 3 seconds.
+We stored the two audio samples for post-processing.
+Login attempts differed in the following settings.
+
+\begin{itemize}
+\item \emph{Environment:}
+an office at our lab with either no ambient noise (labelled as Office) or with the computer playing music (Music);
+a living-room with the TV on (TV);
+a lecture hall while a faculty member was giving a lecture (Lecture);
+a train station (TrainStation);
+a cafe (Cafe).
+\item \emph{User activity:} being silent,  talking, coughing, or whistling.
+\item \emph{Phone position:} on a table or a bench next to the user, in the trouser pocket, or in a purse.
+\item \emph{Phone model:} Apple iPhone~5 or Google Nexus~4.
+\item \emph{Computer model:} Mac Book Pro ``Mid 2012'' running OS X10.10 Yosemite or Dell E6510 running Windows 7.
+\end{itemize}
+
+
+
+At the end of the 4 weeks we had collected between 5 and 15 login attempts per each setting, totalling
+%4092 login attempts (8184 audio samples).
+2007 login attempts (4014 audio samples).
+%In the selection of the scenarios, we avoided those that may not arise in reality.
+%For example we only tested login from a lecture hall while the user was silent, since the user may not be allowed to make noise during a lecture.
+%Similarly, we did not test login while whistling in a public place, because a user may feel uncomfortable whistling in places like cafes.
+
+\subsection{Analysis}
+\label{sec:ps_sp_parameters}
+We used the collected samples to find the configuration of system parameters (i.e., $\tau_{dB},\ \ell_{max},\ B,$ and $\tau_C$) that led to
+the best results in terms of False Rejection Rate (FRR) and the False Acceptance Rate (FAR).
+A false rejection occurs when a legitimate login is rejected.
+A false acceptance occurs when a fraudulent login is accepted.
+A fraudulent login is accepted if the sample submitted by the attacker
+and the sample recorded by the victim's phone have a similarity score greater than $\tau_C$, and if both samples have an average power greater than $\tau_{dB}$.
+
+To compute the FAR, we used the following strategy.
+For each phone sample collected by one of the subjects (acting as the victim),
+we use all the computer samples collected by the other subject as the attacker's samples. We then switch the roles of the two subjects and repeat the procedure.
+The total number of victim--adversary sample pairs we considered was
+%8,324,608.
+2,045,680.
+
+\paragraph{System Parameters.}
+We set the average power threshold $\tau_{dB}$ to 40dB which, based on our measurements,
+is a good threshold to reject silence or very quiet recordings like the sound of a fridge buzzing or the sound of a clock ticking.
+Out of 2007 login attempts we found 5 attempts to have an average power of either sample below 40dB and we discard them for the rest of the evaluation.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=.8\linewidth]{figures/phonesecures/sound-proof_falsepositives_50-4000.pdf}
+    
+    \caption[{False Rejection Rate and False Acceptance Rate as a function of the
+    threshold $\tau_C$ for $B=[50\text{Hz}-4\text{kHz}]$}]{False Rejection Rate and
+    False Acceptance Rate as a function of the threshold $\tau_C$ for
+    $B=[50\text{Hz}-4\text{kHz}]$. The Equal Error Rate is $0.0020$ at $\tau_{C}=0.13.$}
+    
+    \label{fig:ps_sp_eer_average}
+\end{figure}
+
+We set $\ell_{max}$ to 150ms because this was the highest clock difference experienced while testing our time-synchronization protocol (see Section~\ref{sec:ps_sp_implementation}).
+
+
+An important parameter of Sound-Proof is the set $B$ of one-third octave bands to consider when computing the similarity score described in Section~\ref{sec:ps_sp_similarity}.
+The goal is to select a spectral region that (\emph{i}) includes most common sounds and (\emph{ii}) is robust to attenuation and directionality of audio signals.
+We discarded bands below $50\text{Hz}$ to remove very low-frequency noises.
+We also discarded bands above $8\text{kHz}$, because these frequencies are attenuated by fabric and they are not suitable for scenarios where the phone is in a pocket or a purse.
+We tested all sets of one-third octave bands $B=[x-y]$ where $x$ ranged from $50$Hz to $100$Hz and $y$ ranged from $630$Hz to $8$kHz.
+
+
+We found the smallest Equal Error Rate (EER, defined as the crossing point of FRR and FAR) when using $B=[50\text{Hz}-4\text{kHz}]$.
+Figure~\ref{fig:ps_sp_eer_average} shows the FRR and FAR using this set of bands where the EER is $0.0020$ at $\tau_{C}=0.13$.
+We experienced worse results with one-third octave bands above 4kHz.
+This was likely due to the high directionality of the microphones found on commodity devices when recoding sounds at those frequencies~\cite{book}. Appendix~\ref{app:ps_sp_otherbands} shows similar plots for all the band ranges $B$ we tested starting from 50Hz to 100Hz and going up from 630Hz to 4kHz.
+
+We also computed the best set of one-third octave bands to use in case usability and security are weighted differently by the service provider.\footnote{For example,
+a social network provider may value usability higher than security.}
+In particular, we computed the sets of bands that minimized $f=\alpha\cdot FRR+\beta\cdot FAR$, for $\alpha\in[0.1,\ldots,0.9]$ and $\beta=1-\alpha$.
+Figure~\ref{tab:ps_sp_alfabeta} shows the set of bands that provided the best results for each configuration of $\alpha$ and $\beta$.
+As before, we experienced better results with bands below 4kHz.
+Figure~\ref{fig:ps_sp_alfabeta} plots the FRR and FAR against the possible values of $\alpha$ and $\beta$.
+We stress that the set of bands may differ across two different points on the x-axis.
+
+\begin{figure}[!ht]
+    \centering
+    \subfigure[False Rejection Rate and False Acceptance Rate when usability and security
+    have different weights.\label{fig:ps_sp_alfabeta}] {
+    \includegraphics[width=.8\columnwidth]{figures/phonesecures/sound-proof_alfabeta.pdf}}
+    
+    \subfigure[One-third octave bands and similarity score
+    threshold.\label{tab:ps_sp_alfabeta}] {
+    \scalebox{.8}{
+    {\tabulinesep=.7mm
+    \setlength{\tabcolsep}{1.2mm}
+    \begin{tabu}[b]{|l|c|c|}
+        \hline
+        &	B & $\tau_c$ \\
+        \hline
+        $\alpha=0.1,\ \beta=0.9$  & $[80\text{Hz}-2500\text{Hz}]$ & 0.12 \\ \hline
+        $\alpha=0.2,\ \beta=0.8$  & $[50\text{Hz}-2500\text{Hz}]$  & 0.14 \\ \hline
+        $\alpha=0.3,\ \beta=0.7$  & $[50\text{Hz}-2500\text{Hz}]$ & 0.14 \\ \hline
+        $\alpha=0.4,\ \beta=0.6$  & $[50\text{Hz}-800\text{Hz}]$  & 0.19 \\ \hline
+        $\alpha=0.5,\ \beta=0.5$  & $[50\text{Hz}-800\text{Hz}]$  & 0.19 \\ \hline
+        $\alpha=0.6,\ \beta=0.4$  & $[50\text{Hz}-800\text{Hz}]$  & 0.19 \\ \hline
+        $\alpha=0.7,\ \beta=0.3$  & $[50\text{Hz}-1000\text{Hz}]$  & 0.2 \\ \hline
+        $\alpha=0.8,\ \beta=0.2$  & $[50\text{Hz}-1000\text{Hz}]$  & 0.2 \\ \hline
+        $\alpha=0.9,\ \beta=0.1$  & $[50\text{Hz}-1250\text{Hz}]$ & 0.21 \\ \hline
+    \end{tabu}}}}
+    \caption[{Minimizing $f=\alpha\cdot FRR+\beta\cdot FAR$, for
+    $\alpha\in[0.1,\ldots,0.9]$ and $\beta=1-\alpha$}]{Minimizing $f=\alpha\cdot
+    FRR+\beta\cdot FAR$, for $\alpha\in[0.1,\ldots,0.9]$ and $\beta=1-\alpha$.}
+\end{figure}
+
+Experiments in the remaining of this section were run with the configuration of the parameters that minimized the EER to $0.0020$:
+$\tau_{dB}=40\text{dB},\ \ell_{max}=150\text{ms},\ B=[50\text{Hz}-4\text{kHz}],$ and $\tau_C=0.13$.
+
+
+\subsection{False Rejection Rate}
+
+In the following we evaluate the impact of each setting that we consider (environment, user activity, phone position, phone model, and computer model) on the FRR.
+Figures~\ref{fig:ps_sp_environment} and~\ref{fig:ps_sp_diffparams} show a box and whisker plot for each setting.
+The whiskers mark the 5th and the 95th percentiles of the similarity scores.
+The boxes show the 25th and 75th percentiles.
+The line and the solid square within each box mark the median and the average, respectively.
+A gray line marks the similarity score threshold ($\tau_C=0.13$) and each red dot in the plots denotes a login attempt where the similarity score was below that threshold (i.e., a false rejection).
+%\noindent\textbf{Noise Reduction.}
+%The Mac Book Pro allows users to switch ``Ambient Noise Reduction'' on and off.
+%We tested both cases for all the scenarios we consider.
+%This option is not available on the Dell.
+%Figure~\ref{fig:noisereduction} shows the average similarity score experienced switching noise reduction on and off on the Mac Book Pro.
+%The overall FRR was 0.013 (over 1313 login attempts) with noise reduction switched on and  0.006  (over 2759 login attempts) with the noise reduction switched off. %total=4072
+
+\noindent\textbf{Environment.}
+Figure~\ref{fig:ps_sp_environment} shows the similarity scores for each environment.
+Sound-Proof fares equally well indoors and outdoors.
+We did not experience rejections of legitimate logins for the Music (over 432 logins), the Lecture (over 122 logins), and the TV (over 430 logins) environments.
+The FRR was 0.003 (1 over 310 logins) for Office,
+0.003 (1 over 370 logins) for TrainStation, and
+0.006 (2 over 338 logins) for Cafe. % total 4072
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=.8\linewidth]{figures/phonesecures/sound-proof_box_place.pdf}
+    \caption[Impact of the environment on the False Rejection Rate]{Impact of the
+    environment on the False Rejection Rate.}
+    \label{fig:ps_sp_environment}
+\end{figure}
+
+\noindent\textbf{User Activity.}
+Figure~\ref{fig:ps_sp_activity} shows the similarity scores for different user activities.
+In general, if the user makes any noise the similarity score improves.
+We only experienced a few rejections of legitimate logins when the user was silent (TrainStation and Cafe) or when he was coughing (Office).
+In the Lecture case the user could only be silent.
+We also avoided whistling in the cafe, because this may be awkward for some users.
+The FRR was
+0.005 (3 over 579 logins) when the user was silent,
+0.002 (1 over 529 logins) when the user was coughing,
+0 (0 over 541 logins) when the user was speaking, and
+0 (0 over 353 logins) when the user was whistling. %total 4072
+
+
+\noindent\textbf{Phone Position.}
+Figure~\ref{fig:ps_sp_phoneposition} shows the similarity scores for different phone positions.
+Sound-Proof performs slightly better when the phone is on a table or on a bench.
+Worse performance when the phone is in a pocket or in a purse are likely due to the attenuation caused by the fabric around the microphone.
+The FRR was
+0.001 (1 over 667 logins) with the phone on a table,
+0.001 (1 over 675 logins) with the phone in a pocket, and
+0.003 (2 over 660 logins) with the phone in a purse. % total 4072
+
+
+\noindent\textbf{Phone Model.}
+Figure~\ref{fig:ps_sp_phone} shows the similarity scores for the two phones.
+The Nexus 4 and the iPhone 5 performed equally good across all environments.
+The FRR was
+0.002 (2 over 884 logins) with the iPhone~5 and
+0.002 (2 over 1118  logins) with the Nexus~4. % total 4072
+
+
+\noindent\textbf{Computer.}
+Figure~\ref{fig:ps_sp_laptop} shows the similarity scores for the two computers we used.
+We could not find significant differences between their performance.
+The FRR was
+0.002 (3 over 1299 logins) with the MacBook Pro and
+0.001 (1 over 703 logins) with the Dell. % total 4072
+
+\begin{figure}[!ht]
+\centering
+%\subfigure[Noise reduction]{%
+%\includegraphics[width=.32\linewidth]{./figures/box_noise.pdf}
+%\label{fig:noisereduction}}
+%\subfigure[Environment]{%
+%\includegraphics[width=.32\linewidth]{./figures/box_place.pdf}
+%\label{fig:environment}}
+%
+\subfigure[User Activity]{%
+\includegraphics[width=.48\linewidth]{figures/phonesecures/sound-proof_box_useractivity.pdf}
+\label{fig:ps_sp_activity}}
+%
+\subfigure[Phone position]{%
+\includegraphics[width=.48\linewidth]{figures/phonesecures/sound-proof_box_phoneposition.pdf}
+\label{fig:ps_sp_phoneposition}}
+
+\subfigure[Phone model]{%
+\includegraphics[width=.48\linewidth]{figures/phonesecures/sound-proof_box_phone.pdf}
+\label{fig:ps_sp_phone}}
+%
+\subfigure[Computer]{%
+\includegraphics[width=.48\linewidth]{figures/phonesecures/sound-proof_box_laptop.pdf}
+\label{fig:ps_sp_laptop}}
+%
+%\subfigure[Browser]{%
+%\includegraphics[width=.32\linewidth]{./figures/box_browser.pdf}
+%\label{fig:browser}}
+\caption[Impact of user activity, phone position, phone model, and computer model on the
+False Rejection Rate]{Impact of user activity, phone position, phone model, and computer
+model on the False Rejection Rate.}
+\label{fig:ps_sp_diffparams}
+\end{figure}
+
+
+%\noindent\textbf{Browser.}
+%Figure~\ref{fig:browser} shows the average similarity score for the browsers we considered.
+%Chrome and Firefox use different algorithms to process the recorded audio (e.g., low-pass filtering, noise reduction), before delivering it to the application.
+%The WebRTC specification does not yet define how the recorded audio should be processed.
+%Chrome allows to disable audio processing through the \texttt{getUserMedia} API.
+%This option is not available on Firefox.
+%Chrome (with audio processing disabled) performed constantly better than Firefox.
+%The FRR was
+%0.002 (over 2002 logins) with Chrome and
+%0.016  (over 2070 logins) with Firefox. %total 4072
+
+
+
+\paragraph{Distance Between Phone and Computer.}
+In some settings (e.g., at home), the user's phone may be away from his computer.
+For instance, the user could leave the phone in his bedroom while watching TV or working in another room.
+We evaluated this scenario by placing the computer close to the TV in a living-room, and testing Sound-Proof while the phone was away from the computer.
+For this set of experiments we used the iPhone 5 and the MacBook Pro.
+The average noise level by the TV was measured at 50dB.
+We tested 3 different distances: 4, 8 and 12 meters (running 20 login attempts for each distance).
+All login attempts were successful (i.e., FRR=0).
+We also tried to log in while the phone was in another room behind a closed door, but logins were rejected.
+
+\paragraph{Discussion.}
+Based on the above results, we argue that the FRR of Sound-Proof is small enough to be practical for real-world usage. To put it in perspective, the FRR of Sound-Proof is likely to be smaller than the FRR due to mistyped passwords (0.04, as reported in~\cite{kumar07}).
+
+
+\begin{table}[!ht]
+\centering
+\scalebox{.9}{
+{\tabulinesep=.7mm
+	\setlength{\tabcolsep}{1.2mm}
+\begin{tabu}{|l|c|c|c|}
+\hline
+&\multicolumn{3}{c|}{False Acceptance Rate}\\
+\hline
+				& SC-SP & SC-DP & DC-DP\\
+\hline
+	TV channel 1 & 1   & 0.1 & 0.1 \\ \hline %srf1 or mtv for alessia
+	TV channel 2 & 1   & 1   & 0 \\ \hline %canale 5
+	TV channel 3 & 1   & 0   & - \\ \hline %srfinfo
+	TV channel 4 & 1   & 0   & - \\ \hline %cnn
+	Web radio 1  & 1   & 0   & 0.4 \\ \hline %bbc radio
+	Web radio 2  & 0.1 & 0.8 & 0.8 \\ \hline %nrj radio
+	Web TV 1     & 0   & 0   & 0 \\ \hline %eurosport
+	Web TV 2     & 0   & 0   & 0 \\ \hline %euronews
+\end{tabu}}
+}
+\caption[False Acceptance Rate when the adversary and the victim devices record the same
+broadcast media]{False Acceptance Rate when the adversary and the victim devices record
+the same broadcast media. SC-SP stands for ``same city and same Internet/cable
+provider'', SC-DP stands for ``same city but different Internet/cable providers'', DC-DP
+stands for ``different cities and different Internet/cable providers''. A dash in the
+table means that the TV channel was not available at the victim's location.}
+\label{tab:ps_sp_tvattack}
+\end{table}
+
+\subsection{Advanced Attack Scenarios}
+\label{sec:ps_sp_far}
+A successful attack requires the adversary to submit a sample that is very similar to the one recoded by the victim's phone.
+For example, if the victim is in a cafe, the adversary should submit an audio sample that features typical sounds of that environment.
+In the following we assume a strong adversary that correctly guesses the victim's environment.
+We also evaluate the attack success rate in scenarios where the victim and the attacker access the same broadcast audio source from different locations.
+
+\paragraph{Similar Environment Attack.}
+In this experiment we assume that the victim and the adversary are located in similar environments.
+For each environment, we compute the FAR between each phone sample collected by one subject (the victim) and all the computer samples of the other subject (the adversary). We then switch the roles of the two subjects and repeat the procedure.
+The FAR  for the Music and the TV environments were 0.012 (1063 over 91960 attempts) and 0.003 (311 over 90992 attempts), respectively.
+The FAR for the Lecture environment was  0.001 (8 over 7242 attempts).
+When both the victim and the attacker were located at a train station the FAR was 0.001 (44 over 67098 attempts).
+The FAR for the Office environment was 0.025 (1194 over 47250 attempts).
+When both the victim and the attacker were in a cafe the FAR was 0.001 (32 over 56994 attempts).
+
+The above results show low FAR even when the attacker correctly guesses the victim's environment.
+This is due to the fact that ambient noise in a given environment is influenced by random events (e.g., background chatter, music, cups clinking, etc.) that cannot be controlled or predicted by the adversary.
+
+
+
+% If both of them were whistling the FAR was $0.0075$ (over $247848$ attempts).
+% In case they were both speaking the FAR was  0.015(144936)
+%
+%  $0.0233$ (over $595406$ attempts).
+% If they were coughing the FAR was $0.0287$ (over $601776$ attempts).
+
+
+\paragraph{Same Media Attack.}
+In this experiment we assume that the victim and the adversary access the same audio source from different locations.
+This happens, for example, if the victim is watching TV and the adversary correctly guesses the channel to which the victim's TV is tuned.
+We place the victim's phone and the adversary's computer in different locations, but each of them next to a smart TV that was also capable of streaming web media.
+Since the devices have access to two identical audio sources, the adversary succeeds if the lag between the two audio signals is less than $\ell_{max}$.
+We tested 4 cable TV channels, 2 web radios and 2 web TVs.
+For each scenario, we run the attack 100 times and report the FAR in  Table~\ref{tab:ps_sp_tvattack}.
+When the  victim and the attacker were in the same city, we experienced differences based on the media provider.
+When the TVs reproduced content broadcasted by the same provider, the signals were closely synchronized and the similarity score was above the threshold $\tau_C$.
+The FAR dropped in the case of web content.
+When the TVs reproduced content supplied by different providers, the lag between the signals caused the similarity score to drop below $\tau_C$ in most of the cases.
+The similarity score sensibly dropped when the victim and the attacker were located in different cities.
+
+\section{User Study}
+\label{sec:ps_sp_userstudy}
+
+The goal of our user study was to evaluate the usability of Sound-Proof and to compare it with the usability of Google 2-Step Verification (2SV), since 2FA based on one-time codes is arguably the most popular. (We only considered the version of Google 2SV that uses an application on the user's phone to generate one-time codes.)
+We stress that the comparison focuses solely on the usability aspect of the two methods.
+In particular, we did not make the participants aware of the difference in the security guarantees, i.e., the fact that Google 2SV can better resist co-located attacks.
+
+We ran repeated-measure experiments where each participant was asked to log in to a server using both mechanisms in random order.
+After using each 2FA mechanism, participants ranked its usability answering the System Usability Scale (SUS)~\cite{sus}.
+The SUS is a widely-used scale to assess the usability of IT systems~\cite{bangor}.
+The SUS score ranges from 0 to 100, where higher scores indicate better usability.
+
+\subsection{Procedure}
+
+\paragraph{Recruitment.}
+We recruited participants with a snowball sampling method. Most subjects were recruited outside our department and were not working in or studying computer science.
+The study was advertised as a user study to ``evaluate the usability of two-factor authentication mechanisms''.
+We informed participants that we would not collect any personal information and offered a compensation of CHF 20.
+Among all respondents to our email, we discarded the ones that were security experts and ended up with 32 participants.
+
+\paragraph{Experiment.}
+The experiment took place in our lab where we provided a laptop and a phone to complete the login procedures. Both devices were connected to the Internet through WiFi.
+We set up a Gmail account with Google 2SV enabled.
+We also created another website that supported Sound-Proof and mimicked the Gmail UI.
+
+Participants saw a video where we explained the two mechanisms under evaluation.
+We told participants that they would need to log in using the account credentials and the hardware we provided.
+We also explained that we would record the keystrokes and the mouse movements (this allowed us to time the login attempts).
+
+We then asked participants to fill in a pre-test questionnaire designed to collect demographic information.
+Participants logged in to our server using Sound-Proof and to Gmail using Google 2SV.
+We randomized the order in which each participant used the two mechanisms.
+After each login, participants rated the 2FA mechanism answering the SUS.
+
+At the end of the experiment participants filled in a post-test questionnaire that
+covered aspects of the 2FA mechanisms under evaluation not covered by the SUS.
+
+\subsection{Results}
+
+\paragraph{Demographics.}
+58\% of the participants were between 21 and 30 years old.
+25\% of the participants were between 31 and 40 years old.
+The remaining 17\% of the participants were above 40 years old.
+53\% of the participants were female.
+69\% of the participants had a master or doctoral degree.
+50\% of the participants used 2FA for online banking and only 13\% used Google 2SV to access their email accounts.
+
+\begin{figure}[!ht]
+\centering
+\subfigure[SUS answers for Sound-Proof]{%
+\includegraphics[width=.75\linewidth]{figures/phonesecures/sound-proof_susaudio}
+\label{fig:ps_sp_susaudio}}
+
+\subfigure[SUS answers for Google 2SV]{%
+\includegraphics[width=.75\linewidth]{figures/phonesecures/sound-proof_suscode}
+\label{fig:ps_sp_suscode}}
+\caption[Distribution of the answers by the participants of the user study]{Distribution
+of the answers by the participants of the user study. System Usability Scale (SUS) of
+Sound-Proof (a) and Google 2-Step Verification (b). Percentages on the left side include
+participants that answered ``Strongly disagree'' or ``Disagree''. Percentages in the
+middle account for participants that answered ``Neither agree, nor disagree''.
+Percentages on the right side include participants that answered ``Agree'' or ``Strongly
+agree''.}
+\label{fig:ps_sp_likerts}
+\end{figure}
+
+\paragraph{SUS Scores.}
+The mean SUS score for Sound-Proof was $91.09$ ($\pm 5.44$).
+The mean SUS score for Google 2SV was $79.45$ ($\pm 7.56$).
+Figure~\ref{fig:ps_sp_susaudio} and Figure~\ref{fig:ps_sp_suscode} show participant answers on 5-point Likert-scales for Sound-Proof and for Google 2SV, respectively. To analyze the statistical significance of these results, we used the following null hypothesis:
+``there will be no difference in perceived usability between Sound-Proof and Google 2SV''.
+%(The normality of the results was confirmed using Q-Q plots.)
+A one-way ANOVA test revealed that the difference of the SUS scores was statistically significant
+($F(1,31) = 21.698,\ p<.001,\ \eta_p^2 = .412$), thus the null hypothesis can be rejected.
+We concluded that users perceive Sound-Proof to be more usable than Google 2SV.
+Appendix~\ref{app:ps_sp_sus} reports the items of the SUS.
+
+\paragraph{Login Time.}
+We measured the login time from the moment when a participant clicked on the ``login'' button (right after entering the password),
+to the moment when that participant was logged in.
+We neglected the time spent entering username and password because we wanted to focus only on the time required by the 2FA mechanism.
+Login time for Sound-Proof was $4.7$ seconds ($\pm 0.2$ seconds); this time was required for the phone to receive the computer's sample and compare it with the one recorded locally. %(see Section~\ref{sec:implementation}).
+With Google 2SV, login time increased to $24.4$ seconds ($\pm 7.1$ seconds); this time was required for the participant to take the phone, start the
+application and copy the verification code from the phone to the browser.
+
+
+\paragraph{Failure Rates.}
+We did not witness any login failure for either of the two methods.
+We speculate that this may be due to the priming of the users right before the experiment,
+when we explained how the two methods work and that Sound-Proof may require users to make some noise in quiet environments.
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=.8\linewidth]{figures/phonesecures/sound-proof_post}
+    \caption[Distribution of the answers to the Post-test questionnaire]{Distribution of
+    the answers to the Post-test questionnaire. Percentages on the left side include
+    participants that answered ``Strongly disagree'' or ``Disagree''. Percentages in the
+    middle account for participants that answered ``Neither agree, nor disagree''.
+    Percentages on the right side include participants that answered ``Agree'' or
+    ``Strongly agree''.}
+    \label{fig:ps_sp_post}
+\end{figure}
+
+\paragraph{Post-test Questionnaire.}
+The post-test questionnaire was designed to collect information on the perceived quickness of the two mechanisms (Q1--Q2)
+and participants willingness to adopt any of the schemes (Q3--Q6).
+We also included items to inquire if participants would feel comfortable using the mechanisms in different environments (Q7--Q14).
+Figure~\ref{fig:ps_sp_post} shows participants answers on 5-point Likert-scales.
+The full text of the items can be found in Appendix~\ref{app:ps_sp_posttest}.
+
+All participants found Sound-Proof to be quick (Q1), while only 50\% of the participants found Google 2SV to be quick (Q2).
+If 2FA were mandatory, 84\% of the participants said that they would use Sound-Proof (Q3) and 47\% said that they would use Google 2SV (Q4).
+In case 2FA were optional the percentage of participants willing to use the two mechanisms dropped to 78\% for Sound-Proof (Q5) and to 19\% for Google 2SV (Q6).
+Similar to~\cite{petsas15eurosec,imperi13umsurvey}, our results for Google 2SV suggest that users are likely not to use 2FA if it is optional.
+With Sound-Proof, the difference in user acceptance between a mandatory and an optional scenario is only 6\%.
+
+We asked participants if they would feel comfortable using either mechanism at home, at their workplace, in a cafe, and in a library.
+95\% of the participants would feel comfortable using Sound-Proof at home (Q7) and 77\% of the participants would use it at the workplace (Q8).
+68\% would use it in a cafe (Q9) and 50\% would use it in a library (Q10).
+Most participants (between 91\% and 82\%) would feel comfortable using Google 2SV in any of the scenario we considered (Q11--Q14).
+
+The results of the post-test questionnaire suggest that users may be willing to adopt Sound-Proof because it is quicker and causes less burden, compared to Google 2SV.
+In some public places, however, users may feel more comfortable using Google 2SV. In Section~\ref{sec:ps_sp_discussion} we discuss how to integrate the two approaches.
+
+The post-test questionnaire allowed participants to comment on the 2FA mechanisms evaluated.
+Most participants found Sound-Proof to be user-friendly and appreciated the lack of interaction with the phone.
+Appendix~\ref{app:ps_sp_comments} lists some of the users' comments.
+
+\section{Discussion}
+\label{sec:ps_sp_discussion}
+
+
+
+
+\paragraph{Software and Hardware Requirements.}
+Similar to any other 2FA based on software tokens, Sound-Proof requires an application on the user's phone.
+Sound-Proof, however, does not require additional software on the computer and seamlessly works with any
+HTML5-compliant browser that implements the WebRTC API.
+Chrome, Firefox and Opera, already support WebRTC and a version of Internet Explorer supporting WebRTC will soon be released~\cite{iewebrtc}.
+Sound-Proof needs the phone to have a data connection. Moreover, both the phone and the computer where the browser is running must be equipped with a microphone. Microphones are ubiquitous in phones, tablets and laptops. If a computer such as a desktop machine does not have an embedded microphone, Sound-Proof requires an external microphone, like the one of a webcam.
+
+\paragraph{Other Browsers.}
+Section~\ref{sec:ps_sp_evaluation} evaluates Sound-Proof using Google Chrome.
+We have also tested Sound-Proof with Mozilla Firefox and Opera.
+Each browser may use different algorithms to process the recorded audio (e.g., filtering for noise reduction), before delivering it to the web application.
+The WebRTC specification does not yet define how the recorded audio should be processed, leaving the specifics of the implementation to the browser vendor. When we ran our tests, Opera behaved like Chrome.
+Firefox audio processing was slightly different and it affected the performance of our prototype.
+In particular, the Equal Error Rate computed over the samples collected while using Firefox was 0.012.
+We speculate that a better Equal Error Rate can be achieved with any browser if the software token performs the same audio processing of the browser being used to log in.
+
+
+
+\paragraph{Privacy.}
+The noise in the user's environment may leak private information to a prying server. In our design, the audio recorded by the phone is never uploaded to the server.
+%The server could, however, use the phone as an ``oracle'' to guess the features of the ambient noise where the phone is located.
+%In particular, the server can fake a login attempt and send an arbitrary recording to the phone.
+%The phone will record the ambient noise from its microphone, compare it to the received recording, and notify the server if the two samples have a similarity score above the threshold $\tau_C$.
+A malicious server can also access the computer's microphone while the user is visiting the server's webpage.
+This is already the case for a number of websites that require access to the microphone.
+For example, websites for language learning, Gmail (for video-chats or phone calls), live chat-support services, or any site
+that uses speech-recognition require access to the microphone and may record the ambient noise any time the user visits the provider's webpage.
+All browsers we tested ask the user for permission before allowing a website to use \texttt{getUserMedia}. Moreover, browsers show an alert when a website triggers recording from the microphone. Providers are likely not to abuse the recording capability, since their reputation would be affected, if users detect unsolicited recording.
+
+\paragraph{Quiet Environments.}
+Sound-Proof rejects a login attempt if the power of either sample is below $\tau_{dB}$.
+In case the environment is too quiet, the website can prompt the user to make any noise (by, e.g., clearing his throat, knocking on the table, etc.).
+
+\paragraph{Fallback to Code-based 2FA.}
+Sound-Proof can be combined with 2FA mechanisms based on one-time codes, like Google 2SV.
+For example, the webpage can employ Sound-Proof as the default 2FA mechanism, but give to the user the option to log in entering a one-time code.
+This may be useful in cases where the environment is quiet and the user feels uncomfortable making any noise.
+Login based on one-time codes is also convenient when the phone has no data connectivity (e.g., when roaming).
+
+\paragraph{Failed Login Attempts and Throttling.}
+Sound-Proof deems a login attempt as fraudulent if the similarity score between the two samples is below the threshold $\tau_C$ or if the power of either sample is below $\tau_{dB}$.
+In this case, the server may request the two devices to repeat the recording and comparison phase.
+After a pre-defined number of failed trials, the server can fall-back to a 2FA mechanism based on one-time codes.
+The server can also throttle login attempts in order to prevent ``brute-force'' attacks and to protect the user's phone battery from draining.
+
+\paragraph{Login Evidence.}
+Since audio recording and comparison is transparent to the user, he has no means to detect an ongoing attack. To mitigate this, at each login attempt the phone may vibrate, light up, or display a message to notify the user that a login attempt is taking place.
+The Sound-Proof application may also keep a log of the login attempts.
+Such techniques can help to make the user aware of fraudulent login attempts.
+Nevertheless, we stress that the user does not have to attend to the phone during legitimate login attempts.
+
+
+\paragraph{Continuous Authentication.}
+Sound-Proof can also be used as a form of continuous authentication. The server can periodically trigger Sound-Proof, while the user is logged in and interacts with the website. If the recordings of the two devices do not match, the server can forcibly log the user out. Nevertheless, such use can have a more significant impact on the user's privacy, as well as affect the battery life of the user's phone.
+
+\paragraph{Alternative Devices.}
+Our 2FA mechanism uses the phone as a software token.
+Another option is to use a smartwatch and we plan to develop a Sound-Proof application for smartwatches based on Android Wear and Apple Watch.
+We speculate that smartwatches can further lower the false rejection rate because of the proximity of the computer and the smartwatch during logins.
+
+\paragraph{Logins from the Phone.}
+If a user tries to log in from the same device where the Sound-Proof application is running,
+the browser and the application will capture audio through the same microphone and, therefore, the login attempt will be accepted. This requires the mobile OS to allow access to the microphone by the browser and, at the same time, by the Sound-Proof application.
+If the mobile OS does not allow concurrent access to the microphone, Sound-Proof can fall back to code-based 2FA.
+
+
+\paragraph{Comparative Analysis.}
+We use the framework of Bonneau et al.~\cite{bonneau12sp} to compare Sound-Proof with Google 2-Step Verification (Google 2SV), with PhoneAuth~\cite{czeskis12ccs}, and with  the 2FA protocol of~\cite{shirvanian14} that uses WiFi to create a channel between the phone and the computer (referred to as FBD-WF-WF in~\cite{shirvanian14}).
+The framework of  Bonneau et al. considers 25 ``benefits'' that an authentication scheme should provide, categorized in terms of usability, deployability, and security.
+Table~\ref{tab:ps_sp_comparison} shows the overall comparison.
+The evaluation of Google 2SV in Table~\ref{tab:ps_sp_comparison} matches the one reported by~\cite{bonneau12sp}, besides the fact that we consider Google 2SV to be non-proprietary.
+
+\emph{Usability:}
+No scheme is scalable nor it is effortless for the user because they all require a password as the first authentication factor.
+They are all ``Quasi-Nothing-to-Carry'' because they leverage the user's phone.
+Sound-Proof and PhoneAuth are more efficient to use than Google 2SV because they do not require the user to interact with his phone. They are also more efficient to use than  FBD-WF-WF, because the latter requires a non-negligible setup time every time the user logs in from a new computer.
+All mechanisms incur some errors if the user enters the wrong password (Infrequent-Errors).
+All mechanisms also require similar recovery procedures if the user loses his phone.
+
+\emph{Deployability:}
+Sound-Proof, PhoneAuth, and FBD-WF-WF score better than Google 2SV in the category ``Accessible'' because the user is asked nothing but his password.
+The three schemes are also better than Google 2SV in terms of cost per user, assuming users already have a phone.
+None of the mechanisms is server-compatible. Sound-Proof and Google 2SV are the only  browser-compatible mechanisms as they require no changes to current browsers or computers.
+Google 2SV is more mature, and all of them are non-proprietary.
+
+\emph{Security:}
+The security provided by Sound-Proof, PhoneAuth, and FBD-WF-WF is similar to the one provided by Google 2SV.
+However, we rate Sound-Proof and PhoneAuth as not resilient to targeted impersonation, since a targeted, co-located attacker can launch the attack from the victim's environment. FBD-WF-WF uses a paired connection between the user's computer and phone, and can better resist such attacks.
+
+\begin{landscape}
+\begin{table}[!t]
+\centering
+\scalebox{.8}{
+    {\tabulinesep = .7mm
+    \setlength{\tabcolsep}{1.2mm}
+    \begin{tabu}{l|cccccccc|cccccc|ccccccccccc}
+        &\multicolumn{8}{c|}{Usability}& \multicolumn{6}{c|}{Deployability}&\multicolumn{11}{c}{Security}\\
+        Scheme & \rot{Memorywise-Effortless} & \rot{Scalable-for-Users}&\rot{Nothing-to-Carry} & \rot{Physically Effortless} & \rot{Easy-to-Learn} &\rot{Efficient-to-Use} &\rot{Infrequent-Errors}&\rot{Easy-Recovery-from-Loss}&\rot{Accessible} & \rot{Negligible-Cost-per-User} &\rot{Server-Compatible}&\rot{Browser-Compatible}&\rot{Mature}&\rot{Non-Proprietary} & \rot{Resilient-to-Physical-Observation}&\rot{Resilient-to-Targeted-Impersonation}&\rot{Resilient-to-Throttled-Guessing}&\rot{Resilient-to-Unthrottled-Guessing} &        \rot{Resilient-to-Internal-Observation}&\rot{Resilient-to-Leaks-from-Other-Verifiers}&\rot{Resilient-to-Phishing}&\rot{Resilient-to-Theft}&\rot{No-Trusted-Third-Party}&        \rot{Requiring-Explicit-Consent} &\rot{Unlinkable}\\
+ \hline
+  Sound-Proof &   &   & S &   & Y & Y & S & S    & Y & Y &   & Y &   & Y    & S &   & Y & Y &  & Y & Y & Y & Y & Y &\\
+ \hline
+  Google 2SV  &   &   & S &   & Y & S & S & S    & S & S &   & Y & Y &  Y    & S & S & Y & Y &   & Y & Y & Y & Y & Y &\\
+ \hline
+ PhoneAuth   &   &   & S &   & Y & Y & S & S    & Y & Y &   &   &   & Y    & S &   & Y & Y &   & Y & Y & Y & Y & Y &\\
+ \hline
+ FBD-WF-WF   &   &   & S &   & Y & S & S & S    & Y & Y &   &   &   & Y    & S &  S & Y & Y &   & Y & Y & Y & Y & Y &\\
+ \hline
+    \end{tabu}}}
+    \caption[Comparison of Sound-Proof against Google 2-Step Verification, PhoneAuth, and
+    FBD-WF-WF, using the framework of Bonneau et al.]{Comparison of Sound-Proof against
+    Google 2-Step Verification (Google 2SV), PhoneAuth~\cite{czeskis12ccs}, and
+    FBD-WF-WF~\cite{shirvanian14}, using the framework of Bonneau et
+    al.~\cite{bonneau12sp}. We use `Y' to denote that the benefit is provided and `S' to
+    denote that the benefit is somewhat provided.}
+    \label{tab:ps_sp_comparison}
+\end{table}
+\end{landscape}
+
+%This is an inherent limitation of any 2FA mechanism that does not ask the user to interact with the phone.
+%If Google 2SV is used, a targeted, co-located attacker must gain access to the user's phone or read the code from a distance~\cite{backes09sp,backes08sp,raguram11ccs}.
+
+\section{Related Work}
+
+In chapter~\ref{chap:ps_relatedwork} we discussed  alternative approaches to 2FA. In the following we review related work that leverages audio to verify the proximity of two devices.
+
+Halevi et al.,~\cite{halevi12esorics} use ambient audio to detect the proximity of two devices to thwart relay attacks in NFC payment systems.
+They compute the cross-correlation between the audio recorded by the two devices and employ machine-learning techniques to tell whether
+the two samples were recorded at the same location or not.
+The authors claim perfect results (0 false acceptance and false rejection rate).
+They, however, assume the two devices to have the same hardware (the experiment campaign used two Nokia N97 phones).
+Furthermore, their setup allows a maximum distance of 30 centimeters between the two devices.
+Our application scenario (web authentication) requires a solution that works (\emph{i}) with heterogeneous devices, (\emph{ii}) indoors and outdoors, and (\emph{iii}) irrespective of the phone's position (e.g., in the user's pocket or purse).
+As such, we propose a different function to compute the similarity of the two samples, which we empirically found to be more robust, than what proposed in~\cite{halevi12esorics}, in our settings.
+
+Truong et al.,~\cite{truong14percom} investigate relay attacks in zero-interaction authentication systems and use techniques similar to the ones of~\cite{halevi12esorics}.
+They propose a framework that detects co-location of two devices comparing features from multiple sensors, including GPS, Bluetooth, WiFi and audio.
+The authors conclude that an audio-only solution is not robust to detect co-location (20\% of false rejections) and advocate for the combination of multiple sensors.
+Furthermore, their technique requires the two devices to sense the environment for 10 seconds. This time budget may not be available for web authentication.
+
+The authors of~\cite{schurmannS13tmc} use ambient audio to derive a pair-wise cryptographic key between two co-located devices.
+They use an audio fingerprinting scheme similar to the one of~\cite{haitsma02} and leverage fuzzy commitment schemes to accommodate for the difference of the two recordings. Their scheme may, in principle, be used to verify proximity of two devices in a 2FA mechanism. 
+However, the experiments of~\cite{schurmannS13tmc} reveal that
+the key derivation is hardly feasible in outdoor scenarios. Our scheme takes advantage of noisy environments and, therefore, can be used in outdoor scenarios like train stations.
+
+\section{Summary and Future Work}
+
+Two-factor authentication is an effective mechanism to prevent attackers from accessing users' accounts and data. Deployed solutions have seen little adoption as users find it cumbersome to change their behavior when authenticating to a website.
+
+We proposed Sound-Proof, a two-factor authentication mechanism for web logins that does not require the user to interact with his phone. In our solution the second authentication factor is the vicinity of the user's smartphone to the computer from which he is logging in. In particular two simultaneous recordings of the surrounding ambient audio are performed on the two devices and compared to test for their proximity. Sound-Proof is deployable today and works with major browsers. The user does not have to interact with his smartphone upon login and we have shown how our system works even if the phone is the user's pocket or purse as well as in a wide variety of environments. In comparison to Google 2-Step Verification, the participants in our user study found Sound-Proof to be more usable. More importantly, the majority said that they would use Sound-Proof for online services for which two-factor authentication is optional. We see the possibility to foster large-scale adoption of two-factor authentication for the web with a solution that is both usable and deployable today.
+
+\subsection{Future Work}
+
+With Sound-Proof we presented a two-factor authentication solution that is transparent to the user as he logs into a website. We now discuss interesting directions for future research.
+
+\paragraph{Audio Comparison.} Our audio comparison algorithm is based on cross-correlation. We perform some optimizations to make it more suitable to our needs such as filtering out lower and higher frequency bands. While this approach has shown to give good results in the experimental evaluation that we performed in multiple environments, we believe that there is room for improvement. Most audio comparison frameworks have seen research in order to perform a fast and accurate lookup of a short audio sample in a large samples dataset (e.g., to find a short and noisy recording of a song in a music catalog). Our use-case is different and different comparison techniques can be further researched to improve the accuracy without hindering usability.
+
+\paragraph{Feature Extraction.} In Sound-Proof, the audio sample recorded by the browser is sent to the phone to perform the audio comparison. While this works well in scenarios where the user's smartphone has data connection, it becomes problematic to achieve the same functionality when that is not the case. One option to consider is to extract audio features from the recording on the browser so that they fit, for example, in an SMS message that can be sent to the phone. This solution requires further research into which features can be extracted from the audio sample while preserving the accuracy and security of our solution.
+
+\paragraph{Security Guarantees.} In this work we presented an empirical evaluation of our proposed solution. We collected a large number of samples in various environments and showed the robusteness of Sound-Proof balancing security and usability. Future work can focus on understanding the physical properties of the audio samples that can be recorded with current platforms, evaluate them in terms of their entropy, and fully gauge the adversary's probability to successfully produce an audio sample that would match the user's one.
+
+\paragraph{User Studies.} We acknowledge the limitations of our small-scale user study, which focused on the usability aspects of Sound-Proof. A possible direction for future research is to perform further user studies in the field of two-factor authentication. In particular it would be interesting to understand how users actually interact with the second authentication factor and if, or how, they perceive the security benefits of two-factor authentication. Future user studies would enable researchers to propose solutions that better suit the needs of end users and possibly enable faster and more widespread adoption.
+
+% In Sound-Proof we considered the user's smartphone to be fully trusted. In the next chapter we move away from this assumption. In the field of payments at points of sale we will assume a stronger adversary that can compromise the vitcim's mobile OS and applications and we will introduce a second authentication factor that is resilient to such attacks. In doing so we investigate the problem of secure enrollment while keeping in mind usability and deployability aspects.

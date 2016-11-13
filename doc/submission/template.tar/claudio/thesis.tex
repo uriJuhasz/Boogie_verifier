@@ -1,0 +1,88 @@
+\documentclass{ETHdissertation}
+
+\usepackage[toc]{appendix}
+\usepackage[sort]{natbib}
+\usepackage{bibentry}
+\usepackage{textcomp}
+\usepackage{tabu,array,multirow}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+\usepackage{subfigure}
+\usepackage{caption}
+\usepackage{rotating}
+\usepackage{lscape}
+\usepackage{supertabular}
+\usepackage[hyphens]{url}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=false, %set true if you want colored links
+    linktoc=all,      %set to all if you want both sections and subsections linked
+    linkcolor=blue,   %choose some color if you want links to stand out
+}
+\usepackage{enumitem}
+%\nobibliography*
+
+\title{Smartphone Security:\\ New Applications and Challenges}
+
+\author{Claudio Marforio}
+\dissnum{XXX}
+\acatitle{Master of Science in Computer Science, \\ETH Zurich}
+\dateofbirth{10.03.1986}
+\citizen{Italy}
+\examiner{Prof.~Dr.~Srdjan \v{C}apkun, examiner}
+\coexaminer{Prof.~Dr.~N. Asokan, co-examiner \\
+Prof.~Dr.~David Basin, co-examiner \\
+Prof.~Dr.~Patrick Traynor, co-examiner}
+\date{2015}
+%\isbn{978-3-8391-4778-8}
+%\publisher{Herstellung und Verlag: Books on Demand GmbH, Norderstedt}
+
+\newcommand{\todo}[1]{\textcolor{red}{TODO: #1}}
+\newcommand{\citneed}{[\textcolor{red}{cit}]}
+
+\begin{document}
+\newsavebox{\myimage}
+
+\frontmatter
+%\newpage\thispagestyle{empty}$ $\newpage\thispagestyle{empty}$ $\newpage
+\maketitle
+%\makeimprint
+\cleardoublepage
+\thispagestyle{empty}
+ \vspace*{\fill} 
+\begin{quote} 
+\raggedleft
+\textit{To succeed, planning alone is insufficient.\\ One must improvise as well.} \\
+--- Asimov, Foundation
+\end{quote}
+\vspace*{\fill}
+\cleardoublepage
+\pagenumbering{roman}
+\import{chapters/}{abstracts.tex}
+\import{chapters/}{acknowledgments.tex}
+\setcounter{tocdepth}{1}
+\tableofcontents
+\listoffigures
+\listoftables
+
+\mainmatter
+\import{chapters/}{introduction.tex}
+\import{chapters/}{background.tex}
+\subimport{chapters/}{part_phonesecures}
+\subimport{chapters/}{part_securingphone}
+\import{chapters/}{conclusions.tex}
+
+\backmatter
+\import{chapters/}{appendix.tex}
+
+\clearpage
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliography{biblio}
+\bibliographystyle{abbrv}
+
+\clearpage
+\clearpage
+\addcontentsline{toc}{chapter}{Resume}
+\import{chapters/}{resume.tex}
+\cleardoublepage
+%\newpage\thispagestyle{empty}$ $\newpage\thispagestyle{empty}$ $\newpage
+\end{document}

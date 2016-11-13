@@ -1,0 +1,1765 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+Our missing gfa can be found directly by congruence closure - we see that applying the function \m{f} 
+to both \m{[(a)]_{p_0}} and \m{[(b)]_{p_0}} reaches the same node in \m{g_{p_0}}, and by \m{[(a)]_n =_n^i [(b)]_n} this is also the case in \m{g_n \sqcap g_{p_1}} - hence we can add the missing edge by checking only local 
+as \m{[(a)]_n} has a super gfa-edge labeled f, and as 
+the equality is the above green line and the functions are
+the gfa \m{[f(b)]_{p_0}} 
+and \m{[f(a)]_{n}} 
+
+we add a potential node for \m{[f(b)]_n} 
+and see that it actually equals \m{[f(a)]_n}:
+
+
+
+
+In the above example, \m{[b]_{p_0} \in \rt{n}{0}} and \m{[\s{a,b}]_{p_1} \in \rt{n}{1}}, so we know that 
+\m{\feasible{\gta{b}{\s{a,b}}}}\\
+Furthermore, we know that a node with a source \gta{b}{\s{a,b}} would be equal in \m{g_n \sqcap g_{p_1}} to \m{[a]_{n}}, 
+as they share the \m{g_{p_1}} source \m{[\s{a,b}]_{p_1}}.\\
+We cannot apply congruence closure for source-pairs as \gta{b}{\s{a,b}} does not have a super gfa-edge labeled f at \m{g_{p_1}},
+but we can perform congruence closure with the \m{g_n} gfa \m{[b]_n} and the relevant gfa \m{[f(b)]_{p_0}}, and we know the resulting potential node would be equal to \m{[f(b)]_n} in \m{g_n \sqcap g_{p_1}}.\\
+We represent this potential node as \gtpa{b}{a} - \\
+the ordered pair \m{([b]_{p_0},[a]_{n}) \in g_{p_0} \times g_n} which we call a \emph{source-join-pair}.\\
+The dual would be in the form \gtpb{a}{\s{a,b}} of the set \m{g_n \times g_{p_1}}.\\
+In the bottom-up approach we know that each source-join-pair that we consider is feasible, as is the case for source-pairs, 
+and we denote the set of such feasible source-join-pairs as \fgtps{n}{i}.\\
+The potential \m{g_n} node that \gtpb{b}{a} represents would be equal to \m{[f(a)]_n} in \m{g_n \sqcap g_{p_1}},
+but also shares a source in \m{g_{p_0}} with it, hence it is also equal in \m{g_n \sqcap g_{p_0}} and at the join.\\
+To illustrate the above reasoning:
+
+
+
+
+We see now 
+
+Clearly, if we want to \lstinline{add(f(a))} to \m{n}, just following gfa paths downwards will not do.\\
+Our solution is, essentially, to traverse and mark, at \m{p_0}, the path \s{f(a),f(b)} - \s{(b)} - \s{b} - \s{()} until we hit a node that is a common source with one from \m{p_1} - in this case \s{()}, 
+now we can traverse up the marked path in lock-step as long as both joinees agree - so we get to the pair \m{[\s{b},\s{a,b}]}, 
+and now we cannot traverse in lock-step anymore, but we can see that \s{a,b} would be the source of \s{b} at \m{n}, 
+but also of \s{a}, which has \s{a} at \m{p_0} as a source - so we know that applying the function \m{f} to both at \m{p_0} 
+would give the same result (same node, if we were to create it) at \m{p_1} - 
+so now we traverse the nodes \s{a} and \s{b} at \m{p_0} in lock-step as long as one has a marked path and they agree on edge labels, until we reach \s{f(a),f(b)} - here they converge and so we know they should lead to the same node at the join - we end up with:
+\begin{figure}[H]
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 2.5cm and 0cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_1}};
+
+	\node[gtn]  (12) [above left  = 1cm and 1cm of 11] {\s{a}};
+	\node[gtn]  (14) [above right = 1cm and 1cm of 11] {\s{b}};
+	
+	\draw[gfa]  (12)  to node[el,anchor=east]  {\m{a}} (11);
+	\draw[gfa]  (14)  to node[el,anchor=west]  {\m{b}} (11);
+
+	\node[gttn] (12a)  [above = 1cm of 12]    {\m{(a)}};
+	\node[gttn] (14a)  [above = 1cm of 14]    {\m{(b)}};
+
+	\draw[sgtt] (12a) to node[el,anchor=east] {0} (12);
+	\draw[sgtt] (14a) to node[el,anchor=west] {0} (14);
+
+	\node[gtn]  (15) [above = 3cm of 11] {\tiny$\faB{f}{a}{b}$};
+	\draw[gfa]  (15) to node[el,anchor=east] {\m{f}} (12a);
+	\draw[gfa]  (15) to node[el,anchor=west] {\m{f}} (14a);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (21)  [below right= 3.0cm and 0cm of 1] {$()$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_2}};
+
+  \node[gtn]  (22) [above  = 1.0cm of 21] {\s{a,b}};
+	
+  \draw[gfa] (22) to[bend right] node[el,anchor=east] {\m{a}} (21);
+  \draw[gfa] (22) to[bend left]  node[el,anchor=west] {\m{b}} (21);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 6cm of 1] {$()$};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+	\node[gtn]  (32) [above left  = 1cm and 1cm of 31] {\s{a}};
+	\node[gtn]  (34) [above right = 1cm and 1cm of 31] {\s{b}};
+	
+	\draw[gfa]  (32)  to node[el,anchor=east]  {\m{a}} (31);
+	\draw[gfa]  (34)  to node[el,anchor=west]  {\m{b}} (31);
+
+	\node[gttn] (32a)  [above = 1cm of 32]    {\m{(a)}};
+	\node[gttn] (34a)  [above = 1cm of 34]    {\m{(b)}};
+
+	\draw[sgtt] (32a) to node[el,anchor=east] {0} (32);
+	\draw[sgtt] (34a) to node[el,anchor=west] {0} (34);
+
+	\node[gtn]  (35) [above = 3.5cm of 31] {\tiny$\faB{f}{a}{b}$};
+	\draw[gfa]  (35) to node[el,anchor=east] {\m{f}} (32a);
+	\draw[gfa]  (35) to node[el,anchor=west] {\m{f}} (34a);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node (32u) [above left = 0.2cm and 1.0cm of 32] {};
+	\node (32d) [below left = 0.2cm and 1.0cm of 32] {};
+	\draw[se] (32) to (32u) to (12);
+	\draw[se] (32) to (32d) to (22);
+
+	\node (34u) [above left = 0.2cm and 2.5cm of 34] {};
+	\node (34d) [below left = 0.2cm and 2.5cm of 34] {};
+	\draw[se] (34) to (34u) to (14);
+	\draw[se] (34) to (34d) to (22);
+
+	\node (32au) [above left = 2.2cm and 2.5cm of 32a] {};
+	\draw[se] (32a) to[in=-10] (32au) to[out=170] (12a);
+
+	\node (34au) [above left = 0.0cm and 2.0cm of 34a] {};
+	\draw[se] (34a) to (34au) to (14a);
+
+
+	\node (35u) [above left = 0.2cm and 1.0cm of 35] {};
+	\draw[se] (35) to (15);
+
+	\draw[green] (32a.0) to node[el,anchor=north,text=green] {$\m{p_1}$} (34a.180);
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (3.5cm,-3.3cm) to (3.5cm,6.5cm);
+\end{pgfinterruptboundingbox}
+\end{tikzpicture}
+\caption{
+Join gfa completeness missing paths\\
+after $\m{n}$.\lstinline{add(f(a))}
+}
+\label{snippet3.20_graph3}
+\end{figure}
+\noindent
+As expected.\\
+The green line between \s{(a)} and \s{(b)} labeled \m{n} means that any super-term of of these tuples will be equal in \m{p_1} - 
+we remember this fact so that we do not need to recalculate it - the full details are in the algorithm description in the next section.
+
+Our weak join is missing some obvious cases, as can be seen easily if we look at ~\ref{snippet3.20_graph3}:\\
+\m{\s{f(a)=f(b)} \sqcup \s{a=b}}, where we want to create the term \m{f(a)} at \m{g_n}.\\
+Here there is no source-pair for \m{f(a)} as \m{\sources{n}{p_1}{[f(a)]_{g_n}}=\emptyset}.
+However, \m{\sources{n}{p_0}{[f(a)]_{g_n}}=[f(a)]_{g_{p_0}}} where \\
+\m{\gfasA{[f(a)]_{g_{p_0}}} = \s{\fa{f}{[a]_{g_{p_0}}},\fa{f}{[b]_{g_{p_0}}}}} - so how can we can we observe that the joined graph is missing a \gfa at that EC-node?\\
+In order to be able to determine locally (in \m{g_n}) when such a case occurs, we add state to \m{g_n} to represent the difference between
+the equalities provable from \m{\eqs{p_1} \cup \eqs{n}} and those provable (and hence represented) in \m{g_n}.\\
+This additional state is represented by the green line (and label) at ~\ref{snippet3.20_graph3} - it means that the two EC-nodes (tuple nodes in this case, but similarly for term nodes) \m{[(a)]_{n}} and \m{[(b)]_{n}} can be proven equal from \m{\eqs{p_1} \cup \eqs{n}}.\\
+For a predecessor \m{p}, we will denote the case where two nodes \m{s,t \in g_n} can be proven equal from \\
+\m{\eqs{p} \cup \eqs{n}}  as \m{p,n \models s=t}.\\
+The additional state is represented using equivalence classes relative to a specific predecessors:\\
+For \m{s,t \in g_{p_0}}, we use \m{[s]_{g_n}^0 = [t]_{g_n}^0} to represent the additional state that signifies that \m{s,t} are in the same equivalence class at \m{g_n} - implying:\\
+\m{\exists u \in \terms{s},v \in \terms{t} \cdot \eqs{p} \cup \eqs{n} \models u=v}.\\
+In example ~\ref{snippet3.20_graph3} we establish the equality \m{f(a)=f(b)} from \m{\eqs{n} \cup \eqs{p_0}} directly from an axiom, 
+and from \m{\eqs{n} \cup \eqs{p_1}} by congruence closure.\\
+The difference from the cases that are covered by the weak join is that here we are missing the node \m{[b]_{g_n}} at \m{g_n}.
+If \m{[b]_{g_n}} had already existed, we would have known that, as it shares the source \m{[a]_{g_{p_1}}} (from \m{g_{p_1}}) with \m{[a]_{g_n}}, the gfas \m{f([a]_{g_{n}})} and \m{f([b]_{g_{n}})} are equal under \m{\eqs{n} \cup \eqs{p_1}} by congruence closure.\\
+For the strong join we need to make sure we find all such missing nodes. \\
+As before, we have two options for approaching this search - either bottom up, inspecting all potential missing nodes, but only feasible ones, or top down, inspecting only potential missing nodes that would be part of a gfa, but also including infeasible ones.\\
+\textbf{Bottom up:}\\
+In our example, inspecting bottom up we would need to generate all feasible source-pairs of relevant terms - in our case that means
+we would create the source-pair \gta{[b]_{g_{p_0}}}{[b]_{g_{p_1}}} (as each member of the source pair appears in the downward closure of source nodes of the nodes of \m{g_n}), we know that the potential \m{g_n} node that belongs to this source-pair - which would be \m{[b]_{g_n}} if we were to add it - is equal in \m{\eqs{n} \cup \eqs{p_1}} to \m{[a]_{g_n}}, and so by congruence closure the gfas 
+\m{f([a]_{g_n})} and \m{f([b]_{g_n})} are also equal in \m{\eqs{n} \cup \eqs{p_1}}.
+We already know that \m{[f(a)]_{g_n})} is equal to \m{[f(b)]_{g_n})} in \m{\eqs{n} \cup \eqs{p_0}} because they share a source (\m{[f(a)]_{g_{p_0}}}), and so we know that \m{f([a]_{g_n}) = f([b]_{g_n})}.\\
+In this case there are no other feasible potential source-pairs.
+We see in ~\ref{snippet3.20_graph4} that the two top nodes in \m{g_n} share a source in \m{p_0} and are marked equal in \m{p_1} by 
+congruence closure, hence they are equal also at \m{n}.
+
+\noindent
+\textbf{Top down:}\\
+In our example, we inspect \m{[f(a)]_{g_n}}, we find that the gfa \m{f([a]_{g_n})} has the same function symbol as \m{f([b]_{g_{p_0}})},
+which appears in the source \m{[f(a)]_{g_{p_0}}}. Similar to source-pairs we inspect the pair \m{[a]_{g_n}} vs. \m{[b]_{g_{p_0}}} and
+we find that \m{[a]_{g_{p_1}} \in \sources{n}{p_1}{[a]_{g_n}}}, and so we check for the feasibility of the (standard) source pair 
+\gta{[b]_{g_{p_0}}}{[a]_{g_{p_1}}} as before - we find it is feasible, so create the corresponding \m{g_n} node \m{[b]_{g_n}} and add the gfa \m{f([b]_{g_n})} to \m{[f(b)]_{g_n}}.\\
+Here the basic element we are dealing with, in addition to source pairs, is a pair of a node from \m{g_n} and a node from \m{g_{p_i}}.\\
+We name these elements \emph{predecessor pairs} and denote them as \gtpa{s}{t}, where \m{s \in g_{p_0},t \in g_n},
+and accordingly \gtpb{t}{s}, where \m{s \in g_{p_1},t \in g_n}.\\
+In our example, we had \gtpa{[f(a)]_{g_{p_0}}}{[f(a)]_{g_n}} and we generated from it \\
+\gtpa{[b]_{g_{p_0}}}{[a]_{g_n}}, 
+from which we got \gta{[a]_{g_{p_0}}}{[b]_{g_{p_1}}} through \\
+\m{{[b]_{g_{p_1}}} \in \sources{n}{p_1}{[a]_{g_n}}}.\\
+Adding such a predecessor pair \gtpb{t}{s} to our data structure signifies that there is some sequence of functions,
+s.t. applying that sequence to \m{t} in \m{g_n} reaches some term \m{u}, and applying it to \m{s} reaches \m{v} in \m{g_{p_i}},
+and \m{v \in \sources{n}{p_i}{u}}. For non-unary functions, this only takes into account reachability thourough reverse gfa edges, 
+regardless of other nodes that participate in the same tuple (we will discuss related optimizations later).\\
+For our example the set of generated source-pairs and predecessor-pairs is depicted in ~\ref{snippet3.20_graph5}:
+
+\begin{figure}[H]
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 2.5cm and 0cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_1}};
+
+	\node[gtn]  (12) [above left  = 1cm and 1cm of 11] {\s{a}};
+	\node[gtn]  (14) [above right = 1cm and 1cm of 11] {\s{b}};
+	
+	\draw[gfa]  (12)  to node[el,anchor=east]  {\m{a}} (11);
+	\draw[gfa]  (14)  to node[el,anchor=west]  {\m{b}} (11);
+
+	\node[gttn] (12a)  [above = 1cm of 12]    {\m{(a)}};
+	\node[gttn] (14a)  [above = 1cm of 14]    {\m{(b)}};
+
+	\draw[sgtt] (12a) to node[el,anchor=east] {0} (12);
+	\draw[sgtt] (14a) to node[el,anchor=west] {0} (14);
+
+	\node[gtn]  (15) [above = 3cm of 11] {\tiny$\faB{f}{a}{b}$};
+	\draw[gfa]  (15) to node[el,anchor=east] {\m{f}} (12a);
+	\draw[gfa]  (15) to node[el,anchor=west] {\m{f}} (14a);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (21)  [below right= 3.0cm and 0cm of 1] {$()$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_2}};
+
+  \node[gtn]  (22) [above  = 1.0cm of 21] {\s{a,b}};
+	
+  \draw[gfa] (22) to[bend right] node[el,anchor=east] {\m{a}} (21);
+  \draw[gfa] (22) to[bend left]  node[el,anchor=west] {\m{b}} (21);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 6cm of 1] {$()$};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+	\node[gtn]  (32) [above left  = 1cm and 1cm of 31] {\s{a}};
+	\node[pgtn] (34b)  [above right = 1cm and 1cm of 31]    {\m{\gta{b}{a}}};
+	\node[pgtn]  (34) [above = 0.5cm of 34b] {\m{\gtpa{b}{a}}};
+	
+	\draw[gfa]  (32)  to node[el,anchor=east]  {\m{a}} (31);
+
+	\node[gttn] (32a)  [above = 1.5cm of 32]    {\m{(a)}};
+	\node[pgttn] (34a)  [above = 0.55cm of 34]    {\m{\gtpa{(b)}{(a)}}};
+
+	\draw[pgfa]  (34b)  to node[pl,anchor=west]  {\m{b}} (31);
+	
+
+	\draw[sgtt] (32a) to node[el,anchor=east] {0} (32);
+	\draw[psgtt] (34a) to node[pl,anchor=west] {0} (34);
+
+	\node[gtn]  (35) [above = 1.5cm of 32a] {\tiny$\m{f(a)}$};
+	\draw[gfa]  (35) to node[el,anchor=east] {\m{f}} (32a);
+
+	\node[pgtn] (36) [above = 1.23cm of 34a] {\tiny$\m{\gtpa{\faB{f}{a}{b}}{f(a)}}$};
+	\draw[pgfa] (36) to node[pl,anchor=west] {\m{f}} (34a);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node (32u) [above left = 0.2cm and 1.0cm of 32] {};
+	\node (32d) [below left = 0.2cm and 1.0cm of 32] {};
+	\draw[se] (32) to (32u) to (12);
+	\draw[se] (32) to (32d) to (22);
+
+	\node (34u) [above left = 0.2cm and 2.5cm of 34] {};
+	\node (34d) [below left = 0.2cm and 2.5cm of 34] {};
+	\node (34bnw) [above left = 0.2cm and 1.8cm of 34b] {};
+	\node (34bsw) [below left = 0.2cm and 1.8cm of 34b] {};
+	\draw[se] (34b) to (34bnw) to (14);
+	\draw[se] (34b) to (34bsw) to (22);
+	\node (34nw) [above left = 0.2cm and 1.8cm of 34] {};
+	\draw[se] (34) to (34nw) to (14);
+%
+	%%\node (32au) [above left = 2.2cm and 2.5cm of 32a] {};
+	%%\draw[se] (32a) to[in=-10] (32au) to[out=170] (12a);
+%%
+	%%\node (34au) [above left = 0.0cm and 2.0cm of 34a] {};
+	%%\draw[se] (34a) to (34au) to (14a);
+
+	\node (35u) [above left = 0.2cm and 1.0cm of 35] {};
+	\draw[se] (35) to (15);
+	\node (36u) [above left = 0.2cm and 1.0cm of 36] {};
+	\draw[se] (36) to (15);
+	\draw[pe] (36.180) to (35.0);
+	\draw[pe] (34.180) to (32.0);
+%	\draw[pe,green] (34b.180) to (32.0);
+
+	\draw[pe] (34.-90) to[out=-90,in=90] (34b.90);
+%	\draw[pe] (34b) to (32);
+
+	\draw[green,dashed] (34b) to node[pl,anchor=north,text=green] {$\m{p_1}$} (32);
+%	\draw[green] (32a.0) to node[el,anchor=north,text=green] {$\m{p_1}$} (34a.180);
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (3.5cm,-3.3cm) to (3.5cm,6.5cm);
+\end{pgfinterruptboundingbox}
+\end{tikzpicture}
+\caption{
+Join gfa completeness missing paths\\
+after $\m{n}$.\lstinline{add(f(a))}
+}
+\label{snippet3.20_graph5}
+\end{figure}
+
+We need to represent also when two \m{g_n} nodes are equal under \\
+\m{\eqs{n} \cup \eqs{p_i}}  
+(the horizontal green line in ~\ref{snippet3.20_graph3}) - we use the notation\\
+\m{s =_n^{i} t} for this.
+
+Source completeness for the full join is as follows:
+\begin{figure}[H]
+\begin{enumerate}
+	\item Weak source completeness:\\
+	\m{\forall t \in g_n, i, \fa{f}{u} \in t, \tup{s_i} \in \sources{n}{p_i}{\tup{u}}, s \in g_{p_i} \cdot}\\
+	\m{ \fa{f}{s_i} \in s \Rightarrow s \in \sources{n}{p_i}{t}}
+	\item Per-predecessor equality base case:\\
+	\m{\forall s,t \in g_n, i \cdot}\\
+	\m{ (\sources{n}{p_i}{s} \cap \sources{n}{p_i}{t} \neq \emptyset) \Rightarrow s =_n^i t}
+	\item Per-predecessor equality gruence closure:\\
+	\m{\forall t \in g_n, i, \fa{f}{u} \in t, \tup{v} \in g_n, s \in g_n \cdot}\\
+	\m{ (\tup{v} =_n^i \tup{u} \land \fa{f}{v} \in s) \Rightarrow s =_n^i t}
+\end{enumerate}
+\caption{strong join source completeness}
+\label{strong_join_source_completeness}
+\end{figure}
+
+
+
+
+Our gfa completeness requirements for the top down approach include all rules for source-pairs we have used for the weak join, 
+and the additional rules for predecessor pairs:
+
+\begin{figure}[H]
+\begin{enumerate}
+	\item All feasible source-pairs of existing nodes participate in the corresponding gfa:\\
+	\m{\forall t \in g_n, \gta{s_0}{s_1} \in \sourcesB{n}{t},  \fa{f}{v_0} \in s_0, \fa{f}{v_1} \in s_1 \cdot}\\
+	\m{\feasible{\gta{\tup{v_0}}{\tup{v_1}}} \Rightarrow \exists \fa{f}{u} \in t \cdot \gta{\tup{v_0}}{\tup{v_1}} \in \sourcesB{n}{\tup{u}}}
+	\item All feasible predecessor-pairs of existing nodes participate in the corresponding gfa :\\
+	\m{\forall t \in g_n, s_0 \in \sourcesB{n}{t}, \fa{f}{v_0} \in s_0, \fa{f}{u} \in t \cdot}\\
+	\m{\feasible{\gtpa{\tup{v_0}}{\tup{u}}} \Rightarrow \exists \fa{f}{w} \in t \cdot \tup{v_0} \in \sources{n}{p_0}{\tup{w}}}
+	And symmetrically for \m{p_1}.
+	\item Feasibility for source-pairs:\\
+	\m{\feasible{\gta{s_0}{s_1}} \triangleq }\\
+	\m{(\exists t \in g_n \cdot \gta{s_0}{s_1} \in \sourcesB{n}{t})}\\
+	\m{\lor (\exists \fa{f}{u_0} \in s_0,\fa{f}{u_1} \in s_1 \cdot \feasible{\gta{\tup{u_0}}{\tup{u_1}}})}
+	\item Feasibility for predecessor-pairs:\\
+	\m{\feasible{\gtpa{s_0}{t}} \triangleq }\\
+	\m{(\exists s_1 \in \sources{n}{p_1}{t} \cdot \feasible{\gta{s_0}{s_1}})}\\
+	\m{\lor (\exists \fa{f}{u_0} \in s_0,\fa{f}{v} \in t \cdot \feasible{\gtpa{\tup{u_0}}{\tup{v}}})}\\
+	\m{\lor (\exists u \in g_n \cdot s_0 \in \sources{n}{p_0}{u} \land u =_n^i t )}\\
+	And symmetrically for \m{p_1}.
+\end{enumerate}
+\caption{strong join propagation completeness}
+\label{strong_join_propagation_completeness}
+\end{figure}
+
+The third disjunct of 4 is needed if, for example, in ~\ref{snippet3.20_graph5} we had already added \m{b} to \m{g_n} before 
+adding \m{f(a)} - we do not want to repeat the work of establishing \m{[a]_{g_n} =_n^1 [b]_{g_n}} (dashed green line in the digram), so we establish this equality (that is, place these two nodes in the same \m{p_1} equivalence class) when adding the node \m{[b]_{g_n}}, and use the result when adding term
+\m{f(a)}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+without inspecting the whole of \m{g_{p_0}}, would be by matching the  of both \m{[b]_{p_0},[c]_{p_0}} - one of these edges is marked relevant (as it belongs to \m{[a]_{p_0}}, and so we mark the other, with its node \m{[d]_{p_0}} as also relevant 
+
+The additional state (green in the above) we keep in order to facilitate is reason for keepingadditional state that we need to keep in order 
+
+The important point here is that we did not need to consider the node \m{[b]_{g_n}} and its edges at all during the update operation.\\
+In all existing join algorithms, this node would have to be considered both initially and during the last \lstinline{update}.\\
+In this case it is just one node with two gfas, but in general it could be any size of a sub-graph (e.g. replace \m{g(b),g(c)} by \m{g^n(b),g^n(c)} ) that would be evaluated twice.\\
+If the above predecessor specific gfas (green lines) were actually a sub-graph - e.g. \m{g^2(b),g^2(c)} - then we need corresponding 
+predecessor specific nodes that represent information we have gathered in previous operation on \m{g_n}, that have not resulted in any node
+at \m{g_n}, but that we do not want to repeat - as shown in the graph:
+\begin{figure}[H]
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 2.5cm and 0cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+	\node[gtn]  (12) [above left  = 1cm and 1cm of 11] {\s{b}};
+	\node[gtn]  (14) [above right = 1cm and 1cm of 11] {\s{c}};
+	
+	\draw[gfa]  (12)  to node[el,anchor=east]  {\m{b}} (11);
+	\draw[gfa]  (14)  to node[el,anchor=west]  {\m{c}} (11);
+
+	\node[gttn] (12a)  [above = 1cm of 12]    {\m{(b)}};
+	\node[gttn] (14a)  [above = 1cm of 14]    {\m{(c)}};
+
+	\draw[sgtt] (12a) to node[el,anchor=east] {0} (12);
+	\draw[sgtt] (14a) to node[el,anchor=west] {0} (14);
+
+	\node[gtn]  (15) [above = 1cm of 12a] {\tiny$\s{f(b)}$};
+	\draw[gfa]  (15) to node[el,anchor=east] {\m{f}} (12a);
+	\node[gtn]  (16) [above = 1cm of 14a] {\tiny$\s{f(c)}$};
+	\draw[gfa]  (16) to node[el,anchor=west] {\m{f}} (14a);
+
+	\node[gttn] (15a)  [above = 1cm of 15]    {\m{(f(b))}};
+	\node[gttn] (16a)  [above = 1cm of 16]    {\m{(f(c))}};
+
+	\draw[sgtt] (15a) to node[el,anchor=east] {0} (15);
+	\draw[sgtt] (16a) to node[el,anchor=west] {0} (16);
+
+	\node[gtn]  (17) [above = 1cm of 15a] {\tiny$\svb{a}{f(f(b))}$};
+	\draw[gfa]  (17) to node[el,anchor=east] {\m{f}} (15a);
+	\draw[gfa]  (17) to[out = -60,in=90] node[el,anchor=east] {\m{a}} (11);
+	\node[gtn]  (18) [above = 1cm of 16a] {\tiny$\svb{d}{f(f(c))}$};
+	\draw[gfa]  (18) to node[el,anchor=west] {\m{f}} (16a);
+	\draw[gfa]  (18) to[out = -120,in=90] node[el,anchor=west] {\m{d}} (11);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (21)  [below right= 3.0cm and 0cm of 1] {$()$};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+	\node[gtn]  (22) [above left  = 1cm and 1cm of 21] {\s{b}};
+	\node[gtn]  (24) [above right = 1cm and 1cm of 21] {\s{c}};
+	
+	\draw[gfa]  (22)  to node[el,anchor=east]  {\m{b}} (21);
+	\draw[gfa]  (24)  to node[el,anchor=west]  {\m{c}} (21);
+
+	\node[gttn] (22a)  [above = 1cm of 22]    {\m{(b)}};
+	\node[gttn] (24a)  [above = 1cm of 24]    {\m{(c)}};
+
+	\draw[sgtt] (22a) to node[el,anchor=east] {0} (22);
+	\draw[sgtt] (24a) to node[el,anchor=west] {0} (24);
+
+	\node[gtn]  (25) [above = 1cm of 22a] {\tiny$\svb{a}{g(b)}$};
+	\draw[gfa]  (25) to node[el,anchor=east] {\m{g}} (22a);
+	\draw[gfa]  (25) to node[el,anchor=east] {\m{a}} (21);
+	\node[gtn]  (26) [above = 1cm of 24a] {\tiny$\svb{d}{g(c)}$};
+	\draw[gfa]  (26) to node[el,anchor=west] {\m{g}} (24a);
+	\draw[gfa]  (26) to node[el,anchor=west] {\m{d}} (21);
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 7cm of 1] {$()$};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+	\node[gtn]  (32) [above left  = 6cm and 1cm of 31] {\s{a}};
+	\node[gtn]  (34) [above right = 1cm and 1cm of 31] {\s{b,c}};
+	
+%	\draw[gfa,ultra thick]  (32)  to[out=-80,in=80]  node[el,anchor=south west,pos=0.4]  {\m{\mathbf{d}}} (31);
+	\draw[gfa]  (32)  to[out=-90,in=100] node[el,anchor=east]  {\m{a}} (31);
+	\draw[gfa]  (34)  to[bend left]  node[el,anchor=east]  {\m{b}} (31);
+	\draw[gfa]  (34)  to[bend right] node[el,anchor=west]  {\m{c}} (31);
+
+	\node[gttn,green] (34a)  [above = 1cm of 34]    {\m{p_0}};
+	\draw[sgtt,green] (34a) to node[el,anchor=east,text=green] {0} (34);
+
+	\node[gtn,green]  (36) [above = 1cm of 34a] {\m{p_0}};
+	\draw[gfa,green]  (36)  to  node[el,anchor=south west,text=green]  {\m{f_0}} (34a);
+
+	\node[gttn,green] (36a)  [above = 1cm of 36]    {\m{p_0}};
+	\draw[sgtt,green] (36a) to node[el,anchor=east,text=green] {0} (36);
+
+	\draw[gfa,green]  (32.-90)  to[out=-45,in=90]  node[el,anchor=south west,text=green]  {\m{f_0}} (36a);
+	\draw[gfa,green]  (32.-90)  to node[el,anchor=north east,text=green]  {\m{g_1}} (34);
+
+%	\node[gttn] (32a)  [above = 1cm of 32]    {\m{(a)}};
+%	\node[gttn] (34a)  [above = 1cm of 34]    {\m{(b)}};
+
+%	\draw[sgtt] (32a) to node[el,anchor=east] {0} (32);
+%	\draw[sgtt] (34a) to node[el,anchor=west] {0} (34);
+
+%	\node[gtn]  (35) [above = 1cm of 32a] {\tiny$\s{f(a)}$};
+%	\draw[gfa]  (35) to node[el,anchor=east] {\m{f}} (32a);
+%	\draw[gfa]  (35) to node[el,anchor=west] {\m{f}} (34a);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node (32nw) [above left = 0.8cm and 1.0cm of 32] {};
+	\node (32nww) [left = 2cm of 32nw] {};
+	\node (32sw) [below left = 0.8cm and 1.0cm of 32] {};
+%	\node (32d) [below left = 0.2cm and 1.0cm of 32] {};
+	\draw[se] (32) to (32nw) to (32nww) to (17);
+	\draw[se] (32) to (32nw) to (18);
+	\draw[se] (32) to (32sw) to (25);
+	\draw[se] (32) to (32sw) to (26);
+
+	\node (36nw) [above left = 0.4cm and 1.5cm of 36] {};
+	\draw[se] (36) to (36nw) to (15);
+	\draw[se] (36) to (36nw) to (16);
+
+	%\node (34nw) [above left = 0.2cm and 1.5cm of 34] {};
+	%\node (34sw) [below left = 0.2cm and 1.5cm of 34] {};
+	%\draw[se] (34) to (34nw) to (12);
+	%\draw[se] (34) to (34nw) to (14);
+	%\draw[se] (34) to (34sw) to (22);
+	%\draw[se] (34) to (34sw) to (24);
+%	\draw[se] (34) to (34d) to (22);
+
+%	\node (32au) [above left = 2.2cm and 2.5cm of 32a] {};
+%	\draw[se] (32a) to[in=-10] (32au) to[out=170] (12a);
+
+%	\node (34au) [above left = 0.0cm and 2.0cm of 34a] {};
+%	\draw[se] (34a) to (34au) to (14a);
+
+
+%	\node (35u) [above left = 0.2cm and 1.0cm of 35] {};
+%	\draw[se] (35) to (15);
+
+%	\draw[green] (32a.0) to node[el,anchor=north,text=green] {$\m{p_1}$} (34a.180);
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (3.5cm,-3.3cm) to (3.5cm,9.5cm);
+\end{pgfinterruptboundingbox}
+\end{tikzpicture}
+\caption{
+Join gfa completeness missing paths\\
+before $\m{n}$.\lstinline{update}
+}
+\label{snippet3.22_graph6}
+\end{figure}
+Here the green nodes with sources represent sets of EC-nodes from \m{g_{p_0}}, essentially encoding the difference between,
+\s{s=t \mid  \models s =_{n,p_0} t} and \\
+\m{ \s{s=t \mid s=_{n,p_0} t} \cup \s{s=t \mid s=_{n,p_1} t}}\\
+restricted to \emph{relevant terms} - terms represented in nodes of \m{g_{p_0}} that are reachable through gfa edges from the range of the \m{sources(n)(p_0)} function, and their equivalence class under \m{=_{n,p_0}}.\\
+The actual representation of this information would be a partition of the set of relevant terms (set of pairwise disjoint sets), so it does not increase the space complexity asymptotically. We write \m{s=_{n,p_0} t} when the term-EC-nodes \m{s,t \in g_{p_0}} are in the same partition.\\
+The green line we have seen at ~\ref{snippet3.20_graph3}, between two \m{g_n} term-EC-nodes \m{s,t} essentially means that
+these two nodes are equal under \m{m,p_0} \\
+(that is,\m{\exists u \in \terms{s}, v \in \terms{t} \cdot n,p_0 \models u=v}).\\
+We overload the notation and write \m{s =_{n,p_0} t} in this case (this time for \m{g_n} nodes).\\
+This property can be established in two ways:\\
+either directly - \m{\exists u \in \sources{n}{p_0}{s},v \in \sources{n}{p_0}{t} \cdot u =_{n,p_0} v}, \\
+or the equality was established indirectly through congruence closure - that is, \\
+\m{\exists \fa{f}{u} \in s, \fa{f}{v} \in t \cdot \tup{u} =_{n,p_0} \tup{v}}
+
+Note, for graph locality we do not need the green edges (gfa) as well, as they only copy information from the corresponding gfa edges in \m{g_{p_0}}, which is reachable in O(1) through source edges, but, as we will show when discussing complexity, when we need to enumerate or search through incoming or outgoing gfa edges, copying and indexing these edges helps ensure the overall complexity is bounded only by relevant terms.
+
+We will use the notation \m{g_n \models s=_{0} t} for both cases above:\\
+For \m{s,t \in g_{p_i}} to mean that \m{s,t \in \rt{n}{i}} and that they share the same \m{p_i} equivalence class -\m{[s]_{g_n}^i = [t]_{g_n}^i}\\
+And\\
+For \m{s,t \in g_{n}} to mean that \m{s,t} are marked as equal under \m{n,p_i} (the horizontal green line of ~\ref{snippet3.20_graph3}).\\
+We assume both of these are always reflexive, and extend them in the standard way to tuples.\\
+
+
+Note that the second part implies down propagation, while the fourth part implies upward propagation - 
+so we can get the equivalent of ~\ref{graph_sequential_multi_propagation_post} per predecessor.\\
+The key that allows us to establish in  ~\ref{snippet3.22_graph4} that \m{[d]_{g_{p_0}} \in \sources{n}{p_0}{[a]_{g_n}}}
+is the fourth part:\\
+\m{[a]_{g_{p_0}}} = \m{[g(b)]_{g_{p_0}}}, \m{[d]_{g_{p_0}}} = \m{[g(c)]_{g_{p_0}}} \\
+\m{[b]_{g_{p_0}} =_{n,0} [c]_{g_{p_0}}} because they are both in \sources{n}{p_0}{[b]_{g_n}} (by part 3)\\
+As \m{[g(b)]_{g_{p_0}} \in \rt{n}{0}}, and as \m{g([c]_{p_0}) \in \gfasA{[g(c)_{p_0}}}, \\
+we get that \m{[[g(b)]_{p_0}]_{g_n}^{0} = [[g(c)]_{p_0}]_{g_n}^{0}} by part 4.
+
+\noindent 
+\textbf{Locality:}
+All of the above conditions are local, in the sense that we can check each node (in \m{g_n,g_{p_i},\rt{n}{i}}) 
+just by considering paths from the node (on all edge types - gfa,source,relevant terms) of constant length (in fact length at most 3).\\
+For example, for rule 4, given an \rt{n}{i} node, we need to follow a gfa edge \m{f}, 
+find the relevant tuples and for each tuple try look for a corresponding gfa edge \m{f} in \m{g_{p_i}}.
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+\textbf{Asymptotic bounds:}
+We note here some of the asymptotic bounds on regarding the problem of establishing strong source completeness:
+\begin{itemize}
+	\item For a given program cfg, two nodes \m{n,p}, a path \m{p.P.n} and nodes \m{t \in g_n,s \in g_p} s.t. there are 
+	\m{u \in \terms{t},v \in \terms{s}} s.t. \m{p.P.n \models u=v}, the worst case space complexity (number of \gfas that we need to add in EC-graphs in the program) for ensuring the strong source completeness condition is at least exponential, by using example \ref{snippet3.6}, where at \m{j_1} we would need an exponential sized term to connect \m{[x]_n} to \m{[y]_{j_0}}
+	\item For a path of length three (that is, in the above, \m{p.q.n} for some \m{q}) the worst case space complexity is quadratic, by the following argument: w.l.o.g. we can start with \m{g_q} empty, we now start adding gfas (and the corresponding nodes) to \m{g_q} by the following criterion - we add the gfa \fa{f}{u} iff there are \m{\tup{t} \in g_n, \tup{s} \in g_n} s.t.
+		\begin{itemize}
+			\item  \m{\tup{u} \in \sources{n}{q}{\tup{t}}},
+			\m{\tup{s} \in sources{q}{p}{\tup{u}}} 
+			\item \m{\fa{f}{t} \in g_n, \fa{f}{s} \in g_p} but \m{[\fa{f}{s}]_p \notin \sourcesB{p.q.n}{[\fa{f}{t}]_n}}
+		\end{itemize}
+		The second condition ensures that we do not add more than a quadratic number of \gfas, and it is easy to see that any \gfa that is not added cannot contribute a new source triple because either (first condition violated) it is disconnected from either \m{n} or \m{p}, or (second condition violated) the connection it would add is not new.\\
+		This gives us a quadratic upper bound for a path with one middle node (2+1 nodes in total). 
+		To extend this to a path with \m{n} nodes,  where, w.l.o.g., the EC-graph at each but the first and last are empty, we need at most \m{
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+For ground (non-unit) clauses, we want to be able to determine whether a clause needs to be propagated from a node in which it was derived to a transitive successor node where it might participate in an inference with another clause.\\
+We cannot simply look at both clauses to determine this - for example:
+\begin{figure}[H]
+\begin{lstlisting}
+$\node{n_1}:$
+	assume $\m{\underline{g(f(d))}=g(a) \lor C}$ //$\m{\textcolour{gray}{g(f(d))}}$ is maximal
+$\node{n_2}:$
+	assume $\m{d=c}$
+$\node{n_3}:$
+	assume $\m{f(c)=h(b)}$
+$\node{n_4}:$
+	assume $\m{\underline{g(h(b))}=a \lor D}$ //$\m{\textcolour{gray}{g(h(b))}}$ is maximal
+\end{lstlisting}
+\caption{clause propagation sources}
+\label{snippet3.16aa}
+\end{figure}
+We denote the clause \m{g(f(d))}=g(a) \lor C} by \m{\mathbf{E}} and
+\m{\underline{g(h(b))}=a \lor D} by \m{\mathbf{F}}.\\
+Here, if we propagate \m{\underline{g(f(d))}=g(d) \lor C} to \node{n_3}, it is equivalent to (simplified by our simplification calculus):\\
+\m{\underline{g(h(b))}=g(a) \lor C}, which is valid for the ground superposition instance:\\
+$
+\begin{array}[c]{llll}
+%\vspace{1cm}\\
+\vcenter{\infer[]{\m{g(a)=a \lor C \lor D}}{\m{\underline{g(h(b))}=g(a) \lor C} & \m{\underline{g(h(b))}=a \lor D}}} 
+%& \parbox[c][2cm]{3cm}{\m{g(h(b))=g(a) \succ C,g(h(b)) \succ g(a)}\\\m{g(h(b))=a \succ D,g(h(b)) \succ a}}
+\\
+\end{array}
+$\\
+But it is not obvious from inspecting just the two original clauses that this inference is needed, 
+and we do not want to simplify \m{\mathbf{E}} by the rewrite system at \m{n_4} unless it could actually 
+participate in a derivation.
+The missing information is the equalities on the path from \node{n_1} to \node{n_4} which are needed in order to determine the relevance of the clause \m{\mathbf{E}}.
+The key here is that \m{n_1.n_2.n_3.n_4 \models g(h(b))=g(f(d))}, and as \m{g(h(b))} is already simplified, and \m{g(f(d))} 
+appears at \m{\mathbf{E}}, the inference is viable if \m{g(h(b))} is still maximal in the simplified version of \m{\mathbf{E}}.
+
+We could simply propagate all clauses to \node{n_4}, simplify them accordingly and then check if the simplified version (assuming it's not tautological) is relevant for any inference. We want to do better - as \m{\mathbf{F}} is already simplified, we only need to consider its maximal term there \m{g(h(b))}, and we need to consider \m{\mathbf{E}} because \m{g(f(d))} appears in it and would be simplified on the path to \m{g(h(b))}.\\
+We need to consider any term that appears in \m{\mathbf{E}} because simplification can change the maximal term in a clause, 
+we will discuss this issue in the next chapter - in this chapter we are only interested in making sure that we can recognize 
+all such clauses \m{\mathbf{E}} where a term appears that is equal to our maximal term on the path.
+
+We will use the sources function in order to determine \\
+\m{n_1.n_2.n_3.n_4 \models g(h(b))=g(f(d))} - essentially we will want to ensure that:\\
+\m{[g(h(b))]_{g_{n_1}} \in \sourcesB{n_1.n_2.n_3.n_4}{[g(h(b))]_{g_{n_4}}}}\\
+that is, the EC node that represents \m{g(h(b))} at \node{n_1} is in the transitive sources of the EC node that represents 
+\m{g(h(b))} at \node{n_4}.
+
+We want to use the sources function in order to determine which clauses need to be propagated to a node, 
+by propagating a query up the \cfg where at each node we query about clauses containing the transitive sources of the term of interest.
+
+In the above example, this would mean that we have to add the following terms:\\
+\m{g(h(b))} to \node{n_3} (implying adding \m{g(f(c))} as they are equal there).\\
+\m{g(f(c))} to \node{n_2} (implying \m{g(f(d))} as above).\\
+And then the sources chain is:\\
+\m{\sources{n_4}{n_3}{[g(h(b))]_{g_{n_4}}} = \s{[g(h(b))]_{g_{n_3}}}} \\
+\m{\sources{n_3}{n_2}{[g(h(b))]_{g_{n_3}}} = \s{[g(f(c))]_{g_{n_2}}}} \\
+\m{\sources{n_3}{n_2}{[g(f(c))]_{g_{n_2}}} = \s{[g(f(d))]_{g_{n_1}}}} \\
+Assuming \m{C,D} do not contain the constants \s{a,b,c,d,e}.
+
+It would seem that the node \node{n_4} could have enough information to determine whether \m{\mathbf{E}} is relevant, 
+but as we will show in this section, this does not hold if there are any joins on the path.\\
+Also with scoping, if each constant is in scope only between nodes where it is mentioned, 
+then \m{g(f(d))} is out of scope for \node{n_4}, and so it cannot determine its relevance.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+We are interested in completeness in a setting where, on the one hand, no information needs to be forgotten (monotonicity) - which simplifies things, but on the other hand, any other fragment can introduce new (in)equalities and terms at any cfg node at any time.\\
+In order to preserve completeness efficiently in this setting we will restrict somewhat the order of evaluation and enforce a backward monotonicity invariant - that is, any operation on a node is allowed to modify any of the node's transitive predecessors, but only in a monotonic way - formally:\\
+For each operation on node \node{n} we denote the pre-state resp. post-state of the graph of a node \node{p} as 
+\m{g_p} resp. \m{g_p'}. \\
+Now each operation on \node{n} satisfies:\\
+\m{\forall p \in \predst{n},s,t \in \terms{g_p} \cdot s,t \in \terms{g_p'} \land (g_p \models s = t \Rightarrow g_p' \models s = t) }\\
+\m{\forall m \in \cfg \setminus \predst{n} \cdot g_m'=g_m}\\
+The second formula means that operations on a node \node{n} only modify the sub-DAG between the node and the root because this is the only part of the DAG involved in information propagation to \node{n} - by the definition of semantic validity by paths.\\
+This is not an obvious restriction - for example, one might consider information flow to a branch point considering the terms on both sides of the branch, neither of which is in the sub-DAG of the other. \\
+We have chosen to restrict the information flow criteria so that it can be calculated locally, and be robust to the addition and removal of independent branches - otherwise reasoning about complexity and completeness could become dependent on the order in which other fragments generate clauses - for example, if one side of a branch is an assertion that gets refuted at some point in the verification process, if the information flow to the other side of the branch depends on the order in which we have evaluated the branches.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+We can divide the clauses at a node to three groups: \emph{original} - \clauses{n}, \emph{imported} - \precond{n} and \emph{derived}
+As stated earlier we do not need to perform superposition between clauses that are both imported, as it will have been performed in a transitive predecessor.\\
+
+
+This can be likened, to some degree, to Shostak theories (~\cite{Shostak84}), where we have a \emph{canonizer} for theories which rewrites every theory term to a unique normal form, and indeed some combinations of rewriting and Shostak theories have been presented (~\cite{SuperpositionModuloShostak} ). We have experimented with a very limited canonizer for arithmetic expressions which we will discuss later.\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%\subsubsection{disagreement sets}
+
+%We will show that \m{\size{dai_u^{max}(s,t)} \leq 1}.\\
+%
+%\noindent
+%We will show now how to calculate \m{dai_u^{max}} and its uniqueness:\\
+%\begin{lstlisting}
+%$\m{dai^{max}_u(\fa{f}{s},\fa{g}{t})}$
+	%if ($\m{\fa{f}{s}\equiv\fa{g}{t}} \lor \m{f \not\equiv g \lor \size{s} = 0}$)
+		%return $\emptyset$
+	%for (i:=0 to $\m{\size{s}-1}$)
+		%if ($\m{s_i \not\equiv t_i}$)
+			%return $\m{dai_2(s_i \neq t_i,i+1,\tup{s},\tup{t})}$
+	%return $\emptyset$
+%
+%$\m{dai_2(u \neq v,i,\tup{s},\tup{t})}$
+	%if ($\m{i\geq\size{\tup{s}}}$)
+		%return $\m{u \neq v}$
+	%while (true)
+		%if ($\m{\forall j>i \cdot dai_3(u \neq v,s_j,t_j)}$)
+			%return $\m{u \neq v}$
+		%S = $\m{dai^{max}_u(u,v)}$
+		%if (S = $\m{u' \neq v'}$)
+			%u:=$\m{u'}$
+			%v:=$\m{v'}$
+		%else
+			%return $\emptyset$
+	%
+%$\m{dai_3(u \neq v,\fa{f}{s},\fa{g}{t})}$
+	%if ($\m{\fa{f}{s} \equiv \fa{g}{t}}$)
+		%return true
+	%if ($\m{u \neq v \equiv \fa{f}{s} \neq \fa{g}{t}}$)
+		%return true
+	%if ($\m{f \not\equiv g}$)
+		%return false
+	%for (i in 0..$\size{\tup{s}}$)
+		%if ($\m{\s{u,v} \not\subseteq subterms{\s{s_i,t_i}}}$ or $\m{ \lnot dai_3(u \neq v,s_i,t_i)}$)
+			%return false
+	%return true
+%\end{lstlisting}
+%
+%\begin{theorem}
+%Assuming \m{\fa{f}{s}\not\equiv\fa{g}{t}},
+%if there is a maximal unit disagreement set for \m{\fa{f}{s}\neq\fa{g}{t}} then it is unique and 
+%the procedure \m{dai^{max}_u(\fa{f}{s},\fa{g}{t})} above returns \m{u \neq v}.\\
+%Otherwise the procedure returns $\emptyset$.
+%
+%\noindent
+%\textbf{Proof}\\
+%We know that \m{\fa{f}{s}\not\equiv\fa{g}{t}}, hence either \m{f\not\equiv g} or \m{\tup{s}\not\equiv\tup{t}}.\\
+%If \m{f\not\equiv g} then for any \m{u,v \in \mathbf{neqs}(\subterms{\s{s,t}})}, \m{u=v,\fa{f}{s}\neq\fa{g}{t} \not\models \emptyClause} because:\\
+%Given a derivation of \m{u=v \vdash_{\mathbf{CC_G}} \fa{f}{s}=\fa{g}{t}}, we look at the derivation tree.\\
+%As there are no inequalities, non can be generated, so we ignore the rules \m{dai,res,tra_{\neq}}.\\
+%We assume w.l.o.g that \m{u} is at least as deep as \m{v}.\\
+%If \m{v\equiv u} then only tautologies can be derived.\\
+%If \m{v} is not a strict sub-term of \m{u}, then we claim that for any \m{x=y} derivable from \m{u=v} s.t. \m{x=y \not\equiv u=v}, \m{x \not\equiv y}, it holds that both \m{x,y} have at least one strict sub-term that is either of \m{u,v}, and the leading function symbols of \m{x,y} are the same.\\
+%Proof by induction on the derivation tree of \m{x=y}:\\
+%At the leaves we have either a tautology \m{t=t} or \m{u=v}.\\
+%For \m{ref_G} we only get tautologies.\\
+%For \m{con_G} if all the premises are tautologies then we get a tautology, otherwise the leading function symbol is the same and each premise can be either \m{u=v} or some \m{x'=y'} for which i.h. holds, so we know that both sides of the conclusion have at least one of \m{u,v} as a strict sub-term.\\
+%For \m{tra}, if one side is a tautology then the other premise is the conclusion, otherwise:\\
+%If both premises are both not \m{u=v} then both premises have the same leading function symbol and both have at least one strict sub-term from \s{u,v} by i.h. .\\
+%If both premises are \m{u=v} then the conclusion is a tautology.\\
+%If one premise is \m{u=v} and the other is \m{w=z} then w.l.o.g \m{z\equiv u} but \m{z} must have a sub-term from \m{u,v} which cannot be as \m{v} is not a sub-term of \m{u}.\\
+%This shows that \m{\fa{f}{s}=\fa{g}{t}} cannot be derived from \m{u=v}.\\
+%If \m{v} is a strict sub-term of \m{u}, then for any derived non tautological \m{x=y} s.t. \m{x} is at least as deep as \m{y}, it holds that:\\
+%Either \m{y\equiv v} and \m{v} is a strict sub-term of \m{x} and the leading function symbol of \m{x} is that of \m{u} \\
+%or both \m{x,y} have \m{v} as a strict sub-term and the same leading function symbol.\\
+%Again by induction on the derivation tree:\\
+%At the leaves we have either a tautology \m{t=t} or \m{u=v}.\\
+%For \m{ref_G} we only get tautologies.\\
+%For \m{con_G} if all the premises are tautologies then we get a tautology, otherwise the leading function symbol is the same and each premise can be either \m{u=v} or some \m{x'=y'} for which i.h. holds, so we know that both sides of the conclusion have at least one of \m{u,v} as a strict sub-term and hence both have \m{v} as a strict sub-term.\\
+%For \m{tra}, if one side is a tautology then the other premise is the conclusion, otherwise:\\
+%If the premises are both not \m{u=v} then both premises have the same leading function symbol and both have at least one strict sub-term from \s{u,v} by i.h. .\\
+%If both premises are \m{u=v} then the conclusion is a tautology.\\
+%If one premise is \m{u=v} and the other is \m{w=z} then either:\\
+%\m{z\equiv u} and \m{w} has the same leading function symbol as \m{u} by i.h., in which case the conclusion \m{w=v} satisfies the condition.\\
+%Or \m{z\equiv v} and then \m{w} must have the same leading function symbol as \m{z} by i.h. and hence the same as \m{u}, and in the conclusion \m{u=w} both must have \m{v} as a sub-term.\\
+%Now, if \m{\fa{f}{s}=\fa{g}{t}} was derived from \m{u=v} where \m{v} is a strict sub-term of \m{u}, 
+%it would mean by the lemma that \m{v \equiv \fa{g}{t}} and \m{f} is the leading function symbol of \m{u}.\\
+%But that means that \m{u} must be a strict sub-term of \fa{f}{s}
+%
+%
+%
+%By \m{f\not\equiv g} we know that the last derivation must have been \m{tra_{=}}
+%By contradiction suppose we have a refutation in $\mathbf{CC_R}$ from \m{\fa{f}{s}\neq\fa{g}{t},\m{u=v}}.\\
+%Assume, w.l.o.g that \fa{f}{s} is at least as deep as \fa{g}{t}, hence it is strictly deeper than both \m{u,v} as they are both strict sub-terms.\\
+%Now we claim that for any equality \m{x=y} s.t. \m{u=v \vdash_{\mathbf{CC_R}} x=y}, either \fa{f}{s} is strictly deeper than both \m{x,y} or \m{x,y} have the same leading function symbol.\\
+%
+%
+%If \m{u,v} have the the leading function symbols \m{h_u,h_v} respectively, then for any equality \m{x=y} derived by $\mathbf{CC_R}$ from \m{u=v} with the leading function symbols \m{h_x,h_y}, either \m{h_x\equiv h_y} or \m{\s{h_x,h_y}=\s{h_u,h_v}}, by induction on the derivation tree:\\
+%There is only one axiom, the leading function symbols are equal in the conclusions of reflexivity and congruence closure, and for transitivity either all leading function symbols in the premises are equal or both are \s{h_u,h_v} in which case in the conclusion it is either \m{h_u} or \m{h_v}, or one side has \s{h_u,h_v} while the other has w.l.o.g \m{h_u} - hence the conclusion has \s{h_u,h_v}.\\
+%
+%
+%and transitivity produces preserves this .\\
+%We denote \m{u\equiv\fa{m}{x}} and \m{v\equiv\fa{n}{y}}.\\
+%If \m{m\equiv n} then all derivations of equalities produce equalities with the same leading function symbol
+%The only rule that can generate \m{\fa{f}{s}=\fa{g}{t}} where \m{f\not\equiv g} is the transitivity rule, and it requires that there is some \fa{h}{w} s.t. we have already derived \m{\fa{f}{s}=\fa{h}{w}} abd \m{\fa{h}{w}=\fa{g}{t}}.\\
+%On any path in the 
+%
+%
+%We assume, then,\m{f \equiv g} and \m{\tup{s}\not\equiv\tup{t}} and w.l.o.g \m{i} is the minimal index s.t. \m{s_i\not\equiv t_i}.\\
+%Now we claim that \m{u \neq v} is a unit disagreement set of \m{\fa{f}{s}\neq\fa{f}{t}} iff for all j either \m{s_j\equiv t_j} or 
+%\m{u \neq v} is a unit disagreement set of \m{s_j \neq t_j}.\\
+%
+%To prove this lemma, first consider only if direction:\\
+%We assume for all j either \m{s_j\equiv t_j} or \m{u \neq v} is a unit disagreement set of \m{s_j \neq t_j}.\\
+%By definition that means that for all \m{j} \m{s_j \neq t_j \models u \neq v} which implies \m{u=v \models s_j = t_j}.\\
+%But then \m{u=v \models \bigwedge\limits_j s_j=t_j} and hence \m{u=v \models \fa{f}{s}=\fa{f}{t}} so \m{\fa{f}{s}\neq\fa{f}{t} \models u \neq v}.\\
+%
+%\bigskip
+%In the other direction, assume \m{\fa{f}{s}\neq\fa{f}{t} \models u \neq v} but for some \m{j} \m{s_j \neq t_j \not\models u \neq v}.\\
+%Now we claim that \m{ u=v \not\vdash_\mathbf{CC_R} \fa{f}{s}=\fa{f}{t}} - \\
+%it cannot be derived by \m{ref} because \m{\fa{f}{s}\not\equiv\fa{f}{t}}\\
+%It cannot be derived by congruence closure because \m{u=v \not\models s_j=t_j }\\
+%In order to derive it by transitivity, we must have derived, w.l.o.g, \m{\fa{f}{s}=w'} and \m{w'=\fa{f}{t}}, 
+%we take the minimal derivation (sub-derivation order) in the derivation tree s.t. the conclusion is \m{\fa{f}{s}=w} for some w.\\
+%We know \m{w \not\equiv \fa{f}{t}}, and the derivation cannot have been an instance of \m{tra} because that would contradict minimality.\\
+%This means that \m{\fa{f}{s}=w} was derived by congruence closure and hence \m{w\equiv\fa{f}{s'}} and \m{u=v \vdash_\mathbf{CC_R} \tup{s} = \tup{s'}}.\\
+%A similar argument shows that, for some \tup{t'}, \m{u=v \vdash_\mathbf{CC_R} \tup{t} = \tup{t'}}.\\
+%We also know that there is a 
+%
+%
+%The procedure finds such \m{i}
+%If the tuples  are equal then \m{dai^{max}_u} returns $\emptyset$, otherwise it finds the lowest \m{i} s.t. \m{s_i \neq t_i} 
+%and calls $\m{dai_2}$ to find the maximal inequality in \m{s_i \neq t_i} or any of its unit disagreement sets are a disagreement set of \m{\fa{f}{s} \neq \fa{g}{t}}.\\
+%The function \m{dai_2(u \neq v,i,\tup{s},\tup{t})} searches among the unit inequalities derivable from \m{u \neq v} (including \m{u \neq v}) in descending (sub-term) order, that is also derivable from each of \m{s_j \neq t_j} for \m{j>i}.
+%The function \m{dai_3(u \neq v,s,t)} return true iff \m{u=v,s \neq t \models \emptyClause}.\\
+%This check returns false (that is \s{u=v,s \neq t} is consistent) if \m{u,v} are not subterms of \m{s \neq t} (by the refutational completeness of \m{\mathbf{CC^R}}).\\
+%If the \m{s=t} or \m{u=s \land v=t} or \m{u=t \land v=s} then the set is immediately inconsistent.\\
+%If both \m{u,v} are strict sub-terms of \m{s,t} and \m{s=\fa{f}{s}, t=\fa{f}{t}} then \m{u=v,\fa{f}{s} \neq \fa{g}{t}} is inconsistent iff \m{\forall i \cdot u=v,s_i\neq t_i \models \emptyClause} by induction on the structure of \m{s,t}:\\
+%The base case is as above.\\
+%For the induction step, if, for some \m{i}, \m{u=v,s_i \neq t_i} is consistent, then there
+%\end{theorem}
+
+%$
+%\m{dai^{max}(\fa{f}{s},\fa{g}{t})} = 
+	%\begin{cases} 
+			%\m{u \neq v}  & \m{f \equiv g \land \size{s}>0 \land \s{u \neq v} = dai_2(0,\tup{s},\tup{t})} \\
+			%\emptyset     & \mbox{otherwise}\\
+	 %\end{cases}
+%$\\
+%$ 
+%\m{dai_2(i,\tup{s},\tup{t})} = 
+	%\begin{cases} 
+			%\m{dai_2(i+1,\tup{s},\tup{t})}          & \m{i < \size{s} \land s_i \equiv t_i} \\
+			%\m{dai_3(u \neq v,i+1,\tup{s},\tup{t})} & \m{i < \size{s} \land s_i \not\equiv t_i \land dai^{max}(s_i,t_i) = \s{u \neq v}}\\
+			%\emptyset                               & \mbox{otherwise}\\
+	 %\end{cases}
+%$\\
+%$ 
+%\m{dai3(u \neq v,i,\tup{s},\tup{t})} = 
+	%\begin{cases} 
+		%\s{u \neq v}                            & \m{i \geq \size{s} \lor dai4(u \neq v,i+1,\tup{s},\tup{t})} \\
+		%\m{dai_3(u' \neq v',i,\tup{s},\tup{t})} & \m{i<\size{s} \land \lnot dai4(u \neq v,i+1,\tup{s},\tup{t} \land \s{u' \neq v'} = dai^{max}(u,v)} \\
+		%\emptyset                               & \m{otherwise} \\
+	 %\end{cases}
+%$\\
+%$ 
+%\m{dai4(u \neq v,i,\tup{s},\tup{t})} = 
+	%\begin{cases} 
+		%\s{u \neq v}                                       & \m{i \geq \size{s}} \\
+		%\s{u \neq v}                                       & \m{i < \size{s} \land u \neq v \equiv s_i \neq t_i \land dai4(u \neq v,i+1,\tup{s},\tup{t})} \\
+		%\m{dai5(u \neq v,s_i \neq v_i,i+1,\tup{s},\tup{t})} & \m{i < \size{s} \land u \neq v \not\equiv s_i \neq t_i} \\
+		%\emptyset                                          & \m{otherwise} \\
+	 %\end{cases}
+%$\\
+%$ 
+%\m{dai5(u \neq v,u' \neq v',i,\tup{s},\tup{t})} = 
+	%\begin{cases} 
+		%\s{u \neq v}                                  & \m{u \neq v \equiv u' \neq v' \land dai4(u \neq v,i,\tup{s},\tup{t}} \\
+		%dai5(u \neq v,u' \neq v',i+1,\tup{s},\tup{t}) & \m{i < \size{s} \land \size{s_i \neq t_i}>\size{u \neq v} \land \s{u' \neq v'} = dai^{max}(s_i,t_i)} \\
+		%\emptyset                               & \m{otherwise} \\
+	 %\end{cases}
+%$\\
+%$ 
+%\m{dais(i,\tup{s},\tup{t})} = 
+	%\begin{cases} 
+			%\s{\emptyset}                                                  & \m{i \geq \size{s}}\\
+			%\s{\bigcup_i P_i \mid P \in \prod\limits_{j>i} dais_2(s_j,t_j) } & \mbox{otherwise} \\
+	 %\end{cases}
+%$\\
+%$ 
+%\m{dais_2(\fa{f}{s},\fa{g}{t})} = 
+	%\begin{cases} 
+			%\s{\emptyset}                                                                                    & \m{\fa{f}{s} \equiv \fa{g}{t}}\\
+			%\s{\fa{f}{s} \neq \fa{g}{t}}                                                                     & \m{f \not\equiv g}\\
+			%\s{\fa{f}{s} \neq \fa{g}{t}} \cup \m{\bigcup_i P_i \mid P \in \prod\limits_{i} dais_2(s_i,t_i) } & \mbox{otherwise} \\
+	 %\end{cases}
+%$
+
+%\subsubsection{Recursive import}
+%
+%Recursive import traverses the CFG in reverse topological order, from the importing node to the root.\\
+%At each branch node, we have to \emph{join the queries} from both sides (which might differ because of the \m{sources} function) - for example:
+%
+%
+%Here, when we import recursively from \node{n_{ja}}, \node{n_t} must query \node{n_1} for \s{f(b),g(b),f(a),g(a)} while 
+%\node{n_e} must query for \s{f(b),g(b),f(c),g(c)} - the algorithm collects all the queries as a set of terms,
+%and when \node{n_1} answers the combined query each of \node{n_t,n_e} selects the relevant clauses from the answer to import.
+%Note that even without combining queries, the total query time is polynomial because the number of possible queries to each node is polynomial (number of terms, and later number of equivalence classes) and the results are cached at all nodes on the path, 
+%but we have found the query time as one of the main bottlenecks and so joining queries improves performance significantly.
+%
+%The implementation basically maintains a queue sorted by reverse topological order to traverse the CFG up (backwards), stopping at the root and at nodes which have already cached a super-set of the query, and then traverse the CFG from these nodes down in topological order, importing clauses and performing simplifications and saturation.
+%
+%The important property of the simplification fragment is that it cannot introduce new equalities to \m{g} - if simplifying a non-unit-ground clauses produces a unit ground clause, it is kept as clauses in the \lstinline{nextTodo} queue and not \lstinline{assume}d in \m{g} - otherwise the import condition of successor nodes might change and it is very hard to define saturation.
+%
+%\begin{lstlisting}
+%Node.importRecursive(ts:Set<Term>)	
+	%dq = new PriorityQueue //reverse topological-order
+	%uq = new Queue
+	%requestMap = new Map
+	%foreach $\m{p \in \preds{this}}$
+		%requestMap[p] = ts
+		%dq.enqueue(p)
+		%
+	%while (!dq.isEmpty)
+		%n = dq.dequeue
+		%nts = $(\bigcup\limits_{\m{t \in requestMap[n]}} \m{EC(t)}) \setminus$ n.importedTerms
+		%n.importedTerms = n.importedTerms \cup nts
+		%if (nts = $\emptyset$ or $\preds{n}$=$\emptyset$)
+			%uq.enqueue(n)
+		%else
+			%foreach p in $\preds{n}$
+				%requestMap[p].add($\m{sources(n,p,nts)) }$)
+				%//Unify request from all successors
+	%
+	%while (!uq.isEmpty)
+		%n = uq.dequeue
+		%ncs = $\bigcap\limits_{\m{p \in \preds{n}}}$ p.relevantClauses(requestMap[n])
+		%n.importedClauses.add(ncs)
+		%n.nextTodo.enqueue(ncs $\setminus$ n.done)
+		%n.saturate
+		%requestMap.remove(n)
+		%foreach ($\m{s \in \succs{n}}$)
+			%if ($\m{\preds{s} \cap requestMap.keys=\emptyset}$)
+				%uq.enqueue(s)
+				%
+%Node.relevantClauses(ts : Set<Term>)
+	%return $\s{c \in done \mid c.maxLiteral.maxTerm \in requestMap[n]})$
+		     %$\cup \s{c \in done \mid \exists s,t,p \cdot c.maxLiteral =s \neq t \land l=\termAt{s}{p}}$
+%\end{lstlisting}
+%
+%\lstinline{p.relevantClauses(ts)} chooses clauses from \lstinline{p.done,p.nextTodo} where the maximal term is in \lstinline{ts}, all simplified according to \lstinline{p.g}.\\
+%\lstinline{importRecursive} first descends the CFG in reverse topological order, where each node queries its predecessors for all terms it knows as equivalent to terms it was queries about. A node does not query backwards if it has no predecessors or has already imported clauses for all relevant terms. Branch nodes collect the queries from both sides, otherwise we would need a potentially exponential query time for a DAG (e.g. DAG of size 3n+1 with n diamonds in sequence).
+%Once done traversing backwards, we traverse forward in topological order, starting from the nodes which created no further queries.
+%Each node imports the clauses from predecessors, simplifies them and adds them to the saturation queue.
+%Note that the import code (assignment to \lstinline{ncs}) above implements a very limited join, we discuss joins in the next section.
+%
+%\begin{lstlisting}[caption=propagation sources,label=snippet3.17]
+%$\node{n_1}:$
+%assume C $\lor$ f(c)=f(a)
+%$\node{n_2}:$
+%assume d=c
+%assume b=a
+%$\node{n_3}:$
+%assume $\lnot$C
+%$\node{n_4}:$
+%assert $\m{f(d)=f(b)}$ //negated $\m{f(d) \neq f(b)}$
+%\end{lstlisting}
+%
+%Assuming \m{a,b,c,d} do not occur in \m{C}.\\
+%Here \node{n_4} and \node{n_1} have no terms in common.\\
+%The graph \m{g_{n_4}}, however, will include nodes for \m{a,c} because of the sub-term transitive closure, so it will include the following equalities \m{d=c,b=a} and nodes for the following equivalence classes \\
+%\s{\s{a,b},\s{f(a),f(b)},\s{c,d}, \s{f(c),f(d)}}.\\
+%In fact, \m{g_{n_4}}, \m{g_{n_3}}, \m{g_{n_2}} will share all the sub-graph that includes these equivalence classes - so the sources function would map each term to its singleton set - e.g. \m{sources(n_4,n_3,g_{n_4}(a))=\s{g_{n_3}(a)} (=\s{g_{n_4}(a)})}.\\
+%For \node{n_1} the situation is different:\\
+%The graph \m{g_{n_1}} includes only a singleton set at each node - so\\
+%\m{sources(n_2,n_1,g_{n_2}(a)) = \s{g_{n_1}(a),g_{n_1}(b)}}, and\\
+%\m{sources(n_2,n_1,g_{n_2}(f(a))) = \s{g_{n_1}(f(a)),g_{n_1}(f(b))}}.
+%
+%Thus, when \node{n_4} recursively imports the term \m{f(d)}, which means the graph node \s{g_{n_4}(f(d))} that represents the equivalence class \s{f(\s{c,d})}, when the query reaches \node{n_1} it will become \s{g_{n_1}(f(c))} which represents the equivalence class \s{f(c)}.
+%
+%Only, in fact, with the current machinery this would not work, because \m{f(d),f(b) \notin g_{n_3}} - 
+%these terms do not occur in \clauses{n_3} and are not imported by the graph operations because \m{sources(n_4,n_3,g_{n_4}(f(b))=\emptyset}.
+%So there is a clause at \node{n_1} that is relevant at \node{n_4} under the currently known equalities, but is not imported because there is a \emph{disconnect} in the \m{sources} chain between 
+%\m{g_{n_4}(f(d))} and \m{g_{n_1}(f(c))}, although, there are enough known equalities along the path from \node{n_1} to \node{n_4} to know that these terms are equivalent.
+%
+%This means that, in order to ensure that all relevant clauses are imported, we need to make sure that there are no disconnects in the \m{sources} chain - especially once we use scoping, in the above example \node{n_4} will not have \m{c} in scope at all, so it cannot get the relevant clause even by directly querying \node{n_1}.
+%
+%The invariant that needs to be maintained by the sources function, at the end of a \lstinline{saturate} pass, is roughly as follows:\\
+%For each CFG path \m{P = p.P_1.q,P_2.n},  (\m{P,P_1,P_2} paths, \m{p,q,n} nodes)\\
+%for all terms \m{t \in g_n}, \m{s \in g_p} s.t. \m{ eqs(P) \models s=t}, \\
+%for all terms \m{u} s.t. \m{ eqs(g_p.P_1.g_q) \models s=u \land eqs(g_q.P_2.g_n) \models u=t},\\
+%it holds that \m{u \in g_q}.\\
+%This implies, along with the definition of sources, that \\
+%\m{g_q(u) \in sources(q.P_2.n, g_n(t))} and \m{g_p(s) \in sources(p.P_1.q, g_q(u))} - hence\\
+%\m{g_p(s) \in sources(p.P_1.q.P_2.n, g_n(t))}.
+%
+%Unfortunately, maintaining this invariant in the presence of joins is not always possible - for example:
+%\begin{lstlisting}[caption=propagation sources infinite,label=snippet3.18]
+%if (*)
+	%$\node{t1}:$
+	%assume a=f(a)
+	%assume b=f(b)
+	%assume a=b
+%else
+	%$\node{e1}:$
+	%assume f(f(a))=f(b)
+%$\node{j}:$
+%if (*)
+	%$\node{t2}:$
+	%assume a=f(a)
+	%assume b=f(b)
+		%$\node{a}:$
+		%assert a=b
+%\end{lstlisting}
+%
+%
+%For \node{t1}, for all \m{i}, \m{g_{t1}(f^i(a)) = g_{t1}(f^i(b)) = g_{t1}(a) = g_{t1}(b)} and the graph \m{g_a} has only one node.
+%Also, \m{eqs(g_{t2}) \models \forall i \cdot f^i(a)=a \land f^i(b)=b}, so the graph can have at most two nodes.\\
+%However, at \node{j}, for \m{i \neq j}, it does not hold that \m{eqs(g_j) \models f^i(a)=f^j(a)}, so if we were to maintain the invariant above then \m{g_j} could not be a finite graph.
+%
+%In the above example it seems that it would suffice if the (sub-term closure of) the terms \s{f(f(a)),f(b)} existed at \m{g_j} - the minimal requirement for completeness is in fact that a \m{u} as above \emph{exists} at \node{g_q}, as then we have a \m{sources} chain between each pair of equivalent terms.
+%
+%We could modify the above invariant so that, instead of for all \m{u}, we would have exists \m{u} - that is:\\
+%\m{\forall p.P_1.q.P_2.n \in paths(CFG),t \in g_n,s \in g_p \cdot }\\
+%\m{eqs(p.P_1.q.P_2.n) \models s=t \Rightarrow }\\
+%\m{\exists u \cdot ((eqs(p.P_1.q) \models s=u \land eqs(q.P_2.n) \models u=t) \Rightarrow u \in g_q)}
+%
+%Here we guarantee that we only need a finite number of equivalence classes at each graph, but it is not immediately clear how to choose which ones, and we need to analyze carefully the worst case space complexity of such join nodes.
+%
+%How do we go about choosing such a \m{u}?\\
+%The sets of equivalence classes grow and merge throughout the verification process and it would not be efficient if we need a global analysis of the program after each change to some node, so we need a criterion that is somewhat local and robust to the addition and merging of equivalence classes.\\
+%In the above case we want \s{f(f(a)),f(b)} at the join, so a criterion that suggests itself is is to choose, at a node \node{j}, all such \m{u} that exist in the transitive predecessors of \emph{all} direct predecessors of \node{j}, and whichever term is not covered (that is - only appears in the transitive predecessors of one predecessor), we can choose arbitrarily, or choose the minimal one by our term ordering or by absolute size (number of graph nodes that would be added).\\
+%This strategy ensures completeness and ensures that we do not add more EC nodes to the graph of each CFG node than there are EC nodes in all graphs in its transitive predecessors, which is in total exponential, but a more careful analysis .\\
+%It ensures further that 
+%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%
+%\subsection{Fragment verification algorithm}
+%Integrating the above discussed modification, we present a modified version of our algorithm, which handles clauses (not necessarily ground) relative to some calculus, but uses the graph structure to handle unit ground equality clauses.
+%\begin{lstlisting}
+%CFG.verify(fragment : Fragment,initial : Bool)
+	%if (initial)
+		%build()
+	%else
+		%foreach (n in nodes)
+			%n.nextTodo.enqueue(n.done)
+			%n.done.clear()
+			%
+	%while (any node has a non-empty nextTodo list)
+		%CFG.saturateForward(fragment)
+%
+%CFG.build()
+	%foreach n in cfg.nodes in topological order
+		%n.g = empty congruence closure graph
+		%n.done = $\emptyset$
+		%n.imported = $\emptyset$
+		%n.nextTodo.enqueue($\clauses{n}$)
+%
+%CFG.saturateForward(fragment)
+	%foreach n in cfg.nodes in topological order
+		%n.saturate(fragment)
+%
+%Node.saturate(fragment : Fragment)
+	%while !nextTodo.isEmpty
+		%todo = nextTodo
+		%nextTodo = emptyQueue
+		%
+		%g.add(todo)
+		%
+		%eqs = todo.unit ground (in)equalities
+		%todo = todo \setminus eqs
+		%g.assume(eqs)
+		%
+		%importClauses(todo)
+		%foreach (c in todo)
+			%done.add(c)
+			%for $\m{c{'} \in inferences(fragment,c,done)}$
+				%if $\m{c{'} \notin done \cup todo}$
+					%nextTodo.enqueue($\m{c'}$)
+%\end{lstlisting}
+%
+%The clauses in \lstinline{done,todo,nextTodo} are always kept simplified with respect to \lstinline{g} and one another.\\
+%We will discuss the eager simplification calculus later, we just note it includes simplification by equalities, tautology elimination, literal factoring, unit clause propagation and several others.
+%A simplified clause goes from \lstinline{done,todo} to \lstinline{nextTodo} if simplification has potentially changed the import condition on the clause - in the current case the maximal term and literal.
+%
+%As described before, we try to import the clauses for as many terms as possible in one query, and we cache queries and simplify results.
+%Unit ground clause import is handled by the graph data structure, where each \lstinline{add} or \lstinline{assume} operation takes care of importing and integrating predecessor unit ground \\ (in)equalities until all invariants are satisfied - all described in the next section.
+%
+%The pseudo-code for clause import is:
+%\begin{lstlisting}
+%Node.importClauses(cs:Set<Clause>)
+		%ncs = cs $\setminus$ importedClauses
+		%terms = $\bigcup\limits_{\m{c \in ncs}} \s{t \mid \exists l,p \cdot t=\termAt{l}{p} \land l = c.maxTerm}$
+		%terms = terms $\setminus$ importedTerms
+		%importedTerms = importedTerms $\cup$ terms
+		%ncs = importRecursive(terms)
+		%foreach ($\m{nc \in ncs}$)
+			%$\m{c'}$ = simplify(g,nc)
+			%if ($\m{c'}$ is not a tautology)
+				%importedClauses.add($\m{c'}$)
+				%if $\m{c{'} \notin done \cup todo}$
+					%nextTodo.enqueue($\m{c'}$)
+%\end{lstlisting}
+%
+%
+%
+%Given a node \node{n} and a direct predecessor \m{p \in \preds{n}}, 
+%for each term EC \m{t \in g_n} we need to know which term ECs \m{s \in g_p} satisfy \m{\Eqst{n} \models s \cap t \neq \emptyset}.\\
+%This is needed both for assembling the query from \node{n} to \node{p} and for translating, in the query response, 
+%each clause over \m{\ECs{p}} to an equivalent (set of) clause(s) over \m{\ECs{n}}.\\
+%A simple example:
+%\begin{lstlisting}[caption=propagation sources,label=snippet3.16a]
+%$\node{n_1}:$
+%assume $\m{f(a)=g(a)}$
+%$\node{n_2}:$
+%assume $\m{a=b}$
+%$\node{n_3}:$
+%assert $\m{f(b)=g(b)}$
+%\end{lstlisting}
+%Here \node{n_3} cannot directly query \node{n_1} for \m{f(b),g(b)} as \m{b} is not defined there.\\
+%Using scoping the equivalence class of the term \m{b} at \m{n_3} would be \s{b} and the equivalence class of \m{a} at \m{n_1} would be \m{a}, so we need to translate the query\\
+ %\m{f(\s{b})} at \m{n_3} to \\
+%\m{f(\s{a,b})} at \m{n_2} to \\
+%\m{f(\s{a})} at \m{n_1}.\\
+%Likewise, the result is translated from \\
+%\m{f(\s{a})=g(\s{a})} at \m{n_1} to \\
+%\m{f(\s{a,b})=g(\s{a,b})} at \m{n_2} to \\
+%\m{f(\s{b})=g(\s{b})} at \m{n_3}.
+%
+%To see that the problem does not stem only from scoping:
+%\begin{lstlisting}[caption=propagation sources,label=snippet3.16b]
+%$\node{n_1}:$
+%assume $\m{f(a)=g(a)}$
+%assume $\m{f(c)=g(c)}$
+%if (*)
+	%$\node{n_{2a}}:$
+	%assume $\m{a=b}$
+%else
+	%$\node{n_{2b}}:$
+	%assume $\m{c=b}$
+%$\node{n_3}:$
+%assert $\m{f(b)=g(b)}$ //negated $\m{f(b) \neq g(b)}$
+%\end{lstlisting}
+%Here, even without scoping, \m{\Eqs{n_3} \not\models a=b} and \m{\Eqs{n_3} \not\models c=b}, and so the query and response have to be translated through \m{n_{2a},n_{2b}}.
+%
+%As is evident from the example ~\ref{snippet3.16a}, the term \m{f(\s{b})} at \m{n_3} has no corresponding term at \m{n_2}, although it has the corresponding term \m{f(\s{a})} at \m{n_1}
+%
+
+
+%\m{p,n \vdash_k s=t}.\\
+%(Strictly speaking, we mean \\
+%\m{\forall s,t \in g_n,p \in \preds{n} \cdot}\\
+%\m{n,p \vdash_k s=t \Leftrightarrow (\exists u \in \terms{s},v \in \terms{t} \cdot \eqs{p} \cup \eqs{n} \vdash_k u=v)} )\\
+%Following our calculus, two such EC-nodes \m{s,t} at \m{g_n} can be proven equal from \m{\eqs{p} \cup \eqs{n}} by a proof of depth at most \m{k} iff one of the following holds:
+%\begin{enumerate}
+	%\item Axiom from \m{n}, or provable from \m{n}: \m{s\equiv t} 
+	%\item Axiom from \m{p}: \m{\sources{n}{p}{s} \cap \sources{n}{p}{t} \neq \emptyset}
+	%\item Transitivity: \m{\exists u \in g_n \cdot p,n \vdash_{k-1} s=u \land p,n \vdash_{k-1} u=t} (this is not a direct outcome from the definition of transitivity - in theory it could be that such \m{u} does not exist, we will show in the completeness proof that such a \m{u} must exist)
+	%\item Congruence closure: \m{\exists \fa{f}{x} \in s,\fa{f}{y} \in t \cdot p,n \vdash_{k-1} \tup{x}=\tup{y}}  - we distinct
+		%\subitem 4a: \m{\forall p' \in \preds{n} \cdot p',n \vdash \tup{x}=\tup{y}}
+		%\subitem 4b: \m{\exists p' \in \preds{n} \cdot p',n \not\vdash \tup{x}=\tup{y}}
+%\end{enumerate}
+%
+%We use \m{p,n \vdash_{k-1} \tup{x}=\tup{y}} to mean that for each \m{i} where \m{x_i\not\equiv y_i}, \\
+%\m{p,n \vdash_{k-1} x_i=y_i}.
+%
+%The graph \m{g_n} is gfa-complete iff, for each EC-node \m{s}, for each term \m{u} s.t. 
+%\m{\forall p \in \preds{n} \exists v_p \in \terms{s} \cdot p,n \models v_p=u}, \m{u \in \terms{s}}.\\
+%To phrase our graph-based, local version of this invariant, we need to consider every combination of the last step of the proof of 
+%\m{u=v_p} for each \m{p}.\\
+%We will show the full case analysis in the completeness proof, here we only discuss the interesting cases:\\
+%The various combinations with transitivity we will discuss when presenting the completeness proof, basically they do not add much complication as all EC-graphs are transitive closed by construction.\\
+%If the last step for both predecessors is predecessor specific congruence closure (4b), 
+%then we would reach a state where we have the equivalent of the above mentioned green line between \m{s,t} with both labels \m{p_0,p_1},
+%and then we know we should merge \m{s} and \m{t}.\\
+%If the last step for both predecessors is a predecessor specific axiom (2), then our completeness criterion by source-pairs suffices.\\
+%If the last step for both predecessors is (4a), then \m{g_n \models \tup{x}=\tup{y}}, and hence by construction \m{s\equiv t}.\\
+%There cannot be a combination of (4a) and (4b), be definition.\\
+%In ~\ref{snippet3.20_graph3}, the last step in proving \m{f(a)=f(b)} from \m{p_0} was an axiom(2), and from \m{p_1} it was congruence closure(4b).\\
+%Essentially, in this case we need to show that \m{n,p_1 \models (a)=(b)} which means \m{n,p_1 \models a=b}.
+%This means, essentially, that 
+
+%which means that we need to match a gfa from \m{g_{p_0}} with a gfa from \m{g_n}, rather than from \m{g_{p_1}}.\\
+%Overloading the notation for source-pairs we are traversing downwards on the gfa-pair 
+%\gta{\fa{f}{[b]_{g_{p_0}}}}{\fa{f}{[a]_{g_n}}}, to get the term-pair \gta{[b]_{g_{p_0}}}{[a]_{g_n}}.\\
+%Now we use transitivity - \m{[a]_{g_{p_1}} \in \sources{n}{p_1}{[a]_{g_n}}}, 
+%we traverse \\
+%from \gta{\fa{f}{[b]_{g_{p_0}}}}{\fa{f}{[a]_{g_n}}} to \gta{[b]_{g_{p_0}}}{[a]_{g_{p_1}}},
+%that is, transitivity means that, as a traversal step in a source-pair, we can replace in a source-pair a \m{g_n} node with one of its sources (according to position), and vice versa.
+%Traversing this source-pair down we see it is feasible (as $b() \in \gfasA{[a]_{g_{p_1}}}$ and \m{b() \in \gfasA{[b]_{g_{p_0}}}}),
+%so we can create bottom up, as before, the node \m{[b]_{g_n}} with the source-pair \gta{[b]_{g_{p_1}}}{[a]_{g_{p_1}}}.\\
+%Now we need another step we did not have before - we need to add the gfa \fa{f}{[b]_{g_n}} to \m{[f(a)]_{g_n}}.\\
+%This gfa we have traversed downwards before as part of the gfa-source-pair \gta{\fa{f}{[b]_{g_{p_0}}}}{\fa{f}{[a]_{g_n}}},
+%so we can create it once we have determined its tuple-source-pair is feasible.\\
+%In order to be incremental as described above, we would need to add to the state at each CFG-node the set of 
+%term,(possibly tuple) and gfa source-pairs that we have already checked, including those that have been found feasible (except those that actually produced a node at \m{g_n}) and infeasible.
+%Note that we did not include source-pairs where both nodes are from \m{g_n} - 
+%the reason is that the meaning of these is ambiguous, 
+%different depending on whether we have reached 
+%The green line in ~\ref{snippet3.20_graph3}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%As a first approximation we might try to ensure source completeness by traversing the CFG in topological order and adding, at each node, the equivalence class of each term that appears in any of the predecessors.\\
+%\textbf{Tree CFG source completeness:}\\
+%If the CFG is a tree that would work, because of the following property:\\
+%In a sequential node, each equality that holds at the predecessor holds also at the node, so each equivalence class of 
+%\m{\terms{\Sigma}/\Eqs{n}} is a (disjoint) union of one or more ECs from \m{\terms{\Sigma}/\Eqs{p}}, where \m{p} is the direct predecessor of \m{n}.
+%This property ensures that we have to add at most \size{g_p} EC nodes to \size{g_n} in order to ensure source completeness with the process described above.
+%Assuming each node has at least one statement, the total complexity is then \m{O((\sum_n \size{g_n})^2)}, but could be expected to be nearer to \m{\sum_n \size{g_n}} in most DSA programs unless each node has a completely unrelated set of terms 
+%(if the number of nodes \m{c} is more dominant than the number of function symbol occurrences then we would get \m{O(c \times (\sum_n \size{g_n}))} as each term can appear at each node).\\
+%Note that in this case (topological order traversal), time complexity can be calculated from the space complexity:\\
+%Assuming we construct the graph initially as in the verification algorithm above, each node would have a graph that includes the transitive sub-term closure of the terms that appear in the clauses of that node, under all equalities that hold at the node and predecessors (again assuming the graph has no joins).\\
+%Under that assumption, when traversing the CFG in topological order, each node would have to add at most one EC (node) per predecessor EC (node), and so in the worst case , where the root has \m{k} EC nodes and the rest of the \m{c} CFG nodes have empty EC graphs, we would end up with \m{k \times c} total EC graph nodes.\\
+%As described later, in our algorithm we would actually have less EC nodes, as identical sub-term closed EC sub-graphs are shared, but that does not change the asymptotic worst case.
+%
+%\subsubsection*{Join CFG source completeness:}
+%At a join node \node{n} with two direct predecessors \m{p_1,p_2} 
+%For a join node that was created using the verification algorithm above, the following property holds by construction:\\
+%\m{\forall s \in \terms{g_{p_1}} \cap \terms{g_n} \cap \terms{g_{p_2}}, t \in \terms{g_{p_1} \cap{ g_{p_2}}} \cdot}\\ 
+%\m{((g_{p_1} \models s=t \land g_{p_2} \models s=t) \Rightarrow (t \in \terms{g_n} \land g_n \models s=t))}\\
+%That is, if two terms appear and are equal in both \m{p_1,p_2}, and at least one of them appears in \m{n} then so does the other and they are also equal in \m{n}.\\
+%This property will be weakened once we add scoping and term-radius, and we will discuss that later.\\
+%What this property means is that:\\
+%Each equivalence class in \m{\terms{\Sigma}/\Eqs{n}} is a (disjoint) union of one or more elements from 
+%\s{S_1 \cap S_2 \mid S_1 \in \terms{\Sigma}/\Eqs{p_1} \land S_2 \in \terms{\Sigma}/\Eqs{p_2}}.\\
+%Given such \m{S_1 \cap S_2} we can define \m{[S_1 \cap S_2]_n} which is the equivalence class that includes all the elements of \m{S_1 \cap S_2}, as we know they will all appear in the same equivalence class at \m{n}.
+%
+%Using the above definition, given a node \m{n} with the predecessors \m{p_1,p_2} which are source complete, we can make \node{n} source complete by adding \\
+%\s{[\terms{s} \cap \terms{t}]_n \mid t \in g_{p_1} \land s \in g_{p_2}} to \m{g_n}, where \m{t,s} are EC nodes.
+%This adds at most \m{\size{g_{p_1}} \times \size{g_{p_2}}} nodes to \m{g_n}.\\
+%The overall complexity is then at most double exponential in the number of function symbol occurrences (with the above assumption about CFG nodes). 
+%We are only aware of an example for exponential lower bound (from ~\cite{GulwaniNecula07}, adjusted for \lstinline{assume} rather than assignments to get \m{O(2^n)} rather than \m{O(2^{\sqrt{n}})} as described later), and not aware of any double exponential lower bound.
+%
+%A double exponential algorithm is not practical, and the above algorithm adds many more terms than are needed, as it does not take into account at all the the terms present in successor nodes.
+%
+%We disregard, for now, the question of whether \m{\terms{s}} includes a maximal term in some clause at \m{p} and simply discuss sets of terms.\\
+%We can phrase the original condition as:\\
+%\m{\forall n,p \in cfg, s \in g_p, t \in g_n \cdot }\\
+%\m{((\exists p.P.n \in cfg,s' \in \terms{s}, t' \in \terms{t} \cdot \Eqs{p.P.n} \models s'=t') \Rightarrow} \\
+%\m{\exists p.P.n \in cfg \cdot s \in \sourcesB{p.P.n}{t}} \\
+%However, this property is highly non-local, as "missing" sources on one branch can be compensated on another branch - for example:
+%
+%
+%While this criterion is minimal, we have not found an obvious algorithm to establish minimal source completeness under this criterion that is local and can be calculated efficiently after source completeness is violated by arbitrary addition of equalities and terms (e.g. from a theory or quantifier instantiation).
+%
+%For this reason we strengthen our criterion:\\
+%\m{\forall n,p \in cfg, s \in g_p, t \in g_n, p.P.n \in cfg \cdot }\\
+%\m{((\exists s' \in \terms{s}, t' \in \terms{t} \cdot \Eqs{p.P.n} \models s'=t') \Rightarrow
+%s \in \sourcesB{p.P.n}{t}} 
+%
+%So now each path must be source complete.
+%
+%However, if we translate this to the condition for any point on a path, we get:\\
+%\m{\forall p.P.q.Q.n \in cfg, s \in g_p, t \in g_n \cdot }\\
+%\m{(\exists s' \in \terms{s}, t' \in \terms{t} \cdot \Eqs{p.P.q.Q.n} \models s'=t') \Rightarrow}\\
+%\m{\exists u \in g_q \cdot \cdot u \in \sourcesB{p.P.q}{t} \land s \in \sourcesB{q.Q.n}{t}}\\
+%Meaning that for each term at the end of the path that is equivalent on the path (by \Eqs{} on the paths) to a term at the beginning of the path, for each CFG node on the path there must be an EC node that is equivalent to both terms along the path.\\
+%This leaves some freedom in selecting the terms to add to internal nodes, which can effect efficiency - for example:
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+%\begin{figure}[H]
+%\begin{lstlisting}
+	%if (*)
+		%$\m{p_0}:$ 
+		%assume $\m{a=b}$
+	%else
+		%$\m{p_1}:$
+		%assume $\m{a=f(f(b))}$
+		%assume $\m{a=f(a)}$
+%$\m{n}$
+	%if (*)
+		%$p_t:$
+		%assume $\m{a=f(a)}$
+		%assume $\m{b=f(b)}$
+		%assert $\m{g(a)=g(b)}$ //negated $\m{g(a) \neq g(b)}$
+	%else
+		%...
+%\end{lstlisting}
+%\caption{join indirect congruence closure loop}
+%\label{snippet3.9}
+%\end{figure}
+%
+%Here, all of the terms of the form \m{g(f^i(a))} at \m{n} would map to $\m{g(a)}$ at $p_t$ and at \m{p_1}.\\
+%For any natural \m{i}, \m{g(f^{i+2}(a))=g(f^{i+2}(b))} holds at \m{n} - 
+%however this set is infinite so we cannot deduce all these equalities at \m{n} 
+%(as an attempt at ensuring completeness by deducing all equalities for represented terms). \\
+%It would be sufficient to deduce \m{g(f^{2}(a))=g(f^{2}(b))} at \m{n} in order to prove the assertion, 
+%but it is not immediately obvious how to determine exactly which equalities are sufficient to ensure completeness.\\
+%Even when the set of all implied equalities on terms that are equivalent to terms in both a predecessor and successor cfg node is finite, it could be large - consider:
+%Here we have 16 options for an equality which we could add to the join to get the assertion proven - 
+%any of \m{f(\s{a,b,c,d},\s{a,b,c,d})=e} would suffice, and there is no specific reason to select any of them - they are basically symmetric. Adding all these equalities results in a quadratic size join.\\
+%In our setting, we will want such a join 
+%
+%We could extend this example with \m{n^2} constants instead of just the \m{2^2} constants \m{a,b,c,d}, 
+%and then we have \m{2n + n^2} equalities on each of \m{p_0,p_1}, and \m{{n^2}^2} terms at the join 
+%(2n equalities on constants, \m{n^2} equalities of the form \m{f(x,y)=e}).
+%
+%We have experimented with several methods for determining which terms to add to a join in order to make later assertions provable, as will be described later, but, as we have seen above, in order to ensure polynomial complexity we cannot allow the ground unit fragment to deduce even all equalities at a join and hence we choose a subset of these and the rest of the information is encoded as (in)equalities guarded by the branch condition that is joined at the node, and later equalities (as in above a=b=c=d) can allow simple resolution steps to deduce the rest - in example ~\ref{snippet3.10}, using \m{p} as the joined branch condition, this could be:\\
+%$\m{\lnot p \lor a=b}$\\
+%$\m{\lnot p \lor c=d}$\\
+%$\m{p \lor a=c}$\\
+%$\m{p \lor b=d}$\\
+%$\m{f(a,a)=e}$\\
+%$\m{f(a,d)=e}$\\
+%$\m{f(d,a)=e}$\\
+%$\m{f(d,d)=e}$
+%
+%Which is complete and gives us a linear sized join.
+%
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\subsubsection{Join nodes}
+%Remember that our congruence closure only introduces new terms, consider ~\ref{snippet3.3},
+%\noindent
+%Here, \\ 
+%$
+%\begin{array}{lll}
+	%\precondIII{p_j}     & = & \s{\lnot \m{c_1} \lor \term{a=b}, \m{c_1} \lor \term{f(a)=f(b)}} \\
+	%\postcondIII{p_j}    & = & \s{\lnot \m{c_1} \lor \term{a=b}, \m{c_1} \lor \term{f(a)=f(b)}} \\
+	%\postcondIII{p_{ja}} & = & \s{\lnot \m{c_1} \lor \term{a=b}, \m{c_1} \lor \fau{f}{a}=\fau{f}{b},\fau{f}{a} \neq \fau{f}{b}}
+%\end{array}
+%$\\
+%which is sufficient to prove the assertion using a complete calculus, but the unit restricted version is:\\
+%$
+%\begin{array}{lll}
+	%\restrict{\precondIII{p_j}}{u}     & = & \s{} \\
+	%\restrict{\postcondIII{p_j}}{u}    & = & \s{} \\
+	%\restrict{\postcondIII{p_{ja}}}{u} & = & \s{\fau{f}{a} \neq \fau{f}{b}}
+%\end{array}
+%$\\
+%Which is insufficient.\\
+%If it were the case that $\fau{f}{a} \in \terms{\clauses{p_j}}$, for example if we added $\clauses{p_j} = \s{\fau{f}{a}=\term{d}}$, 
+%then $\fau{f}{a}=\fau{f}{b} \in \CC{\postcondIII{p_t} \cup \clauses{p_j}}$ and hence
+%$\fau{f}{a}=\fau{f}{b} \in \cprecondIII{p_j}$ and the pre and post-conditions would be:\\
+%$
+%\begin{array}{lll}
+%\precondIII{p_j}     & = & \s{\lnot \m{c_1} \lor \term{a=b}, \fau{f}{a}=\fau{f}{b}} \\
+%\postcondIII{p_j}    & = & \s{\lnot \m{c_1} \lor \term{a=b}, \fau{f}{a}=\fau{f}{b},\fau{f}{a}=\term{d}} \\
+%\postcondIII{p_{ja}} & = & \s{\lnot \m{c_1} \lor \term{a=b}, \fau{f}{a}=\fau{f}{b},\fau{f}{a}=\term{d},\fau{f}{a} \neq \fau{f}{b}}
+%\end{array}
+%$\\
+%And the unit version:\\
+%$
+%\begin{array}{lll}
+%\restrict{\precondIII{p_j}}{u}     & = & \s{\fau{f}{a}=\fau{f}{b}} \\
+%\restrict{\postcondIII{p_j}}{u}    & = & \s{\fau{f}{a}=\fau{f}{b}, \fau{f}{a}=\term{d}} \\
+%\restrict{\postcondIII{p_{ja}}}{u} & = & \s{\fau{f}{a}=\fau{f}{b}, \fau{f}{a}=\term{d},\fau{f}{a} \neq \fau{f}{b}} \\
+%\end{array}
+%$\\
+%And so we can derive the empty clause.
+%(we have omitted the equalities produced by reflexivity and transitivity, for clarity - they are built-in in our data structure).
+%
+%This is undesirable for us as the addition of an unrelated and unused clause has put the program into our fragment - we want the fragment to be predictable to programmers.
+%
+%We have explored three different approaches to attack this problem.\\
+%One idea would be to try to augment the set of terms of each side of a join with the terms on the other side (e.g. with reflexive equalities such as \term{f(a)=f(a)}, and then perform the join as above).
+%This would solve the above case, but consider:
+%
+%\begin{lstlisting}[caption=join congruence closure co-propagation,label=snippet3.20]
+%$\node{p_b}:$
+%if ($\m{c_1}$)
+	%$\node{p_t}:$
+	%assume a=f(b)
+%else
+	%$\node{p_e}:$
+	%assume b=g(a)
+%$\node{p_j}:$
+	%$\node{p_ja}:$
+	%assert f(g(a))=f(b) || g(f(b))=g(a) 
+	%//negated $\fau{f}{\fau{g}{a}} \neq \fau{f}{b} \land \fau{g}{\fau{f}{b}} \neq \fau{g}{a}$
+%\end{lstlisting}
+%
+%This program is not provable in the unit fragment which is reasonable, but the problem lies with the join, looking at the sets of terms:\\
+%$\begin{array}{lll}
+	%\terms{p_t} & = & \s{a,b,f(b)} \\
+	%\terms{p_e} & = & \s{a,b,g(a)} \\
+%\end{array}
+%$
+%
+%If we were to try and complete each side with the other side's terms, we get, after one iteration and congruence closure:\\
+%$\begin{array}{lll}
+	%\terms{p_t} & = & \s{a,b,f(b),g(a),g(f(b))} \\
+	%\terms{p_e} & = & \s{a,b,g(a),f(b),f(g(a))} \\
+%\end{array}
+%$\\
+%And the next:\\
+%$\begin{array}{lll}
+	%\terms{p_t} & = & \s{a,b,f(b),g(a),g(f(b)),f(g(a)),f(g(f(a)))} \\
+	%\terms{p_e} & = & \s{a,b,g(a),f(b),f(g(a)),g(f(b)),g(f(g(b)))} \\
+%\end{array}
+%$\\
+%So this will diverge.\\
+%We would not want to limit congruence closure depth as we have seen that it does not add new equivalence classes in the sequential case.
+%We could mark terms as coming from completion and limit congruence closure only on these terms, however this is rather arbitrary and unrelated to the assertions we try to prove.
+%We have experimented with this approach but have found it to be not very efficient and unpredictable.
+%
+%A variant on this approach would try to complete each side only as far as it could produce a new equality in the join, 
+%and relegate the rest to the non-unit fragment - however, going back to our previous example:
+%\begin{lstlisting}[caption=join congruence closure quadratic depth simple,label=snippet3.21]
+%$\node{p_b}:$
+%if ($\m{c_1}$)
+	%$\node{p_t}:$
+	%assume $\m{a=f^m(a)}$
+%else
+	%$\node{p_e}:$
+	%assume $\m{a=f^n(a)}$
+%$\node{p_j}:$
+	%$\node{p_{ja}}:$
+	%assert ......
+%\end{lstlisting}
+%
+%Here we would need to complete each side to $\m{m \times n}$ terms in order to get all the possible equalities at the join.
+%
+%Here, the implied equalities at the join are $\m{g(f^k(a))=g(f^k(b))}$ for any non-negative k, and this is not finitely representable as a set of unit equalities. However, it seems clear which of these equalities are needed in order to prove the assertion, which leads us to the next approach:
+%
+%We want the join to be sensitive not only to the terms and clauses at the join point but also those in all transitive successors.
+%We also want to keep the join calculation local in the sense that only the three involved nodes are needed to compute it.
+%
+%For that, each node will ensure that each term that occurs in the node occurs also in all its predecessors - 
+%so in the above example:\\
+%$\terms{\clauses{p_{ja}}} = \s{a,b,f(a),f(b),f(f(a)),f(f(b)),g(f(f(a))),g(f(f(b)))}$\\
+%So all of these terms will be added (e.g. as reflexive self equality axioms) to all the nodes, and we would get(omitting reflexive axioms):\\
+%$
+%\begin{array}{lll}
+	%\restrict{\precondIII{p_j}}{u}     & = & \s{\term{g(a)=g(b),g(f(a))=g(f(b)),g(f(f(a)))=g(f(f(b)))}} \\
+	%\restrict{\postcondIII{p_j}}{u}    & = & \s{\term{g(a)=g(b),g(f(a))=g(f(b)),g(f(f(a)))=g(f(f(b)))}} \\
+	%\restrict{\postcondIII{p_{ja}}}{u} & = & \{\term{g(a)=g(b),g(f(a))=g(f(b)),g(f(f(a)))=g(f(f(b)))} \\
+	                                   %&   & \term{g(f(f(a))) \neq g(f(f(b)))}\} \\
+%\end{array}
+%$\\
+%So the program is now within our unit fragment.
+%
+%
+%However, we have now introduced a complexity problem - consider:
+%\begin{lstlisting}[caption=congruence closure source polynomial,label=snippet3.24]
+%$\node{p_b}:$
+	%assume $\m{f(a,a)=d}$
+%if ($\m{c_1}$)
+	%$\node{p_t}:$
+	%assume $\m{a=b}$
+	%assume $\m{c=d}$
+		%$\node{p_{ta}}:$
+		%assert f(b,b)=c
+%else
+	%$\node{p_e}:$ ...
+%$\node{p_j}:$ ...
+%\end{lstlisting}
+%
+%Now the set of terms that \node{p_{ta}} is interested in (after propagation and congruence closure):\\
+%$\terms{p_{ta}} = \s{a,b,c,d,f(a,a),f(a,b),f(b,a),f(b,b)}$
+%
+%So from the one term \term{f(b,b)} we got four terms \term{f(a,a),f(a,b),f(b,a),f(b,b)} and obviously more equalities at \node{p_t} would entail more terms are needed at \term{p_t} to ensure that we have covered all possibilities.
+%For example, the term \term{f(f(a,a),f(a,a))} would require 16 options and another level would require 256 options.
+%In this case exactly one option is useful - \term{f(a,a)} for \term{f(b,b)} and \term{d} for \term{c}.
+%This kind of expansion is at most polynomial in the number of equalities where the degree of the polynomial is the largest function arity in the signature, which would already make the algorithm not very scalable, however consider the following:
+%\begin{lstlisting}[caption=congruence closure source loop,label=snippet3.25]
+%$\node{p_b}:$
+	%assume $\m{f(g(a),g(a))=c}$
+%if ($\m{c_1}$)
+	%$\node{p_t}:$
+	%assume $\m{a=g(a)}$
+		%$\node{p_{ta}}:$
+		%assert $\m{f(a,a)=c}$
+%else
+	%$\node{p_e}:$ ...
+%$\node{p_j}:$ ...
+%\end{lstlisting}
+%
+%Here the set of potentially relevant terms at \node{p_b} is \s{\m{f(g^m(a),g^n(a))} } for any \m{m,n} - so an infinite set.
+%
+%In both of the above examples it seems obvious which terms are needed for completeness: in ~\ref{snippet3.24} we see that out of all the potentially relevant terms, only the tuple \term{(a,a)} has a corresponding term \term{f(a,a)}.
+%For ~\ref{snippet3.25} we can try to determine this set bottom up: we start with the constant \term{a} and determine its equivalent terms in predecessors, then we look at each term for which all sub-terms have been processed, as \term{a=g(a)}, we need to check the terms \s{g(a),f(a,a)} - we only find \term{g(a)} which maps to the equivalence class for \term{a} at \node{p_{ta}} so now we need to consider: \\
+%\s{g(g(a)), f(a,g(a)), f(g(a),a), f(g(a),g(a))}\\
+%We only find \term{f(g(a),g(a))} which is (or its equivalents are) then added to all the nodes on the path between \node{p_{ta}} and \node{p_b}, which then suffices to prove the assertion. 
+%We present the end result, showing only a set of unit equalities sufficient to generate the congruence relation at each node, 
+%and the reflexive closure of a term if it does not appear in any other clause.
+%The end result is:\\
+%$
+%\begin{array}{llll}
+	%\clauses{p_b}    & = & \s{f(g(a),g(a))=c} \\
+	%\clauses{p_t}    & = & \s{f(g(a),g(a))=c,a=g(a)} \\
+	%\clauses{p_{ta}} & = & \s{f(g(a),g(a))=c,a=g(a),f(g(a),f(g(a))) \neq c} \\
+%\end{array}
+%$
+%
+%As we will be representing terms by their equivalence classes, we measure the complexity of a node \node{n} as follows:\\
+%We use \clauseseq{n} for the set of unit equalities at \clauses{n}.
+%In general, for a sequential node \node{n} and its direct predecessor \node{p}, it does not hold that 
+%$\clauseseq{p} \subseteq \clauseseq{n}$.
+%However we claim that $\restrict{\clauseseq{p}}{\terms{n}} \subseteq \restrict{\clauseseq{n}}{\terms{n}}$.\\
+%The reason is that \terms{n} is subterm closed, and for any term in \terms{n} we would propagate all unit equalities on that term from \node{p} to \node{n} (as described in the process above), and so $\restrict{\clauses{p}}{\terms{n}} \subseteq \clauses{n}$. We will prove these claims formally later.
+%In the algorithm described above, a term can be added to \terms{n} only if it exists already in a direct predecessor of \node{n}, and an equivalent term exists already in \succst{n}. Each such added term will have all of its unit equalities from predecessors of \node{n} also added to \node{n}, so that the number of equivalence classes added to \node{n} is bounded by the size of $\ECs{\bigcup\limits_{\m{p} \in \predst{n}} \clauses{p}}$, which is in turn bounded by the size of $\terms{\bigcup\limits_{\m{p} \in \predst{n}} \clauses{p}}$, as no step in our algorithm can add a term to \node{n} unless there is already an equivalent term in $\terms{\bigcup\limits_{\m{p} \in \predst{n}} \clauses{p}}$.
+%We will discuss complexity further when we present our data structure.
+%
+%Coming back to example ~\ref{snippet3.3}:
+%
+%\noindent
+%Now, the terms \term{f(a),f(b)} are added to \terms{p_j} and so:\\
+%Here, \\ 
+%$
+%\begin{array}{lll}
+	%\precondIII{p_j}     & = & \s{\lnot \m{c_1} \lor \term{a=b}, \term{f(a)=f(b)}} \\
+	%\postcondIII{p_j}    & = & \s{\lnot \m{c_1} \lor \term{a=b}, \term{f(a)=f(b)}} \\
+	%\postcondIII{p_{ja}} & = & \s{\lnot \m{c_1} \lor \term{a=b}, \term{f(a)=f(b)}, \term{f(a) \neq f(b)}}
+%\end{array}
+%$\\
+%And the unit restriction is:\\
+%$
+%\begin{array}{lll}
+	%\restrict{\precondIII{p_j}}{u}     & = & \s{\term{f(a)=f(b)}} \\
+	%\restrict{\postcondIII{p_j}}{u}    & = & \s{\term{f(a)=f(b)}} \\
+	%\restrict{\postcondIII{p_{ja}}}{u} & = & \s{\term{f(a)=f(b)},\fau{f}{a} \neq \fau{f}{b}}
+%\end{array}
+%$\\
+%Which now lets us prove the assertion.
+%
+%Consider also the following example:
+%\begin{lstlisting}[caption=join congruence closure,label=snippet3.26]
+%$\node{p_b}:$
+%if ($\m{c_1}$)
+	%$\node{p_{t1}}:$
+	%assume $\m{a=b}$
+	%assume $\m{P(f(a,b))=T}$
+%else
+	%$\node{p_{e1}}:$
+	%assume $\m{P(f(b,a))=T}$
+%$\node{p_{j1}}:$
+%if ($\m{c_2}$)
+	%$\node{p_{t2}}:$
+	%assume $\m{a=b}$
+		%$\node{p_{t2a}}:$
+		%assert $\m{P(f(a,a))=T}$
+			%//negated $\m{f(a) \neq f(b)}$
+%else
+	%....
+%\end{lstlisting}
+%
+%Here, \node{p_{t2a}} would request from \node{p_{t2}} the equalities for the equivalence class for \\
+%\s{P(f(a,a))} (and for T, but we ignore that for now).\\
+%\node{p_{t2}} would request from \node{p_{j1}} the equivalence class first for 
+%\s{a,b}, \\
+%and then for \s{f(a,a),f(a,b),f(b,a),f(b,b)}.\\
+%When \node{p_{j1}} requests these from \node{p_{t1}}, the answer is \\
+%\s{f(a,a),f(a,b),f(b,a),f(b,b)}, \\
+%as they are all in the same equivalence class at \node{p_{t1}}.\\
+%In this case  \node{p_{t1}} can choose to create only \m{f(b,a)}, because it is the only member of the equivalence class that exists also at \node{p_{e1}}, so there could be no extra equality information about any of the others.
+%
+%However, going back to the previous example ~\ref{snippet3.10}:\\
+%Now the query to $\node{p_{j1}}$ would actually consist of \\
+%$\{P(a,a),P(a,b),P(a,c),P(a,d),P(b,a),P(b,b),P(b,c),P(b,d), \\
+%P(c,a),P(c,b),P(c,c),P(c,d),P(d,a),P(d,b),P(d,c),P(d,d)\}$ \\
+%Or in short: \\
+%\s{P(\s{a,b,c,d},\s{a,b,c,d})}. \\
+%In fact, at the join point all of these terms equal \m{T}, and each single one of them would be sufficient in order to prove the assertion.
+%If we add any of the 16 equations in \s{P(\s{a,b,c,d},\s{a,b,c,d})=T} to $\node{p_{j1}}$ we would be able to prove the assertion.
+%
+%Before we describe how we handle this example, consider again a variant of ~\ref{snippet3.11}:
+%\begin{lstlisting}[caption=join congruence closure quadratic branch,label=snippet3.27]
+%$\node{p_b}:$
+%if ($\m{c_1}$)
+	%$\node{p_{t1}}:$
+	%assume $f^{m}(a)=b$
+	%assume $f^{m}(b)=b$
+%else
+	%$\node{p_{e1}}:$
+	%assume $f^{n}(a)=b$
+	%assume $f^{n}(b)=b$
+%$\node{p_{j1}}:$
+%if ($\m{c_2}$)
+	%$\node{p_{t2}}:$
+	%assume a=f(a)
+		%$\node{p_{t2a}}:$
+		%assert $a = b$
+			%//negated $\m{a \neq b}$
+%else
+	%....
+%\end{lstlisting}
+%Here, if \m{m} and \m{n} are co-prime then at the join we would have only \m{f^{m \times n}(a)=b} and \m{f^{2(m \times n)}(a)=f^{(m \times n)}(a)}, 
+%so the size of the unit representation of the join is also quadratic as above.
+%In this case there is no choice of small join interpolant (that is, a conjunction of unit ground equalities)  linear in the size of the program that holds at $\node{p_{j1}}$ and is sufficient to prove the assertion.
+%As mentioned in the previous section, cascading joins with quadratic expansion in the term depth could potentially lead to double exponential expansion in the term depth, but we are not aware of a concrete example for this or even single exponential expansion.
+%
+%Coming back to ~\ref{snippet3.11}:\\
+%We will discuss the exact complexity analysis in detail when we discuss the join algorithm.
+%For the purpose of the ground fragment, however, it is instructive to see how this issue manifests itself in DPLL and superposition:\\
+%For DPLL, if we first \lstinline{decide} on \term{c1} and then on \term{\lnot c1}, we would not need any join and the e-graph 
+%will not contain more representatives of \\
+%\s{P(\s{a,b,c,d},\s{a,b,c,d})} than those appearing on the path that we choose.
+%
+%For superposition, if we assume some strict order e.g. \term{d>c>b>d>T}, assuming the input includes clauses of the form:\\
+%\term{\lnot c_1 \lor d=c} \\
+%\term{\lnot c_1 \lor P(d,d)=T} \\
+%We could get the following set of clauses (depending on which clauses are chosen for derivations):\\
+%\term{\lnot c_1 \lor P(d,d)=T} \\
+%\term{\lnot c_1 \lor P(d,c)=T} \\
+%\term{\lnot c_1 \lor P(c,d)=T} \\
+%\term{\lnot c_1 \lor P(c,c)=T} \\
+%...\\
+%in general, all 16 rewrite options on each side, depending on the chosen term ordering.
+%We could be luckier with a different ordering, or if the inequality in was chosen for negative superposition first and then the correct resolutions were performed, but we are looking at the worst case.
+%Note that if we allow the path condition literals to be higher in the ordering than the equalities, we automatically get a quadratic size by the resolution of each term from each joinee with each term from the other joinee.
+%
+%There are several ways to handle this problem:\\
+%The simplest way is to allow all these 16 terms to be added to \node{p_{j1}}, and rely on the term radius limitations in order to ensure a bound on the global number of terms in the system - this is a last resort solution but the simplest to implement and analyze.
+%
+%Another solution would be to choose, for each such query \\ \s{P(\s{a,b,c,d},\s{a,b,c,d})}, one representative.
+%
+%Suppose that the one answer that was chosen for the first query was \term{P(c,d)}.
+%Now consider what could happen on the other side of the branch:
+%\begin{lstlisting}[caption=join congruence closure quadratic branch else,label=snippet3.11a]
+%...
+%$\node{p_{j1}}:$
+%if ($\m{c_2}$)
+	%$\node{p_{t2}}:$
+	%assume $\m{a=b}$
+	%assume $\m{b=c}$
+	%assume $\m{c=d}$
+		%$\node{p_{t2a}}:$
+		%assert P(b,d)=T
+			%//negated $\m{P(b,d) \neq T}$
+%else
+	%$\node{p_{t2}}:$
+	%assume $\m{a=b}$
+	%assume $\m{c=d}$
+		%$\node{p_{t2a}}:$
+		%assert $\m{P(b,d)=T}$
+			%//negated $\m{P(b,d) \neq T}$
+%\end{lstlisting}
+%
+%Now \node{p_{j1}} will get a query for \s{P(\s{a,b},\s{c,d})}, while we remember that we have queried \s{P(\s{a,b,c,d},\s{a,b,c,d})} before.
+%This means we cannot trust the results of a previous query that covers our query, and must repeat each query that does not equal exactly a previous query.
+%
+%Given a sub-term-closed set of terms \m{S}, and two finite sets of equalities \m{E_1,E_2}, ~\cite{GulwaniTiwariNecula04} calculate the \emph{relative complete join} of \m{E_1,E_2} with respect to \m{S} as:\\
+%$\m{J_1} = \s{t=s \mid t,s \in S \land E_1 \models t=s \land E_2 \models t=s }$\\
+%Where they show the result is in linear space in the size of \m{S}.\\
+%This means calculating all equalities that hold on members of \m{S} - essentially an 
+%\emph{eager} (potentially too strong), but sufficient, interpolant (if an interpolant as a conjunction of unit equalities exists) between \m{ E_1 \lor E_2 } and any disjunction of inequalities over \m{S}.
+%(by \m{ E_1 \lor E_2 } we mean \s{ l_1 \lor l_2 \mid l_1 \in E_1 \land l_2 \in E_2}
+%
+%
+%In our setting we need to refine this formulation somewhat:\\
+%If the set of clauses \clauses{n_j} at the join node \node{n_j} contains the unit equalities \m{E_j}, 
+%then for any sub-term-closed set of terms \m{S} such that $\terms{E_j} \subseteq \m{S}$ we can calculate:\\
+%$\m{J_2} = \s{t=s \mid t,s \in \m{S} \land E_1 \cup E_j \models t=s \land E_2 \cup E_j \models t=s }$\\
+%The size of \ECs{J_2} is \m{O(\size{S} + \size{\ECs{E_j}} + \size{\ECs{E_1}} + \size{\ECs{E_2}})} by a simple argument:\\
+%We can build \m{E_1' = E_1 \cup E_j \cup {t=t \mid t \in S}} and similarly for \m{E_2}, and then apply the result above.
+%$\size{E_1'} \le \size{\ECs{E_1}} + \size{\ECs{E_j}} + \size{S}$ because 
+%$\terms{E_1 \cup E_j} = \terms{E_1} \cup \terms{E_j}$ and $\m{{E_1'}_=} \subseteq \m{{E_1}_=}$ and $\m{{E_1'}_=} \subseteq \m{{E_j}_=}$ 
+%and because, as shown in ~\cite{GulwaniTiwariNecula04}, adding a term \m{t} to a set of equations adds at most \size{t} equations, and \m{S} is sub-term-closed.
+%
+%We require $\terms{n_j} \subseteq \m{S}$ because this ensures that no information is lost when replacing \m{E_j} with \m{J_2}.
+%
+%\vspace{1pt}
+%
+%How do we choose \m{S}? \\
+%Our representation (described in the next section) for a set of equalities \m{E} is (roughly) a graph \m{G_E} with \size{\ECs{E}} \emph{term EC nodes} and, for each term $t=\fa{f}{si} \in \terms{E}$ \arity{f} ordered edges from \m{[t]_{E_=}} to each of \m{[s_i]_{E_=}} labeled \m{f_i} - where edges with the same label, source and target are merged.
+%By definition this means that \size{\m{G_E}} (sum of number of nodes and edges) is less than or equal to $2\size{E}$, as each node and edge correspond to at least one occurrence of a function symbol in \m{E}.
+%
+%If we consider a \cfg that is in fact just a sequence of \m{n} basic blocks, with a total of \m{c} flat (in)equalities in the whole program, we want to bound the total size of representing the equivalence classes in all nodes.
+%According to the definition of \postcondIII{n}, each \cfg node \emph{imports} all the (in)equalities from its predecessors, so the last node includes the union of all (in)equalities in the program.
+%If each node imports (copies) all (in)equalities from its predecessor, adds these imported (in)equalities to its own set of equalities (\clauses{n}) and creates the equivalence class graph described above for the union of these equalities, the total size of the graph is at most the sum of the sizes of the graphs that would be generated for each \clauses{n} separately, so if the equalities are divided evenly between the \cfg node, then at least half the nodes can have a graph whose size is half the number of equations - so we have a quadratic overall size of all the graphs in the \cfg.
+%
+%In general we cannot hope for better than quadratic minimal number of equations to represent the state at each program point, however we can refine the above in two ways:
+%\begin{itemize}
+	%\item Scoping - the size of the program that we are using as the input size is in fact the size of the DSA version of the program.
+	%The relation between the number of DSA variables \m{d} and the number of original program variables \m{v} is that each program variable has at least one DSA version, each assignment in the original program introduces one DSA version of a variable and is translated to at least one unit equality assume statement - so  \m{nv \geq d \geq v} for \m{n} basic blocks. 
+	%New DSA versions are also introduced for join points, and can also be introduced to model non-determinism, program external input, the output of a method call, loop internal variables and possibly other modeling needs. A join can introduce a new DSA version for several variables simultaneously.
+	%In terms of scope, each \cfg node has at most two DSA versions of each program variable in scope, by the definition of DSA.
+	%As shown in ~\cite{McMillan05} and ~\cite{FuchsGoelGrundyKrsticTinelli2012}, the fragment of unit ground equality (conjunctions of unit ground equalities) supports interpolation, but not unit-only interpolants - for example (based on ~\cite{FuchsGoelGrundyKrsticTinelli2012}):\\
+	%An (reverse) interpolant of $\m{A}=\s{a=f(b,e) , c=f(d,e)}$ and \\
+	%\m{B=\s{a \neq c, b=d}} is \m{b \neq d \lor a=c}, but there is no interpolant as a conjunction of ground unit equalities (A conjunction non ground existential interpolant exists: \m{\exists x \cdot a=f(b,x) \land c=f(d,x)}).
+	%As discussed later, in such a case we might add \m{e} to the scope of \m{B} for completeness (we do not support existential interpolants).
+	%Given an equivalence class graph, by removing a constant we mean removing all terms that include that constant, and all equivalence classes that contains only terms with this constant, and the relevant edges.
+	%We only restrict the scope for constants. Removing a constant from an EC graph can leave the number of nodes unchanged and the number of edges reduced by 1, or it could leave the graph empty. Restricting the EC graph at each node to scope however, makes sense when we also limit the size of terms. We will discuss the term radius concept later, but generally given \m{f} functions of maximal arity \m{a}, and \m{c} constants, the number of terms \m{t} of depth up to \m{d} in this signature respects \m{t = O(f^{a^{d-1}}c^{a^d})}, so limiting the number of constants can affect the worst case space behaviour of the verifier significantly.
+%\end{itemize}
+%
+%In the above example it would seem obvious that adding the terms \m{f(a),f(b)} to would allow the program to verify.
+%However, we have already seen examples, where any sub-term-closed set of terms which is sufficient to verify the program gives an exponential sized join.
+%
+%In the rest of this section we will discuss a compromise between propagating all potentially useful information and having polynomial performance.
+%
+%If the join node is an assertion node, which has just one ground unit inequality clause (which is the negated assertion), and 
+%\m{S} is the set of terms that appear in that inequality, then the above mentioned join is, in a sense, an \emph{eager} (potentially stronger than minimal, but sufficient if an interpolant of the form exists) form of an interpolant.
+%
+%If the set of clauses \clauses{n_j} at the join node \node{n_j} contains the unit equalities \m{E_j}, then for any set of inequalities \m{NE_j}, we can refine the above definition to:\\
+%$\m{J_2} = \s{t=s \mid t,s \in \terms{NE_j} \land E_1 \cup E_j \models t=s \land E_2 \cup E_j \models t=s }$\\
+%And then \\
+%$(\CC{E_1 \cup E_j} \cap \CC{E_2 \cup E_j}) \cup \m{NE_j} \models \emptyClause \Leftrightarrow \m{ \exists l \in J_2 \cdot \lnot l \in \m{NE_j}}$\\
+%So \m{J_2} is an \emph{eager} (potentially too strong), but sufficient, interpolant (if an interpolant as a conjunction of unit equalities exists) between \m{ E_1 \lor E_2 } and \m{E_j \cup NE_j}.
+%(by \m{ E_1 \lor E_2 } we mean \s{ l_1 \lor l_2 \mid l_1 \in E_1 \land l_2 \in E_2}
+%
+%The reason that we are interested in an eager interpolant is that the price of traversing the \cfg in order to answer the question whether an (in)equality holds is relative to the number of nodes traversed (and also the size of the query, answer and data structures at each node). If most answers to such queries are negative - that is, the transitive predecessors of the querying node cannot prove or refute the query - then it is advantageous to answer as many such potential questions in one \cfg traversal as possible, as long as the complexity of the answer and traversal can be bounded to be linear in the size of the original question.
+%As an example:
+%\begin{lstlisting}[caption=congruence closure eager interpolant,label=snippet3.28]
+%assume $\m{\forall x,y \cdot P(x,y) \rightarrow x=y}$
+%$\node{p_1}:$
+%assume $\m{d=e}$
+%$\node{p_2}:$
+%assume $\m{a=b}$
+%$\node{p_3}:$
+%assume $\m{c=d}$
+%
+%....
+%
+%$\node{p_4}:$
+%assume $\m{b=c}$
+%
+%...
+%
+%$\node{p_{5a}}:$
+%assert $\m{P(a,e)}$
+%\end{lstlisting}
+%
+%If we assume here that the terms \m{a,e} only appear at \node{p_{5a}} after applying some theory reasoning or quantifier instantiation - that is, we first run the unit ground fragment, found no proof, then we apply one iteration of theory or quantifier instantiation at each node, and then try to saturate the unit ground fragment.
+%Here, at \node{p_4}, propagating only equality information for \m{b,c} would not produce any extra information.\\
+%Node \node{p_{5a}}, could request equality information for \m{a} and \m{e}, 
+%and then the question is how this request would be propagated from \node{p_4} - if we just query about \m{a,e} (as \m{b,c} were already queried), we would not get any extra information. If we query about \m{a,b,c,e}, then \m{p_3} 
+%would have to query again about \m{a,b,c,d,e}, which would return 
+%
+%
+%Ignoring scoping, we could try a variation on an existing approach inspired by IC3/PDR, in the style of :\\
+%\node{p_{5a}} would query its predecessors for a refutation of the cube (conjunction of literals) \m{a=e}\\
+%\node{p_4}
+%
+%The algorithm, as presented there, begins by adding all the terms in \m{S} to both \m{E_1} and \m{E_2}
+%
+%In our case, the join point \node{n_j} has a set of clauses already deduced there - \m{E_j} (initially \clauses{n_j}), and we are in fact interested in restricting the join \\
+%\s{t=s \mid E_1 \cup E_j \models t=s \land E_2 \cup E_j \models s=t} which in our terminology is:\\
+%\m{\CC{E_1 \cup E_j} \cap \CC{E_2 \cup E_j}}
+%
+%We need a slightly stronger version of this property, however, as it does not take into account the set of clauses already deduced at the join - \m{E_j} (initially \clauses{n_j} for a join node\node{n_j}).
+%As stated above, we 
+%
+ %- so we get a complete join for 
+%space the join of the sets \emph{relative} to \m{t}: \m{J_{S} = \restrict{E_1 \sqcup E_2}{\m{t}}} - that is, for each term \m{t \in S}, \\
+%each term in \m{S}, and furthermore, each such \m{t} is in \terms{S}.
+%
+%Now the definition of the full join is:\\
+%\s{E_j = \CC{E_1 \cup E_j} \cap \CC{E_2 \cup E_j}}\\
+%However, as we have seen, this can be quadratic at each join, so we want to reduce it to the set of terms at \m{E_j} (as a first approximation), 
+	%
+%Here we want the following stronger formulation, if \m{J} is the join (set of equalities) we calculate:\\
+%\m{\forall t \in \terms{E_j} \cdot \forall s \in \Ts{\sig} \cdot} \\ 
+%\m{E_1 \cup E_j \models t=s \land E_2 \cup E_j \models t=s \Rightarrow J_{S} \models t=s \land t \in \terms{J} }
+%
+%In this case the space complexity requirement is slightly different:\\
+%\m{\size{\ECs{J}} = O(\size{\ECs{E_1}} + \size{\ECs{E_2}} + \size{\ECs{E_j}})} - that is, the set of equivalence classes at the join is linear in the number of equivalence classes in the input. 

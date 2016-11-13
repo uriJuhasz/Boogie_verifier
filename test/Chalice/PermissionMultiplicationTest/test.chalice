@@ -1,0 +1,19 @@
+class C{
+	var next : C;
+	
+	predicate v{
+		   acc(next,100)
+		&& next != null
+		&& rd*(next.v)
+	}
+	
+	method f()
+		requires rd(v);
+		ensures  rd(v);
+	{
+		unfold rd(v);
+		call next.f();
+		fold rd(v);
+	}
+	
+}

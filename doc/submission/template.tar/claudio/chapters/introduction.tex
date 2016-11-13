@@ -1,0 +1,198 @@
+\chapter{Introduction}
+
+Smartphones are mobile devices carried around by billions of people everyday and used for both personal and business activities, more often than not on the same device. It is common for people to use their smartphones for social-media interaction (e.g., Facebook, Twitter, Instagram), for their day-to-day private life (e.g., making and receiving calls and messages from relatives or friends, taking pictures, accessing their online banking), as well as for their business activities (e.g., receiving and composing e-mails, reading work-related documents, accessing their corporate functions through a VPN).
+
+The introduction of smartphones followed years of technological advancements in both hardware and software components and, among other aspects, many security concepts introduced for other platforms were ported and refined for this new architecture. Examples are limiting access to peripherals through a well-defined set of APIs and permission controls, application sandboxing techniques, the permission-based security mechanism used by Android~\cite{androidsecurity} and Windows Phones~\cite{windowssecurity} and the signature-based third-party applications distribution used by iOS~\cite{applesecurity} and Windows Phones. Over multiple iterations, different vendors have borrowed security principles from one another and ended up having similar security guarantees for the applications running on the mobile OS as well as for the data stored by users.
+
+Hardware developments have further enabled secure applications for modern smartphones. Technologies like TI M-Shield~\cite{mshield}, ARM TrustZone~\cite{ARMTrustZone}, and GlobalPlatform standards for SIM applets deployment~\cite{globalplatformspecs} have made their way into many devices available today. Hardware and software vendors, as well as the research community have tapped repeatedly into these technologies to propose and provide secure services like payment systems~\cite{proxama}, keyless access to cars~\cite{busold2013codaspy}, and secure ticketing for events and public transport~\cite{tamrakar2011stc,tamrakar2013trust}.
+
+As a two-factor authentication mechanism, smartphones can increase the security of day-to-day activities such as online banking and web logins. Nonetheless, they still suffer from a series of security problems and privacy concerns that have been raised and studied in the past years by both the research community and industry. In this thesis, we look at two different aspects of smartphone-related security: first we look at how current smartphones can be used as a second authentication factor in different scenarios in a secure way; then we look at the security guarantees offered by current smartphones and how they can be both attacked and enhanced.
+
+In the first part of this thesis we show how modern smartphones can strengthen the security of various services, such as web logins and payments at points of sale. In particular, smartphones can serve as a usable and secure two-factor authentication token, transparent to the user: something that might eventually make the adoption of two-factor authentication mechanisms widespread on the web. We then consider a strong attacker model and we present an ARM TrustZone-based solution to strengthen the security of credit-card payments at points of sale. Through the use of novel enrollment schemes for the secure code running on a user's phone, our solution withstands an adversary that can carry out targeted attacks and who has potentially infected the user's device at the time of enrollment.
+
+While smartphones can aid in securing some aspects of people's daily lives, they are still open to some attacks. This holds, irrespective of which security mechanism smartphone operating systems use or if the underlying hardware supports system-wide security features, like ARM TrustZone. Furthermore, in many scenarios the added security benefits brought by smartphones rely on the alertness of the user.
+
+In the second part of this thesis, we investigate security problems of widely used smartphone platforms and applications. In particular, we look at phishing attacks, commonly seen on the web, that have also appeared in the form of application phishing attacks against smartphone users. We borrow a solution proposed for the web, namely the use of personalized images at the time of login, and integrate it into smartphone applications. While this solution showed limited success on the web~\cite{schechter07sp,lee-w2sp14} we study its effectiveness in this new setting. Finally, we show how decade-old attacks against multi-tier security systems, namely the use of covert channels to exfiltrate private information, still apply to current mobile platforms, and then propose some countermeasures.
+
+\section{Part I: Securing Applications Using Smartphones}
+\label{sec:intro_part1}
+
+We explore how smartphones can be used as a secure and usable two-factor authentication token for different application scenarios. In our work we focused on web authentication and payments at points of sale. We advance the state-of-the-art in terms of usability, deployability and security. While increasing security through the use of a second authentication factor, our solutions ensure that the user interaction is not changed or are evaluated through a user study, and that the hardware and software requirements are met by platforms available and widespread today.
+
+On the web, two-factor authentication protects online accounts even when
+passwords are leaked. Most users, however, prefer password-only authentication.
+One reason why two-factor authentication is so unpopular is the extra steps
+that the user must complete in order to log
+in~\cite{gunson11cs,weir10int,imperi13umsurvey}. Currently deployed two-factor
+authentication mechanisms require the user to interact with his phone or a
+dedicated two-factor token to, for example, copy a verification code to the
+browser. Two-factor authentication schemes that eliminate user-phone
+interaction exist, but require additional software to be deployed on every
+device from which the user wants to login.
+
+With Sound-Proof, we propose a usable and deployable two-factor authentication
+mechanism as no interaction between the user and his phone is required.
+Furthermore, Sound-Proof is deployable with today's technologies and does not
+require any software to be installed on the computer from which the user is
+logging in. In Sound-Proof, the second authentication factor is the proximity
+of the user's phone to the device being used to log in. The proximity of the
+two devices is verified by comparing the ambient noise recorded by their
+microphones. Audio recording and comparison are transparent to the user, so
+that the user experience is similar to the one of password-only authentication.
+Sound-Proof can be easily deployed as it works with current phones and major
+browsers without plugins. We built a prototype for both Android and iOS. We
+provide empirical evidence that ambient noise is a robust discriminant to
+determine the proximity of two devices both indoors and outdoors, and even if
+the phone is in a pocket or a purse. We conducted a user study designed to
+compare the usability of Sound-Proof with Google 2-Step Verification.
+Participants ranked Sound-Proof as more usable and the majority would be
+willing to use Sound-Proof even for scenarios in which two-factor
+authentication is optional. Furthermore, users particularly liked how fast
+Sound-Proof is in comparison to a code-based two-factor authentication solution.
+
+Following on our work with Sound-Proof and web authentication, we look at a different scenario, namely payments at points of sale. In this setting, we consider a stronger attacker model, one where the adversary can carry
+out targeted attacks and compromise the victims' smartphone applications and
+operating system.
+
+We propose a novel location-based two-factor authentication solution for
+modern smartphones that withstands such attacks. We demonstrate our solution in
+the context of points of sale transactions and show how it can be effectively
+used for the detection of fraudulent transactions caused by card theft or
+counterfeiting. Our scheme makes use of Trusted Execution Environments (TEEs),
+such as ARM TrustZone, commonly available on modern smartphones. Following the
+same goals as for Sound-Proof, namely security, usability and deployability,
+our solution does not require any changes in the user behavior at the point of
+sale or to the deployed payment terminals. In particular, we show that
+practical deployment of smartphone-based two-factor authentication requires
+a secure enrollment phase that binds the user to his smartphone TEE and allows
+convenient device migration. We then propose two novel enrollment schemes that
+resist targeted attacks and provide easy migration. We implement our solution
+with available platforms and show that it is indeed realizable, can be
+deployed with small software changes, and does not hinder user experience.
+
+\section{Part II: Smartphone Attacks and Countermeasures}
+\label{sec:intro_part2}
+
+% Despite the added security benefits that smartphones can bring to other applications, as we show in the first part of this thesis,
+In the second part of this thesis, we focus our attention on the security of smartphones themselves. First, we look at the user's role of the security equation and try to aid him in detecting an application phishing attack. Then, we show how applications that are inconspicuous when analyzed on their own, might actually turn out to be malicious and collude to exfiltrate personal data despite all the security mechanisms implemented on smartphones. 
+
+In mobile application phishing attacks, a malicious mobile application
+masquerades as a legitimate one to steal user credentials. Such attacks are an
+emerging threat with examples reported in the wild~\cite{droid09, securelist,
+zhou12ndss}. We first categorize application phishing attacks in mobile
+platforms and identify possible countermeasures. We show that personalized
+security indicators can help users to detect all types of phishing attacks.
+Indicators can be easily deployed, as no platform or infrastructure changes are
+needed. However, personalized security indicators rely on the user's alertness
+to detect phishing attacks. Previous work in the context of website phishing
+has shown that users tend to ignore the absence of security indicators and
+remain susceptible to attacks~\cite{schechter07sp,lee-w2sp14}. Consequently,
+personalized security indicators have been deemed an ineffective phishing
+detection mechanism. We revisit their reputation and evaluate the effectiveness
+of personalized indicators as a phishing detection solution in the new context
+of mobile applications. 
+
+We report the results of a user study on the
+effectiveness of personalized indicators as a phishing-detection mechanism. Our
+results show that personalized indicators can help users detect phishing
+attacks in mobile applications and we suggest that their reputation as an
+ineffective anti-phishing mechanism should be reconsidered. We further discuss
+possible reasons that lead to our results and some limitations of our study.
+
+Application collusion attacks are another mechanism that malicious applications
+can use to exfiltrate users' private data. In such attacks two malicious
+applications exchange information through the use of overt or covert channels.
+Users are not made aware of possible implications of application collusion
+attacks, quite the contrary, on existing platforms that implement
+permission-based security mechanisms. Rather, users are implicitly led to
+believe that by approving the installation of each application independently,
+they can limit the damage that an application can cause.
+
+We implement and analyze a number of covert and overt communication channels
+that enable applications to collude and therefore indirectly escalate their
+permissions. We measure and report the throughput of the implemented
+communication channels, thereby highlighting the extent of the threat posed by
+such attacks. We show that while it is possible to detect a number of channels,
+most techniques do not detect all the possible communication channels and
+therefore fail to fully prevent application collusion. Our research shows that
+attacks using covert communication channels remain a real threat to smartphone
+security and an open problem for the research community.
+
+% \section{Contributions}
+% \label{sec:intro_contributions}
+%
+% In summary, the main contributions of the first part: \textbf{``Securing Applications Using Smartphones''} of this thesis are:
+%
+% \begin{itemize}
+%     \item We propose Sound-Proof, a novel two-factor authentication mechanism that does not require the user to interact with his phone. The second authentication factor is the proximity of the user's phone to the computer from which he is logging in. Proximity of the two devices is verified by comparing the ambient audio recorded via their microphones. Recording and comparison are transparent to the user. We implement a prototype of Sound-Proof for both Android and iOS. We use the prototype to evaluate the effectiveness of our solution in a number of different settings. We show that Sound-Proof works even if the phone is in the user's pocket or purse, and that it fares well both indoors and outdoors. During a user-study, comparing Sound-Proof to Google 2-Step Verification, participants ranked the usability of Sound-Proof higher than the one of Google 2-Step Verification, with a statistically significant difference. More importantly, we found that most participants would use Sound-Proof even if two-factor authentication were optional.
+%     \item We propose a smartphone-based two-factor authentication solution for payments at points of sale, that uses the phone's location as the second authentication factor. Our solution makes use of smartphone TEEs to resist mobile OS compromise. As part of our solution, we construct two secure enrollment schemes that allow a card issuer to bind the identity of a user with the TEE running on his device. The first enrollment scheme leverages the unique identity of the user's SIM card and resists adversaries that can remotely compromise the victim's mobile OS. The second enrollment scheme uses specially crafted SMS messages that are processed within the device baseband OS. This scheme provides protection against more powerful adversaries that can additionally perform hardware attacks on devices to which they have physical access.
+% \end{itemize}
+%
+% In the second part: \textbf{``Smartphones Attacks and Countermeasures''} of this thesis, we make the following contributions:
+%
+% \begin{itemize}
+%     \item We analyze application phishing attacks in mobile platforms and possible
+% countermeasures. We argue that personalized indicators are easy to deploy and can
+% mitigate application phishing attacks, assuming user alertness. We conducted a user study
+% with 221 participants where a significant fraction of those that used personalized
+% security indicators were able to detect phishing. All participants that did not use
+% indicators could not detect the attack and entered their credentials to a phishing
+% screen. Personalized security indicators can, therefore, help phishing detection in
+% mobile applications.
+%     \item We demonstrate the practicality of application collusion attacks by implementing
+% several overt and covert communication channels on the Android platform. Furthermore, we
+% present and implement a covert channel between an installed application and a web page
+% loaded in the system browser. We measure the throughput of all these channels as well as
+% their bit-error rate and required synchronization for successful data transmission. The
+% measured throughput of covert channels ranges from 3.7 bps to 3.27 kbps on a Nexus One
+% and from 0.47 bps to 4.22 kbps on a Samsung Galaxy S, such throughputs allow the
+% applications to efficiently exchange users' sensitive information (e.g., GPS coordinates
+% or contacts). We propose countermeasures that limit, if not eliminate, the throughput of
+% selected communication channels between the applications and show that other proposed
+% techniques still fail to detect several of the implemented channels.
+% \end{itemize}
+
+\section{Related Publications}
+\label{sec:intro_papers}
+
+The work presented in this thesis is based on the following publications, co-authored during my doctoral studies at ETH Zurich.
+
+\begin{itemize}
+	\item C. Marforio, R. Jayaram Masti, C. Soriente, K. Kostiainen and S. \v{C}apkun. Evaluation of Personalized Security Indicators as an Anti-Phishing Mechanism for Smartphone Applications. \emph{Under Submission}
+	\item N. Karapanos, C. Marforio, C. Soriente, and S. \v{C}apkun. Sound-Proof: Usable Two-Factor Authentication Based on Ambient Sound. In \emph{Proc. USENIX Security}, 2015
+	\item C. Marforio, N. Karapanos, C. Soriente, K. Kostiainen, and S. \v{C}apkun. Smartphones as Practical and Secure Location Verification Tokens for Payments. In \emph{Proc. Network and Distributed System Security Symposium (NDSS)}, 2014
+	\item C. Marforio, N. Karapanos, C. Soriente, K. Kostiainen, and S. \v{C}apkun. Secure Enrollment and Practical Migration for Mobile Trusted Execution Environments. In \emph{Proc. ACM workshop on Security and Privacy in Smartphones and Mobile devices (SPSM@CCS)}, 2013
+	\item C. Marforio, H. Ritzdorf, A. Francillon, S. \v{C}apkun. Analysis of the Communication between Colluding Applications on Modern Smartphones. In \emph{Proc. Annual Computer Security Applications Conference (ACSAC)}, 2012
+\end{itemize}
+
+\section{Thesis Outline}
+\label{sec:intro_outline}
+
+In this thesis, we investigate the security enhancements that the widespread use of smartphones can enable, as well as attacks and countermeasures for different security mechanisms employed on smartphones themselves. The first part of this thesis is dedicated to the former theme, investigating smartphones as two-factor authentication tokens in different scenarios. We focus on the security, deployability, and usability of the proposed solutions. In the second part of this thesis we look at application phishing attacks as well as personal data exfiltration through covert channels. A detailed outline of the thesis is as follows.
+
+In \textbf{Chapter~\ref{chap:background}}, we introduce the architecture and operation of modern smartphones from the hardware and software perspective. We present an overview of the different hardware components, with a focus on the ones later used in our work. We then present the security mechanisms deployed on modern smartphones. For more detailed background information relevant to each part of the thesis, we refer the reader to the shorter background sections in each research chapter.
+
+\vspace*{.5cm}
+\noindent\textbf{Part I: Securing Applications Using Smartphones}
+
+\textbf{Chapter~\ref{chap:ps_introduction}} introduces the first part of this thesis, which focuses on applications whose security can be enhanced through the use of smartphones. In \textbf{Chapter~\ref{chap:ps_relatedwork}}, we overview research as well as deployed systems that propose or employ two-factor authentication. We detail smartphone-based systems with a particular interest in their security, deployability and usability. In \textbf{Chapter~\ref{chap:ps_soundproof}}, we introduce Sound-Proof, a two-factor authentication mechanism for web login that leverages the ambient audio to verify the proximity of the first (e.g., the user's laptop) and the second (e.g., the user's phone) authentication factor. The driving factor of Sound-Proof is its immediate deployability and usability.
+In \textbf{Chapter~\ref{chap:ps_tee}}, we take a look at TEE solutions available for smartphones and in particular ARM TrustZone. We present the problem of secure enrollment of applications running within the secure world, and possible solutions deployable with minimum changes to the system. We then introduce a secure two-factor authentication mechanism for payments at points of sale that is deployable and transparent to the user.
+
+\vspace*{.5cm}
+\noindent\textbf{Part II: Smartphones Attacks and Countermeasures}
+
+\textbf{Chapter~\ref{chap:sp_introduction}} introduces the second part of this thesis, which focuses on security on smartphones, attacks and countermeasures.
+In \textbf{Chapter~\ref{chap:sp_relatedwork}}, we overview attacks on smartphone operating systems that enable an attacker to disrupt functionality or steal the user's data. We then provide a summary of proposed techniques to reduce or mitigate such attacks.
+In \textbf{Chapter~\ref{chap:sp_phishing}}, we present a taxonomy of application phishing attacks, a technique borrowed from the web. We discuss possible solutions and focus on application indicators. In particular we are interested in finding out if mobile application indicators can better prevent phishing attacks than their web counterparts. Finally, we present a mechanism to securely set up application indicators despite the presence of an active attacker on the victim's phone.
+In \textbf{Chapter~\ref{chap:sp_appcollusion}}, we show how overt and covert communication channels can be implemented on modern smartphones to enable application collusion attacks. We demonstrate several of these channels ranging from high-throughput but easy-to-detect, to low-throughput but harder-to-detect. We show how current countermeasures can be defeated, allowing an attacker to exfiltrate information in a slow yet effective manner.
+
+\vspace*{.5cm}
+In \textbf{Chapter~\ref{chap:conclusion}} we present the closing remarks of the work presented in this thesis and conclude.
+
+% We conclude this thesis in \textbf{Chapter~\ref{chap:conclusion}} and summarize the limitations of our work. We finally present interesting directions for future research and some questions left open by this work.
+
+
+
+
+
+

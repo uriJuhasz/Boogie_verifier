@@ -1,0 +1,115 @@
+Student project on set/sequence axioms
+
+
+Instead of gta/gtta have ISet<Ground*EC>[joinedNum] ??
+Lotsa work, reduces asymptotic complexity.
+
+
+R!=N 
+	=>
+M[R:=V][N] = M[N]
+					
+Orient equality gtts on GART
+
+!x==c \/ P(x) ==> P(c)
+
+Z3 on:
+
+assume Ax P(x)
+	assert Ex !P(x)
+	or 
+	assert Ex !P(f(x))
+
+
+case split also on:
+
+pathAtom \/ x==y \/ m_i[x] == m_j[x]
+
+Order:
+
+assume P
+assume P \/ Q
+	assume Q
+	
+assume goal R
+	assume R \/ P
+	
+	goal P
+	
+	not goal Q :(
+
+
+AVLTree:
+
+50% on left and right means no left!=right until we open one of them ?! - 
+predicate fields do not have a permission limit
+
+Use oriented EQS/NEQS for GAGCs
+
+
+***meet:
+	inequalities
+	gas
+	gcs
+	
+	complete already imported for:
+		inequalities
+		gagcs, gafcs
+		gt triggers
+		etc...
+	
+Keep and share case splits
+
+- m[x:=v1][x:=v2] = m[x:=v2]
+
+goal inequalities
++ only saturate goal inequalities - by goal terms
+only saturate not previously saturated inequalities
+
+cleanup caches selectively when unassuming - except when merging
+sort out refutations on recursive dag call
+===>
+
+!!!Topo sort conditions
+
+ *** Mark sweep - Remove cleanup
+
+========================================================
+move NP@s to the right place
+
+========================================================
+
+builtin distributive law:
+x*z+y*z=(x+y)*z
+z*x*z+z*y=z*(x+y)
+x*y=y*x
+
+
+!!!! a=b \/ f(a)=f(b) seems ok
+
+MMMMMMMMMMMMMMMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE?A?EEEEEEEEETTTTTTTTTTTTTTTT
+
+Case splits:
+	+ Orient case splits
+		make subsequent ones use the old one - or clear them out
+		? allow cascade of case splits?
+		? check that we get the inequality at the join
+		
+	check why more case splits don't work
+	heap[this,left]==heap[this,right]
+
+	+ enable frame rule (CATEq)
+	
+	
+V	eliminate annoying Perm(50)==Perm(100) in clauses
+
+V Embed meet directly
+
+
+===========================================
++		Universe.m[126].goalGTs	Count = 91	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GroundTermEC> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GroundTermEC>}
++		Universe.m[126].assumedGCs	Count = 5	System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GroundClauseEC>
++		Universe.m[126].mapIndexGoalGEMap	Count = 0	System.Collections.Generic.IDictionary<Slicer.Analyzers.FOLConverter.CanonicalForms.GroundAtomEC,System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GroundAtomEC>> {System.Collections.Generic.Dictionary<Slicer.Analyzers.FOLConverter.CanonicalForms.GroundAtomEC,System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GroundAtomEC>>}
++		Universe.m[126].assumedGAs	Count = 295	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GroundAtomEC> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GroundAtomEC>}
+		Universe.m[126].isRefuted	false	bool
++		GroundTermEC.m[6231]	{Fractions(200)}	Slicer.Analyzers.FOLConverter.CanonicalForms.GroundTermEC

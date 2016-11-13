@@ -1,0 +1,113 @@
+\documentclass[a4paper]{report}
+%\usepackage{geometry}
+%\geometry{a4paper, portrait, margin=3cm}
+
+\usepackage{amssymb,amsmath}
+%\usepackage{subfigure}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage[font=small]{caption}
+\usepackage{textcomp}
+\usepackage{proof}
+\usepackage{amsthm}
+\usepackage{stmaryrd}
+\usepackage{cancel}
+\usepackage{ifthen}
+\usepackage{adjustbox}
+
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% graphs
+\usepackage{tikz}
+\usetikzlibrary{positioning,calc, shapes, backgrounds,arrows,automata}
+%\usepackage{dot2texi}
+%\usepackage{tikz}
+%\usetikzlibrary{shapes,arrows}
+
+\usepackage{float}
+\floatstyle{boxed}
+\restylefloat{table}
+\restylefloat{figure}
+
+\theoremstyle{definition}
+%\renewenvironment{proof}[1]{{\bfseries Proof}}{\textnormal{#1}}
+
+\include{macros}
+
+\lstset{mathescape} 
+\lstset{commentstyle=\color{gray}\ttfamily}
+
+\lstset{ 
+	escapeinside={\^}{\^}
+}
+
+\renewcommand{\thechapter}{\arabic{chapter}}
+\renewcommand{\thesection}{\thechapter.\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
+
+\AtBeginDocument{%
+  \renewcommand{\thelstlisting}{%
+		\ifnum\value{subsection}=0
+      \thesection.\arabic{lstlisting}%
+    \else
+      \ifnum\value{subsubsection}=0
+        \thesubsection.\arabic{lstlisting}%
+      \else
+        \thesubsubsection.\arabic{lstlisting}%
+      \fi
+    \fi
+  }
+}
+
+\makeatletter
+\def\pgf@plot@curveto@handler@finish{%
+  \ifpgf@plot@started%
+    \pgfpathcurvebetweentimecontinue{0}{0.995}{\pgf@plot@curveto@first}{\pgf@plot@curveto@first@support}{\pgf@plot@curveto@second}{\pgf@plot@curveto@second}%
+  \fi%
+}
+\makeatother
+
+\begin{document}
+\title{Slicer}
+\author{Uri Juhasz}
+\maketitle
+
+\setcounter{tocdepth}{4}
+\setcounter{secnumdepth}{4}
+\renewcommand{\thelstlisting}{\thesection-\arabic{lstlisting}}
+
+
+\tableofcontents
+
+\newpage
+
+\lstset{
+  language={java},
+  basicstyle=\ttfamily\small,
+	tabsize=3,
+	mathescape,
+	showstringspaces=false,
+	showspaces=false
+}
+
+%\include{abstract}
+%\input{introduction}
+%\input{basic_ideas}
+\newpage
+\input{ground_first_order_logic_with_equality}
+
+%\input{clauses and quantifiers}
+%\input{scoping_dsa_measures}
+%\include{advanced}
+%\include{implementation}
+%\include{rewrite_slicer}
+%\include{future_and_related_work}
+%\include{summary}
+
+\bibliography{slicer}
+\bibliographystyle{plain}
+	
+\end{document}

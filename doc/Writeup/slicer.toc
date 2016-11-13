@@ -1,0 +1,82 @@
+\contentsline {chapter}{\numberline {1}Introduction}{1}
+\contentsline {section}{\numberline {1.1}Outline}{3}
+\contentsline {section}{\numberline {1.2}Control Flow}{4}
+\contentsline {section}{\numberline {1.3}Locality and Scope}{5}
+\contentsline {section}{\numberline {1.4}Bounded Fragments}{7}
+\contentsline {chapter}{\numberline {2}Preliminaries}{9}
+\contentsline {chapter}{\numberline {3}Unit ground first order logic with equality}{34}
+\contentsline {section}{\numberline {3.1}Congruence closure graphs}{35}
+\contentsline {subsection}{\numberline {3.1.1}Data Structure}{35}
+\contentsline {subsection}{\numberline {3.1.2}Notation}{41}
+\contentsline {section}{\numberline {3.2}Congruence closure graphs for verification}{45}
+\contentsline {subsection}{\numberline {3.2.1}Complexity}{46}
+\contentsline {subsection}{\numberline {3.2.2}Joins}{50}
+\contentsline {section}{\numberline {3.3}Information Propagation}{63}
+\contentsline {subsection}{\numberline {3.3.1}A verification algorithm}{63}
+\contentsline {subsection}{\numberline {3.3.2}Clause propagation criteria}{66}
+\contentsline {subsection}{\numberline {3.3.3}Ground unit equality propagation}{74}
+\contentsline {subsection}{\numberline {3.3.4}Propagation using sources}{77}
+\contentsline {subsection}{\numberline {3.3.5}The equality propagation algorithm}{85}
+\contentsline {section}{\numberline {3.4}Joins}{94}
+\contentsline {subsection}{\numberline {3.4.1}Equality propagation}{94}
+\contentsline {subsection}{\numberline {3.4.2}Strong join}{99}
+\contentsline {section}{\numberline {3.5}Related Work}{103}
+\contentsline {subsection}{\numberline {3.5.1}Congruence closure}{103}
+\contentsline {subsection}{\numberline {3.5.2}Information propagation}{104}
+\contentsline {chapter}{\numberline {4}Ground first order logic with equality}{106}
+\contentsline {section}{\numberline {4.1}The fragment of GFOLE}{106}
+\contentsline {subsection}{\numberline {4.1.1}Basic clause propagation}{111}
+\contentsline {subsection}{\numberline {4.1.2}Redundancy elimination}{120}
+\contentsline {subsection}{\numberline {4.1.3}Improvements to the base algorithm}{127}
+\contentsline {section}{\numberline {4.2}Completeness}{131}
+\contentsline {section}{\numberline {4.3}Joins}{132}
+\contentsline {section}{\numberline {4.4}Term, literal and clause ordering}{144}
+\contentsline {section}{\numberline {4.5}Related work}{145}
+\contentsline {subsection}{\numberline {4.5.1}Theorem proving and CFGs}{145}
+\contentsline {subsection}{\numberline {4.5.2}Clause join}{146}
+\contentsline {chapter}{\numberline {5}Scoping and Interpolation}{147}
+\contentsline {section}{\numberline {5.1}Basics}{147}
+\contentsline {subsection}{\numberline {5.1.1}Notation}{148}
+\contentsline {section}{\numberline {5.2}CFG Node Scope}{151}
+\contentsline {section}{\numberline {5.3}Ground Unit Interpolation}{157}
+\contentsline {subsection}{\numberline {5.3.1}The problem}{157}
+\contentsline {subsection}{\numberline {5.3.2}Basic graph-based algorithm}{157}
+\contentsline {subsection}{\numberline {5.3.3}Selecting equations to communicate}{161}
+\contentsline {subsection}{\numberline {5.3.4}Relevance calculations}{165}
+\contentsline {subsection}{\numberline {5.3.5}Scoping in the CFG}{170}
+\contentsline {subsection}{\numberline {5.3.6}Related work}{178}
+\contentsline {section}{\numberline {5.4}Ground Clause Interpolation}{181}
+\contentsline {subsection}{\numberline {5.4.1}Basics}{181}
+\contentsline {subsection}{\numberline {5.4.2}Approximation of the bottom model}{183}
+\contentsline {subsection}{\numberline {5.4.3}Interpolation ordering}{186}
+\contentsline {subsection}{\numberline {5.4.4}Interpolation superposition calculus}{186}
+\contentsline {subsection}{\numberline {5.4.5}Ordering for Interpolation}{188}
+\contentsline {subsection}{\numberline {5.4.6}Related and future work}{190}
+\contentsline {chapter}{\numberline {6}Bounded fragments}{195}
+\contentsline {section}{\numberline {6.1}Term depth}{195}
+\contentsline {subsection}{\numberline {6.1.1}Relative depth}{196}
+\contentsline {subsection}{\numberline {6.1.2}Enforcing the depth restriction}{201}
+\contentsline {section}{\numberline {6.2}Size bounds for clauses}{202}
+\contentsline {section}{\numberline {6.3}Derivation depth}{203}
+\contentsline {section}{\numberline {6.4}Summary}{204}
+\contentsline {chapter}{\numberline {7}Quantification}{205}
+\contentsline {section}{\numberline {7.1}Preliminaries}{205}
+\contentsline {section}{\numberline {7.2}Propagation and requests}{211}
+\contentsline {section}{\numberline {7.3}Quantifiers in bounded fragments}{213}
+\contentsline {section}{\numberline {7.4}Instantiation}{214}
+\contentsline {section}{\numberline {7.5}Scoping for quantified clauses}{215}
+\contentsline {subsection}{\numberline {7.5.1}Incompleteness}{215}
+\contentsline {subsection}{\numberline {7.5.2}Completeness for some restricted cases}{216}
+\contentsline {chapter}{\numberline {8}Implementation and experimental results}{217}
+\contentsline {section}{\numberline {8.1}Order of evaluation}{217}
+\contentsline {section}{\numberline {8.2}Implementation}{221}
+\contentsline {section}{\numberline {8.3}Experimental results}{224}
+\contentsline {chapter}{\numberline {9}Conclusion and future work}{232}
+\contentsline {section}{\numberline {9.1}Main contributions}{232}
+\contentsline {section}{\numberline {9.2}Experience and directions for future work}{233}
+\contentsline {chapter}{\numberline {A}Appendix}{235}
+\contentsline {section}{\numberline {A.1}Interpolation}{235}
+\contentsline {subsection}{\numberline {A.1.1}Completeness proof for GFOLE interpolation}{236}
+\contentsline {subsection}{\numberline {A.1.2}Improved justification extraction}{249}
+\contentsline {section}{\numberline {A.2}EC-graphs and clauses}{255}
+\contentsline {subsection}{\numberline {A.2.1}Non-unit fall-back at joins}{258}

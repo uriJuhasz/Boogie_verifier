@@ -1,0 +1,241 @@
+\newpage
+\section{CFG Node Scope}\label{section:scoping:node_scope}
+Intuitively, the set of program locations in which a program variable is in scope is the part of the program where it exists in memory and accessible by the program. We use at least the minimal scope at each node as it is the smallest scope that we can determine syntactically, that is guaranteed to suffice for proving the program in the ground case.
+
+\begin{figure}
+\begin{lstlisting}
+$\m{n_1:}$
+	assume P(c)=T
+$\m{n_2:}$
+	assume Q(d)=T
+$\m{n_3:}$
+	assert P(c)=T
+\end{lstlisting}
+\caption{Minimal scope}
+\label{snippet4.2.1}
+\end{figure}
+
+For example, consider figure \ref{snippet4.2.1}.
+If \m{c \notin S^{M}_{2}} (that is, clauses derived at \m{n_2} cannot have occurrences of c) there is no way to prove the assertion - there is no interpolant (not even with quantifiers) that verifies the assertion which does not include the constant c at \m{I_{n_2}}.\\
+In our definition for a fragment interpolant, we have restricted the set of clauses of the interpolant at a node to clauses in the vocabulary in the scope of the node, which we have left as a parameter and until now assumed that this included all constants in the signature. 
+In the ground case, it is easy to see that we can use \m{S^F_n} as the scope at node n in our verification algorithm without losing completeness, as the conclusion of each inference rule only contains symbols from the premises, and as clauses are only propagated forward.
+
+\begin{figure}
+\begin{lstlisting}
+$\m{n_1:}$
+	assume c=f(a,e)
+	assume d=f(b,e)
+$\m{n_2:}$
+	...
+	//$\m{\textcolor{gray}{S^F_n = \s{a,b,c,d,e}}}$
+	//$\m{\textcolor{gray}{S^{M}_n = \s{a,b,c,d}}}$
+	//Interpolant for $\m{\textcolor{gray}{S^F_n}}$: $\m{\textcolor{gray}{\s{c=f(a,e),d=f(b,e)}}}$
+	//Interpolant for $\m{\textcolor{gray}{S^{M}_n}}$: $\m{\textcolor{gray}{a \neq b \lor c=d}}$
+$\m{n_3:}$
+	assume a=b
+	assert c=d
+\end{lstlisting}
+\caption{Minimal scope - unit ground fragment}
+\label{snippet4.2.2}
+\end{figure}
+
+In the ground unit fragment this is not sufficient - for example, consider figure \ref{snippet4.2.2}.
+Here, using \m{S^F_n} allows us to prove the program in the ground unit fragment, 
+while using \m{S^{M}_n} requires the non-unit fragment.
+
+\begin{figure}
+\begin{lstlisting}
+$\m{s:}$
+	... //Heap axioms
+	assume f $\m{\neq}$ g
+$\m{n_1:}$
+	assume x$\m{\neq}$null
+	assume y$\m{\neq}$null
+	assume x$\m{\neq}$y
+	x.f := 1    //$\m{\textcolor{gray}{h_1=wr(h_0,x,f,1)}}$
+$\m{n_2:}$
+	x.g := 2    //$\m{\textcolor{gray}{h_2=wr(h_1,x,g,2)}}$
+$\m{n_3:}$
+	y.f := 3    //$\m{\textcolor{gray}{h_3=wr(h_2,y,f,3)}}$
+$\m{n_4:}$
+	assert y.g = old(y.g) 
+	//negated $\m{\textcolor{gray}{rd(h_3,y,g) \neq rd(h_0,y,g)}}$
+	//Here $\m{\textcolor{gray}{S^{M}_{n_4}=\s{y,g,h_0,h_3}}}$
+\end{lstlisting}
+\caption{Intermediate scope\\
+We assume the standard heap axioms without extensionality
+}
+\label{snippet4.2.4}
+\end{figure}
+
+Consider also the example in figure \ref{snippet4.2.4}.
+If we restrict the scope at each node to \m{S^{M}_n}, we can still prove the assertion with a low depth bound 
+ - that is, without propagating \\
+\m{h_3=wr(wr(wr(h_0,x,f,1),x,g,2),y,f,3)}, \\
+only \m{rd(h_0,y,g)=rd(h_3,y,g)}.\\
+This case is interesting, as it represents a typical combination of heap updates, DSA variables and post-conditions.
+
+In light of the above, we sometimes want to find some compromise scope S s.t. 
+\m{S^{M}_n \subseteq S \subseteq S^F_n} and S still allows us to find unit and short proofs.
+Here, \m{a \in S^F_n \setminus S^{M}_n}, but we can represent \m{f(a)} using the constant b and \m{b \in S_n}.
+
+For each node n, we are interested in finding a minimal \m{S_n} which satisfies \m{S^{M}_n \subseteq S_n \subseteq S^F_n} but still allows us to avoid resorting to non-unit clauses for completeness (without joins) in the unit fragment (as \m{S^F_n} does).
+
+Another reason that we are interested in finding a scope where each transitive predecessor term is representable is for completeness in the non-ground case. This is discussed in chapter \ref{chapter:quantification} and we only motivate it here briefly.
+The standard lifting argument to show completeness for superposition uses, instead of the set of ground clauses, the set of ground instances of all clauses. It has to be proven that each inference between ground instances is an instance of an inference between two clauses in the saturated set. This does not hold in our case (as discussed e.g. in \cite{BaumgartnerWaldmann13}) as some ground instances use symbols that do not exist together in any node-scope.
+
+One solution is to ensure that each term in \langt can be proven equal to a term in \langb. 
+We can then replace each mixed-color ground clause by a non-mixed color ground clause that is equivalent under the interpretation
+(in \cite{BaumgartnerWaldmann13} a multi-sorted signature is used, and then the above has to hold essentially only for terms of sorts on which \m{N^b} can quantify - this is related to their notion of sufficient completeness).
+
+\begin{figure}
+\begin{lstlisting}
+$\m{s:}$
+	... //Heap axioms
+	//precondition
+	assume x.f.g=y
+	assume f$\neq$g
+	assume x.f$\in$P //set of locations
+$\m{n_1:}$
+	x.f := null //$\m{\textcolor{gray}{h_1=wr(h_0,x,f,null)}}$
+$\m{n_2:}$
+	assert $\exists$p$\in$P$\cdot$p.g=y
+	//negated as
+	//$\m{\forall p \in P\cdot rd(h_1,p,g)\neq y}$ 
+	// the object pointed to by y is reachable from P
+\end{lstlisting}
+\caption{Scoping and reachability\\
+\lstinline|x.f| at the initial state is unreachable at the assertion,\\
+which is equivalent to \m{rd(h_0,x,f)} having no equivalent ground term at \m{n_2}.\\
+Without scoping we would use the mixed term \m{rd(h_1,rd(h_0,x,f),g} to instantiate the quantifier.
+}
+\label{snippet4.2.4.1}
+\end{figure}
+
+An interesting example of the above, using a heap theory, is that if a memory locations becomes unreachable at some point in the program, we might not be able to prove some global heap invariants at later points - for example, consider figure \ref{snippet4.2.4.1}.
+We only discuss \emph{static syntactic scoping} - scoping determined syntactically as a pre-process using only the original set of clauses at each CFG-node, and not derived equalities. 
+
+\textbf{Algorithm:}
+Our algorithm begins by assigning \m{S_n = S^{M}_n} at each node.\\
+The main idea is that we can skip adding a constant c from \m{S^F_n} to \m{S_n} if it can be represented as a term over \m{S_n} using the known equalities at n - that is, for some term t over \m{S_n} we have \m{\clauses{n} \models c=t}. We do not actually check entailment but only use positive ground unit equalities syntactically. \\
+We traverse the CFG in topological order, at each CFG-node we begin with \m{S_n = S^M_n} and add constants not representable by terms over constants in \m{S_n} until all constants are represented. When there is more than one option we make an arbitrary choice,
+but prefer constants whose scope does not end at n.
+
+For a constant c whose minimal scope ends at the CFG-node n, if the unit ground clause \m{c=t} is in \clauses{n} for some ground term t, and if all the constants in t are in scope in successors of n, then any clause \termRepAt{C}{c}{p} can be propagated as \termRepAt{C}{t}{p} and the scope of c can end at n, without losing completeness.
+
+
+\textbf{Scope effects on size of proof:}
+As can be seen in figure \ref{snippet4.2.4}, aggressive scoping can reduce the set of constants at the price of increasing the minimal term depth of a proof. In the example, we were still able to prove the assertion using a low term depth because the heap update axioms could deduce equalities that reduce the depth of the relevant terms.
+We have identified some common patterns for VCs where keeping a constant in scope might be beneficial, allowing us to find narrow and shallow proofs while maintaining a small scope per CFG-node.
+For each clause appearing in our VC program (\clauses{n}), there are, in general, two possible sources:
+
+Some clauses come from original program statements, especially assignments (heap or local variable), or an \lstinline|assume| statement modeling a branch condition.
+
+The rest of the (non-assertion) clauses come either from specifications (e.g. method pre-conditions, or assumed post-conditions after a call), or from the verification methodology (e.g. the modeling of permissions in permission based verification), these can also sometimes take the form of (DSA transformed) assignments.
+
+We are interested in the first occurrence of a constant along a path - the earliest CFG-node in which it is mentioned.
+For most DSA versions of variables, we have identified the following common patterns for initialization at first occurrence:
+\begin{itemize}
+	\item Assignment of a constant (independent of previous versions) expression - e.g. \lstinline|x:=1|
+	\item Assignment of an expression that includes the previous DSA version of some variables (often including itself) 
+	- e.g. \lstinline|x:=y| or \lstinline|x:=x+1| or for heaps \lstinline|x.f:=1| (\m{h_1 = wr(h_0,x,f,1)})
+	\item The join DSA version of a variable, assigned different values on two different paths
+	\item Unassigned variable with some property assumed - several distinct cases:
+		\begin{itemize}
+			\item The initial DSA version of a variable referenced in the method pre-condition
+			\item The initial DSA version of a variable that is modified in a loop, where Boogie would model the loop using a \lstinline|havoc| statement on the variable - this is usually combined with \lstinline|assuming| the loop invariant which often refers to the variables modified in the loop body
+			\item The initial DSA version of a variable after a loop - similarly the invariant (and negated loop condition) are \lstinline|assumed|
+			\item The initial DSA version of a variable after return from a call in modular verification - usually the post-condition is assumed which might refer to the variable and (especially for heaps) we often have a (possibly quantified) framing assumption that correlates the uninitialized version with the version before the call
+			\item A variable used to model non-determinism
+		\end{itemize}
+\end{itemize}
+
+In the first two cases (variable explicitly assigned one value), we would expect that once the said DSA version goes out of \m{S^{M}_n}scope, we could replace it with the expression used in its initialization, also recursively replaced until all DSA versions are not assigned a definite value. The recursive replacement might increase the depth of the term, 
+which would mean that, if we search for a proof with increasing depth as in our example, reasoning will be forced to be more local.
+
+
+\begin{figure}
+\begin{lstlisting}
+$\m{s:}$
+	... //Heap axioms
+	assume x>0 // $\m{\textcolor{gray}{x_0 > 0}}$
+if ($\m{c_0}$)
+	x:=x+1 // $\m{\textcolor{gray}{x_1 = x_0+1}}$
+else
+	x:=x+2 // $\m{\textcolor{gray}{x_1 = x_0+2}}$
+$\m{n_0:}$
+	// $\m{\textcolor{gray}{\lnot c_0 \lor x_1 = x_0+1}}$
+	// $\m{\textcolor{gray}{c_0 \lor x_1 = x_0+2}}$
+if ($\m{c_1}$)
+	x:=x+3 // $\m{\textcolor{gray}{x_2 = x_1+3}}$
+	// $\m{\textcolor{gray}{\lnot c_0 \lor x_1 = x_0+1}}$
+	// $\m{\textcolor{gray}{c_0 \lor x_1 = x_0+2}}$
+else
+	x:=x+5 // $\m{\textcolor{gray}{x_2 = x_1+5}}$
+	// $\m{\textcolor{gray}{\lnot c_0 \lor x_1 = x_0+1}}$
+	// $\m{\textcolor{gray}{c_0 \lor x_1 = x_0+2}}$
+$\m{n_1:}$
+	// With $\m{\textcolor{gray}{S_n=\s{x_0,x_2}}}$
+	//   $\m{\textcolor{gray}{\lnot c_0 \lor \lnot c_1 \lor x_2 = x_0+4}}$
+	//   $\m{\textcolor{gray}{\lnot c_0 \lor c_1 \lor x_2 = x_0+6}}$
+	//   $\m{\textcolor{gray}{c_0 \lor \lnot c_1 \lor x_2 = x_0+5}}$
+	//   $\m{\textcolor{gray}{c_0 \lor c_1 \lor x_2 = x_0+7}}$
+	//   $\m{\textcolor{gray}{x_0>0}}$
+	// With $\m{\textcolor{gray}{S_n=\s{x_0,\mathbf{x_1},x_2}}}$
+	//   $\m{\textcolor{gray}{\lnot c_0 \lor x_1 = x_0+1}}$
+	//   $\m{\textcolor{gray}{c_0 \lor x_1 = x_0+2}}$
+	//   $\m{\textcolor{gray}{\lnot c_1 \lor x_2 = x_1+3}}$
+	//   $\m{\textcolor{gray}{c_1 \lor x_2 = x_1+4}}$
+	//   $\m{\textcolor{gray}{x_0>1}}$
+$\m{n_a:}$
+	assert x>2
+\end{lstlisting}
+\caption{Scoping DSA join}
+\label{snippet4.2.5}
+\end{figure}
+
+In the third case, we can add path condition qualified non-unit clauses that correlate the join DSA version with the recursively replaced versions of the value assigned at each branch, also recursively, for example, consider the code in figure \ref{snippet4.2.5}.
+If we add n such branches in sequence, we would need \m{2^n} clauses, each n literals wide, for the strongest post-condition, if we remove join DSA versions from the scope, and \m{2n} clauses without removing the join DSA versions.
+In the above case we can propagate more goal directed clauses also without the join DSA versions, but it is not clear that this can be done in the general case. Examples such as the above motivate us not to remove join DSA versions from the scope.
+
+For all the uninitialized cases, we would also want to keep the uninitialized DSA version of the variable in scope as in this case there is no other way to represent the value of these variables. 
+Intuitively, it would make sense that e.g. the return value of a function is a useful value later in the program, and so we should be able to refer to it in clauses.
+
+\textbf{Implementation:}
+We have implemented an (optional) pre-processing step that determines a scope for each CFG-node, based on the above:
+Initially, for each node n, we assign \m{S_n = S^{M}_n}. 
+We then proceed in topological order and mark a subset \m{K_n} of \m{S^{F}_n} as \emph{key constants} - constants that are determined on some path leading to n (or n itself) not to be representable using other key constants. Each constant in \m{S^F_n} can be represented as a term over \m{K_n}.
+In some cases we have to make an arbitrary choice to select a key constant between a set of constants (e.g. \lstinline|assume a=b=c| - one of \s{a,b,c} has to be selected arbitrarily, or \lstinline|a=f(b),b=g(a)| where either of a or b can be selected).
+We add each of \m{K_n} to \m{S_n}.
+At the end of the process we are assured that any interpolant of the program can be transformed (with the above described recursive substitutions) to an interpolant where the clauses at each node are only over \m{S_n}.
+
+
+%With regards to joins we have to be careful - for example:
+%\begin{figure}[H]
+%\begin{lstlisting}
+%$\m{s:}$
+	%assume a=b
+	%assume P(a) $\lor$ Q
+	%
+	%if (*)
+		%$\m{p_0a:}$
+		%assume f(a)=c
+		%$\m{p_0b:}$
+		%//$\m{\textcolor{gray}{S_n=\s{a,c}}}$
+	%else
+		%$\m{p_1a:}$
+		%assume f(b)=c
+		%$\m{p_1b:}$
+		%//$\m{\textcolor{gray}{S_n=\s{b,c}}}$
+	%$\m{n:}$
+	%assume d=e
+	%$\m{n_a:}$
+	%assume $\lnot$Q
+	%assert P(
+%\end{lstlisting}
+%\caption{Scope minimization and joins}
+%\label{snippet4.2.3.1}
+%\end{figure}
+
+
+

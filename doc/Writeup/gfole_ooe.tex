@@ -1,0 +1,81 @@
+\section{Order of Evaluation}
+\subsection{Minimizing cfg traversals}
+Once the ground unit equalities fragment has to interact with larger fragments, in theory a new ground equality, or any other clause, for a given term can appear at a given node at any time we apply the larger fragment at that node.\\
+In our experience it is most often the case that the size and depth of the cfg are much larger than the size of any term that is part of a Hoare proof of the program (especially when applying scoping as described in the next chapter).
+%If a program of depth k - longest path from root to furthest leaf \m{n} - includes e.g. \lstinline{assert f(a_k)=f(b_k)} at \m{n} (\m{a_i,b_i} are the ith DSA versions, out of \m{k}), and \m{a,b} occur at the root node (where \m{a,b} have \m{n} , we would have to invest at least \m{k} steps to ensure that any relevant equality from \m{root} is propagated to \m{n}.\\
+%If initially we cannot establish the assertion at \m{n}, but a later step (e.g. quantifier instantiation at the root) established some clause that includes \m{a,b} at the root, we would need 
+
+Any complete algorithm that tries 
+We want to avoid having to repeat all the queries a node has performed once we have applied a larger fragment at any transitive predecessor.
+
+In order to reduce the number of cfg traversals, we apply increasing fragments in the following way:
+\begin{itemize}
+	\item First we perform \lstinline{saturate} for the unit equality fragment, but we import also non-unit ground clauses and simplify them accordingly
+	\item We now choose the next fragment (e.g. one step of ground resolution/superposition, one step of quantifier instantiation) and traverse the \cfg in topological order - for each node:
+		\subitem First we synchronize the node with the predecessor - we import all relevant new clauses (including new equalities) from the predecessor and saturate the unit ground fragment. 		
+		\subitem Now we apply one step of the current fragment and again saturate the unit ground fragment.
+\end{itemize}
+
+The idea of \emph{synchronization} is simple: at a given node we have a set of terms for which we have imported all relevant transitive predecessor clauses for all the previous fragments. 
+The new fragment might have introduced more relevant clauses for our set of terms in any of the transitive predecessors, so we need to make sure that all these clauses are imported. 
+In order to avoid requerying the \cfg recursively, each node maintains a list of clauses added since the last synchronization operation, and when synchronizing a node would import all clauses from that list in direct predecessors that are relevant for our set of terms.
+This way we are guaranteed all the our relevant clauses from all transitive predecessors of a node reach the direct predecessors of the node before we traverse that node.\\
+This works as long as the \m{sources} function does not change - however, consider the following example:
+\begin{figure}[H]
+\begin{lstlisting}
+$\node{n_1}:$
+assume a=b
+assume $\m{\forall x \cdot f(f(x))=g(x)}$
+assume $\m{\forall x \cdot g(x)=c}$
+$\node{n_2}:$
+...
+$\node{n_k}:$
+	assume $\m{a=f(a)}$
+	$\node{n_{ka}}:$
+		assert $\m{a=c}$
+\end{lstlisting}
+\caption{propagation sources fragment interaction}
+\label{snippet3.19}
+\end{figure}
+In the first pass, with only unit ground equalities, we will not be able to prove the assertion.\\
+\node{n_k} would have to query at least about the terms \s{a,c,f(a)} and would get \s{a=b} (assuming we do not propagate non-ground clauses for now - we will discuss that later).
+
+In the second pass, \node{n_1} instantiates \m{\forall x \cdot f(f(x))=g(x)} to get \m{f(f(a))=g(a)} and
+\m{\forall x \cdot g(x)=c} to get \m{g(a)=c}.\\
+Now, if \m{sources(a)} at \node{n_k} had included \m{f(f(a))}, then in the second pass these two clauses will be imported in the synchronization stage (\m{f(f(a))=g(a)} causes \m{g(a)=c} to be imported by the sub-term condition) and so there will not be any further recursive traversal of the \cfg before the assertion is discharged.\\
+However, there is no obvious reason to include e.g. \m{f(f(a))} and not \m{f(f(f(a)))} when calculating \m{sources(a)} in the first pass - we do not have enough information about the next pass (we want to keep the flexibility of choosing the fragment for the next pass later).
+
+The tradeoff is either larger queries vs. potentially more traversals of the \cfg when importing at the next pass.
+
+We just note here that one could argue that queries should be more involved than just finite sets of terms, and in the above case we could query for \m{a} \emph{assuming} \m{f(a)=a}, but in the general case the size of the query might grow to be as large as the set of equalities at the querying node - and joining queries or incremental queries become much more complicated. We will discuss this question in later sections. 
+
+The strategy we have selected is as follows:\\
+When adding a term \m{t} to the graph at a node \node{n}, we have to query all predecessors for equalities on the sources \m{s} of that term - when this query reaches a node \node{p}, it will be propagated down unless:
+\begin{itemize}
+	\item \node{p} is the root
+	\item \node{p} has already queried about \m{t} (in fact, about transitive \m{sources(t)} applied on all paths between \node{n} and \node{p})
+	\item \node{p} does not have some sub-term of \m{t} in scope - discussed in later sections
+\end{itemize}
+
+We can avoid a large number of these queries by adding a fourth stopping condition - if we know that some term \m{s} does not appear in any transitive predecessor of \m{p} then \m{p} need not query about any super-term of \m{s}, as it cannot appear in any transitive predecessor either.\\
+So now, when first adding a term, when traversing down the \cfg to find all equalities for that term, each node would add all the terms matching the query that appear in the predecessor, even if they do not participate in any equality. The query terms that have not been matched will also be remembered as a \emph{rejected} term - 
+now we do not need to query about any term for which any sub-term is rejected.
+This way, a node will never receive a query about a super-term of a rejected term.
+
+This gives us a first clue on how to filter the potential \m{source(t)} - we can build the set bottom up (starting from constants), only adding terms in the equivalence class of \m{t}, and stopping whenever a term is rejected in the predecessor (we discuss joins later).
+This way \m{source(t)} is guaranteed to include all and only terms \m{s} for which there is some path to some transitive predecessor so that there is a term \m{u} that appears in a clause in that predecessor and the equalities along the path imply \m{s=u}.
+
+The rejected terms also help us reduce the amount of \cfg traversals - in the above example, after the first pass, 
+all nodes \node{n_1}..\node{n_{k-1}} will have the term \m{a}, but will have \m{f(a)} as a rejected term, 
+and \m{f(f(a))} will not appear at all.\\
+During the second pass, when we synchronize each of \node{n_2}..\node{n_{k}}, the synchronization process will detect that a rejected term \m{f(a)} has been added to a predecessor, and so will import all relevant clauses for that term and add the term to the set of terms of the node.
+Synchronize at \node{n_k} will detect both \m{f(a)} has been added to the predecessor, and so will query about the next member of the equivalence class, \m{f(f(a))} that now could potentially have extra information at predecessors - this will cause one extra traversal of the \cfg to retrieve the clauses \s{f(f(a))=g(a),g(a)=c} in order to discharge the assertion.
+
+Obviously, we do not want to recalculate \m{sources(t)} at a node \node{n} whenever we query any super-term of \m{t}, so we cache this set once it is calculated, and use the cache to detect changes in predecessors when synchronizing.
+
+For rejected terms the invariant is:\\
+For each node \node{n} and direct predecessor \node{p}, 
+for each term \m{\fa{f}{t} \in g_{n}}, 
+for each tuple \m{\tup{s} \in sources(n,\tup{t})}, 
+\m{\fa{f}{s} \notin g_p \Leftrightarrow \fa{f}{s} \in rejected(p)}.
+

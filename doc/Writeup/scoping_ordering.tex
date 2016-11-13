@@ -1,0 +1,58 @@
+\subsection{Ordering for Interpolation}
+In this section we describe how we establish an adequate total order on ground terms for interpolation for the whole CFG.
+
+Extending our interpolation calculus to a DAG CFG requires that we have a separating total order on all program constants, so that whenever a constant in scope at a CFG-node is not in scope in the successor, it is separated from the any constant that is in scope in the successor.\\
+For a linear program, we can simply assign decreasing limit ordinals to each CFG-node, so that the root node has the maximal limit ordinal and each successor has a lower limit ordinal. We then assign each constant the weight \m{n\omega+1} where n is the limit ordinal index of the last CFG-node where it appears.\\
+However, this solution does not extend immediately to tree-shaped CFGs, as different branches may imply different orderings. Consider, for example, figure \ref{snippet4.5.1}.
+
+\begin{figure}
+\begin{lstlisting}
+$\m{n_1:}$
+	assume a$\neq$b
+if (*)
+	$\m{n_2:}$
+		assume f(a)=f(b)
+	$\m{n_3:}$
+		assert f(a)=c
+else
+	$\m{n_4:}$
+		assume f(a)$\neq$f(b)
+	$\m{n_5:}$
+		assert f(b)=c
+\end{lstlisting}
+\caption{Interpolation ordering for trees}
+\label{snippet4.5.1}
+\end{figure}
+
+The \lstinline|then| branch implies that \m{b\succsep a} while the \lstinline|else|  branch implies that \m{a \succsep b}.
+There is no total order with minimal scoping that respects the separating constraint for this program.
+
+Our solution to this problem is to add a further DSA version for every constant at a branch that is in scope in at least one successor of the branch, unless it is in scope at the join of the branch.
+For figure \ref{snippet4.5.1} the modified program is shown in figure \ref{snippet4.5.1b}.
+
+\begin{figure}
+\begin{lstlisting}
+$\m{n_1:}$
+	assume a$\neq$b
+if (*)
+	$\m{n_2.0:}$
+		assume a$_1$=a
+		assume b$_1$=b
+	$\m{n_2:}$
+		assume f(a$_1$)=f(b$_1$)
+	$\m{n_3:}$
+		assert f(a$_1$)=c
+else
+	$\m{n_4.0:}$
+		assume a$_2$=a
+		assume b$_2$=b
+	$\m{n_4:}$
+		assume f(a$_2$)$\neq$f(b$_2$)
+	$\m{n_5:}$
+		assert f(b$_2$)=c
+\end{lstlisting}
+\caption{Interpolation ordering for trees - additional DSA versions}
+\label{snippet4.5.1b}
+\end{figure}
+
+After this transformation, and after ensuring that the scope for each constant is contiguous (by renaming one instance of a constant that appears on two parallel branches but neither at branch nor join point), we can choose any topological order of the nodes and assign limit ordinal indices accordingly.

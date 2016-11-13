@@ -1,0 +1,6 @@
+class Integer{
+	ghost var av : int;
+	var i : int;
+
+
+}

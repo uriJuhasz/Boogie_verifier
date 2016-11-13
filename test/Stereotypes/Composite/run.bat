@@ -1,0 +1,1 @@
+Boogie /errorLimit:28  /enhancedErrorMessages:1  /trace /vcsMaxKeepGoingSplits:10 /vcsKeepGoingTimeout:1 /xml:result.xml Heap.bpl Region.bpl Auxiliary.bpl TreeStereotype.bpl TreeOperations.bpl TreeInvariant.bpl CompositeType.bpl CompositeOperations.bpl CompositeInvariant.bpl InvCompositeAx.bpl client.bpl

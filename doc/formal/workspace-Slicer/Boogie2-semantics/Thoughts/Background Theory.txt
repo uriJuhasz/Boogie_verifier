@@ -1,0 +1,40 @@
+	
+Background Theory:
+
+	* type definitions
+		- finiteness
+		- type aliases
+
+	* constants
+		- value
+		- order axioms
+		- uniqueness
+
+	* axioms
+		- definition
+		
+	* functions
+		- definition
+	
+	* global variable     
+		- type
+		- where clauses
+	
+	* procedure parameter 
+		- type
+		- where clauses
+
+	* procedure result    
+		- type
+		- where clauses
+
+	* procedure specification
+		- definition
+
+	* local variables
+		- type
+		- where clauses
+
+	? triggers
+
+	? modifies clause

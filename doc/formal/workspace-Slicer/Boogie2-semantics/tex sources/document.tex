@@ -1,0 +1,140 @@
+%%This is a very basic article template.
+%%There is just one section and two subsections.
+\documentclass{article}
+
+
+\usepackage{amssymb,amsmath}
+
+\begin{document}
+
+\include{ASTMacros}
+
+\title{Boogie 2 Semantics}
+\author{}
+\maketitle
+
+\section{Abstract Syntax}
+
+\subsection{Program}
+
+
+\flushleft
+\framebox{
+$
+	\begin{array}{ll}
+		\astNode{program} := \\
+			~~~ \astNode{declaration} \ast
+	\end{array}
+$
+}
+
+\framebox{
+$
+	\begin{array}{ll}
+	\astNode{declaration} := \\
+		~~~ | ~ \astNode{type\_declaration}            \\
+		~~~ | ~ \astNode{constant\_declaration}        \\
+		~~~ | ~ \astNode{function\_declaration}        \\
+		~~~ | ~ \astNode{axiom\_declaration}           \\
+		~~~ | ~ \astNode{variable\_declaration}        \\
+		~~~ | ~ \astNode{procedure\_declaration}       \\
+		~~~ | ~ \astNode{implementation\_declaration}  \\
+	\end{array}
+$
+}
+
+\framebox{
+$
+	\begin{array}{ll}
+		\astNode{symbol} := \\
+			~~~ \astNode{name}            \\
+			~~~ \astNode{attributes}      \\
+		\\
+		\hline
+		\astNode{type\_declaration} < \astNode{symbol} := \\
+			~~~ \astNode{definition} : \astNode{type\_defitinion}   \\
+		\\
+		\astNode{constant\_declaration} < \astNode{symbol} := \\
+			~~~ \astNode{type} \\
+			~~~ \astNode{unique} : \astNode{boolean} \\
+			~~~ \astNode{order\_specification} \\
+		\\
+		\astNode{function\_declaration} < \astNode{symbol} := \\
+			~~~ \astNode{type\_parameters} \\
+			~~~ \astNode{parameters} : \astNode{function\_parameter}* \\ 
+			~~~ \astNode{result}     : \astNode{function\_parameter}* \\
+			~~~ [ \astNode{body}      : \astNode{expression} \ \\
+		\\
+		\astNode{axiom\_declaration} < \astNode{symbol} :=  \\                                 %%TODO: no name
+			~~~ \astNode{expression} \\
+		\\
+		\astNode{variable\_declaration} < \astNode{symbol} := \\  
+			~~~ \astNode{type}  \\
+			~~~ \astNode{where} : \astNode{expression} \\
+		\\
+		\astNode{procedure\_declaration} < \astNode{symbol} :=
+			~~~ \astNode{type\_parameters} \\
+			~~~ \astNode{parameters}    : \astNode{variable\_declaration}*       \\               %%TODO: no attributes
+			~~~ \astNode{result}        : \astNode{variable\_declaration}*       \\               %%TODO: no attributes
+			~~~ \astNode{specification} : \astNode{procedure\_specification}     \\
+			~~~ [\astNode{body} : \astNode{block}] \\
+		\\
+		\astNode{implementation\_declaration} < \astNode{symbol} := \\
+			~~~ \astNode{type\_parameters} \\
+			~~~ \astNode{parameters} : \astNode{variable\_declaration}* \\                         %%TODO: no where clause, no attributes
+			~~~ \astNode{result}     : \astNode{variable\_declaration}* \\                      %%TODO: no where clause, no attributes
+			~~~ \astNode{bodies}     : \astNode{block}* \\
+	\end{array}
+$
+}
+
+\section{Vocabulary}
+$
+	\begin{array}{ll}
+		\mathrm{types} : \\
+			~~~ $global types$ \\
+			~~~ $procedure type parameters$  \\
+		\mathrm{functions}  : \\
+			~~~ $global functions$ \\
+			~~~ $global constants$ \\
+		\mathrm{variables} : \\
+			~~~ $global variables$ \\
+			~~~ $local variables$ \\
+			~~~ $procedure parameters$ \\
+			~~~ $procedure results$ \\
+		\mathrm{predicates} : \\
+			~~~ =_T $ per type $ \\
+			~~~ <_T $ per type $ \\
+	\end{array}
+$
+
+\section{Background Theory}
+$
+	\begin{array}{ll}
+		\mathrm{BackgroundTheory} := \mathrm{Set}<\mathrm{Predicate}> \\ 
+	\end{array}
+$
+
+\section{State Model}
+\framebox{
+%% TODO:types
+$
+	\begin{array}{ll}
+		\mathrm{State} := \\ 
+			~~~	E  : \mathrm{VariableName} \rightarrow \mathrm{Value} \\
+			~~~	T  : \mathrm{VariableName} \rightarrow \mathrm{Type} \\
+	\end{array}
+$
+}
+
+\section{WP-Semantics}
+	\subsection{Expression Semantics}
+	\subsection{Statement Semantics}
+		\begin{tabular}{lllll}
+			$wp(\statement{assert}  \; P,Q)   $ & = $ P \land       Q$ \\
+			$wp(\statement{assume}  \; P,Q)   $ & = $ P \Rightarrow Q$ \\
+			$wp(x \; \statement{:=} \; e ,Q)  $ & = $ Q[x \leftarrow e]$ \\
+		\end{tabular}
+	
+
+\end{document}

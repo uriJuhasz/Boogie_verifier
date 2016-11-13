@@ -1,0 +1,26 @@
+
+	* R(v): Relevant variables at point v (prestate) 
+		- R(v) \subseteq V
+	
+	* R(v) propagation:
+		- R(v) = \cup { WR(v',R(v')) | v' \in succ(v) }
+			WR( assert e, V ) = V 
+			WR( assume e, V ) = if ( VARS(e) \cap V == {} ) then 
+			WR( x :=   e, V ) = if x \in V then V \cup VARS(e) else V
+		
+
+
+	* State abstraction:
+		S : statespace (E,OE)
+		
+		S -> S^#
+		Condition abstraction:
+			
+	* Data dependency graph:
+		
+
+	* For a condition C(v) :
+		* R(v) = VARS(C)
+			- VARS(e) = ...
+		* forall v' in pred(v)
+			- WR( S, R ) =  

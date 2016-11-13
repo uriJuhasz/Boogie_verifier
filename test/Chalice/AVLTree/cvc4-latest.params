@@ -1,0 +1,20 @@
+unsupported
+unsupported
+unsupported
+unsupported
+unsupported
+unsupported
+unsupported
+unsupported
+unsupported
+unsupported
+unsupported
+unsupported
+unsupported
+unsupported
+unsupported
+minisat: Incremental solving is forced on (to avoid variable elimination) unless using internal decision strategy.
+============================[ Search Statistics ]==============================
+| Conflicts |          ORIGINAL         |          LEARNT          | Progress |
+|           |    Vars  Clauses Literals |    Limit  Clauses Lit/Cl |          |
+===============================================================================

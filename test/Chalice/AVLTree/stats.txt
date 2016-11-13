@@ -1,0 +1,4180 @@
+Microsoft Windows [Version 10.0.10586]
+(c) 2015 Microsoft Corporation. All rights reserved.
+
+C:\Users\uri>cd \work\slicer\test\Chalice\AVLTree
+
+C:\work\slicer\test\Chalice\AVLTree>dir
+ Volume in drive C has no label.
+ Volume Serial Number is 90A7-462F
+
+ Directory of C:\work\slicer\test\Chalice\AVLTree
+
+09-Jul-16  14:17    <DIR>          .
+09-Jul-16  14:17    <DIR>          ..
+02-Jul-16  09:45         3,781,645 AVLTree.1
+02-Jul-16  09:45         3,781,718 AVLTree.1.bpl
+07-Jul-16  04:25            19,331 AVLTree.AVLTree$monitorinvariant$checkDefinedness.pre.bpl
+05-Jul-16  20:24            21,444 AVLTree.AVLTree.has$checkDefinedness.pre.bpl
+05-Jul-16  20:24            59,039 AVLTree.AVLTree.has.pre.bpl
+05-Jul-16  20:24            21,421 AVLTree.AVLTree.init$checkDefinedness.pre.bpl
+05-Jul-16  20:24            45,637 AVLTree.AVLTree.init.pre.bpl
+05-Jul-16  20:24            25,786 AVLTree.AVLTree.insert$checkDefinedness.pre.bpl
+05-Jul-16  20:24            76,608 AVLTree.AVLTree.insert.pre.bpl
+05-Jul-16  20:24            26,960 AVLTree.AVLTree.remove$checkDefinedness.pre.bpl
+05-Jul-16  20:24            71,538 AVLTree.AVLTree.remove.pre.bpl
+05-Jul-16  20:24            27,308 AVLTree.AVLTree.valid$checkDefinedness.pre.bpl
+05-Jul-16  20:25            19,375 AVLTree.AVLTreeNode$monitorinvariant$checkDefinedness.pre.bpl
+05-Jul-16  20:29            55,763 AVLTree.AVLTreeNode.close$checkDefinedness.pre.bpl
+08-Jul-16  16:36           601,941 AVLTree.AVLTreeNode.close.build.fw.smt2
+08-Jul-16  16:36           497,280 AVLTree.AVLTreeNode.close.build.orig.smt2
+08-Jul-16  16:36           488,136 AVLTree.AVLTreeNode.close.build.smt2
+08-Jul-16  16:41         2,849,271 AVLTree.AVLTreeNode.close.end.fw.smt2
+08-Jul-16  16:41           490,362 AVLTree.AVLTreeNode.close.end.orig.smt2
+08-Jul-16  16:41           518,625 AVLTree.AVLTreeNode.close.end.smt2
+08-Jul-16  16:36           500,945 AVLTree.AVLTreeNode.close.init.smt2
+08-Jul-16  16:36           491,502 AVLTree.AVLTreeNode.close.orig.1.smt2
+05-Jul-16  20:30           210,790 AVLTree.AVLTreeNode.close.pre.bpl
+08-Jul-16  16:36           947,851 AVLTree.AVLTreeNode.close.round_0_IN.fw.smt2
+08-Jul-16  16:36           497,280 AVLTree.AVLTreeNode.close.round_0_IN.orig.smt2
+08-Jul-16  16:36           511,702 AVLTree.AVLTreeNode.close.round_0_IN.smt2
+08-Jul-16  16:36           949,377 AVLTree.AVLTreeNode.close.round_0_MR.fw.smt2
+08-Jul-16  16:36           497,280 AVLTree.AVLTreeNode.close.round_0_MR.orig.smt2
+08-Jul-16  16:36           511,702 AVLTree.AVLTreeNode.close.round_0_MR.smt2
+08-Jul-16  16:37         1,214,669 AVLTree.AVLTreeNode.close.round_1_MR.fw.smt2
+08-Jul-16  16:37           495,177 AVLTree.AVLTreeNode.close.round_1_MR.orig.smt2
+08-Jul-16  16:37           523,157 AVLTree.AVLTreeNode.close.round_1_MR.smt2
+08-Jul-16  16:37         1,484,115 AVLTree.AVLTreeNode.close.round_1_SP.fw.smt2
+08-Jul-16  16:37           492,258 AVLTree.AVLTreeNode.close.round_1_SP.orig.smt2
+08-Jul-16  16:37           519,462 AVLTree.AVLTreeNode.close.round_1_SP.smt2
+08-Jul-16  16:39         2,727,302 AVLTree.AVLTreeNode.close.round_2_IN.fw.smt2
+08-Jul-16  16:39           490,362 AVLTree.AVLTreeNode.close.round_2_IN.orig.smt2
+08-Jul-16  16:39           518,237 AVLTree.AVLTreeNode.close.round_2_IN.smt2
+08-Jul-16  16:39         2,727,218 AVLTree.AVLTreeNode.close.round_2_MR.fw.smt2
+08-Jul-16  16:39           490,362 AVLTree.AVLTreeNode.close.round_2_MR.orig.smt2
+08-Jul-16  16:39           518,161 AVLTree.AVLTreeNode.close.round_2_MR.smt2
+05-Jul-16  20:28           151,793 AVLTree.AVLTreeNode.getBalanceFactor$checkDefinedness.pre.bpl
+05-Jul-16  20:29            99,028 AVLTree.AVLTreeNode.getBalanceFactor.pre.bpl
+05-Jul-16  20:29            36,809 AVLTree.AVLTreeNode.getBalanceFactorI$checkDefinedness.pre.bpl
+05-Jul-16  20:29           141,483 AVLTree.AVLTreeNode.getBalanceFactorI.pre.bpl
+05-Jul-16  20:28            21,539 AVLTree.AVLTreeNode.has$checkDefinedness.pre.bpl
+05-Jul-16  20:28           110,199 AVLTree.AVLTreeNode.has.pre.bpl
+05-Jul-16  20:25            25,291 AVLTree.AVLTreeNode.init$checkDefinedness.pre.bpl
+08-Jul-16  17:38           116,560 AVLTree.AVLTreeNode.init.boogie.smt2
+08-Jul-16  16:22           274,564 AVLTree.AVLTreeNode.init.build.fw.smt2
+08-Jul-16  16:22           222,578 AVLTree.AVLTreeNode.init.build.orig.smt2
+08-Jul-16  16:22           224,362 AVLTree.AVLTreeNode.init.build.smt2
+08-Jul-16  16:22           256,682 AVLTree.AVLTreeNode.init.end.fw.smt2
+08-Jul-16  16:22           189,217 AVLTree.AVLTreeNode.init.end.orig.smt2
+08-Jul-16  16:22           186,968 AVLTree.AVLTreeNode.init.end.smt2
+08-Jul-16  16:22           217,336 AVLTree.AVLTreeNode.init.init.smt2
+08-Jul-16  16:22           222,684 AVLTree.AVLTreeNode.init.orig.1.smt2
+05-Jul-16  20:25            53,735 AVLTree.AVLTreeNode.init.pre.bpl
+08-Jul-16  16:22           250,459 AVLTree.AVLTreeNode.init.round_0_IN.fw.smt2
+08-Jul-16  16:22           192,211 AVLTree.AVLTreeNode.init.round_0_IN.orig.smt2
+08-Jul-16  16:22           193,951 AVLTree.AVLTreeNode.init.round_0_IN.smt2
+08-Jul-16  16:22           308,681 AVLTree.AVLTreeNode.init.round_0_MR.fw.smt2
+08-Jul-16  16:22           195,979 AVLTree.AVLTreeNode.init.round_0_MR.orig.smt2
+08-Jul-16  16:22           197,958 AVLTree.AVLTreeNode.init.round_0_MR.smt2
+08-Jul-16  16:22           250,701 AVLTree.AVLTreeNode.init.round_1_MR.fw.smt2
+08-Jul-16  16:22           189,382 AVLTree.AVLTreeNode.init.round_1_MR.orig.smt2
+08-Jul-16  16:22           187,177 AVLTree.AVLTreeNode.init.round_1_MR.smt2
+08-Jul-16  16:22           264,563 AVLTree.AVLTreeNode.init.round_1_SP.fw.smt2
+08-Jul-16  16:22           189,338 AVLTree.AVLTreeNode.init.round_1_SP.orig.smt2
+08-Jul-16  16:22           187,008 AVLTree.AVLTreeNode.init.round_1_SP.smt2
+08-Jul-16  16:22           255,223 AVLTree.AVLTreeNode.init.round_2_IN.fw.smt2
+08-Jul-16  16:22           189,217 AVLTree.AVLTreeNode.init.round_2_IN.orig.smt2
+08-Jul-16  16:22           186,771 AVLTree.AVLTreeNode.init.round_2_IN.smt2
+08-Jul-16  16:22           255,232 AVLTree.AVLTreeNode.init.round_2_MR.fw.smt2
+08-Jul-16  16:22           189,217 AVLTree.AVLTreeNode.init.round_2_MR.orig.smt2
+08-Jul-16  16:22           186,771 AVLTree.AVLTreeNode.init.round_2_MR.smt2
+05-Jul-16  20:25            32,281 AVLTree.AVLTreeNode.insert$checkDefinedness.pre.bpl
+09-Jul-16  14:15           506,909 AVLTree.AVLTreeNode.insert.build.full.smt2
+09-Jul-16  14:15           500,471 AVLTree.AVLTreeNode.insert.build.fw.smt2
+09-Jul-16  14:15           501,551 AVLTree.AVLTreeNode.insert.build.mrs.smt2
+09-Jul-16  14:15           638,625 AVLTree.AVLTreeNode.insert.build.orig.smt2
+09-Jul-16  14:15           651,832 AVLTree.AVLTreeNode.insert.build.smt2
+09-Jul-16  14:17           671,582 AVLTree.AVLTreeNode.insert.end.full.smt2
+09-Jul-16  14:17           477,314 AVLTree.AVLTreeNode.insert.end.fw.smt2
+09-Jul-16  14:17           491,043 AVLTree.AVLTreeNode.insert.end.mrs.smt2
+09-Jul-16  14:17           626,400 AVLTree.AVLTreeNode.insert.end.orig.smt2
+09-Jul-16  14:17           704,700 AVLTree.AVLTreeNode.insert.end.smt2
+08-Jul-16  17:16           626,953 AVLTree.AVLTreeNode.insert.init.smt2
+08-Jul-16  17:16           620,098 AVLTree.AVLTreeNode.insert.orig.1.smt2
+07-Jul-16  00:12           250,896 AVLTree.AVLTreeNode.insert.pre.bpl
+09-Jul-16  14:15           513,837 AVLTree.AVLTreeNode.insert.round_0_IN.full.smt2
+09-Jul-16  14:15           495,838 AVLTree.AVLTreeNode.insert.round_0_IN.fw.smt2
+09-Jul-16  14:15           510,005 AVLTree.AVLTreeNode.insert.round_0_IN.mrs.smt2
+09-Jul-16  14:15           635,897 AVLTree.AVLTreeNode.insert.round_0_IN.orig.smt2
+09-Jul-16  14:15           682,867 AVLTree.AVLTreeNode.insert.round_0_IN.smt2
+09-Jul-16  14:15           519,652 AVLTree.AVLTreeNode.insert.round_0_MR.full.smt2
+09-Jul-16  14:15           499,942 AVLTree.AVLTreeNode.insert.round_0_MR.fw.smt2
+09-Jul-16  14:15           515,784 AVLTree.AVLTreeNode.insert.round_0_MR.mrs.smt2
+09-Jul-16  14:15           637,724 AVLTree.AVLTreeNode.insert.round_0_MR.orig.smt2
+09-Jul-16  14:15           684,997 AVLTree.AVLTreeNode.insert.round_0_MR.smt2
+09-Jul-16  14:16           494,999 AVLTree.AVLTreeNode.insert.round_1_MR.full.smt2
+09-Jul-16  14:16           477,695 AVLTree.AVLTreeNode.insert.round_1_MR.fw.smt2
+09-Jul-16  14:16           491,424 AVLTree.AVLTreeNode.insert.round_1_MR.mrs.smt2
+09-Jul-16  14:16           626,929 AVLTree.AVLTreeNode.insert.round_1_MR.orig.smt2
+09-Jul-16  14:16           704,324 AVLTree.AVLTreeNode.insert.round_1_MR.smt2
+09-Jul-16  14:17           671,582 AVLTree.AVLTreeNode.insert.round_1_SP.full.smt2
+09-Jul-16  14:16           477,314 AVLTree.AVLTreeNode.insert.round_1_SP.fw.smt2
+09-Jul-16  14:17           491,043 AVLTree.AVLTreeNode.insert.round_1_SP.mrs.smt2
+09-Jul-16  14:16           626,400 AVLTree.AVLTreeNode.insert.round_1_SP.orig.smt2
+09-Jul-16  14:16           704,700 AVLTree.AVLTreeNode.insert.round_1_SP.smt2
+08-Jul-16  16:25         2,490,298 AVLTree.AVLTreeNode.insert.round_2_IN.fw.smt2
+08-Jul-16  16:25           612,872 AVLTree.AVLTreeNode.insert.round_2_IN.orig.smt2
+08-Jul-16  16:25           689,331 AVLTree.AVLTreeNode.insert.round_2_IN.smt2
+08-Jul-16  16:25         2,490,118 AVLTree.AVLTreeNode.insert.round_2_MR.fw.smt2
+08-Jul-16  16:25           612,872 AVLTree.AVLTreeNode.insert.round_2_MR.orig.smt2
+08-Jul-16  16:25           689,236 AVLTree.AVLTreeNode.insert.round_2_MR.smt2
+09-Jul-16  14:15           633,785 AVLTree.AVLTreeNode.insert.start.1.smt2
+09-Jul-16  14:15           640,640 AVLTree.AVLTreeNode.insert.start.smt2
+05-Jul-16  20:27            35,818 AVLTree.AVLTreeNode.pruneMax$checkDefinedness.pre.bpl
+05-Jul-16  20:27           167,603 AVLTree.AVLTreeNode.pruneMax.pre.bpl
+05-Jul-16  20:27            35,821 AVLTree.AVLTreeNode.pruneMin$checkDefinedness.pre.bpl
+05-Jul-16  20:28           175,065 AVLTree.AVLTreeNode.pruneMin.pre.bpl
+05-Jul-16  20:30            45,152 AVLTree.AVLTreeNode.rebalanceLeft$checkDefinedness.pre.bpl
+08-Jul-16  16:29         1,903,236 AVLTree.AVLTreeNode.rebalanceLeft.build.fw.smt2
+08-Jul-16  16:29         1,581,756 AVLTree.AVLTreeNode.rebalanceLeft.build.orig.smt2
+08-Jul-16  16:29         1,741,662 AVLTree.AVLTreeNode.rebalanceLeft.build.smt2
+08-Jul-16  16:28         1,569,488 AVLTree.AVLTreeNode.rebalanceLeft.init.smt2
+08-Jul-16  16:28         1,553,897 AVLTree.AVLTreeNode.rebalanceLeft.orig.1.smt2
+05-Jul-16  20:30           801,267 AVLTree.AVLTreeNode.rebalanceLeft.pre.bpl
+05-Jul-16  20:41            45,760 AVLTree.AVLTreeNode.rebalanceLL$checkDefinedness.pre.bpl
+08-Jul-16  17:19           430,881 AVLTree.AVLTreeNode.rebalanceLL.build.full.smt2
+08-Jul-16  17:19           420,013 AVLTree.AVLTreeNode.rebalanceLL.build.fw.smt2
+08-Jul-16  17:19           333,625 AVLTree.AVLTreeNode.rebalanceLL.build.orig.smt2
+08-Jul-16  17:19           332,577 AVLTree.AVLTreeNode.rebalanceLL.build.smt2
+08-Jul-16  17:20         5,422,644 AVLTree.AVLTreeNode.rebalanceLL.end.full.smt2
+08-Jul-16  17:20         1,681,164 AVLTree.AVLTreeNode.rebalanceLL.end.fw.smt2
+08-Jul-16  17:20           331,619 AVLTree.AVLTreeNode.rebalanceLL.end.orig.smt2
+08-Jul-16  17:20           359,217 AVLTree.AVLTreeNode.rebalanceLL.end.smt2
+08-Jul-16  17:19           330,354 AVLTree.AVLTreeNode.rebalanceLL.init.smt2
+08-Jul-16  17:19           331,461 AVLTree.AVLTreeNode.rebalanceLL.orig.1.smt2
+05-Jul-16  20:41           109,351 AVLTree.AVLTreeNode.rebalanceLL.pre.bpl
+08-Jul-16  17:19         1,593,851 AVLTree.AVLTreeNode.rebalanceLL.round_0_IN.full.smt2
+08-Jul-16  17:19           655,310 AVLTree.AVLTreeNode.rebalanceLL.round_0_IN.fw.smt2
+08-Jul-16  17:19           332,837 AVLTree.AVLTreeNode.rebalanceLL.round_0_IN.orig.smt2
+08-Jul-16  17:19           339,775 AVLTree.AVLTreeNode.rebalanceLL.round_0_IN.smt2
+08-Jul-16  17:19         1,591,851 AVLTree.AVLTreeNode.rebalanceLL.round_0_MR.full.smt2
+08-Jul-16  17:19           655,319 AVLTree.AVLTreeNode.rebalanceLL.round_0_MR.fw.smt2
+08-Jul-16  17:19           332,837 AVLTree.AVLTreeNode.rebalanceLL.round_0_MR.orig.smt2
+08-Jul-16  17:19           339,775 AVLTree.AVLTreeNode.rebalanceLL.round_0_MR.smt2
+08-Jul-16  17:19         1,961,420 AVLTree.AVLTreeNode.rebalanceLL.round_1_MR.full.smt2
+08-Jul-16  17:19           673,586 AVLTree.AVLTreeNode.rebalanceLL.round_1_MR.fw.smt2
+08-Jul-16  17:19           332,742 AVLTree.AVLTreeNode.rebalanceLL.round_1_MR.orig.smt2
+08-Jul-16  17:19           354,433 AVLTree.AVLTreeNode.rebalanceLL.round_1_MR.smt2
+08-Jul-16  17:19         4,320,705 AVLTree.AVLTreeNode.rebalanceLL.round_1_SP.full.smt2
+08-Jul-16  17:19           825,601 AVLTree.AVLTreeNode.rebalanceLL.round_1_SP.fw.smt2
+08-Jul-16  17:19           332,861 AVLTree.AVLTreeNode.rebalanceLL.round_1_SP.orig.smt2
+08-Jul-16  17:19           354,176 AVLTree.AVLTreeNode.rebalanceLL.round_1_SP.smt2
+08-Jul-16  17:20         5,413,905 AVLTree.AVLTreeNode.rebalanceLL.round_2_IN.full.smt2
+08-Jul-16  17:20         1,675,776 AVLTree.AVLTreeNode.rebalanceLL.round_2_IN.fw.smt2
+08-Jul-16  17:20           331,619 AVLTree.AVLTreeNode.rebalanceLL.round_2_IN.orig.smt2
+08-Jul-16  17:20           359,217 AVLTree.AVLTreeNode.rebalanceLL.round_2_IN.smt2
+08-Jul-16  17:20         5,416,450 AVLTree.AVLTreeNode.rebalanceLL.round_2_MR.full.smt2
+08-Jul-16  17:20         1,675,689 AVLTree.AVLTreeNode.rebalanceLL.round_2_MR.fw.smt2
+08-Jul-16  17:20           331,619 AVLTree.AVLTreeNode.rebalanceLL.round_2_MR.orig.smt2
+08-Jul-16  17:20           359,179 AVLTree.AVLTreeNode.rebalanceLL.round_2_MR.smt2
+05-Jul-16  20:38            93,741 AVLTree.AVLTreeNode.rebalanceLR$checkDefinedness.pre.bpl
+08-Jul-16  15:57         1,154,182 AVLTree.AVLTreeNode.rebalanceLR.build.fw.smt2
+08-Jul-16  15:57           938,415 AVLTree.AVLTreeNode.rebalanceLR.build.orig.smt2
+08-Jul-16  15:57           936,621 AVLTree.AVLTreeNode.rebalanceLR.build.smt2
+08-Jul-16  15:56           939,626 AVLTree.AVLTreeNode.rebalanceLR.init.smt2
+08-Jul-16  15:56           922,928 AVLTree.AVLTreeNode.rebalanceLR.orig.1.smt2
+07-Jul-16  02:00           425,906 avltree.AVLTreeNode.rebalanceLR.pre.bpl
+07-Jul-16  02:02         2,228,003 AVLTree.AVLTreeNode.rebalanceLR.round_0Inst.fw.smt2
+07-Jul-16  02:02           932,377 AVLTree.AVLTreeNode.rebalanceLR.round_0Inst.orig.smt2
+07-Jul-16  02:02           993,015 AVLTree.AVLTreeNode.rebalanceLR.round_0Inst.smt2
+07-Jul-16  02:02         2,227,940 AVLTree.AVLTreeNode.rebalanceLR.round_0_EQ.fw.smt2
+07-Jul-16  02:02           932,377 AVLTree.AVLTreeNode.rebalanceLR.round_0_EQ.orig.smt2
+07-Jul-16  02:02           993,015 AVLTree.AVLTreeNode.rebalanceLR.round_0_EQ.smt2
+08-Jul-16  16:00         2,480,783 AVLTree.AVLTreeNode.rebalanceLR.round_0_IN.fw.smt2
+08-Jul-16  16:00           931,588 AVLTree.AVLTreeNode.rebalanceLR.round_0_IN.orig.smt2
+08-Jul-16  16:00         1,011,926 AVLTree.AVLTreeNode.rebalanceLR.round_0_IN.smt2
+08-Jul-16  15:59         2,506,388 AVLTree.AVLTreeNode.rebalanceLR.round_0_MR.fw.smt2
+08-Jul-16  15:59           932,410 AVLTree.AVLTreeNode.rebalanceLR.round_0_MR.orig.smt2
+08-Jul-16  15:59         1,009,512 AVLTree.AVLTreeNode.rebalanceLR.round_0_MR.smt2
+07-Jul-16  02:06         3,270,649 AVLTree.AVLTreeNode.rebalanceLR.round_1_EQ.fw.smt2
+07-Jul-16  02:06           928,991 AVLTree.AVLTreeNode.rebalanceLR.round_1_EQ.orig.smt2
+07-Jul-16  02:06         1,097,385 AVLTree.AVLTreeNode.rebalanceLR.round_1_EQ.smt2
+08-Jul-16  16:13         3,285,525 AVLTree.AVLTreeNode.rebalanceLR.round_1_MR.fw.smt2
+08-Jul-16  16:13           929,024 AVLTree.AVLTreeNode.rebalanceLR.round_1_MR.orig.smt2
+08-Jul-16  16:13         1,111,823 AVLTree.AVLTreeNode.rebalanceLR.round_1_MR.smt2
+05-Jul-16  20:36            45,221 AVLTree.AVLTreeNode.rebalanceRight$checkDefinedness.pre.bpl
+05-Jul-16  20:36           801,929 AVLTree.AVLTreeNode.rebalanceRight.pre.bpl
+05-Jul-16  20:32            93,393 AVLTree.AVLTreeNode.rebalanceRL$checkDefinedness.pre.bpl
+06-Jul-16  17:25           425,505 AVLTree.AVLTreeNode.rebalanceRL.pre.bpl
+05-Jul-16  20:36            45,742 AVLTree.AVLTreeNode.rebalanceRR$checkDefinedness.pre.bpl
+05-Jul-16  20:36           109,194 AVLTree.AVLTreeNode.rebalanceRR.pre.bpl
+05-Jul-16  20:26            38,525 AVLTree.AVLTreeNode.remove$checkDefinedness.pre.bpl
+08-Jul-16  14:12         1,314,842 AVLTree.AVLTreeNode.remove.build.fw.smt2
+08-Jul-16  14:12           983,208 AVLTree.AVLTreeNode.remove.build.orig.smt2
+08-Jul-16  14:12           982,130 AVLTree.AVLTreeNode.remove.build.smt2
+08-Jul-16  14:18         3,962,263 AVLTree.AVLTreeNode.remove.end.fw.smt2
+08-Jul-16  14:18           945,372 AVLTree.AVLTreeNode.remove.end.orig.smt2
+08-Jul-16  14:18         1,044,074 AVLTree.AVLTreeNode.remove.end.smt2
+08-Jul-16  14:12           993,124 AVLTree.AVLTreeNode.remove.init.smt2
+08-Jul-16  14:12           970,085 AVLTree.AVLTreeNode.remove.orig.1.smt2
+06-Jul-16  23:01         1,026,971 avltree.AVLTreeNode.remove.post.2
+07-Jul-16  00:50           470,035 avltree.AVLTreeNode.remove.pre.bpl
+08-Jul-16  14:12         1,651,634 AVLTree.AVLTreeNode.remove.round_0_IN.fw.smt2
+08-Jul-16  14:12           950,156 AVLTree.AVLTreeNode.remove.round_0_IN.orig.smt2
+08-Jul-16  14:13           991,894 AVLTree.AVLTreeNode.remove.round_0_IN.smt2
+08-Jul-16  14:12         1,705,003 AVLTree.AVLTreeNode.remove.round_0_MR.fw.smt2
+08-Jul-16  14:12           956,104 AVLTree.AVLTreeNode.remove.round_0_MR.orig.smt2
+08-Jul-16  14:12           998,398 AVLTree.AVLTreeNode.remove.round_0_MR.smt2
+08-Jul-16  14:13         2,606,680 AVLTree.AVLTreeNode.remove.round_1_MR.fw.smt2
+08-Jul-16  14:13           945,372 AVLTree.AVLTreeNode.remove.round_1_MR.orig.smt2
+08-Jul-16  14:13         1,043,799 AVLTree.AVLTreeNode.remove.round_1_MR.smt2
+08-Jul-16  14:14         2,934,272 AVLTree.AVLTreeNode.remove.round_1_SP.fw.smt2
+08-Jul-16  14:14           945,372 AVLTree.AVLTreeNode.remove.round_1_SP.orig.smt2
+08-Jul-16  14:14         1,046,225 AVLTree.AVLTreeNode.remove.round_1_SP.smt2
+08-Jul-16  14:17         3,536,729 AVLTree.AVLTreeNode.remove.round_2_IN.fw.smt2
+08-Jul-16  14:17           945,372 AVLTree.AVLTreeNode.remove.round_2_IN.orig.smt2
+08-Jul-16  14:17         1,047,495 AVLTree.AVLTreeNode.remove.round_2_IN.smt2
+08-Jul-16  14:16         3,536,699 AVLTree.AVLTreeNode.remove.round_2_MR.fw.smt2
+08-Jul-16  14:16           945,372 AVLTree.AVLTreeNode.remove.round_2_MR.orig.smt2
+08-Jul-16  14:17         1,047,533 AVLTree.AVLTreeNode.remove.round_2_MR.smt2
+05-Jul-16  20:25            56,505 AVLTree.AVLTreeNode.valid$checkDefinedness.pre.bpl
+02-Jul-16  09:45         3,781,958 AVLTree.bpl
+02-Jul-16  09:45            25,989 AVLTree.chalice
+02-Jul-16  09:45            99,075 AVLTree.init.z3
+02-Jul-16  09:45            44,535 AVLTree.insert.bpl
+02-Jul-16  09:45         2,119,962 AVLTree.newer.bpl
+02-Jul-16  09:45            19,131 AVLTree.noremove.chalice
+02-Jul-16  09:45            55,722 AVLTreeNode.init.77.logg
+08-Jul-16  17:26           117,099 AVLTreeNode.init.boogie.smt2
+07-Jul-16  01:12             6,536 beagle.params
+02-Jul-16  19:43            16,137 boogie.params
+02-Jul-16  09:45            11,038 boogie.timings.log
+02-Jul-16  09:45         2,477,953 carbon-AVLTree.bpl
+02-Jul-16  09:45                93 command.txt
+03-Jul-16  18:53               635 cvc4-latest.params
+07-Jul-16  01:33            43,191 CVC4.latest.params
+03-Jul-16  10:00            26,969 cvc4.params
+02-Jul-16  09:45    <DIR>          Iterative
+02-Jul-16  09:45    <DIR>          nobalance
+02-Jul-16  09:45    <DIR>          nokeys
+02-Jul-16  09:45    <DIR>          temp
+05-Jul-16  19:57           159,863 times.txt
+02-Jul-16  09:45                49 timings.txt
+03-Jul-16  18:17       131,174,677 VSPerf(1).vspx
+03-Jul-16  20:33         4,393,504 VSPerf(2).vspx
+03-Jul-16  20:54        10,260,422 VSPerf(3).vspx
+04-Jul-16  15:32         8,523,310 VSPerf(4).vspx
+04-Jul-16  15:47         7,819,705 VSPerf(5).vspx
+04-Jul-16  15:55         5,886,983 VSPerf(6).vspx
+04-Jul-16  16:17         2,917,303 VSPerf(7).vspx
+04-Jul-16  16:21         6,271,370 VSPerf(8).vspx
+05-Jul-16  21:38        43,487,230 VSPerf(9).vspx
+02-Jul-16  15:45        17,484,808 VSPerf.vspx
+02-Jul-16  09:45            18,108 z3.commandline
+02-Jul-16  09:45            41,436 z3.params
+             256 File(s)    437,782,656 bytes
+               6 Dir(s)  254,530,314,240 bytes free
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.start.smt2
+(smt.restarting :propagations 14429 :decisions 1263 :conflicts 101 :restart 150 :agility 0.030831)
+(smt.restarting :propagations 47495 :decisions 3711 :conflicts 252 :restart 225 :agility 0.0318357)
+(smt.restarting :propagations 119699 :decisions 11579 :conflicts 478 :restart 337 :agility 0.0800193)
+(smt.restarting :propagations 278981 :decisions 15140 :conflicts 816 :restart 505 :agility 0.0443069)
+(smt.restarting :propagations 520003 :decisions 23586 :conflicts 1322 :restart 757 :agility 0.0603228)
+unsat
+(:add-rows                    781230
+ :added-eqs                   1303229
+ :arith-conflicts             811
+ :assert-diseq                18572
+ :assert-lower                464867
+ :assert-upper                275929
+ :binary-propagations         197230
+ :bound-prop                  63680
+ :conflicts                   1838
+ :decisions                   30594
+ :del-clause                  1741522
+ :dyn-ack                     4
+ :eq-adapter                  159564
+ :final-checks                78
+ :fixed-eqs                   300750
+ :gcd-tests                   1672
+ :ineq-splits                 1
+ :interface-eqs               76
+ :max-generation              88
+ :max-memory                  84.54
+ :max-missed-qa-cost          108.00
+ :memory                      21.59
+ :min-missed-qa-cost          107.00
+ :minimized-lits              56501
+ :missed-quant-instantiations 2
+ :mk-bool-var                 1428631
+ :mk-clause                   1812910
+ :num-allocs                  5865141107.00
+ :offset-eqs                  214875
+ :pivots                      72263
+ :propagations                1151361
+ :quant-instantiations        182343
+ :restarts                    5
+ :rlimit-count                15183839
+ :time                        14.46
+ :total-time                  14.51)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.start.fw.smt2
+(error "failed to open file 'AVLTree.AVLTreeNode.insert.start.fw.smt2'")
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.start.1.smt2
+(smt.restarting :propagations 15652 :decisions 985 :conflicts 101 :restart 150 :agility 0.0272062)
+(smt.restarting :propagations 49275 :decisions 2426 :conflicts 253 :restart 225 :agility 0.0282473)
+(smt.restarting :propagations 125817 :decisions 4995 :conflicts 479 :restart 337 :agility 0.0339651)
+(smt.restarting :propagations 241021 :decisions 8593 :conflicts 817 :restart 505 :agility 0.0663098)
+(smt.restarting :propagations 574430 :decisions 15268 :conflicts 1323 :restart 757 :agility 0.0777652)
+unsat
+(:add-rows             777210
+ :added-eqs            1284623
+ :arith-conflicts      826
+ :assert-diseq         16265
+ :assert-lower         454369
+ :assert-upper         267637
+ :binary-propagations  171226
+ :bound-prop           63898
+ :conflicts            1761
+ :decisions            21792
+ :del-clause           1676837
+ :dyn-ack              4
+ :eq-adapter           164923
+ :final-checks         62
+ :fixed-eqs            307494
+ :gcd-tests            4701
+ :ineq-splits          2
+ :interface-eqs        59
+ :max-generation       86
+ :max-memory           82.09
+ :memory               20.95
+ :minimized-lits       56606
+ :mk-bool-var          1382712
+ :mk-clause            1748221
+ :num-allocs           5303608966.00
+ :offset-eqs           223676
+ :pivots               72818
+ :propagations         1117116
+ :quant-instantiations 170375
+ :restarts             5
+ :rlimit-count         14640566
+ :time                 14.18
+ :total-time           14.20)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.smt2
+(smt.restarting :propagations 14902 :decisions 1491 :conflicts 101 :restart 150 :agility 0.0312598)
+(smt.restarting :propagations 46644 :decisions 2830 :conflicts 252 :restart 225 :agility 0.0339176)
+(smt.restarting :propagations 105028 :decisions 4146 :conflicts 478 :restart 337 :agility 0.0732763)
+(smt.restarting :propagations 219951 :decisions 6346 :conflicts 816 :restart 505 :agility 0.07616)
+(smt.restarting :propagations 511131 :decisions 10488 :conflicts 1325 :restart 757 :agility 0.0459055)
+unsat
+(:add-rows                    760009
+ :added-eqs                   1215853
+ :arith-conflicts             708
+ :assert-diseq                19785
+ :assert-lower                444335
+ :assert-upper                267435
+ :binary-propagations         191219
+ :bound-prop                  68572
+ :conflicts                   1762
+ :decisions                   14872
+ :del-clause                  1530502
+ :dyn-ack                     1
+ :eliminated-applications     7
+ :eq-adapter                  156848
+ :final-checks                73
+ :fixed-eqs                   301610
+ :gcd-tests                   1369
+ :ineq-splits                 1
+ :interface-eqs               71
+ :max-generation              86
+ :max-memory                  85.57
+ :max-missed-qa-cost          108.00
+ :memory                      21.27
+ :min-missed-qa-cost          107.00
+ :minimized-lits              48792
+ :missed-quant-instantiations 2
+ :mk-bool-var                 1317151
+ :mk-clause                   1610503
+ :num-allocs                  5183102497.00
+ :offset-eqs                  203796
+ :pivots                      77827
+ :propagations                1075345
+ :quant-instantiations        152974
+ :restarts                    5
+ :rlimit-count                13755669
+ :time                        12.51
+ :total-time                  12.53)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.full.smt2
+unknown
+(:add-rows                361
+ :added-eqs               272
+ :arith-conflicts         2
+ :assert-diseq            14
+ :assert-lower            109
+ :assert-upper            65
+ :binary-propagations     172
+ :bound-prop              56
+ :conflicts               2
+ :decisions               499
+ :del-clause              242
+ :eliminated-applications 9
+ :eq-adapter              192
+ :final-checks            3
+ :fixed-eqs               34
+ :gcd-tests               1
+ :interface-eqs           2
+ :max-generation          3
+ :max-memory              3.56
+ :memory                  1.60
+ :mk-bool-var             2873
+ :mk-clause               1350
+ :num-allocs              3218958
+ :offset-eqs              13
+ :pivots                  58
+ :propagations            249
+ :quant-instantiations    81
+ :rlimit-count            357197
+ :time                    0.06
+ :total-time              0.08)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.fw.smt2
+unknown
+(:add-rows                359
+ :added-eqs               268
+ :arith-conflicts         2
+ :assert-diseq            15
+ :assert-lower            111
+ :assert-upper            65
+ :binary-propagations     167
+ :bound-prop              58
+ :conflicts               2
+ :decisions               499
+ :del-clause              245
+ :eliminated-applications 9
+ :eq-adapter              192
+ :final-checks            3
+ :fixed-eqs               34
+ :gcd-tests               1
+ :interface-eqs           2
+ :max-generation          3
+ :max-memory              3.53
+ :memory                  1.60
+ :mk-bool-var             2838
+ :mk-clause               1342
+ :num-allocs              3211077
+ :offset-eqs              13
+ :pivots                  57
+ :propagations            245
+ :quant-instantiations    91
+ :rlimit-count            351444
+ :time                    0.07
+ :total-time              0.09)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.mrs.smt2
+unknown
+(:add-rows                359
+ :added-eqs               273
+ :arith-conflicts         2
+ :assert-diseq            15
+ :assert-lower            111
+ :assert-upper            65
+ :binary-propagations     169
+ :bound-prop              58
+ :conflicts               2
+ :decisions               499
+ :del-clause              245
+ :eliminated-applications 9
+ :eq-adapter              192
+ :final-checks            3
+ :fixed-eqs               34
+ :gcd-tests               1
+ :interface-eqs           2
+ :max-generation          3
+ :max-memory              3.53
+ :memory                  1.60
+ :mk-bool-var             2844
+ :mk-clause               1345
+ :num-allocs              3212470
+ :offset-eqs              13
+ :pivots                  57
+ :propagations            248
+ :quant-instantiations    89
+ :rlimit-count            352196
+ :time                    0.07
+ :total-time              0.09)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.orig.smt2
+(smt.restarting :propagations 15312 :decisions 859 :conflicts 102 :restart 150 :agility 0.0261597)
+(smt.restarting :propagations 50961 :decisions 2125 :conflicts 253 :restart 225 :agility 0.02314)
+(smt.restarting :propagations 137374 :decisions 4363 :conflicts 479 :restart 337 :agility 0.0363273)
+(smt.restarting :propagations 241347 :decisions 7891 :conflicts 817 :restart 505 :agility 0.0842123)
+(smt.restarting :propagations 553060 :decisions 16911 :conflicts 1323 :restart 757 :agility 0.0816524)
+unsat
+(:add-rows                    819724
+ :added-eqs                   1161322
+ :arith-conflicts             754
+ :assert-diseq                13809
+ :assert-lower                416046
+ :assert-upper                239177
+ :binary-propagations         140284
+ :bound-prop                  63929
+ :conflicts                   1730
+ :decisions                   22097
+ :del-clause                  1605685
+ :dyn-ack                     3
+ :eq-adapter                  157136
+ :final-checks                81
+ :fixed-eqs                   275426
+ :gcd-tests                   175
+ :ineq-splits                 1
+ :interface-eqs               80
+ :max-generation              88
+ :max-memory                  82.68
+ :max-missed-qa-cost          107.00
+ :memory                      20.81
+ :min-missed-qa-cost          106.00
+ :minimized-lits              53583
+ :missed-quant-instantiations 2
+ :mk-bool-var                 1337244
+ :mk-clause                   1676402
+ :num-allocs                  5117038260.00
+ :offset-eqs                  196896
+ :pivots                      73486
+ :propagations                1003464
+ :quant-instantiations        164258
+ :restarts                    5
+ :rlimit-count                14234168
+ :time                        13.73
+ :total-time                  13.75)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.fw.smt2
+unknown
+(:add-rows                359
+ :added-eqs               268
+ :arith-conflicts         2
+ :assert-diseq            15
+ :assert-lower            110
+ :assert-upper            66
+ :binary-propagations     167
+ :bound-prop              58
+ :conflicts               2
+ :decisions               497
+ :del-clause              244
+ :eliminated-applications 11
+ :eq-adapter              192
+ :final-checks            3
+ :fixed-eqs               34
+ :interface-eqs           2
+ :max-generation          3
+ :max-memory              3.56
+ :memory                  1.63
+ :mk-bool-var             2809
+ :mk-clause               1318
+ :num-allocs              3361546
+ :offset-eqs              13
+ :pivots                  57
+ :propagations            245
+ :quant-instantiations    91
+ :rlimit-count            365138
+ :time                    0.07
+ :total-time              0.09)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.fw.smt2
+unsat
+(:add-rows                332
+ :added-eqs               239
+ :arith-conflicts         2
+ :assert-diseq            14
+ :assert-lower            103
+ :assert-upper            58
+ :binary-propagations     143
+ :bound-prop              36
+ :conflicts               34
+ :decisions               504
+ :del-clause              369
+ :eliminated-applications 10
+ :eq-adapter              184
+ :fixed-eqs               27
+ :max-generation          3
+ :max-memory              3.45
+ :memory                  1.58
+ :mk-bool-var             3410
+ :mk-clause               1407
+ :num-allocs              3158594
+ :offset-eqs              6
+ :pivots                  53
+ :propagations            196
+ :quant-instantiations    87
+ :rlimit-count            349982
+ :time                    0.07
+ :total-time              0.09)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.fw.smt2
+unknown
+(:add-rows                359
+ :added-eqs               268
+ :arith-conflicts         2
+ :assert-diseq            15
+ :assert-lower            111
+ :assert-upper            65
+ :binary-propagations     167
+ :bound-prop              58
+ :conflicts               2
+ :decisions               499
+ :del-clause              245
+ :eliminated-applications 9
+ :eq-adapter              192
+ :final-checks            3
+ :fixed-eqs               34
+ :gcd-tests               1
+ :interface-eqs           2
+ :max-generation          3
+ :max-memory              3.53
+ :memory                  1.60
+ :mk-bool-var             2837
+ :mk-clause               1341
+ :num-allocs              3210994
+ :offset-eqs              13
+ :pivots                  57
+ :propagations            245
+ :quant-instantiations    91
+ :rlimit-count            351399
+ :time                    0.06
+ :total-time              0.08)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.fw.smt2
+unknown
+(:add-rows                359
+ :added-eqs               268
+ :arith-conflicts         2
+ :assert-diseq            15
+ :assert-lower            111
+ :assert-upper            65
+ :binary-propagations     168
+ :bound-prop              58
+ :conflicts               2
+ :decisions               497
+ :del-clause              245
+ :eliminated-applications 10
+ :eq-adapter              192
+ :final-checks            3
+ :fixed-eqs               34
+ :gcd-tests               1
+ :interface-eqs           2
+ :max-generation          3
+ :max-memory              3.55
+ :memory                  1.60
+ :mk-bool-var             2837
+ :mk-clause               1340
+ :num-allocs              3212949
+ :offset-eqs              13
+ :pivots                  57
+ :propagations            246
+ :quant-instantiations    91
+ :rlimit-count            351464
+ :time                    0.06
+ :total-time              0.08)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.fw.smt2
+unsat
+(:add-rows                332
+ :added-eqs               239
+ :arith-conflicts         2
+ :assert-diseq            14
+ :assert-lower            103
+ :assert-upper            58
+ :binary-propagations     140
+ :bound-prop              36
+ :conflicts               34
+ :decisions               494
+ :del-clause              369
+ :eliminated-applications 21
+ :eq-adapter              184
+ :fixed-eqs               27
+ :max-generation          3
+ :max-memory              3.44
+ :memory                  1.58
+ :mk-bool-var             3405
+ :mk-clause               1400
+ :num-allocs              3074472
+ :offset-eqs              6
+ :pivots                  53
+ :propagations            192
+ :quant-instantiations    87
+ :rlimit-count            348698
+ :time                    0.06
+ :total-time              0.08)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.fw.smt2
+unknown
+(:add-rows                359
+ :added-eqs               268
+ :arith-conflicts         2
+ :assert-diseq            15
+ :assert-lower            111
+ :assert-upper            65
+ :binary-propagations     167
+ :bound-prop              58
+ :conflicts               2
+ :decisions               499
+ :del-clause              245
+ :eliminated-applications 9
+ :eq-adapter              192
+ :final-checks            3
+ :fixed-eqs               34
+ :gcd-tests               1
+ :interface-eqs           2
+ :max-generation          3
+ :max-memory              3.53
+ :memory                  1.60
+ :mk-bool-var             2838
+ :mk-clause               1343
+ :num-allocs              3211067
+ :offset-eqs              13
+ :pivots                  57
+ :propagations            245
+ :quant-instantiations    91
+ :rlimit-count            351516
+ :time                    0.06
+ :total-time              0.08)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.fw.smt2
+unknown
+(:add-rows                359
+ :added-eqs               268
+ :arith-conflicts         2
+ :assert-diseq            15
+ :assert-lower            111
+ :assert-upper            65
+ :binary-propagations     167
+ :bound-prop              58
+ :conflicts               2
+ :decisions               499
+ :del-clause              245
+ :eliminated-applications 9
+ :eq-adapter              192
+ :final-checks            3
+ :fixed-eqs               34
+ :gcd-tests               1
+ :interface-eqs           2
+ :max-generation          3
+ :max-memory              3.53
+ :memory                  1.60
+ :mk-bool-var             2838
+ :mk-clause               1343
+ :num-allocs              3213006
+ :offset-eqs              13
+ :pivots                  57
+ :propagations            245
+ :quant-instantiations    91
+ :rlimit-count            351572
+ :time                    0.06
+ :total-time              0.08)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.fw.smt2
+unknown
+(:add-rows                359
+ :added-eqs               268
+ :arith-conflicts         2
+ :assert-diseq            15
+ :assert-lower            111
+ :assert-upper            65
+ :binary-propagations     167
+ :bound-prop              58
+ :conflicts               2
+ :decisions               499
+ :del-clause              245
+ :eliminated-applications 9
+ :eq-adapter              192
+ :final-checks            3
+ :fixed-eqs               34
+ :gcd-tests               1
+ :interface-eqs           2
+ :max-generation          3
+ :max-memory              3.54
+ :memory                  1.62
+ :mk-bool-var             2838
+ :mk-clause               1343
+ :num-allocs              3213575
+ :offset-eqs              13
+ :pivots                  57
+ :propagations            245
+ :quant-instantiations    91
+ :rlimit-count            351612
+ :time                    0.06
+ :total-time              0.08)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.fw.smt2
+unknown
+(:add-rows                359
+ :added-eqs               268
+ :arith-conflicts         2
+ :assert-diseq            15
+ :assert-lower            111
+ :assert-upper            65
+ :binary-propagations     167
+ :bound-prop              58
+ :conflicts               2
+ :decisions               499
+ :del-clause              245
+ :eliminated-applications 9
+ :eq-adapter              192
+ :final-checks            3
+ :fixed-eqs               34
+ :gcd-tests               1
+ :interface-eqs           2
+ :max-generation          3
+ :max-memory              3.54
+ :memory                  1.62
+ :mk-bool-var             2838
+ :mk-clause               1343
+ :num-allocs              3215741
+ :offset-eqs              13
+ :pivots                  57
+ :propagations            245
+ :quant-instantiations    91
+ :rlimit-count            351672
+ :time                    0.07
+ :total-time              0.09)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.fw.smt2
+unknown
+(:add-rows                359
+ :added-eqs               268
+ :arith-conflicts         2
+ :assert-diseq            15
+ :assert-lower            111
+ :assert-upper            65
+ :binary-propagations     167
+ :bound-prop              58
+ :conflicts               2
+ :decisions               499
+ :del-clause              245
+ :eliminated-applications 9
+ :eq-adapter              192
+ :final-checks            3
+ :fixed-eqs               34
+ :gcd-tests               1
+ :interface-eqs           2
+ :max-generation          3
+ :max-memory              3.54
+ :memory                  1.62
+ :mk-bool-var             2838
+ :mk-clause               1343
+ :num-allocs              3215751
+ :offset-eqs              13
+ :pivots                  57
+ :propagations            245
+ :quant-instantiations    91
+ :rlimit-count            351712
+ :time                    0.07
+ :total-time              0.09)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.fw.smt2
+unknown
+(:add-rows                359
+ :added-eqs               268
+ :arith-conflicts         2
+ :assert-diseq            15
+ :assert-lower            111
+ :assert-upper            65
+ :binary-propagations     167
+ :bound-prop              58
+ :conflicts               2
+ :decisions               499
+ :del-clause              245
+ :eliminated-applications 9
+ :eq-adapter              192
+ :final-checks            3
+ :fixed-eqs               34
+ :gcd-tests               1
+ :interface-eqs           2
+ :max-generation          3
+ :max-memory              3.53
+ :memory                  1.60
+ :mk-bool-var             2838
+ :mk-clause               1343
+ :num-allocs              3218157
+ :offset-eqs              13
+ :pivots                  57
+ :propagations            245
+ :quant-instantiations    91
+ :rlimit-count            351764
+ :time                    0.07
+ :total-time              0.09)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.end.smt2
+(smt.restarting :propagations 15319 :decisions 1007 :conflicts 101 :restart 150 :agility 0.0257086)
+(smt.restarting :propagations 42796 :decisions 2379 :conflicts 252 :restart 225 :agility 0.0573746)
+(smt.restarting :propagations 109207 :decisions 4640 :conflicts 478 :restart 337 :agility 0.0824372)
+(smt.restarting :propagations 204618 :decisions 10758 :conflicts 816 :restart 505 :agility 0.0672644)
+(smt.restarting :propagations 481914 :decisions 18259 :conflicts 1322 :restart 757 :agility 0.069211)
+unsat
+(:add-rows                699139
+ :added-eqs               925267
+ :arith-conflicts         633
+ :assert-diseq            17340
+ :assert-lower            348325
+ :assert-upper            214293
+ :binary-propagations     157761
+ :bound-prop              54254
+ :conflicts               1549
+ :decisions               20265
+ :del-clause              1244831
+ :dyn-ack                 1
+ :eliminated-applications 8
+ :eq-adapter              113778
+ :final-checks            41
+ :fixed-eqs               223101
+ :gcd-tests               2517
+ :ineq-splits             1
+ :interface-eqs           39
+ :max-generation          85
+ :max-memory              78.06
+ :memory                  19.57
+ :minimized-lits          32731
+ :mk-bool-var             1078730
+ :mk-clause               1307651
+ :num-allocs              3948700445
+ :offset-eqs              158434
+ :pivots                  61181
+ :propagations            826526
+ :quant-instantiations    125066
+ :restarts                5
+ :rlimit-count            12367718
+ :time                    10.95
+ :total-time              10.97)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.boogie.smt2
+(error "failed to open file 'AVLTree.AVLTreeNode.insert.boogie.smt2'")
+
+C:\work\slicer\test\Chalice\AVLTree>boogie /trace /traceTimes /proverLog:AVLTree.@PROC@.boogie.smt2 AVLTree.bpl | mtee boogie.log
+'mtee' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\work\slicer\test\Chalice\AVLTree>boogie /trace /traceTimes /proverLog:AVLTree.@PROC@.boogie.smt2 AVLTree.bpl | C:\Users\uri\Downloads\mtee.exe boogie.log
+[TRACE] Using prover: C:\Program Files\Microsoft Research\Z3-4.4.2-x64-win\bin\z3.exe
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+>>> Becoming sentient   [0 s]
+Parsing AVLTree.bpl
+>>> Starting resolution   [0.921013 s]
+>>> Starting typechecking   [1.0731317 s]
+Coalescing blocks...
+Inlining...
+>>> Starting abstract interpretation   [2.5101973 s]
+
+Running abstract interpretation...
+  [0.1616078 s]
+>>> Starting implementation verification   [2.6871881 s]
+>>> Starting live variable analysis   [2.7212154 s]
+>>> Finished implementation verification   [3.0653289 s]
+
+Verifying AVLTree$monitorinvariant$checkDefinedness ...
+  [0.379 s, 1 proof obligation]  verified
+>>> Starting implementation verification   [3.0733362 s]
+>>> Starting live variable analysis   [3.0733362 s]
+>>> Finished implementation verification   [3.1233706 s]
+
+Verifying AVLTree.valid$checkDefinedness ...
+  [0.050 s, 31 proof obligations]  verified
+>>> Starting implementation verification   [3.124372 s]
+>>> Starting live variable analysis   [3.124372 s]
+>>> Finished implementation verification   [3.1593945 s]
+
+Verifying AVLTree.init$checkDefinedness ...
+  [0.035 s, 3 proof obligations]  verified
+>>> Starting implementation verification   [3.1593945 s]
+>>> Starting live variable analysis   [3.1593945 s]
+>>> Finished implementation verification   [3.2284443 s]
+
+Verifying AVLTree.init ...
+  [0.069 s, 24 proof obligations]  verified
+>>> Starting implementation verification   [3.2284443 s]
+>>> Starting live variable analysis   [3.2284443 s]
+>>> Finished implementation verification   [3.2729803 s]
+
+Verifying AVLTree.insert$checkDefinedness ...
+  [0.045 s, 24 proof obligations]  verified
+>>> Starting implementation verification   [3.2734797 s]
+>>> Starting live variable analysis   [3.2739798 s]
+>>> Finished implementation verification   [3.8483708 s]
+
+Verifying AVLTree.insert ...
+  [0.575 s, 60 proof obligations]  verified
+>>> Starting implementation verification   [3.8483708 s]
+>>> Starting live variable analysis   [3.8488697 s]
+>>> Finished implementation verification   [3.910498 s]
+
+Verifying AVLTree.remove$checkDefinedness ...
+  [0.062 s, 28 proof obligations]  verified
+>>> Starting implementation verification   [3.910498 s]
+>>> Starting live variable analysis   [3.9114983 s]
+>>> Finished implementation verification   [4.5273649 s]
+
+Verifying AVLTree.remove ...
+  [0.617 s, 48 proof obligations]  verified
+>>> Starting implementation verification   [4.5273649 s]
+>>> Starting live variable analysis   [4.5273649 s]
+>>> Finished implementation verification   [4.5834021 s]
+
+Verifying AVLTree.has$checkDefinedness ...
+  [0.056 s, 4 proof obligations]  verified
+>>> Starting implementation verification   [4.5834021 s]
+>>> Starting live variable analysis   [4.5839026 s]
+>>> Finished implementation verification   [4.7905549 s]
+
+Verifying AVLTree.has ...
+  [0.207 s, 34 proof obligations]  verified
+>>> Starting implementation verification   [4.7905549 s]
+>>> Starting live variable analysis   [4.7905549 s]
+>>> Finished implementation verification   [4.8412856 s]
+
+Verifying AVLTreeNode$monitorinvariant$checkDefinedness ...
+  [0.051 s, 1 proof obligation]  verified
+>>> Starting implementation verification   [4.8412856 s]
+>>> Starting live variable analysis   [4.8412856 s]
+>>> Finished implementation verification   [5.0619464 s]
+
+Verifying AVLTreeNode.valid$checkDefinedness ...
+  [0.221 s, 160 proof obligations]  verified
+>>> Starting implementation verification   [5.0619464 s]
+>>> Starting live variable analysis   [5.0619464 s]
+>>> Finished implementation verification   [5.1319976 s]
+
+Verifying AVLTreeNode.init$checkDefinedness ...
+  [0.070 s, 9 proof obligations]  verified
+>>> Starting implementation verification   [5.1319976 s]
+>>> Starting live variable analysis   [5.1319976 s]
+>>> Finished implementation verification   [5.2660917 s]
+
+Verifying AVLTreeNode.init ...
+  [0.134 s, 53 proof obligations]  verified
+>>> Starting implementation verification   [5.2660917 s]
+>>> Starting live variable analysis   [5.2670908 s]
+>>> Finished implementation verification   [5.3431444 s]
+
+Verifying AVLTreeNode.insert$checkDefinedness ...
+  [0.077 s, 50 proof obligations]  verified
+>>> Starting implementation verification   [5.3431444 s]
+>>> Starting live variable analysis   [5.3451457 s]
+>>> Finished implementation verification   [41.4790654 s]
+
+Verifying AVLTreeNode.insert ...
+  [36.136 s, 275 proof obligations]  verified
+>>> Starting implementation verification   [41.4790654 s]
+>>> Starting live variable analysis   [41.4795647 s]
+>>> Finished implementation verification   [41.7527933 s]
+
+Verifying AVLTreeNode.remove$checkDefinedness ...
+  [0.274 s, 62 proof obligations]  verified
+>>> Starting implementation verification   [41.7527933 s]
+>>> Starting live variable analysis   [41.755793 s]
+>>> Finished implementation verification   [96.7777969 s]
+
+Verifying AVLTreeNode.remove ...
+  [55.025 s, 391 proof obligations]  verified
+>>> Starting implementation verification   [96.7777969 s]
+>>> Starting live variable analysis   [96.7782978 s]
+>>> Finished implementation verification   [97.1730683 s]
+
+Verifying AVLTreeNode.pruneMax$checkDefinedness ...
+  [0.395 s, 47 proof obligations]  verified
+>>> Starting implementation verification   [97.1730683 s]
+>>> Starting live variable analysis   [97.1740634 s]
+>>> Finished implementation verification   [143.3914104 s]
+
+Verifying AVLTreeNode.pruneMax ...
+  [46.218 s, 182 proof obligations]  verified
+>>> Starting implementation verification   [143.3914104 s]
+>>> Starting live variable analysis   [143.3914104 s]
+>>> Finished implementation verification   [143.9209088 s]
+
+Verifying AVLTreeNode.pruneMin$checkDefinedness ...
+  [0.529 s, 47 proof obligations]  verified
+>>> Starting implementation verification   [143.9209088 s]
+>>> Starting live variable analysis   [143.9219099 s]
+>>> Finished implementation verification   [184.0272508 s]
+
+Verifying AVLTreeNode.pruneMin ...
+  [40.106 s, 209 proof obligations]  verified
+>>> Starting implementation verification   [184.0272508 s]
+>>> Starting live variable analysis   [184.0272508 s]
+>>> Finished implementation verification   [184.2979326 s]
+
+Verifying AVLTreeNode.has$checkDefinedness ...
+  [0.271 s, 4 proof obligations]  verified
+>>> Starting implementation verification   [184.2979326 s]
+>>> Starting live variable analysis   [184.2989317 s]
+>>> Finished implementation verification   [189.3173624 s]
+
+Verifying AVLTreeNode.has ...
+  [5.019 s, 78 proof obligations]  verified
+>>> Starting implementation verification   [189.3173624 s]
+>>> Starting live variable analysis   [189.3188636 s]
+>>> Finished implementation verification   [189.7341388 s]
+
+Verifying AVLTreeNode.getBalanceFactor$checkDefinedness ...
+  [0.417 s, 14 proof obligations]  verified
+>>> Starting implementation verification   [189.7346397 s]
+>>> Starting live variable analysis   [189.73564 s]
+>>> Finished implementation verification   [190.885402 s]
+
+Verifying AVLTreeNode.getBalanceFactor ...
+  [1.151 s, 65 proof obligations]  verified
+>>> Starting implementation verification   [190.885402 s]
+>>> Starting live variable analysis   [190.885402 s]
+>>> Finished implementation verification   [191.0995449 s]
+
+Verifying AVLTreeNode.getBalanceFactorI$checkDefinedness ...
+  [0.214 s, 60 proof obligations]  verified
+>>> Starting implementation verification   [191.0995449 s]
+>>> Starting live variable analysis   [191.1020456 s]
+>>> Finished implementation verification   [193.0308741 s]
+
+Verifying AVLTreeNode.getBalanceFactorI ...
+  [1.931 s, 55 proof obligations]  verified
+>>> Starting implementation verification   [193.0308741 s]
+>>> Starting live variable analysis   [193.0313758 s]
+>>> Finished implementation verification   [193.3280993 s]
+
+Verifying AVLTreeNode.close$checkDefinedness ...
+  [0.297 s, 147 proof obligations]  verified
+>>> Starting implementation verification   [193.3285987 s]
+>>> Starting live variable analysis   [193.3306008 s]
+>>> Finished implementation verification   [201.7272683 s]
+
+Verifying AVLTreeNode.close ...
+  [8.399 s, 150 proof obligations]  verified
+>>> Starting implementation verification   [201.7272683 s]
+>>> Starting live variable analysis   [201.7272683 s]
+>>> Finished implementation verification   [202.0684951 s]
+
+Verifying AVLTreeNode.rebalanceLeft$checkDefinedness ...
+  [0.341 s, 95 proof obligations]  verified
+>>> Starting implementation verification   [202.0684951 s]
+>>> Starting live variable analysis   [202.0775015 s]
+>>> Finished implementation verification   [207.1369516 s]
+
+Verifying AVLTreeNode.rebalanceLeft ...
+  [5.068 s, 95 proof obligations]  verified
+>>> Starting implementation verification   [207.1369516 s]
+>>> Starting live variable analysis   [207.1374517 s]
+>>> Finished implementation verification   [208.1616627 s]
+
+Verifying AVLTreeNode.rebalanceRL$checkDefinedness ...
+  [1.025 s, 102 proof obligations]  verified
+>>> Starting implementation verification   [208.1616627 s]
+>>> Starting live variable analysis   [208.1671681 s]
+>>> Finished implementation verification   [533.0793501 s]
+
+Verifying AVLTreeNode.rebalanceRL ...
+  [324.918 s, 190 proof obligations]  verified
+>>> Starting implementation verification   [533.0793501 s]
+>>> Starting live variable analysis   [533.079851 s]
+>>> Finished implementation verification   [533.8924166 s]
+
+Verifying AVLTreeNode.rebalanceRR$checkDefinedness ...
+  [0.813 s, 99 proof obligations]  verified
+>>> Starting implementation verification   [533.8924166 s]
+>>> Starting live variable analysis   [533.8934168 s]
+>>> Finished implementation verification   [548.0831332 s]
+
+Verifying AVLTreeNode.rebalanceRR ...
+  [14.191 s, 90 proof obligations]  verified
+>>> Starting implementation verification   [548.0836338 s]
+>>> Starting live variable analysis   [548.0836338 s]
+>>> Finished implementation verification   [548.5589807 s]
+
+Verifying AVLTreeNode.rebalanceRight$checkDefinedness ...
+  [0.475 s, 95 proof obligations]  verified
+>>> Starting implementation verification   [548.5589807 s]
+>>> Starting live variable analysis   [548.5789928 s]
+>>> Finished implementation verification   [561.2063266 s]
+
+Verifying AVLTreeNode.rebalanceRight ...
+  [12.647 s, 95 proof obligations]  verified
+>>> Starting implementation verification   [561.2063266 s]
+>>> Starting live variable analysis   [561.2068271 s]
+>>> Finished implementation verification   [562.4331821 s]
+
+Verifying AVLTreeNode.rebalanceLR$checkDefinedness ...
+  [1.227 s, 102 proof obligations]  verified
+>>> Starting implementation verification   [562.4331821 s]
+>>> Starting live variable analysis   [562.4381846 s]
+>>> Finished implementation verification   [928.5674941 s]
+
+Verifying AVLTreeNode.rebalanceLR ...
+  [366.134 s, 190 proof obligations]  verified
+>>> Starting implementation verification   [928.5679966 s]
+>>> Starting live variable analysis   [928.5679966 s]
+>>> Finished implementation verification   [929.370998 s]
+
+Verifying AVLTreeNode.rebalanceLL$checkDefinedness ...
+  [0.803 s, 99 proof obligations]  verified
+>>> Starting implementation verification   [929.370998 s]
+>>> Starting live variable analysis   [929.3714985 s]
+>>> Finished implementation verification   [946.2899892 s]
+
+Verifying AVLTreeNode.rebalanceLL ...
+  [16.919 s, 90 proof obligations]  verified
+
+Boogie program verifier finished with 42 verified, 0 errors
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.end.smt2
+(smt.restarting :propagations 15319 :decisions 1007 :conflicts 101 :restart 150 :agility 0.0257086)
+(smt.restarting :propagations 42796 :decisions 2379 :conflicts 252 :restart 225 :agility 0.0573746)
+(smt.restarting :propagations 109207 :decisions 4640 :conflicts 478 :restart 337 :agility 0.0824372)
+(smt.restarting :propagations 204618 :decisions 10758 :conflicts 816 :restart 505 :agility 0.0672644)
+(smt.restarting :propagations 481914 :decisions 18259 :conflicts 1322 :restart 757 :agility 0.069211)
+unsat
+(:add-rows                699139
+ :added-eqs               925267
+ :arith-conflicts         633
+ :assert-diseq            17340
+ :assert-lower            348325
+ :assert-upper            214293
+ :binary-propagations     157761
+ :bound-prop              54254
+ :conflicts               1549
+ :decisions               20265
+ :del-clause              1244831
+ :dyn-ack                 1
+ :eliminated-applications 8
+ :eq-adapter              113778
+ :final-checks            41
+ :fixed-eqs               223101
+ :gcd-tests               2517
+ :ineq-splits             1
+ :interface-eqs           39
+ :max-generation          85
+ :max-memory              78.06
+ :memory                  19.57
+ :minimized-lits          32731
+ :mk-bool-var             1078730
+ :mk-clause               1307651
+ :num-allocs              3948700445
+ :offset-eqs              158434
+ :pivots                  61181
+ :propagations            826526
+ :quant-instantiations    125066
+ :restarts                5
+ :rlimit-count            12367718
+ :time                    10.87
+ :total-time              10.89)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.end.full.smt2
+unknown
+(:add-rows                422
+ :added-eqs               482
+ :assert-diseq            12
+ :assert-lower            265
+ :assert-upper            130
+ :binary-propagations     425
+ :bound-prop              139
+ :decisions               471
+ :del-clause              383
+ :eliminated-applications 10
+ :eq-adapter              316
+ :final-checks            1
+ :fixed-eqs               67
+ :max-generation          3
+ :max-memory              4.12
+ :memory                  1.82
+ :mk-bool-var             3953
+ :mk-clause               1772
+ :num-allocs              4451177
+ :pivots                  73
+ :propagations            471
+ :quant-instantiations    108
+ :rlimit-count            491985
+ :time                    0.08
+ :total-time              0.10)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.end.fw.smt2
+unknown
+(:add-rows                298
+ :added-eqs               185
+ :assert-diseq            11
+ :assert-lower            84
+ :assert-upper            35
+ :binary-propagations     172
+ :bound-prop              24
+ :decisions               470
+ :del-clause              102
+ :eliminated-applications 9
+ :eq-adapter              207
+ :final-checks            1
+ :fixed-eqs               12
+ :max-generation          3
+ :max-memory              3.39
+ :memory                  1.56
+ :mk-bool-var             2634
+ :mk-clause               1054
+ :num-allocs              3140544
+ :offset-eqs              1
+ :pivots                  19
+ :propagations            206
+ :quant-instantiations    72
+ :rlimit-count            319768
+ :time                    0.06
+ :total-time              0.08)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.end.mrs.smt2
+unknown
+(:add-rows                386
+ :added-eqs               493
+ :assert-diseq            11
+ :assert-lower            264
+ :assert-upper            139
+ :binary-propagations     411
+ :bound-prop              130
+ :decisions               470
+ :del-clause              376
+ :eliminated-applications 9
+ :eq-adapter              299
+ :final-checks            1
+ :fixed-eqs               70
+ :max-generation          3
+ :max-memory              3.81
+ :memory                  1.72
+ :mk-bool-var             3337
+ :mk-clause               1326
+ :num-allocs              3592997
+ :offset-eqs              2
+ :pivots                  77
+ :propagations            451
+ :quant-instantiations    116
+ :rlimit-count            328771
+ :time                    0.07
+ :total-time              0.08)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.end.mrs.smt2
+unsat
+(:max-memory   1.06
+ :memory       1.06
+ :num-allocs   19769
+ :rlimit-count 17579
+ :time         0.01
+ :total-time   0.02)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.end.fw.smt2
+unsat
+(:max-memory   1.05
+ :memory       1.05
+ :num-allocs   20288
+ :rlimit-count 17341
+ :time         0.01
+ :total-time   0.02)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.start.smt2
+(smt.restarting :propagations 14429 :decisions 1263 :conflicts 101 :restart 150 :agility 0.030831)
+(smt.restarting :propagations 47495 :decisions 3711 :conflicts 252 :restart 225 :agility 0.0318357)
+(smt.restarting :propagations 119699 :decisions 11579 :conflicts 478 :restart 337 :agility 0.0800193)
+(smt.restarting :propagations 278981 :decisions 15140 :conflicts 816 :restart 505 :agility 0.0443069)
+(smt.restarting :propagations 520003 :decisions 23586 :conflicts 1322 :restart 757 :agility 0.0603228)
+unsat
+(:add-rows                    781230
+ :added-eqs                   1303229
+ :arith-conflicts             811
+ :assert-diseq                18572
+ :assert-lower                464867
+ :assert-upper                275929
+ :binary-propagations         197230
+ :bound-prop                  63680
+ :conflicts                   1838
+ :decisions                   30594
+ :del-clause                  1741522
+ :dyn-ack                     4
+ :eq-adapter                  159564
+ :final-checks                78
+ :fixed-eqs                   300750
+ :gcd-tests                   1672
+ :ineq-splits                 1
+ :interface-eqs               76
+ :max-generation              88
+ :max-memory                  84.54
+ :max-missed-qa-cost          108.00
+ :memory                      21.59
+ :min-missed-qa-cost          107.00
+ :minimized-lits              56501
+ :missed-quant-instantiations 2
+ :mk-bool-var                 1428631
+ :mk-clause                   1812910
+ :num-allocs                  5865141107.00
+ :offset-eqs                  214875
+ :pivots                      72263
+ :propagations                1151361
+ :quant-instantiations        182343
+ :restarts                    5
+ :rlimit-count                15183839
+ :time                        14.94
+ :total-time                  14.96)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.smt2
+(smt.restarting :propagations 14902 :decisions 1491 :conflicts 101 :restart 150 :agility 0.0312598)
+(smt.restarting :propagations 46644 :decisions 2830 :conflicts 252 :restart 225 :agility 0.0339176)
+(smt.restarting :propagations 105028 :decisions 4146 :conflicts 478 :restart 337 :agility 0.0732763)
+(smt.restarting :propagations 219951 :decisions 6346 :conflicts 816 :restart 505 :agility 0.07616)
+(smt.restarting :propagations 511131 :decisions 10488 :conflicts 1325 :restart 757 :agility 0.0459055)
+unsat
+(:add-rows                    760009
+ :added-eqs                   1215853
+ :arith-conflicts             708
+ :assert-diseq                19785
+ :assert-lower                444335
+ :assert-upper                267435
+ :binary-propagations         191219
+ :bound-prop                  68572
+ :conflicts                   1762
+ :decisions                   14872
+ :del-clause                  1530502
+ :dyn-ack                     1
+ :eliminated-applications     7
+ :eq-adapter                  156848
+ :final-checks                73
+ :fixed-eqs                   301610
+ :gcd-tests                   1369
+ :ineq-splits                 1
+ :interface-eqs               71
+ :max-generation              86
+ :max-memory                  85.57
+ :max-missed-qa-cost          108.00
+ :memory                      21.27
+ :min-missed-qa-cost          107.00
+ :minimized-lits              48792
+ :missed-quant-instantiations 2
+ :mk-bool-var                 1317151
+ :mk-clause                   1610503
+ :num-allocs                  5183102497.00
+ :offset-eqs                  203796
+ :pivots                      77827
+ :propagations                1075345
+ :quant-instantiations        152974
+ :restarts                    5
+ :rlimit-count                13755669
+ :time                        13.01
+ :total-time                  13.04)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.fw.smt2
+unsat
+(:max-memory   1.04
+ :memory       1.04
+ :num-allocs   20340
+ :rlimit-count 18050
+ :time         0.01
+ :total-time   0.02)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.full.smt2
+unsat
+(:max-memory   1.05
+ :memory       1.05
+ :num-allocs   20293
+ :rlimit-count 18324
+ :time         0.01
+ :total-time   0.02)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.mrs.smt2
+unsat
+(:max-memory   1.04
+ :memory       1.04
+ :num-allocs   20337
+ :rlimit-count 18080
+ :time         0.01
+ :total-time   0.02)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.mrs.smt2
+unsat
+(:max-memory   1.08
+ :memory       1.08
+ :num-allocs   24519
+ :rlimit-count 14428
+ :time         0.01
+ :total-time   0.02)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.fw.smt2
+unsat
+(:max-memory   1.08
+ :memory       1.08
+ :num-allocs   24519
+ :rlimit-count 14428
+ :time         0.01
+ :total-time   0.02)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.fw.smt2
+(smt.restarting :propagations 24299 :decisions 1085 :conflicts 101 :restart 150 :agility 0.0377786)
+(smt.restarting :propagations 70249 :decisions 6490 :conflicts 252 :restart 225 :agility 0.0233564)
+(smt.restarting :propagations 144912 :decisions 12772 :conflicts 478 :restart 337 :agility 0.0524719)
+(smt.restarting :propagations 268173 :decisions 21026 :conflicts 816 :restart 505 :agility 0.0662891)
+(smt.restarting :propagations 495347 :decisions 42196 :conflicts 1322 :restart 757 :agility 0.0638537)
+unsat
+(:add-rows                    1007056
+ :added-eqs                   1484072
+ :arith-conflicts             760
+ :assert-diseq                22418
+ :assert-lower                518714
+ :assert-upper                332328
+ :binary-propagations         308117
+ :bound-prop                  76775
+ :conflicts                   1884
+ :decisions                   53784
+ :del-clause                  1725619
+ :dyn-ack                     1
+ :eliminated-applications     7
+ :eq-adapter                  180390
+ :final-checks                163
+ :fixed-eqs                   364732
+ :gcd-tests                   1136
+ :ineq-splits                 1
+ :interface-eqs               162
+ :max-generation              86
+ :max-memory                  93.23
+ :max-missed-qa-cost          108.00
+ :memory                      22.11
+ :min-missed-qa-cost          107.00
+ :minimized-lits              50157
+ :missed-quant-instantiations 2
+ :mk-bool-var                 1501694
+ :mk-clause                   1806404
+ :num-allocs                  6613983197.00
+ :offset-eqs                  257632
+ :pivots                      83161
+ :propagations                1367069
+ :quant-instantiations        174232
+ :restarts                    5
+ :rlimit-count                10635304
+ :time                        14.93
+ :total-time                  14.96)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.full.smt2
+(smt.restarting :propagations 18194 :decisions 1349 :conflicts 101 :restart 150 :agility 0.0434563)
+(smt.restarting :propagations 50585 :decisions 6338 :conflicts 252 :restart 225 :agility 0.043276)
+(smt.restarting :propagations 134908 :decisions 12063 :conflicts 478 :restart 337 :agility 0.106124)
+(smt.restarting :propagations 244168 :decisions 17814 :conflicts 834 :restart 505 :agility 0.0547558)
+(smt.restarting :propagations 551774 :decisions 35948 :conflicts 1340 :restart 757 :agility 0.0114847)
+unsat
+(:add-rows                    902212
+ :added-eqs                   1505549
+ :arith-conflicts             906
+ :assert-diseq                19492
+ :assert-lower                508464
+ :assert-upper                328530
+ :binary-propagations         309082
+ :bound-prop                  76569
+ :conflicts                   1922
+ :decisions                   45406
+ :del-clause                  1707278
+ :dyn-ack                     6
+ :eliminated-applications     7
+ :eq-adapter                  176655
+ :final-checks                144
+ :fixed-eqs                   379343
+ :gcd-tests                   37
+ :interface-eqs               144
+ :max-generation              85
+ :max-memory                  93.10
+ :max-missed-qa-cost          107.00
+ :memory                      23.67
+ :min-missed-qa-cost          106.00
+ :minimized-lits              57293
+ :missed-quant-instantiations 2
+ :mk-bool-var                 1495794
+ :mk-clause                   1790134
+ :num-allocs                  6639599579.00
+ :offset-eqs                  266843
+ :pivots                      84238
+ :propagations                1367551
+ :quant-instantiations        178254
+ :restarts                    5
+ :rlimit-count                10628587
+ :time                        15.01
+ :total-time                  15.04)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.build.mrs.smt2
+(smt.restarting :propagations 24303 :decisions 1085 :conflicts 101 :restart 150 :agility 0.0377569)
+(smt.restarting :propagations 71097 :decisions 6233 :conflicts 252 :restart 225 :agility 0.0280444)
+(smt.restarting :propagations 154015 :decisions 13137 :conflicts 478 :restart 337 :agility 0.0436292)
+(smt.restarting :propagations 281535 :decisions 22639 :conflicts 816 :restart 505 :agility 0.0481934)
+(smt.restarting :propagations 527766 :decisions 39800 :conflicts 1322 :restart 757 :agility 0.0576498)
+unsat
+(:add-rows                    1128091
+ :added-eqs                   1427419
+ :arith-conflicts             767
+ :assert-diseq                20102
+ :assert-lower                491002
+ :assert-upper                309881
+ :binary-propagations         286475
+ :bound-prop                  79766
+ :conflicts                   1884
+ :decisions                   50270
+ :del-clause                  1683844
+ :dyn-ack                     4
+ :eliminated-applications     7
+ :eq-adapter                  178518
+ :final-checks                140
+ :fixed-eqs                   353377
+ :gcd-tests                   1648
+ :ineq-splits                 2
+ :interface-eqs               138
+ :max-generation              86
+ :max-memory                  98.32
+ :max-missed-qa-cost          108.00
+ :memory                      22.70
+ :min-missed-qa-cost          107.00
+ :minimized-lits              51078
+ :missed-quant-instantiations 2
+ :mk-bool-var                 1486800
+ :mk-clause                   1770150
+ :num-allocs                  6989412872.00
+ :offset-eqs                  256349
+ :pivots                      85531
+ :propagations                1303444
+ :quant-instantiations        168509
+ :restarts                    5
+ :rlimit-count                10309385
+ :time                        15.22
+ :total-time                  15.25)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.end.smt2
+(smt.restarting :propagations 15319 :decisions 1007 :conflicts 101 :restart 150 :agility 0.0257086)
+(smt.restarting :propagations 42796 :decisions 2379 :conflicts 252 :restart 225 :agility 0.0573746)
+(smt.restarting :propagations 109207 :decisions 4640 :conflicts 478 :restart 337 :agility 0.0824372)
+(smt.restarting :propagations 204618 :decisions 10758 :conflicts 816 :restart 505 :agility 0.0672644)
+(smt.restarting :propagations 481914 :decisions 18259 :conflicts 1322 :restart 757 :agility 0.069211)
+unsat
+(:add-rows                699139
+ :added-eqs               925267
+ :arith-conflicts         633
+ :assert-diseq            17340
+ :assert-lower            348325
+ :assert-upper            214293
+ :binary-propagations     157761
+ :bound-prop              54254
+ :conflicts               1549
+ :decisions               20265
+ :del-clause              1244831
+ :dyn-ack                 1
+ :eliminated-applications 8
+ :eq-adapter              113778
+ :final-checks            41
+ :fixed-eqs               223101
+ :gcd-tests               2517
+ :ineq-splits             1
+ :interface-eqs           39
+ :max-generation          85
+ :max-memory              78.06
+ :memory                  19.57
+ :minimized-lits          32731
+ :mk-bool-var             1078730
+ :mk-clause               1307651
+ :num-allocs              3948700445
+ :offset-eqs              158434
+ :pivots                  61181
+ :propagations            826526
+ :quant-instantiations    125066
+ :restarts                5
+ :rlimit-count            12367718
+ :time                    11.10
+ :total-time              11.13)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.end.fw.smt2
+(smt.restarting :propagations 36236 :decisions 2026 :conflicts 101 :restart 150 :agility 0.0353365)
+(smt.restarting :propagations 96353 :decisions 6042 :conflicts 252 :restart 225 :agility 0.0515254)
+(smt.restarting :propagations 125951 :decisions 14605 :conflicts 478 :restart 337 :agility 0.0580617)
+(smt.restarting :propagations 394027 :decisions 27665 :conflicts 816 :restart 505 :agility 0.0549247)
+(smt.restarting :propagations 869621 :decisions 44730 :conflicts 1322 :restart 757 :agility 0.0403496)
+unsat
+(:add-rows                1010391
+ :added-eqs               1883900
+ :arith-conflicts         805
+ :assert-diseq            29813
+ :assert-lower            641444
+ :assert-upper            423795
+ :binary-propagations     426236
+ :bound-prop              86670
+ :conflicts               1997
+ :decisions               65095
+ :del-clause              2016126
+ :dyn-ack                 3
+ :eliminated-applications 7
+ :eq-adapter              193936
+ :final-checks            47
+ :fixed-eqs               488953
+ :gcd-tests               23
+ :ineq-splits             1
+ :interface-eqs           45
+ :max-generation          85
+ :max-memory              102.14
+ :memory                  24.09
+ :minimized-lits          53992
+ :mk-bool-var             1704771
+ :mk-clause               2107879
+ :num-allocs              8589541344.00
+ :offset-eqs              339242
+ :pivots                  84429
+ :propagations            1748849
+ :quant-instantiations    199672
+ :restarts                5
+ :rlimit-count            12508364
+ :time                    19.16
+ :total-time              19.20)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.end.full.smt2
+(smt.restarting :propagations 58195 :decisions 2969 :conflicts 101 :restart 150 :agility 0.0233028)
+(smt.restarting :propagations 125881 :decisions 6558 :conflicts 252 :restart 225 :agility 0.0540154)
+(smt.restarting :propagations 258181 :decisions 15230 :conflicts 478 :restart 337 :agility 0.00682407)
+(smt.restarting :propagations 531601 :decisions 24527 :conflicts 817 :restart 505 :agility 0.0447844)
+unsat
+(:add-rows                493309
+ :added-eqs               1239639
+ :arith-conflicts         425
+ :assert-diseq            37888
+ :assert-lower            467495
+ :assert-upper            323921
+ :binary-propagations     665440
+ :bound-prop              65879
+ :conflicts               933
+ :decisions               26406
+ :del-clause              1084464
+ :dyn-ack                 2
+ :eliminated-applications 7
+ :eq-adapter              127696
+ :final-checks            57
+ :fixed-eqs               263716
+ :interface-eqs           57
+ :max-generation          83
+ :max-memory              93.72
+ :memory                  22.18
+ :minimized-lits          8709
+ :mk-bool-var             1188674
+ :mk-clause               1164831
+ :num-allocs              5371386277.00
+ :offset-eqs              113936
+ :pivots                  49296
+ :propagations            1409776
+ :quant-instantiations    94532
+ :restarts                4
+ :rlimit-count            12983548
+ :time                    13.40
+ :total-time              13.56)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.end.mrs.smt2
+(smt.restarting :propagations 43401 :decisions 1886 :conflicts 101 :restart 150 :agility 0.0406103)
+(smt.restarting :propagations 100533 :decisions 6548 :conflicts 252 :restart 225 :agility 0.0465502)
+(smt.restarting :propagations 228691 :decisions 13883 :conflicts 478 :restart 337 :agility 0.0214891)
+(smt.restarting :propagations 524585 :decisions 23378 :conflicts 816 :restart 505 :agility 0.0634291)
+unsat
+(:add-rows                563374
+ :added-eqs               1156853
+ :arith-conflicts         406
+ :assert-diseq            17728
+ :assert-lower            436190
+ :assert-upper            287025
+ :binary-propagations     360396
+ :bound-prop              49803
+ :conflicts               1064
+ :decisions               28049
+ :del-clause              1244407
+ :dyn-ack                 1
+ :eliminated-applications 7
+ :eq-adapter              142727
+ :final-checks            49
+ :fixed-eqs               264672
+ :gcd-tests               113
+ :interface-eqs           49
+ :max-generation          86
+ :max-memory              78.51
+ :memory                  20.16
+ :minimized-lits          9588
+ :mk-bool-var             1257257
+ :mk-clause               1301026
+ :num-allocs              4892067970.00
+ :offset-eqs              136327
+ :pivots                  59665
+ :propagations            1127186
+ :quant-instantiations    108139
+ :restarts                4
+ :rlimit-count            9642395
+ :time                    13.27
+ :total-time              13.32)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.end.mrs.smt2
+(smt.restarting :propagations 44740 :decisions 7918 :conflicts 101 :restart 150 :agility 0.0318967)
+(smt.restarting :propagations 104456 :decisions 22158 :conflicts 252 :restart 225 :agility 0.024315)
+(smt.restarting :propagations 236141 :decisions 44237 :conflicts 478 :restart 337 :agility 0.0170668)
+(smt.restarting :propagations 535035 :decisions 71474 :conflicts 816 :restart 505 :agility 0.0521258)
+unsat
+(:add-rows                561407
+ :added-eqs               1137600
+ :arith-conflicts         399
+ :assert-diseq            17622
+ :assert-lower            429432
+ :assert-upper            281955
+ :binary-propagations     346633
+ :bound-prop              49761
+ :conflicts               1060
+ :decisions               87118
+ :del-clause              1230850
+ :dyn-ack                 1
+ :eliminated-applications 7
+ :eq-adapter              141300
+ :final-checks            49
+ :fixed-eqs               260402
+ :gcd-tests               112
+ :interface-eqs           49
+ :max-generation          86
+ :max-memory              78.44
+ :memory                  20.12
+ :minimized-lits          9591
+ :mk-bool-var             1243625
+ :mk-clause               1287380
+ :num-allocs              4797682328.00
+ :offset-eqs              133892
+ :pivots                  59532
+ :propagations            1114441
+ :quant-instantiations    106842
+ :restarts                4
+ :rlimit-count            9883818
+ :time                    13.01
+ :total-time              13.06)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.end.smt2
+(smt.restarting :propagations 15319 :decisions 1007 :conflicts 101 :restart 150 :agility 0.0257086)
+(smt.restarting :propagations 42796 :decisions 2379 :conflicts 252 :restart 225 :agility 0.0573746)
+(smt.restarting :propagations 109207 :decisions 4640 :conflicts 478 :restart 337 :agility 0.0824372)
+(smt.restarting :propagations 204618 :decisions 10758 :conflicts 816 :restart 505 :agility 0.0672644)
+(smt.restarting :propagations 481914 :decisions 18259 :conflicts 1322 :restart 757 :agility 0.069211)
+unsat
+(:add-rows                699139
+ :added-eqs               925269
+ :arith-conflicts         633
+ :assert-diseq            17340
+ :assert-lower            348325
+ :assert-upper            214293
+ :binary-propagations     157761
+ :bound-prop              54254
+ :conflicts               1549
+ :decisions               20265
+ :del-clause              1244831
+ :dyn-ack                 1
+ :eliminated-applications 8
+ :eq-adapter              113778
+ :final-checks            41
+ :fixed-eqs               223102
+ :gcd-tests               2517
+ :ineq-splits             1
+ :interface-eqs           39
+ :max-generation          85
+ :max-memory              78.07
+ :memory                  19.58
+ :minimized-lits          32731
+ :mk-bool-var             1078730
+ :mk-clause               1307651
+ :num-allocs              3907063222
+ :offset-eqs              158435
+ :pivots                  61181
+ :propagations            826526
+ :quant-instantiations    125066
+ :restarts                5
+ :rlimit-count            12370388
+ :time                    10.77
+ :total-time              10.80)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.end.mrs.smt2
+(smt.restarting :propagations 44740 :decisions 7918 :conflicts 101 :restart 150 :agility 0.0318967)
+(smt.restarting :propagations 104456 :decisions 22158 :conflicts 252 :restart 225 :agility 0.024315)
+(smt.restarting :propagations 236141 :decisions 44237 :conflicts 478 :restart 337 :agility 0.0170668)
+(smt.restarting :propagations 535035 :decisions 71474 :conflicts 816 :restart 505 :agility 0.0521258)
+unsat
+(:add-rows                561407
+ :added-eqs               1137600
+ :arith-conflicts         399
+ :assert-diseq            17622
+ :assert-lower            429432
+ :assert-upper            281955
+ :binary-propagations     346633
+ :bound-prop              49761
+ :conflicts               1060
+ :decisions               87118
+ :del-clause              1230850
+ :dyn-ack                 1
+ :eliminated-applications 7
+ :eq-adapter              141300
+ :final-checks            49
+ :fixed-eqs               260402
+ :gcd-tests               112
+ :interface-eqs           49
+ :max-generation          86
+ :max-memory              78.44
+ :memory                  20.12
+ :minimized-lits          9591
+ :mk-bool-var             1243625
+ :mk-clause               1287380
+ :num-allocs              4797682328.00
+ :offset-eqs              133892
+ :pivots                  59532
+ :propagations            1114441
+ :quant-instantiations    106842
+ :restarts                4
+ :rlimit-count            9883818
+ :time                    12.19
+ :total-time              12.24)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.end.full.smt2
+(smt.restarting :propagations 59226 :decisions 8318 :conflicts 101 :restart 150 :agility 0.0179403)
+(smt.restarting :propagations 127739 :decisions 17481 :conflicts 252 :restart 225 :agility 0.0446735)
+(smt.restarting :propagations 276923 :decisions 44119 :conflicts 478 :restart 337 :agility 0.00419435)
+(smt.restarting :propagations 625113 :decisions 66942 :conflicts 816 :restart 505 :agility 0.0743491)
+unsat
+(:add-rows                501351
+ :added-eqs               1321722
+ :arith-conflicts         435
+ :assert-diseq            38580
+ :assert-lower            497567
+ :assert-upper            341102
+ :binary-propagations     684306
+ :bound-prop              68679
+ :conflicts               912
+ :decisions               77225
+ :del-clause              1132239
+ :dyn-ack                 2
+ :eliminated-applications 7
+ :eq-adapter              132682
+ :final-checks            84
+ :fixed-eqs               282864
+ :gcd-tests               1
+ :interface-eqs           84
+ :max-generation          83
+ :max-memory              94.18
+ :memory                  22.31
+ :minimized-lits          8715
+ :mk-bool-var             1228515
+ :mk-clause               1213858
+ :num-allocs              5644998767.00
+ :offset-eqs              133133
+ :pivots                  50842
+ :propagations            1491415
+ :quant-instantiations    100306
+ :restarts                4
+ :rlimit-count            12899134
+ :time                    14.18
+ :total-time              14.30)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.insert.pruneMax.start.smt2
+(error "failed to open file 'AVLTree.AVLTreeNode.insert.pruneMax.start.smt2'")
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.pruneMax.start.smt2
+(smt.restarting :propagations 34547 :decisions 1335 :conflicts 102 :restart 150 :agility 0.0138093)
+(smt.restarting :propagations 71969 :decisions 2125 :conflicts 253 :restart 225 :agility 0.0659877)
+(smt.restarting :propagations 192748 :decisions 7725 :conflicts 479 :restart 337 :agility 0.0825018)
+(smt.restarting :propagations 859738 :decisions 14981 :conflicts 817 :restart 505 :agility 0.00160665)
+(smt.restarting :propagations 1919977 :decisions 24172 :conflicts 1323 :restart 757 :agility 0.0944217)
+unsat
+(:add-rows             1196842
+ :added-eqs            3129505
+ :arith-conflicts      600
+ :assert-diseq         127069
+ :assert-lower         1117502
+ :assert-upper         809344
+ :binary-propagations  524536
+ :bound-prop           89407
+ :conflicts            1647
+ :decisions            34583
+ :del-clause           2072567
+ :dyn-ack              3
+ :eq-adapter           224688
+ :final-checks         204
+ :fixed-eqs            847918
+ :gcd-tests            480
+ :ineq-splits          1
+ :interface-eqs        203
+ :max-generation       100
+ :max-memory           88.64
+ :memory               19.91
+ :minimized-lits       50719
+ :mk-bool-var          1603672
+ :mk-clause            2162873
+ :num-allocs           6348660710.00
+ :offset-eqs           618524
+ :pivots               73620
+ :propagations         3075781
+ :quant-instantiations 229266
+ :restarts             5
+ :rlimit-count         18193242
+ :time                 22.56
+ :total-time           22.57)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.pruneMax.end.smt2
+(smt.restarting :propagations 17804 :decisions 1899 :conflicts 101 :restart 150 :agility 0.0156939)
+(smt.restarting :propagations 71708 :decisions 3612 :conflicts 252 :restart 225 :agility 0.0502863)
+(smt.restarting :propagations 168804 :decisions 8539 :conflicts 478 :restart 337 :agility 0.0622453)
+(smt.restarting :propagations 504772 :decisions 25501 :conflicts 816 :restart 505 :agility 0.00546238)
+(smt.restarting :propagations 1373276 :decisions 31877 :conflicts 1322 :restart 757 :agility 0.0618594)
+unsat
+(:add-rows                1079172
+ :added-eqs               2496674
+ :arith-conflicts         698
+ :assert-diseq            92409
+ :assert-lower            902546
+ :assert-upper            668184
+ :binary-propagations     430878
+ :bound-prop              96821
+ :conflicts               1703
+ :decisions               39519
+ :del-clause              1780003
+ :dyn-ack                 5
+ :eliminated-applications 17
+ :eq-adapter              188480
+ :final-checks            301
+ :fixed-eqs               657336
+ :gcd-tests               11
+ :ineq-splits             1
+ :interface-eqs           300
+ :max-generation          100
+ :max-memory              92.86
+ :memory                  21.00
+ :minimized-lits          50540
+ :mk-bool-var             1480404
+ :mk-clause               1876322
+ :num-allocs              6720377347.00
+ :offset-eqs              478963
+ :pivots                  75244
+ :propagations            2347364
+ :quant-instantiations    212202
+ :restarts                5
+ :rlimit-count            16355629
+ :time                    31.77
+ :total-time              31.79)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.pruneMax.end.smt2
+(smt.restarting :propagations 17804 :decisions 1899 :conflicts 101 :restart 150 :agility 0.0156939)
+(smt.restarting :propagations 71708 :decisions 3612 :conflicts 252 :restart 225 :agility 0.0502863)
+(smt.restarting :propagations 168804 :decisions 8539 :conflicts 478 :restart 337 :agility 0.0622453)
+(smt.restarting :propagations 504772 :decisions 25501 :conflicts 816 :restart 505 :agility 0.00546238)
+(smt.restarting :propagations 1373276 :decisions 31877 :conflicts 1322 :restart 757 :agility 0.0618594)
+unsat
+(:add-rows                1079172
+ :added-eqs               2496674
+ :arith-conflicts         698
+ :assert-diseq            92409
+ :assert-lower            902546
+ :assert-upper            668184
+ :binary-propagations     430878
+ :bound-prop              96821
+ :conflicts               1703
+ :decisions               39519
+ :del-clause              1780003
+ :dyn-ack                 5
+ :eliminated-applications 17
+ :eq-adapter              188480
+ :final-checks            301
+ :fixed-eqs               657336
+ :gcd-tests               11
+ :ineq-splits             1
+ :interface-eqs           300
+ :max-generation          100
+ :max-memory              92.86
+ :memory                  21.00
+ :minimized-lits          50540
+ :mk-bool-var             1480404
+ :mk-clause               1876322
+ :num-allocs              6720377347.00
+ :offset-eqs              478963
+ :pivots                  75244
+ :propagations            2347364
+ :quant-instantiations    212202
+ :restarts                5
+ :rlimit-count            16355629
+ :time                    31.29
+ :total-time              31.30)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.pruneMax.end.mrs.smt2
+(smt.restarting :propagations 15824 :decisions 5712 :conflicts 101 :restart 150 :agility 0.0279517)
+(smt.restarting :propagations 120021 :decisions 16080 :conflicts 252 :restart 225 :agility 0.0132406)
+(smt.restarting :propagations 279254 :decisions 32446 :conflicts 478 :restart 337 :agility 0.00595799)
+(smt.restarting :propagations 717684 :decisions 51317 :conflicts 816 :restart 505 :agility 0.106115)
+unsat
+(:add-rows                738516
+ :added-eqs               1657254
+ :arith-conflicts         512
+ :assert-diseq            46879
+ :assert-lower            647296
+ :assert-upper            427540
+ :binary-propagations     430193
+ :bound-prop              67259
+ :conflicts               1152
+ :decisions               70445
+ :del-clause              1312788
+ :eliminated-applications 20
+ :eq-adapter              151351
+ :final-checks            141
+ :fixed-eqs               429175
+ :interface-eqs           141
+ :max-generation          89
+ :max-memory              80.73
+ :memory                  17.67
+ :minimized-lits          5481
+ :mk-bool-var             1250148
+ :mk-clause               1370436
+ :num-allocs              5086700961.00
+ :offset-eqs              236803
+ :pivots                  50725
+ :propagations            1624773
+ :quant-instantiations    138306
+ :restarts                4
+ :rlimit-count            10159391
+ :time                    15.41
+ :total-time              15.44)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.pruneMax.end.full.smt2
+(smt.restarting :propagations 32521 :decisions 5326 :conflicts 101 :restart 150 :agility 0.0104728)
+(smt.restarting :propagations 185274 :decisions 21364 :conflicts 252 :restart 225 :agility 0.0193929)
+(smt.restarting :propagations 431944 :decisions 33466 :conflicts 481 :restart 337 :agility 0.00650933)
+(smt.restarting :propagations 1173901 :decisions 63345 :conflicts 819 :restart 505 :agility 0.00225993)
+unsat
+(:add-rows                1187019
+ :added-eqs               3743536
+ :arith-conflicts         495
+ :assert-diseq            102512
+ :assert-lower            1308873
+ :assert-upper            957803
+ :binary-propagations     1352815
+ :bound-prop              100453
+ :conflicts               1199
+ :decisions               90830
+ :del-clause              2058240
+ :eliminated-applications 20
+ :eq-adapter              292419
+ :final-checks            104
+ :fixed-eqs               917065
+ :gcd-tests               1
+ :ineq-splits             1
+ :interface-eqs           103
+ :max-generation          88
+ :max-memory              109.80
+ :memory                  22.82
+ :minimized-lits          9797
+ :mk-bool-var             2061075
+ :mk-clause               2162500
+ :num-allocs              11345709987.00
+ :offset-eqs              574003
+ :pivots                  79422
+ :propagations            3978302
+ :quant-instantiations    231266
+ :restarts                4
+ :rlimit-count            19908625
+ :time                    28.47
+ :total-time              28.57)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.pruneMax.end.fw.smt2
+(smt.restarting :propagations 20232 :decisions 5014 :conflicts 104 :restart 150 :agility 0.029063)
+(smt.restarting :propagations 88638 :decisions 17166 :conflicts 255 :restart 225 :agility 0.0354461)
+(smt.restarting :propagations 301566 :decisions 35213 :conflicts 481 :restart 337 :agility 0.0431254)
+(smt.restarting :propagations 604424 :decisions 60801 :conflicts 819 :restart 505 :agility 0.0997812)
+(smt.restarting :propagations 1350050 :decisions 89673 :conflicts 1325 :restart 757 :agility 0.00890236)
+unsat
+(:add-rows                1080246
+ :added-eqs               2440813
+ :arith-conflicts         771
+ :assert-diseq            93419
+ :assert-lower            909887
+ :assert-upper            671262
+ :binary-propagations     550172
+ :bound-prop              90017
+ :conflicts               1710
+ :decisions               106808
+ :del-clause              1767902
+ :eliminated-applications 20
+ :eq-adapter              166339
+ :final-checks            124
+ :fixed-eqs               656456
+ :gcd-tests               1
+ :interface-eqs           124
+ :max-generation          89
+ :max-memory              94.93
+ :memory                  19.48
+ :minimized-lits          42390
+ :mk-bool-var             1423677
+ :mk-clause               1850708
+ :num-allocs              5940957186.00
+ :offset-eqs              462851
+ :pivots                  71056
+ :propagations            2365631
+ :quant-instantiations    207564
+ :restarts                5
+ :rlimit-count            12009413
+ :time                    20.24
+ :total-time              20.26)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.pruneMax.boogie.smt2
+(smt.restarting :propagations 47081 :decisions 1182 :conflicts 101 :restart 150 :agility 0.00417342)
+(smt.restarting :propagations 102295 :decisions 2890 :conflicts 252 :restart 225 :agility 0.0150896)
+(smt.restarting :propagations 312784 :decisions 7706 :conflicts 478 :restart 337 :agility 0.0138362)
+(smt.restarting :propagations 1292952 :decisions 17799 :conflicts 816 :restart 505 :agility 0.0312814)
+(smt.restarting :propagations 2192745 :decisions 23462 :conflicts 1322 :restart 757 :agility 0.0331832)
+(smt.restarting :propagations 4169611 :decisions 37683 :conflicts 2080 :restart 1135 :agility 0.000244013)
+unsat
+(:max-memory 118.34
+ :memory     2.81
+ :num-allocs 23357356062.00
+ :time       45.60
+ :total-time 45.84)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.pruneMax.start.mrs.smt2
+(error "failed to open file 'AVLTree.AVLTreeNode.pruneMax.start.mrs.smt2'")
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.pruneMax.start.smt2
+(smt.restarting :propagations 34547 :decisions 1335 :conflicts 102 :restart 150 :agility 0.0138093)
+(smt.restarting :propagations 71969 :decisions 2125 :conflicts 253 :restart 225 :agility 0.0659877)
+(smt.restarting :propagations 192748 :decisions 7725 :conflicts 479 :restart 337 :agility 0.0825018)
+(smt.restarting :propagations 859738 :decisions 14981 :conflicts 817 :restart 505 :agility 0.00160665)
+(smt.restarting :propagations 1919977 :decisions 24172 :conflicts 1323 :restart 757 :agility 0.0944217)
+unsat
+(:add-rows             1196842
+ :added-eqs            3129505
+ :arith-conflicts      600
+ :assert-diseq         127069
+ :assert-lower         1117502
+ :assert-upper         809344
+ :binary-propagations  524536
+ :bound-prop           89407
+ :conflicts            1647
+ :decisions            34583
+ :del-clause           2072567
+ :dyn-ack              3
+ :eq-adapter           224688
+ :final-checks         204
+ :fixed-eqs            847918
+ :gcd-tests            480
+ :ineq-splits          1
+ :interface-eqs        203
+ :max-generation       100
+ :max-memory           88.64
+ :memory               19.91
+ :minimized-lits       50719
+ :mk-bool-var          1603672
+ :mk-clause            2162873
+ :num-allocs           6348660710.00
+ :offset-eqs           618524
+ :pivots               73620
+ :propagations         3075781
+ :quant-instantiations 229266
+ :restarts             5
+ :rlimit-count         18193242
+ :time                 22.68
+ :total-time           22.70)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.pruneMax.build.smt2
+(smt.restarting :propagations 27769 :decisions 1376 :conflicts 101 :restart 150 :agility 0.0185934)
+(smt.restarting :propagations 82526 :decisions 3969 :conflicts 252 :restart 225 :agility 0.0101394)
+(smt.restarting :propagations 160053 :decisions 6675 :conflicts 478 :restart 337 :agility 0.0494672)
+(smt.restarting :propagations 449636 :decisions 14528 :conflicts 816 :restart 505 :agility 0.000382953)
+(smt.restarting :propagations 1150420 :decisions 29740 :conflicts 1322 :restart 757 :agility 0.0705979)
+unsat
+(:add-rows                919146
+ :added-eqs               2429703
+ :arith-conflicts         772
+ :assert-diseq            104139
+ :assert-lower            869445
+ :assert-upper            658849
+ :binary-propagations     453402
+ :bound-prop              77851
+ :conflicts               1756
+ :decisions               40250
+ :del-clause              1549154
+ :eliminated-applications 7
+ :eq-adapter              157880
+ :final-checks            151
+ :fixed-eqs               637748
+ :gcd-tests               199
+ :ineq-splits             1
+ :interface-eqs           150
+ :max-generation          89
+ :max-memory              87.55
+ :memory                  19.16
+ :minimized-lits          46966
+ :mk-bool-var             1264198
+ :mk-clause               1616730
+ :num-allocs              5090682348.00
+ :offset-eqs              481047
+ :pivots                  63365
+ :propagations            2257394
+ :quant-instantiations    185031
+ :restarts                5
+ :rlimit-count            15444994
+ :time                    17.26
+ :total-time              17.27)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.pruneMax.build.mrs.smt2
+(smt.restarting :propagations 20494 :decisions 4057 :conflicts 101 :restart 150 :agility 0.0489363)
+(smt.restarting :propagations 87378 :decisions 14785 :conflicts 252 :restart 225 :agility 0.0125611)
+(smt.restarting :propagations 196319 :decisions 29652 :conflicts 478 :restart 337 :agility 0.0393988)
+(smt.restarting :propagations 472510 :decisions 53649 :conflicts 816 :restart 505 :agility 0.1622)
+(smt.restarting :propagations 1271133 :decisions 81650 :conflicts 1322 :restart 757 :agility 0.0780402)
+unsat
+(:add-rows                1311309
+ :added-eqs               2946538
+ :arith-conflicts         849
+ :assert-diseq            90703
+ :assert-lower            1025646
+ :assert-upper            761022
+ :binary-propagations     559907
+ :bound-prop              105855
+ :conflicts               1934
+ :decisions               119293
+ :del-clause              2178726
+ :dyn-ack                 1
+ :eliminated-applications 7
+ :eq-adapter              223279
+ :final-checks            104
+ :fixed-eqs               785985
+ :interface-eqs           104
+ :max-generation          100
+ :max-memory              103.91
+ :memory                  21.64
+ :minimized-lits          62700
+ :mk-bool-var             1782599
+ :mk-clause               2279394
+ :num-allocs              9094099932.00
+ :offset-eqs              588137
+ :pivots                  89128
+ :propagations            2798283
+ :quant-instantiations    243563
+ :restarts                5
+ :rlimit-count            14128061
+ :time                    22.54
+ :total-time              22.56)
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.rebalanceRL.start.smt2
+(smt.restarting :propagations 33328 :decisions 2830 :conflicts 101 :restart 150 :agility 0.014925)
+(smt.restarting :propagations 83852 :decisions 7660 :conflicts 252 :restart 225 :agility 0.007815)
+(smt.restarting :propagations 492473 :decisions 82154 :conflicts 478 :restart 337 :agility 0.00316227)
+(smt.restarting :propagations 763932 :decisions 103589 :conflicts 816 :restart 505 :agility 0.0172735)
+(smt.restarting :propagations 1139257 :decisions 134656 :conflicts 1322 :restart 757 :agility 0.0184487)
+(smt.restarting :propagations 2856690 :decisions 166791 :conflicts 2080 :restart 1135 :agility 0.0134638)
+(smt.restarting :propagations 4947904 :decisions 414986 :conflicts 3216 :restart 1702 :agility 0.00285643)
+(smt.restarting :propagations 10834685 :decisions 550343 :conflicts 4919 :restart 2553 :agility 0.14281)
+unsat
+(:add-rows             47655271
+ :added-eqs            38318467
+ :arith-conflicts      3580
+ :assert-diseq         1168899
+ :assert-lower         11404371
+ :assert-upper         9265520
+ :binary-propagations  5262430
+ :bound-prop           644780
+ :conflicts            7208
+ :decisions            593163
+ :del-clause           15384016
+ :dyn-ack              26
+ :eq-adapter           2250803
+ :final-checks         582
+ :fixed-eqs            11316393
+ :gcd-tests            10
+ :interface-eqs        582
+ :max-generation       100
+ :max-memory           442.65
+ :memory               78.85
+ :minimized-lits       1490311
+ :mk-bool-var          12799413
+ :mk-clause            15815935
+ :num-allocs           565890470007.00
+ :offset-eqs           9026185
+ :pivots               620851
+ :propagations         36204656
+ :quant-instantiations 1984094
+ :restarts             8
+ :rlimit-count         122129947
+ :time                 401.88
+ :total-time           401.91)
+
+C:\work\slicer\test\Chalice\AVLTree>\work\slicer\src\Boogie2Slicer\Boogie\Binaries\boogie /slice  /noProver ..\..\..\..\test\Chalice\AVLTree\AVLTree.bpl
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+Error opening file "..\..\..\..\test\Chalice\AVLTree\AVLTree.bpl": Could not find a part of the path 'C:\work\test\Chalice\AVLTree\AVLTree.bpl'.
+
+C:\work\slicer\test\Chalice\AVLTree>\work\slicer\src\Boogie2Slicer\Boogie\Binaries\boogie /slice  /noProver AVLTree.bpl
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+Slicer starting - function "AVLTree$monitorinvariant$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 1/6 - assertions/statements 1/79
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [0] end    - goals/nodes   1/   6 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [0] start  - goals/nodes   1/   6
+Dumping start
+Dumping start.1
+***Extracting CFG                [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     3s]
+
+***Building Universes            [0] start  - goals/nodes   1/   2
+***Building Universes            [0] end    - goals/nodes   0/   1 - proved   1 - time [     0s]/[     3s]
+!!!!!!!!!!!!!!!!!!!!!!!!!Refuted!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+***Analysis done - time: [     3s] - proven 1 goals
+Still 0/1 goals and 1/2 nodes
+
+FOL -      3s
+Total time - AVLTree$monitorinvariant$checkDefinedness:      3s
+Slicer Ended - function "AVLTree$monitorinvariant$checkDefinedness"
+Slicer starting - function "AVLTree.valid$checkDefinedness"
+Preprocessing:^C
+C:\work\slicer\test\Chalice\AVLTree>
+
+C:\work\slicer\test\Chalice\AVLTree>
+
+C:\work\slicer\test\Chalice\AVLTree>
+
+C:\work\slicer\test\Chalice\AVLTree>\work\slicer\src\Boogie2Slicer\Boogie\Binaries\boogie /slice  /noProver AVLTree.bpl | \users\uri\Downloads\mtee.exe slicer.log
+Boogie program verifier version 2.3.0.61016, Copyright (c) 2003-2014, Microsoft.
+Slicer starting - function "AVLTree$monitorinvariant$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 1/6 - assertions/statements 1/79
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [0] end    - goals/nodes   1/   6 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [0] start  - goals/nodes   1/   6
+Dumping start
+Dumping start.1
+***Extracting CFG                [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Building Universes            [0] start  - goals/nodes   1/   2
+***Building Universes            [0] end    - goals/nodes   0/   1 - proved   1 - time [     0s]/[     3s]
+!!!!!!!!!!!!!!!!!!!!!!!!!Refuted!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+***Analysis done - time: [     3s] - proven 1 goals
+Still 0/1 goals and 1/2 nodes
+
+FOL -      3s
+Total time - AVLTree$monitorinvariant$checkDefinedness:      3s
+Slicer Ended - function "AVLTree$monitorinvariant$checkDefinedness"
+Slicer starting - function "AVLTree.valid$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 31/84 - assertions/statements 31/226
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [0] end    - goals/nodes  31/  84 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [0] start  - goals/nodes  31/  84
+Dumping start
+Dumping start.1
+***Extracting CFG                [0] end    - goals/nodes   8/  31 - proved  23 - time [     0s]/[     2s]
+
+***Building Universes            [0] start  - goals/nodes   8/  31
+***Building Universes            [0] end    - goals/nodes   8/  31 - proved   0 - time [     0s]/[     3s]
+
+***Saturating Equalities         [0] start  - goals/nodes   8/  31
+***Saturating Equalities         [0] end    - goals/nodes   8/  31 - proved   0 - time [     0s]/[     3s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes   8/  31
+***Saturating CFG Maps           [0] end    - goals/nodes   8/  31 - proved   0 - time [     0s]/[     3s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes   8/  31
+***Saturating CFG[In]            [0] end    - goals/nodes   8/  31 - proved   0 - time [     0s]/[     3s]
+
+***Saturating Equalities         [1] start  - goals/nodes   8/  31
+***Saturating Equalities         [1] end    - goals/nodes   8/  31 - proved   0 - time [     0s]/[     3s]
+***Analysis done - time: [     5s] - proven 0 goals
+Still 8/8 goals and 31/31 nodes
+
+FOL -      5s
+Total time - AVLTree.valid$checkDefinedness:      3s
+Slicer Ended - function "AVLTree.valid$checkDefinedness"
+Slicer starting - function "AVLTree.init$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 3/10 - assertions/statements 3/124
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes   3/  10 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes   3/  10
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes   1/   2 - proved   2 - time [     0s]/[     2s]
+
+***Building Universes            [1] start  - goals/nodes   1/   2
+***Building Universes            [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Saturating Equalities         [0] start  - goals/nodes   1/   2
+***Saturating Equalities         [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes   1/   2
+***Saturating CFG Maps           [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes   1/   2
+***Saturating CFG[In]            [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Saturating Equalities         [1] start  - goals/nodes   1/   2
+***Saturating Equalities         [1] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+***Analysis done - time: [     4s] - proven 0 goals
+Still 1/1 goals and 2/2 nodes
+
+FOL -      4s
+Total time - AVLTree.init$checkDefinedness:      2s
+Slicer Ended - function "AVLTree.init$checkDefinedness"
+Slicer starting - function "AVLTree.init"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 24/115 - assertions/statements 24/440
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  24/ 115 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes  24/ 115
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  16/  83 - proved   8 - time [     0s]/[     2s]
+
+***Building Universes            [1] start  - goals/nodes  16/  83
+***Building Universes            [0] end    - goals/nodes  14/  79 - proved   2 - time [     1s]/[     3s]
+
+***Saturating Equalities         [0] start  - goals/nodes  14/  79
+***Saturating Equalities         [0] end    - goals/nodes  14/  79 - proved   0 - time [     0s]/[     3s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  14/  79
+***Saturating CFG Maps           [0] end    - goals/nodes   9/  63 - proved   5 - time [     1s]/[     5s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes   9/  63
+***Saturating CFG[In]            [0] end    - goals/nodes   8/  62 - proved   1 - time [     0s]/[     5s]
+
+***Saturating Equalities         [1] start  - goals/nodes   8/  62
+***Saturating Equalities         [1] end    - goals/nodes   8/  62 - proved   0 - time [     0s]/[     5s]
+***Analysis done - time: [     7s] - proven 8 goals
+Still 8/16 goals and 62/83 nodes
+
+FOL -      8s
+Total time - AVLTree.init:      5s
+Slicer Ended - function "AVLTree.init"
+Slicer starting - function "AVLTree.insert$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 24/52 - assertions/statements 24/149
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  24/  52 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes  24/  52
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes   4/   8 - proved  20 - time [     0s]/[     2s]
+
+***Building Universes            [1] start  - goals/nodes   4/   8
+***Building Universes            [0] end    - goals/nodes   1/   2 - proved   3 - time [     0s]/[     2s]
+
+***Saturating Equalities         [0] start  - goals/nodes   1/   2
+***Saturating Equalities         [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes   1/   2
+***Saturating CFG Maps           [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes   1/   2
+***Saturating CFG[In]            [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Saturating Equalities         [1] start  - goals/nodes   1/   2
+***Saturating Equalities         [1] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+***Analysis done - time: [     3s] - proven 3 goals
+Still 1/4 goals and 2/8 nodes
+
+FOL -      4s
+Total time - AVLTree.insert$checkDefinedness:      2s
+Slicer Ended - function "AVLTree.insert$checkDefinedness"
+Slicer starting - function "AVLTree.insert"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 60/225 - assertions/statements 60/834
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  60/ 225 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes  60/ 225
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  34/ 137 - proved  26 - time [     0s]/[     3s]
+
+***Building Universes            [1] start  - goals/nodes  34/ 137
+***Building Universes            [0] end    - goals/nodes  33/ 135 - proved   1 - time [     1s]/[     5s]
+
+***Saturating Equalities         [0] start  - goals/nodes  33/ 135
+***Saturating Equalities         [0] end    - goals/nodes  33/ 135 - proved   0 - time [     0s]/[     5s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  33/ 135
+***Saturating CFG Maps           [0] end    - goals/nodes  31/ 129 - proved   2 - time [     2s]/[     7s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  31/ 129
+***Saturating CFG[In]            [0] end    - goals/nodes  30/ 128 - proved   1 - time [     0s]/[     7s]
+
+***Saturating Equalities         [1] start  - goals/nodes  30/ 128
+***Saturating Equalities         [1] end    - goals/nodes  30/ 128 - proved   0 - time [     0s]/[     7s]
+***Analysis done - time: [    11s] - proven 4 goals
+Still 30/34 goals and 128/137 nodes
+
+FOL -     12s
+Total time - AVLTree.insert:      7s
+Slicer Ended - function "AVLTree.insert"
+Slicer starting - function "AVLTree.remove$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 28/60 - assertions/statements 28/153
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  28/  60 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes  28/  60
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes   5/  10 - proved  23 - time [     0s]/[     2s]
+
+***Building Universes            [1] start  - goals/nodes   5/  10
+***Building Universes            [0] end    - goals/nodes   1/   2 - proved   4 - time [     0s]/[     2s]
+
+***Saturating Equalities         [0] start  - goals/nodes   1/   2
+***Saturating Equalities         [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes   1/   2
+***Saturating CFG Maps           [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes   1/   2
+***Saturating CFG[In]            [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Saturating Equalities         [1] start  - goals/nodes   1/   2
+***Saturating Equalities         [1] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+***Analysis done - time: [     4s] - proven 4 goals
+Still 1/5 goals and 2/10 nodes
+
+FOL -      4s
+Total time - AVLTree.remove$checkDefinedness:      2s
+Slicer Ended - function "AVLTree.remove$checkDefinedness"
+Slicer starting - function "AVLTree.remove"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 48/242 - assertions/statements 48/869
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  48/ 242 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes  48/ 242
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  26/ 151 - proved  22 - time [     0s]/[     3s]
+
+***Building Universes            [1] start  - goals/nodes  26/ 151
+***Building Universes            [0] end    - goals/nodes  25/ 149 - proved   1 - time [     1s]/[     4s]
+
+***Saturating Equalities         [0] start  - goals/nodes  25/ 149
+***Saturating Equalities         [0] end    - goals/nodes  25/ 149 - proved   0 - time [     0s]/[     4s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  25/ 149
+***Saturating CFG Maps           [0] end    - goals/nodes  25/ 149 - proved   0 - time [     2s]/[     7s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  25/ 149
+***Saturating CFG[In]            [0] end    - goals/nodes  24/ 148 - proved   1 - time [     0s]/[     8s]
+
+***Saturating Equalities         [1] start  - goals/nodes  24/ 148
+***Saturating Equalities         [1] end    - goals/nodes  24/ 148 - proved   0 - time [     0s]/[     8s]
+***Analysis done - time: [    11s] - proven 2 goals
+Still 24/26 goals and 148/151 nodes
+
+FOL -     13s
+Total time - AVLTree.remove:      8s
+Slicer Ended - function "AVLTree.remove"
+Slicer starting - function "AVLTree.has$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 4/12 - assertions/statements 4/126
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes   4/  12 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes   4/  12
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes   1/   2 - proved   3 - time [     0s]/[     2s]
+
+***Building Universes            [1] start  - goals/nodes   1/   2
+***Building Universes            [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Saturating Equalities         [0] start  - goals/nodes   1/   2
+***Saturating Equalities         [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes   1/   2
+***Saturating CFG Maps           [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes   1/   2
+***Saturating CFG[In]            [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Saturating Equalities         [1] start  - goals/nodes   1/   2
+***Saturating Equalities         [1] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+***Analysis done - time: [     3s] - proven 0 goals
+Still 1/1 goals and 2/2 nodes
+
+FOL -      4s
+Total time - AVLTree.has$checkDefinedness:      2s
+Slicer Ended - function "AVLTree.has$checkDefinedness"
+Slicer starting - function "AVLTree.has"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 34/164 - assertions/statements 34/660
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  34/ 164 - proved   0 - time [     3s]/[     3s]
+
+***Extracting CFG                [1] start  - goals/nodes  34/ 164
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  18/  96 - proved  16 - time [     0s]/[     3s]
+
+***Building Universes            [1] start  - goals/nodes  18/  96
+***Building Universes            [0] end    - goals/nodes  17/  94 - proved   1 - time [     1s]/[     4s]
+
+***Saturating Equalities         [0] start  - goals/nodes  17/  94
+***Saturating Equalities         [0] end    - goals/nodes  17/  94 - proved   0 - time [     0s]/[     4s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  17/  94
+***Saturating CFG Maps           [0] end    - goals/nodes  17/  94 - proved   0 - time [     1s]/[     6s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  17/  94
+***Saturating CFG[In]            [0] end    - goals/nodes  16/  93 - proved   1 - time [     0s]/[     6s]
+
+***Saturating Equalities         [1] start  - goals/nodes  16/  93
+***Saturating Equalities         [1] end    - goals/nodes  16/  93 - proved   0 - time [     0s]/[     6s]
+***Analysis done - time: [     9s] - proven 2 goals
+Still 16/18 goals and 93/96 nodes
+
+FOL -     10s
+Total time - AVLTree.has:      6s
+Slicer Ended - function "AVLTree.has"
+Slicer starting - function "AVLTreeNode$monitorinvariant$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 1/6 - assertions/statements 1/79
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes   1/   6 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes   1/   6
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Building Universes            [1] start  - goals/nodes   1/   2
+***Building Universes            [0] end    - goals/nodes   0/   1 - proved   1 - time [     0s]/[     2s]
+!!!!!!!!!!!!!!!!!!!!!!!!!Refuted!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+***Analysis done - time: [     2s] - proven 1 goals
+Still 0/1 goals and 1/2 nodes
+
+FOL -      2s
+Total time - AVLTreeNode$monitorinvariant$checkDefinedness:      2s
+Slicer Ended - function "AVLTreeNode$monitorinvariant$checkDefinedness"
+Slicer starting - function "AVLTreeNode.valid$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 160/385 - assertions/statements 160/578
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [0] end    - goals/nodes 160/ 385 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [0] start  - goals/nodes 160/ 385
+Dumping start
+Dumping start.1
+***Extracting CFG                [0] end    - goals/nodes  33/ 120 - proved 127 - time [     0s]/[     2s]
+
+***Building Universes            [0] start  - goals/nodes  33/ 120
+***Building Universes            [0] end    - goals/nodes  33/ 120 - proved   0 - time [     1s]/[     3s]
+
+***Saturating Equalities         [0] start  - goals/nodes  33/ 120
+***Saturating Equalities         [0] end    - goals/nodes  33/ 120 - proved   0 - time [     0s]/[     3s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  33/ 120
+***Saturating CFG Maps           [0] end    - goals/nodes  33/ 120 - proved   0 - time [     2s]/[     6s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  33/ 120
+***Saturating CFG[In]            [0] end    - goals/nodes  33/ 120 - proved   0 - time [     0s]/[     6s]
+
+***Saturating Equalities         [1] start  - goals/nodes  33/ 120
+***Saturating Equalities         [1] end    - goals/nodes  33/ 120 - proved   0 - time [     0s]/[     6s]
+***Analysis done - time: [     9s] - proven 0 goals
+Still 33/33 goals and 120/120 nodes
+
+FOL -     10s
+Total time - AVLTreeNode.valid$checkDefinedness:      6s
+Slicer Ended - function "AVLTreeNode.valid$checkDefinedness"
+Slicer starting - function "AVLTreeNode.init$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 9/22 - assertions/statements 9/188
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes   9/  22 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes   9/  22
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes   3/   6 - proved   6 - time [     0s]/[     2s]
+
+***Building Universes            [1] start  - goals/nodes   3/   6
+***Building Universes            [0] end    - goals/nodes   3/   6 - proved   0 - time [     0s]/[     2s]
+
+***Saturating Equalities         [0] start  - goals/nodes   3/   6
+***Saturating Equalities         [0] end    - goals/nodes   3/   6 - proved   0 - time [     0s]/[     2s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes   3/   6
+***Saturating CFG Maps           [0] end    - goals/nodes   3/   6 - proved   0 - time [     0s]/[     2s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes   3/   6
+***Saturating CFG[In]            [0] end    - goals/nodes   3/   6 - proved   0 - time [     0s]/[     2s]
+
+***Saturating Equalities         [1] start  - goals/nodes   3/   6
+***Saturating Equalities         [1] end    - goals/nodes   3/   6 - proved   0 - time [     0s]/[     2s]
+***Analysis done - time: [     4s] - proven 0 goals
+Still 3/3 goals and 6/6 nodes
+
+FOL -      4s
+Total time - AVLTreeNode.init$checkDefinedness:      2s
+Slicer Ended - function "AVLTreeNode.init$checkDefinedness"
+Slicer starting - function "AVLTreeNode.init"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 53/149 - assertions/statements 53/461
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  53/ 149 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes  53/ 149
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  40/ 104 - proved  13 - time [     0s]/[     3s]
+
+***Building Universes            [1] start  - goals/nodes  40/ 104
+***Building Universes            [0] end    - goals/nodes  31/  86 - proved   9 - time [     1s]/[     4s]
+
+***Saturating Equalities         [0] start  - goals/nodes  31/  86
+***Saturating Equalities         [0] end    - goals/nodes  31/  86 - proved   0 - time [     0s]/[     4s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  31/  86
+***Saturating CFG Maps           [0] end    - goals/nodes  19/  51 - proved  12 - time [     1s]/[     5s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  19/  51
+***Saturating CFG[In]            [0] end    - goals/nodes  12/  44 - proved   7 - time [     0s]/[     5s]
+
+***Saturating Equalities         [1] start  - goals/nodes  12/  44
+***Saturating Equalities         [1] end    - goals/nodes  12/  44 - proved   0 - time [     0s]/[     5s]
+***Analysis done - time: [     8s] - proven 28 goals
+Still 12/40 goals and 44/104 nodes
+
+FOL -      9s
+Total time - AVLTreeNode.init:      5s
+Slicer Ended - function "AVLTreeNode.init"
+Slicer starting - function "AVLTreeNode.insert$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 50/113 - assertions/statements 50/244
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  50/ 113 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes  50/ 113
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes   7/  20 - proved  43 - time [     0s]/[     2s]
+
+***Building Universes            [1] start  - goals/nodes   7/  20
+***Building Universes            [0] end    - goals/nodes   7/  20 - proved   0 - time [     0s]/[     2s]
+
+***Saturating Equalities         [0] start  - goals/nodes   7/  20
+***Saturating Equalities         [0] end    - goals/nodes   7/  20 - proved   0 - time [     0s]/[     2s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes   7/  20
+***Saturating CFG Maps           [0] end    - goals/nodes   7/  20 - proved   0 - time [     0s]/[     2s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes   7/  20
+***Saturating CFG[In]            [0] end    - goals/nodes   7/  20 - proved   0 - time [     0s]/[     3s]
+
+***Saturating Equalities         [1] start  - goals/nodes   7/  20
+***Saturating Equalities         [1] end    - goals/nodes   7/  20 - proved   0 - time [     0s]/[     3s]
+***Analysis done - time: [     4s] - proven 0 goals
+Still 7/7 goals and 20/20 nodes
+
+FOL -      5s
+Total time - AVLTreeNode.insert$checkDefinedness:      3s
+Slicer Ended - function "AVLTreeNode.insert$checkDefinedness"
+Slicer starting - function "AVLTreeNode.insert"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 275/868 - assertions/statements 275/2693
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes 275/ 868 - proved   0 - time [     3s]/[     4s]
+
+***Extracting CFG                [1] start  - goals/nodes 275/ 868
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes 147/ 513 - proved 128 - time [     1s]/[     5s]
+
+***Building Universes            [1] start  - goals/nodes 147/ 513
+***Building Universes            [0] end    - goals/nodes 143/ 505 - proved   4 - time [     6s]/[    11s]
+
+***Saturating Equalities         [0] start  - goals/nodes 143/ 505
+***Saturating Equalities         [0] end    - goals/nodes 143/ 505 - proved   0 - time [     0s]/[    11s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes 143/ 505
+***Saturating CFG Maps           [0] end    - goals/nodes 142/ 500 - proved   1 - time [    10s]/[    22s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes 142/ 500
+***Saturating CFG[In]            [0] end    - goals/nodes 139/ 497 - proved   3 - time [     1s]/[    23s]
+
+***Saturating Equalities         [1] start  - goals/nodes 139/ 497
+***Saturating Equalities         [1] end    - goals/nodes 136/ 494 - proved   3 - time [     2s]/[    25s]
+***Analysis done - time: [    38s] - proven 11 goals
+Still 136/147 goals and 494/513 nodes
+
+FOL -     42s
+Total time - AVLTreeNode.insert:     25s
+Slicer Ended - function "AVLTreeNode.insert"
+Slicer starting - function "AVLTreeNode.remove$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 62/175 - assertions/statements 62/381
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  62/ 175 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes  62/ 175
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  13/  50 - proved  49 - time [     0s]/[     2s]
+
+***Building Universes            [1] start  - goals/nodes  13/  50
+***Building Universes            [0] end    - goals/nodes   8/  40 - proved   5 - time [     0s]/[     2s]
+
+***Saturating Equalities         [0] start  - goals/nodes   8/  40
+***Saturating Equalities         [0] end    - goals/nodes   8/  40 - proved   0 - time [     0s]/[     2s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes   8/  40
+***Saturating CFG Maps           [0] end    - goals/nodes   8/  40 - proved   0 - time [     0s]/[     3s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes   8/  40
+***Saturating CFG[In]            [0] end    - goals/nodes   8/  40 - proved   0 - time [     0s]/[     3s]
+
+***Saturating Equalities         [1] start  - goals/nodes   8/  40
+***Saturating Equalities         [1] end    - goals/nodes   8/  40 - proved   0 - time [     0s]/[     3s]
+***Analysis done - time: [     5s] - proven 5 goals
+Still 8/13 goals and 40/50 nodes
+
+FOL -      5s
+Total time - AVLTreeNode.remove$checkDefinedness:      3s
+Slicer Ended - function "AVLTreeNode.remove$checkDefinedness"
+Slicer starting - function "AVLTreeNode.remove"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 391/1595 - assertions/statements 391/5587
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes 391/1595 - proved   0 - time [     5s]/[     6s]
+
+***Extracting CFG                [1] start  - goals/nodes 391/1595
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes 205/ 818 - proved 186 - time [     3s]/[     9s]
+
+***Building Universes            [1] start  - goals/nodes 205/ 818
+***Building Universes            [0] end    - goals/nodes 203/ 814 - proved   2 - time [    11s]/[    21s]
+
+***Saturating Equalities         [0] start  - goals/nodes 203/ 814
+***Saturating Equalities         [0] end    - goals/nodes 203/ 814 - proved   0 - time [     0s]/[    21s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes 203/ 814
+***Saturating CFG Maps           [0] end    - goals/nodes 190/ 781 - proved  13 - time [    19s]/[    40s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes 190/ 781
+***Saturating CFG[In]            [0] end    - goals/nodes 180/ 771 - proved  10 - time [     2s]/[    43s]
+
+***Saturating Equalities         [1] start  - goals/nodes 180/ 771
+***Saturating Equalities         [1] end    - goals/nodes 168/ 759 - proved  12 - time [     4s]/[    48s]
+***Analysis done - time: [    68s] - proven 37 goals
+Still 168/205 goals and 759/818 nodes
+
+FOL -     76s
+Total time - AVLTreeNode.remove:     48s
+Slicer Ended - function "AVLTreeNode.remove"
+Slicer starting - function "AVLTreeNode.pruneMax$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 47/134 - assertions/statements 47/364
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  47/ 134 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes  47/ 134
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  15/  48 - proved  32 - time [     0s]/[     2s]
+
+***Building Universes            [1] start  - goals/nodes  15/  48
+***Building Universes            [0] end    - goals/nodes  13/  44 - proved   2 - time [     0s]/[     3s]
+
+***Saturating Equalities         [0] start  - goals/nodes  13/  44
+***Saturating Equalities         [0] end    - goals/nodes  13/  44 - proved   0 - time [     0s]/[     3s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  13/  44
+***Saturating CFG Maps           [0] end    - goals/nodes  13/  44 - proved   0 - time [     0s]/[     3s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  13/  44
+***Saturating CFG[In]            [0] end    - goals/nodes  13/  44 - proved   0 - time [     0s]/[     3s]
+
+***Saturating Equalities         [1] start  - goals/nodes  13/  44
+***Saturating Equalities         [1] end    - goals/nodes  13/  44 - proved   0 - time [     0s]/[     3s]
+***Analysis done - time: [     5s] - proven 2 goals
+Still 13/15 goals and 44/48 nodes
+
+FOL -      6s
+Total time - AVLTreeNode.pruneMax$checkDefinedness:      3s
+Slicer Ended - function "AVLTreeNode.pruneMax$checkDefinedness"
+Slicer starting - function "AVLTreeNode.pruneMax"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 182/613 - assertions/statements 182/1861
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes 182/ 613 - proved   0 - time [     3s]/[     3s]
+
+***Extracting CFG                [1] start  - goals/nodes 182/ 613
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes 102/ 348 - proved  80 - time [     0s]/[     4s]
+
+***Building Universes            [1] start  - goals/nodes 102/ 348
+***Building Universes            [0] end    - goals/nodes  98/ 337 - proved   4 - time [     3s]/[     8s]
+
+***Saturating Equalities         [0] start  - goals/nodes  98/ 337
+***Saturating Equalities         [0] end    - goals/nodes  98/ 337 - proved   0 - time [     0s]/[     8s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  98/ 337
+***Saturating CFG Maps           [0] end    - goals/nodes  92/ 321 - proved   6 - time [     9s]/[    18s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  92/ 321
+***Saturating CFG[In]            [0] end    - goals/nodes  87/ 316 - proved   5 - time [     1s]/[    19s]
+
+***Saturating Equalities         [1] start  - goals/nodes  87/ 316
+***Saturating Equalities         [1] end    - goals/nodes  82/ 311 - proved   5 - time [     2s]/[    21s]
+***Analysis done - time: [    30s] - proven 20 goals
+Still 82/102 goals and 311/348 nodes
+
+FOL -     34s
+Total time - AVLTreeNode.pruneMax:     21s
+Slicer Ended - function "AVLTreeNode.pruneMax"
+Slicer starting - function "AVLTreeNode.pruneMin$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 47/134 - assertions/statements 47/364
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  47/ 134 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes  47/ 134
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  15/  48 - proved  32 - time [     0s]/[     2s]
+
+***Building Universes            [1] start  - goals/nodes  15/  48
+***Building Universes            [0] end    - goals/nodes  13/  44 - proved   2 - time [     0s]/[     3s]
+
+***Saturating Equalities         [0] start  - goals/nodes  13/  44
+***Saturating Equalities         [0] end    - goals/nodes  13/  44 - proved   0 - time [     0s]/[     3s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  13/  44
+***Saturating CFG Maps           [0] end    - goals/nodes  13/  44 - proved   0 - time [     0s]/[     3s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  13/  44
+***Saturating CFG[In]            [0] end    - goals/nodes  13/  44 - proved   0 - time [     0s]/[     3s]
+
+***Saturating Equalities         [1] start  - goals/nodes  13/  44
+***Saturating Equalities         [1] end    - goals/nodes  13/  44 - proved   0 - time [     0s]/[     3s]
+***Analysis done - time: [     5s] - proven 2 goals
+Still 13/15 goals and 44/48 nodes
+
+FOL -      6s
+Total time - AVLTreeNode.pruneMin$checkDefinedness:      3s
+Slicer Ended - function "AVLTreeNode.pruneMin$checkDefinedness"
+Slicer starting - function "AVLTreeNode.pruneMin"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 209/676 - assertions/statements 209/1927
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes 209/ 676 - proved   0 - time [     3s]/[     3s]
+
+***Extracting CFG                [1] start  - goals/nodes 209/ 676
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes 111/ 369 - proved  98 - time [     0s]/[     4s]
+
+***Building Universes            [1] start  - goals/nodes 111/ 369
+***Building Universes            [0] end    - goals/nodes 107/ 358 - proved   4 - time [     4s]/[     8s]
+
+***Saturating Equalities         [0] start  - goals/nodes 107/ 358
+***Saturating Equalities         [0] end    - goals/nodes 107/ 358 - proved   0 - time [     0s]/[     8s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes 107/ 358
+***Saturating CFG Maps           [0] end    - goals/nodes 101/ 342 - proved   6 - time [    10s]/[    19s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes 101/ 342
+***Saturating CFG[In]            [0] end    - goals/nodes  96/ 337 - proved   5 - time [     1s]/[    21s]
+
+***Saturating Equalities         [1] start  - goals/nodes  96/ 337
+***Saturating Equalities         [1] end    - goals/nodes  88/ 329 - proved   8 - time [     3s]/[    25s]
+***Analysis done - time: [    34s] - proven 23 goals
+Still 88/111 goals and 329/369 nodes
+
+FOL -     39s
+Total time - AVLTreeNode.pruneMin:     25s
+Slicer Ended - function "AVLTreeNode.pruneMin"
+Slicer starting - function "AVLTreeNode.has$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 4/12 - assertions/statements 4/126
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes   4/  12 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes   4/  12
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes   1/   2 - proved   3 - time [     0s]/[     2s]
+
+***Building Universes            [1] start  - goals/nodes   1/   2
+***Building Universes            [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Saturating Equalities         [0] start  - goals/nodes   1/   2
+***Saturating Equalities         [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes   1/   2
+***Saturating CFG Maps           [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes   1/   2
+***Saturating CFG[In]            [0] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+
+***Saturating Equalities         [1] start  - goals/nodes   1/   2
+***Saturating Equalities         [1] end    - goals/nodes   1/   2 - proved   0 - time [     0s]/[     2s]
+***Analysis done - time: [     4s] - proven 0 goals
+Still 1/1 goals and 2/2 nodes
+
+FOL -      4s
+Total time - AVLTreeNode.has$checkDefinedness:      2s
+Slicer Ended - function "AVLTreeNode.has$checkDefinedness"
+Slicer starting - function "AVLTreeNode.has"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 78/342 - assertions/statements 78/1249
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  78/ 342 - proved   0 - time [     2s]/[     3s]
+
+***Extracting CFG                [1] start  - goals/nodes  78/ 342
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  44/ 217 - proved  34 - time [     0s]/[     3s]
+
+***Building Universes            [1] start  - goals/nodes  44/ 217
+***Building Universes            [0] end    - goals/nodes  41/ 211 - proved   3 - time [     2s]/[     5s]
+
+***Saturating Equalities         [0] start  - goals/nodes  41/ 211
+***Saturating Equalities         [0] end    - goals/nodes  41/ 211 - proved   0 - time [     0s]/[     5s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  41/ 211
+***Saturating CFG Maps           [0] end    - goals/nodes  40/ 210 - proved   1 - time [     5s]/[    11s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  40/ 210
+***Saturating CFG[In]            [0] end    - goals/nodes  39/ 209 - proved   1 - time [     0s]/[    12s]
+
+***Saturating Equalities         [1] start  - goals/nodes  39/ 209
+***Saturating Equalities         [1] end    - goals/nodes  39/ 209 - proved   0 - time [     0s]/[    12s]
+***Analysis done - time: [    18s] - proven 5 goals
+Still 39/44 goals and 209/217 nodes
+
+FOL -     20s
+Total time - AVLTreeNode.has:     12s
+Slicer Ended - function "AVLTreeNode.has"
+Slicer starting - function "AVLTreeNode.getBalanceFactor$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 14/354 - assertions/statements 14/1921
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  14/ 354 - proved   0 - time [     2s]/[     3s]
+
+***Extracting CFG                [1] start  - goals/nodes  14/ 354
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes   5/ 184 - proved   9 - time [     0s]/[     4s]
+
+***Building Universes            [1] start  - goals/nodes   5/ 184
+***Building Universes            [0] end    - goals/nodes   5/ 184 - proved   0 - time [     3s]/[     8s]
+
+***Saturating Equalities         [0] start  - goals/nodes   5/ 184
+***Saturating Equalities         [0] end    - goals/nodes   5/ 184 - proved   0 - time [     0s]/[     8s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes   5/ 184
+***Saturating CFG Maps           [0] end    - goals/nodes   5/ 184 - proved   0 - time [    10s]/[    19s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes   5/ 184
+***Saturating CFG[In]            [0] end    - goals/nodes   5/ 184 - proved   0 - time [     1s]/[    20s]
+
+***Saturating Equalities         [1] start  - goals/nodes   5/ 184
+***Saturating Equalities         [1] end    - goals/nodes   2/  21 - proved   3 - time [     5s]/[    25s]
+***Analysis done - time: [    33s] - proven 3 goals
+Still 2/5 goals and 21/184 nodes
+
+FOL -     33s
+Total time - AVLTreeNode.getBalanceFactor$checkDefinedness:     25s
+Slicer Ended - function "AVLTreeNode.getBalanceFactor$checkDefinedness"
+Slicer starting - function "AVLTreeNode.getBalanceFactor"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 65/307 - assertions/statements 65/1094
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  65/ 307 - proved   0 - time [     2s]/[     3s]
+
+***Extracting CFG                [1] start  - goals/nodes  65/ 307
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  31/ 173 - proved  34 - time [     0s]/[     3s]
+
+***Building Universes            [1] start  - goals/nodes  31/ 173
+***Building Universes            [0] end    - goals/nodes  30/ 171 - proved   1 - time [     1s]/[     5s]
+
+***Saturating Equalities         [0] start  - goals/nodes  30/ 171
+***Saturating Equalities         [0] end    - goals/nodes  30/ 171 - proved   0 - time [     0s]/[     5s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  30/ 171
+***Saturating CFG Maps           [0] end    - goals/nodes  30/ 171 - proved   0 - time [     4s]/[    10s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  30/ 171
+***Saturating CFG[In]            [0] end    - goals/nodes  29/ 170 - proved   1 - time [     0s]/[    10s]
+
+***Saturating Equalities         [1] start  - goals/nodes  29/ 170
+***Saturating Equalities         [1] end    - goals/nodes  29/ 170 - proved   0 - time [     0s]/[    10s]
+***Analysis done - time: [    16s] - proven 2 goals
+Still 29/31 goals and 170/173 nodes
+
+FOL -     18s
+Total time - AVLTreeNode.getBalanceFactor:     10s
+Slicer Ended - function "AVLTreeNode.getBalanceFactor"
+Slicer starting - function "AVLTreeNode.getBalanceFactorI$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 60/160 - assertions/statements 60/373
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  60/ 160 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes  60/ 160
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  12/  51 - proved  48 - time [     0s]/[     3s]
+
+***Building Universes            [1] start  - goals/nodes  12/  51
+***Building Universes            [0] end    - goals/nodes  12/  51 - proved   0 - time [     0s]/[     3s]
+
+***Saturating Equalities         [0] start  - goals/nodes  12/  51
+***Saturating Equalities         [0] end    - goals/nodes  12/  51 - proved   0 - time [     0s]/[     3s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  12/  51
+***Saturating CFG Maps           [0] end    - goals/nodes  12/  51 - proved   0 - time [     0s]/[     4s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  12/  51
+***Saturating CFG[In]            [0] end    - goals/nodes  12/  51 - proved   0 - time [     0s]/[     4s]
+
+***Saturating Equalities         [1] start  - goals/nodes  12/  51
+***Saturating Equalities         [1] end    - goals/nodes   7/  46 - proved   5 - time [     0s]/[     4s]
+***Analysis done - time: [     5s] - proven 5 goals
+Still 7/12 goals and 46/51 nodes
+
+FOL -      6s
+Total time - AVLTreeNode.getBalanceFactorI$checkDefinedness:      4s
+Slicer Ended - function "AVLTreeNode.getBalanceFactorI$checkDefinedness"
+Slicer starting - function "AVLTreeNode.getBalanceFactorI"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 55/320 - assertions/statements 55/1521
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  55/ 320 - proved   0 - time [     3s]/[     3s]
+
+***Extracting CFG                [1] start  - goals/nodes  55/ 320
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  27/ 126 - proved  28 - time [     0s]/[     4s]
+
+***Building Universes            [1] start  - goals/nodes  27/ 126
+***Building Universes            [0] end    - goals/nodes  25/ 122 - proved   2 - time [     1s]/[     6s]
+
+***Saturating Equalities         [0] start  - goals/nodes  25/ 122
+***Saturating Equalities         [0] end    - goals/nodes  25/ 122 - proved   0 - time [     0s]/[     6s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  25/ 122
+***Saturating CFG Maps           [0] end    - goals/nodes  25/ 122 - proved   0 - time [     2s]/[     9s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  25/ 122
+***Saturating CFG[In]            [0] end    - goals/nodes  25/ 122 - proved   0 - time [     0s]/[     9s]
+
+***Saturating Equalities         [1] start  - goals/nodes  25/ 122
+***Saturating Equalities         [1] end    - goals/nodes  23/ 120 - proved   2 - time [     0s]/[    10s]
+***Analysis done - time: [    14s] - proven 4 goals
+Still 23/27 goals and 120/126 nodes
+
+FOL -     16s
+Total time - AVLTreeNode.getBalanceFactorI:     10s
+Slicer Ended - function "AVLTreeNode.getBalanceFactorI"
+Slicer starting - function "AVLTreeNode.close$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 147/365 - assertions/statements 147/619
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes 147/ 365 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes 147/ 365
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  35/ 136 - proved 112 - time [     0s]/[     2s]
+
+***Building Universes            [1] start  - goals/nodes  35/ 136
+***Building Universes            [0] end    - goals/nodes  33/ 132 - proved   2 - time [     1s]/[     4s]
+
+***Saturating Equalities         [0] start  - goals/nodes  33/ 132
+***Saturating Equalities         [0] end    - goals/nodes  33/ 132 - proved   0 - time [     0s]/[     4s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  33/ 132
+***Saturating CFG Maps           [0] end    - goals/nodes  30/ 129 - proved   3 - time [     2s]/[     6s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  30/ 129
+***Saturating CFG[In]            [0] end    - goals/nodes  30/ 129 - proved   0 - time [     0s]/[     7s]
+
+***Saturating Equalities         [1] start  - goals/nodes  30/ 129
+***Saturating Equalities         [1] end    - goals/nodes  16/ 115 - proved  14 - time [     0s]/[     7s]
+***Analysis done - time: [    10s] - proven 19 goals
+Still 16/35 goals and 115/136 nodes
+
+FOL -     11s
+Total time - AVLTreeNode.close$checkDefinedness:      7s
+Slicer Ended - function "AVLTreeNode.close$checkDefinedness"
+Slicer starting - function "AVLTreeNode.close"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 150/655 - assertions/statements 150/2347
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes 150/ 655 - proved   0 - time [     4s]/[     4s]
+
+***Extracting CFG                [1] start  - goals/nodes 150/ 655
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  61/ 296 - proved  89 - time [     0s]/[     5s]
+
+***Building Universes            [1] start  - goals/nodes  61/ 296
+***Building Universes            [0] end    - goals/nodes  57/ 288 - proved   4 - time [     4s]/[     9s]
+
+***Saturating Equalities         [0] start  - goals/nodes  57/ 288
+***Saturating Equalities         [0] end    - goals/nodes  57/ 288 - proved   0 - time [     0s]/[     9s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  57/ 288
+***Saturating CFG Maps           [0] end    - goals/nodes  57/ 288 - proved   0 - time [    10s]/[    20s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  57/ 288
+***Saturating CFG[In]            [0] end    - goals/nodes  57/ 288 - proved   0 - time [     1s]/[    21s]
+
+***Saturating Equalities         [1] start  - goals/nodes  57/ 288
+***Saturating Equalities         [1] end    - goals/nodes  57/ 288 - proved   0 - time [     0s]/[    21s]
+***Analysis done - time: [    31s] - proven 4 goals
+Still 57/61 goals and 288/296 nodes
+
+FOL -     34s
+Total time - AVLTreeNode.close:     21s
+Slicer Ended - function "AVLTreeNode.close"
+Slicer starting - function "AVLTreeNode.rebalanceLeft$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 95/215 - assertions/statements 95/420
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  95/ 215 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes  95/ 215
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  28/  74 - proved  67 - time [     0s]/[     2s]
+
+***Building Universes            [1] start  - goals/nodes  28/  74
+***Building Universes            [0] end    - goals/nodes  25/  68 - proved   3 - time [     0s]/[     3s]
+
+***Saturating Equalities         [0] start  - goals/nodes  25/  68
+***Saturating Equalities         [0] end    - goals/nodes  25/  68 - proved   0 - time [     0s]/[     3s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  25/  68
+***Saturating CFG Maps           [0] end    - goals/nodes  25/  68 - proved   0 - time [     1s]/[     5s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  25/  68
+***Saturating CFG[In]            [0] end    - goals/nodes  25/  68 - proved   0 - time [     0s]/[     5s]
+
+***Saturating Equalities         [1] start  - goals/nodes  25/  68
+***Saturating Equalities         [1] end    - goals/nodes  25/  68 - proved   0 - time [     0s]/[     5s]
+***Analysis done - time: [     8s] - proven 3 goals
+Still 25/28 goals and 68/74 nodes
+
+FOL -      9s
+Total time - AVLTreeNode.rebalanceLeft$checkDefinedness:      5s
+Slicer Ended - function "AVLTreeNode.rebalanceLeft$checkDefinedness"
+Slicer starting - function "AVLTreeNode.rebalanceLeft"
+Preprocessing: -      2s
+FOLing around:
+
+***Processing clauses: goals/nodes 95/1918 - assertions/statements 95/8000
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  95/1918 - proved   0 - time [    12s]/[    15s]
+
+***Extracting CFG                [1] start  - goals/nodes  95/1918
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  54/1326 - proved  41 - time [     3s]/[    19s]
+
+***Building Universes            [1] start  - goals/nodes  54/1326
+***Building Universes            [0] end    - goals/nodes  52/1322 - proved   2 - time [    27s]/[    46s]
+
+***Saturating Equalities         [0] start  - goals/nodes  52/1322
+***Saturating Equalities         [0] end    - goals/nodes  52/1322 - proved   0 - time [     0s]/[    46s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  52/1322
+***Saturating CFG Maps           [0] end    - goals/nodes  52/1322 - proved   0 - time [   149s]/[   196s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  52/1322
+***Saturating CFG[In]            [0] end    - goals/nodes  51/1321 - proved   1 - time [    29s]/[   225s]
+
+***Saturating Equalities         [1] start  - goals/nodes  51/1321
+***Saturating Equalities         [1] end    - goals/nodes  51/1321 - proved   0 - time [     0s]/[   225s]
+***Analysis done - time: [   311s] - proven 3 goals
+Still 51/54 goals and 1321/1326 nodes
+
+FOL -    346s
+Total time - AVLTreeNode.rebalanceLeft:    225s
+Slicer Ended - function "AVLTreeNode.rebalanceLeft"
+Slicer starting - function "AVLTreeNode.rebalanceRL$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 102/308 - assertions/statements 102/991
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes 102/ 308 - proved   0 - time [     2s]/[     3s]
+
+***Extracting CFG                [1] start  - goals/nodes 102/ 308
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  34/ 101 - proved  68 - time [     0s]/[     3s]
+
+***Building Universes            [1] start  - goals/nodes  34/ 101
+***Building Universes            [0] end    - goals/nodes  31/  95 - proved   3 - time [     1s]/[     4s]
+
+***Saturating Equalities         [0] start  - goals/nodes  31/  95
+***Saturating Equalities         [0] end    - goals/nodes  31/  95 - proved   0 - time [     0s]/[     4s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  31/  95
+***Saturating CFG Maps           [0] end    - goals/nodes  31/  95 - proved   0 - time [     3s]/[     8s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  31/  95
+***Saturating CFG[In]            [0] end    - goals/nodes  31/  95 - proved   0 - time [     0s]/[     8s]
+
+***Saturating Equalities         [1] start  - goals/nodes  31/  95
+***Saturating Equalities         [1] end    - goals/nodes  31/  95 - proved   0 - time [     0s]/[     8s]
+***Analysis done - time: [    12s] - proven 3 goals
+Still 31/34 goals and 95/101 nodes
+
+FOL -     13s
+Total time - AVLTreeNode.rebalanceRL$checkDefinedness:      8s
+Slicer Ended - function "AVLTreeNode.rebalanceRL$checkDefinedness"
+Slicer starting - function "AVLTreeNode.rebalanceRL"
+Preprocessing: -      1s
+FOLing around:
+
+***Processing clauses: goals/nodes 190/1361 - assertions/statements 190/5040
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes 190/1361 - proved   0 - time [     5s]/[     6s]
+
+***Extracting CFG                [1] start  - goals/nodes 190/1361
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  98/ 925 - proved  92 - time [     2s]/[     9s]
+
+***Building Universes            [1] start  - goals/nodes  98/ 925
+***Building Universes            [0] end    - goals/nodes  97/ 923 - proved   1 - time [    16s]/[    26s]
+
+***Saturating Equalities         [0] start  - goals/nodes  97/ 923
+***Saturating Equalities         [0] end    - goals/nodes  97/ 923 - proved   0 - time [     0s]/[    26s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  97/ 923
+***Saturating CFG Maps           [0] end    - goals/nodes  93/ 900 - proved   4 - time [   127s]/[   153s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  93/ 900
+***Saturating CFG[In]            [0] end    - goals/nodes  89/ 896 - proved   4 - time [    62s]/[   215s]
+
+***Saturating Equalities         [1] start  - goals/nodes  89/ 896
+***Saturating Equalities         [1] end    - goals/nodes  89/ 896 - proved   0 - time [     0s]/[   215s]
+***Analysis done - time: [   278s] - proven 9 goals
+Still 89/98 goals and 896/925 nodes
+
+FOL -    305s
+Total time - AVLTreeNode.rebalanceRL:    215s
+Slicer Ended - function "AVLTreeNode.rebalanceRL"
+Slicer starting - function "AVLTreeNode.rebalanceRR$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 99/223 - assertions/statements 99/425
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  99/ 223 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes  99/ 223
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  29/  76 - proved  70 - time [     0s]/[     2s]
+
+***Building Universes            [1] start  - goals/nodes  29/  76
+***Building Universes            [0] end    - goals/nodes  26/  70 - proved   3 - time [     0s]/[     3s]
+
+***Saturating Equalities         [0] start  - goals/nodes  26/  70
+***Saturating Equalities         [0] end    - goals/nodes  26/  70 - proved   0 - time [     0s]/[     3s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  26/  70
+***Saturating CFG Maps           [0] end    - goals/nodes  26/  70 - proved   0 - time [     1s]/[     4s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  26/  70
+***Saturating CFG[In]            [0] end    - goals/nodes  26/  70 - proved   0 - time [     0s]/[     5s]
+
+***Saturating Equalities         [1] start  - goals/nodes  26/  70
+***Saturating Equalities         [1] end    - goals/nodes  26/  70 - proved   0 - time [     0s]/[     5s]
+***Analysis done - time: [     7s] - proven 3 goals
+Still 26/29 goals and 70/76 nodes
+
+FOL -      8s
+Total time - AVLTreeNode.rebalanceRR$checkDefinedness:      5s
+Slicer Ended - function "AVLTreeNode.rebalanceRR$checkDefinedness"
+Slicer starting - function "AVLTreeNode.rebalanceRR"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 90/315 - assertions/statements 90/1140
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  90/ 315 - proved   0 - time [     3s]/[     3s]
+
+***Extracting CFG                [1] start  - goals/nodes  90/ 315
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  51/ 162 - proved  39 - time [     0s]/[     4s]
+
+***Building Universes            [1] start  - goals/nodes  51/ 162
+***Building Universes            [0] end    - goals/nodes  49/ 158 - proved   2 - time [     2s]/[     6s]
+
+***Saturating Equalities         [0] start  - goals/nodes  49/ 158
+***Saturating Equalities         [0] end    - goals/nodes  49/ 158 - proved   0 - time [     0s]/[     6s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  49/ 158
+***Saturating CFG Maps           [0] end    - goals/nodes  49/ 155 - proved   0 - time [     4s]/[    11s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  49/ 155
+***Saturating CFG[In]            [0] end    - goals/nodes  48/ 154 - proved   1 - time [     1s]/[    13s]
+
+***Saturating Equalities         [1] start  - goals/nodes  48/ 154
+***Saturating Equalities         [1] end    - goals/nodes  48/ 154 - proved   0 - time [     0s]/[    13s]
+***Analysis done - time: [    19s] - proven 3 goals
+Still 48/51 goals and 154/162 nodes
+
+FOL -     21s
+Total time - AVLTreeNode.rebalanceRR:     13s
+Slicer Ended - function "AVLTreeNode.rebalanceRR"
+Slicer starting - function "AVLTreeNode.rebalanceRight$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 95/215 - assertions/statements 95/420
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  95/ 215 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes  95/ 215
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  29/  79 - proved  66 - time [     0s]/[     2s]
+
+***Building Universes            [1] start  - goals/nodes  29/  79
+***Building Universes            [0] end    - goals/nodes  26/  73 - proved   3 - time [     0s]/[     3s]
+
+***Saturating Equalities         [0] start  - goals/nodes  26/  73
+***Saturating Equalities         [0] end    - goals/nodes  26/  73 - proved   0 - time [     0s]/[     3s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  26/  73
+***Saturating CFG Maps           [0] end    - goals/nodes  26/  73 - proved   0 - time [     2s]/[     5s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  26/  73
+***Saturating CFG[In]            [0] end    - goals/nodes  26/  73 - proved   0 - time [     0s]/[     5s]
+
+***Saturating Equalities         [1] start  - goals/nodes  26/  73
+***Saturating Equalities         [1] end    - goals/nodes  26/  73 - proved   0 - time [     0s]/[     5s]
+***Analysis done - time: [     9s] - proven 3 goals
+Still 26/29 goals and 73/79 nodes
+
+FOL -     10s
+Total time - AVLTreeNode.rebalanceRight$checkDefinedness:      5s
+Slicer Ended - function "AVLTreeNode.rebalanceRight$checkDefinedness"
+Slicer starting - function "AVLTreeNode.rebalanceRight"
+Preprocessing: -      2s
+FOLing around:
+
+***Processing clauses: goals/nodes 95/1918 - assertions/statements 95/8000
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  95/1918 - proved   0 - time [    11s]/[    13s]
+
+***Extracting CFG                [1] start  - goals/nodes  95/1918
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  54/1329 - proved  41 - time [     3s]/[    17s]
+
+***Building Universes            [1] start  - goals/nodes  54/1329
+***Building Universes            [0] end    - goals/nodes  52/1325 - proved   2 - time [    27s]/[    44s]
+
+***Saturating Equalities         [0] start  - goals/nodes  52/1325
+***Saturating Equalities         [0] end    - goals/nodes  52/1325 - proved   0 - time [     0s]/[    44s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  52/1325
+***Saturating CFG Maps           [0] end    - goals/nodes  52/1325 - proved   0 - time [   180s]/[   225s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  52/1325
+***Saturating CFG[In]            [0] end    - goals/nodes  52/1325 - proved   0 - time [    12s]/[   238s]
+
+***Saturating Equalities         [1] start  - goals/nodes  52/1325
+***Saturating Equalities         [1] end    - goals/nodes  50/1323 - proved   2 - time [    19s]/[   257s]
+***Analysis done - time: [   345s] - proven 4 goals
+Still 50/54 goals and 1323/1329 nodes
+
+FOL -    384s
+Total time - AVLTreeNode.rebalanceRight:    257s
+Slicer Ended - function "AVLTreeNode.rebalanceRight"
+Slicer starting - function "AVLTreeNode.rebalanceLR$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 102/308 - assertions/statements 102/991
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes 102/ 308 - proved   0 - time [     2s]/[     3s]
+
+***Extracting CFG                [1] start  - goals/nodes 102/ 308
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  34/ 104 - proved  68 - time [     0s]/[     3s]
+
+***Building Universes            [1] start  - goals/nodes  34/ 104
+***Building Universes            [0] end    - goals/nodes  31/  98 - proved   3 - time [     1s]/[     4s]
+
+***Saturating Equalities         [0] start  - goals/nodes  31/  98
+***Saturating Equalities         [0] end    - goals/nodes  31/  98 - proved   0 - time [     0s]/[     4s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  31/  98
+***Saturating CFG Maps           [0] end    - goals/nodes  31/  98 - proved   0 - time [     3s]/[     7s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  31/  98
+***Saturating CFG[In]            [0] end    - goals/nodes  31/  98 - proved   0 - time [     0s]/[     8s]
+
+***Saturating Equalities         [1] start  - goals/nodes  31/  98
+***Saturating Equalities         [1] end    - goals/nodes  31/  98 - proved   0 - time [     0s]/[     8s]
+***Analysis done - time: [    13s] - proven 3 goals
+Still 31/34 goals and 98/104 nodes
+
+FOL -     14s
+Total time - AVLTreeNode.rebalanceLR$checkDefinedness:      8s
+Slicer Ended - function "AVLTreeNode.rebalanceLR$checkDefinedness"
+Slicer starting - function "AVLTreeNode.rebalanceLR"
+Preprocessing: -      1s
+FOLing around:
+
+***Processing clauses: goals/nodes 190/1361 - assertions/statements 190/5040
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes 190/1361 - proved   0 - time [     5s]/[     7s]
+
+***Extracting CFG                [1] start  - goals/nodes 190/1361
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  98/ 925 - proved  92 - time [     2s]/[    10s]
+
+***Building Universes            [1] start  - goals/nodes  98/ 925
+***Building Universes            [0] end    - goals/nodes  97/ 923 - proved   1 - time [    17s]/[    27s]
+
+***Saturating Equalities         [0] start  - goals/nodes  97/ 923
+***Saturating Equalities         [0] end    - goals/nodes  97/ 923 - proved   0 - time [     0s]/[    27s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  97/ 923
+***Saturating CFG Maps           [0] end    - goals/nodes  93/ 900 - proved   4 - time [   114s]/[   142s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  93/ 900
+***Saturating CFG[In]            [0] end    - goals/nodes  89/ 896 - proved   4 - time [    58s]/[   200s]
+
+***Saturating Equalities         [1] start  - goals/nodes  89/ 896
+***Saturating Equalities         [1] end    - goals/nodes  89/ 896 - proved   0 - time [     0s]/[   200s]
+***Analysis done - time: [   265s] - proven 9 goals
+Still 89/98 goals and 896/925 nodes
+
+FOL -    293s
+Total time - AVLTreeNode.rebalanceLR:    200s
+Slicer Ended - function "AVLTreeNode.rebalanceLR"
+Slicer starting - function "AVLTreeNode.rebalanceLL$checkDefinedness"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 99/223 - assertions/statements 99/425
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  99/ 223 - proved   0 - time [     2s]/[     2s]
+
+***Extracting CFG                [1] start  - goals/nodes  99/ 223
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  30/  81 - proved  69 - time [     0s]/[     2s]
+
+***Building Universes            [1] start  - goals/nodes  30/  81
+***Building Universes            [0] end    - goals/nodes  27/  75 - proved   3 - time [     0s]/[     3s]
+
+***Saturating Equalities         [0] start  - goals/nodes  27/  75
+***Saturating Equalities         [0] end    - goals/nodes  27/  75 - proved   0 - time [     0s]/[     3s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  27/  75
+***Saturating CFG Maps           [0] end    - goals/nodes  27/  75 - proved   0 - time [     1s]/[     5s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  27/  75
+***Saturating CFG[In]            [0] end    - goals/nodes  27/  75 - proved   0 - time [     0s]/[     5s]
+
+***Saturating Equalities         [1] start  - goals/nodes  27/  75
+***Saturating Equalities         [1] end    - goals/nodes  27/  75 - proved   0 - time [     0s]/[     5s]
+***Analysis done - time: [     7s] - proven 3 goals
+Still 27/30 goals and 75/81 nodes
+
+FOL -      8s
+Total time - AVLTreeNode.rebalanceLL$checkDefinedness:      5s
+Slicer Ended - function "AVLTreeNode.rebalanceLL$checkDefinedness"
+Slicer starting - function "AVLTreeNode.rebalanceLL"
+Preprocessing: -      0s
+FOLing around:
+
+***Processing clauses: goals/nodes 90/315 - assertions/statements 90/1140
+   FOL conversion
+   CNF Conversion
+   Eliminating unit clauses
+   Eliminating by criterion
+   Eliminating fully defined functions
+   Factoring inequality clauses
+   Eliminating top-positive-only functions
+   Eliminating unusable clauses
+   Eliminating unsused symbols
+***Preprocessing clauses         [1] end    - goals/nodes  90/ 315 - proved   0 - time [     3s]/[     3s]
+
+***Extracting CFG                [1] start  - goals/nodes  90/ 315
+Dumping start
+Dumping start.1
+***Extracting CFG                [1] end    - goals/nodes  51/ 162 - proved  39 - time [     0s]/[     4s]
+
+***Building Universes            [1] start  - goals/nodes  51/ 162
+***Building Universes            [0] end    - goals/nodes  49/ 158 - proved   2 - time [     2s]/[     6s]
+
+***Saturating Equalities         [0] start  - goals/nodes  49/ 158
+***Saturating Equalities         [0] end    - goals/nodes  49/ 158 - proved   0 - time [     0s]/[     6s]
+
+***Saturating CFG Maps           [0] start  - goals/nodes  49/ 158
+***Saturating CFG Maps           [0] end    - goals/nodes  49/ 155 - proved   0 - time [     6s]/[    12s]
+
+***Saturating CFG[In]            [0] start  - goals/nodes  49/ 155
+***Saturating CFG[In]            [0] end    - goals/nodes  48/ 154 - proved   1 - time [     3s]/[    15s]
+
+***Saturating Equalities         [1] start  - goals/nodes  48/ 154
+***Saturating Equalities         [1] end    - goals/nodes  48/ 154 - proved   0 - time [     0s]/[    15s]
+***Analysis done - time: [    21s] - proven 3 goals
+Still 48/51 goals and 154/162 nodes
+
+FOL -     24s
+Total time - AVLTreeNode.rebalanceLL:     15s
+Slicer Ended - function "AVLTreeNode.rebalanceLL"
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.rebalanceRL.build.smt2
+ :arith-conflicts         3295
+ :conflicts               6311
+ :decisions               421671
+ :propagations            26457157
+ :quant-instantiations    1795508
+ :time                    232.47
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.rebalanceRL.build.mrs.smt2
+ :arith-conflicts         3799
+ :conflicts               7622
+ :decisions               1607756
+ :propagations            31123256
+ :quant-instantiations    2502699
+ :time                    311.57
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.rebalanceRL.round_0_MR.mrs.smt2
+ :arith-conflicts         4114
+ :conflicts               6074
+ :decisions               1278073
+ :propagations            17287925
+ :quant-instantiations    1427886
+ :time                    209.34
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.rebalanceRL.round_0_MR.mrs.smt2
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.rebalanceRL.round_0_IN.mrs.smt2
+ :arith-conflicts         2101
+ :conflicts               3949
+ :decisions               866855
+ :propagations            15642231
+ :quant-instantiations    1250992
+ :time                    163.38
+
+C:\work\slicer\test\Chalice\AVLTree>z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.rebalanceRL.round_0_IN.smt2
+ :arith-conflicts         2970
+ :conflicts               6636
+ :decisions               534495
+ :propagations            27387567
+ :quant-instantiations    1901320
+ :time                    257.24

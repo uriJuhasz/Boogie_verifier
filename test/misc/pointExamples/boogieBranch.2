@@ -1,0 +1,16 @@
+procedure m(b1:Boolean,b2:Boolean) returns (x:int)
+	ensures x>0;
+{
+	if (b1)
+	{
+		x:=1;
+	}else{
+		x:=2;
+	}
+	if (b2)
+	{
+		x:=3;
+	}else{
+		x:=4;
+	}
+}

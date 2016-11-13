@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<boogie version="2.2.30705.1126" commandLine="&quot;C:\boogie\Boogie.exe&quot;  /errorLimit:28 /z3opt:/rs:42 /enhancedErrorMessages:1  /trace /vcsMaxKeepGoingSplits:10 /vcsKeepGoingTimeout:1  /proc:ProveInv /xml:resultInvComp.xml Heap.bpl Region.bpl Auxiliary.bpl TreeStereotype.bpl TreeOperations.bpl TreeInvariant.bpl CompositeType.bpl CompositeOperations.bpl CompositeInvariant.bpl InvCompositeProofs.bpl">
+  <file name="InvCompositeProofs.bpl">
+    <fileFragment name="Heap.bpl" />
+    <fileFragment name="Region.bpl" />
+    <fileFragment name="Auxiliary.bpl" />
+    <fileFragment name="TreeStereotype.bpl" />
+    <fileFragment name="TreeOperations.bpl" />
+    <fileFragment name="TreeInvariant.bpl" />
+    <fileFragment name="CompositeType.bpl" />
+    <fileFragment name="CompositeOperations.bpl" />
+    <fileFragment name="CompositeInvariant.bpl" />
+    <fileFragment name="InvCompositeProofs.bpl" />
+    <method name="ProveInvCompositeFrame" startTime="2011-11-27 15:02:18Z">
+      <conclusion endTime="2011-11-27 15:02:18Z" duration="0.8558464" outcome="correct" />
+    </method>
+    <method name="ProveInvCompositeStFrame" startTime="2011-11-27 15:02:18Z">
+      <conclusion endTime="2011-11-27 15:02:18Z" duration="0.0060003" outcome="correct" />
+    </method>
+    <method name="ProveInvCompositeRemoveChild" startTime="2011-11-27 15:02:18Z">
+      <conclusion endTime="2011-11-27 15:02:19Z" duration="0.9828536" outcome="correct" />
+    </method>
+    <method name="ProveInvCompositeAddChild" startTime="2011-11-27 15:02:19Z">
+      <conclusion endTime="2011-11-27 15:02:19Z" duration="0.0050003" outcome="correct" />
+    </method>
+    <method name="ProveInvCompositeUpdateChild" startTime="2011-11-27 15:02:19Z">
+      <conclusion endTime="2011-11-27 15:02:19Z" duration="0.0090005" outcome="correct" />
+    </method>
+    <method name="ProveInvCompositeSt2Composite" startTime="2011-11-27 15:02:19Z">
+      <conclusion endTime="2011-11-27 15:02:19Z" duration="0.0130008" outcome="correct" />
+    </method>
+  </file>
+</boogie>

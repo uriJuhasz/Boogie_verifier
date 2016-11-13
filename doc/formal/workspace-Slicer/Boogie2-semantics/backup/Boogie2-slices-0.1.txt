@@ -1,0 +1,58 @@
+Static slice 
+	For:
+		A program P :
+			vocabulary        : voc_P (Types, Variables, Functions, Relations)
+			background theory : background_P
+			body              : body_P = (V,E) 
+		A condition C(v) :
+			C \in expression over voc_P U V
+			at node v
+	
+	First Definition - a slice is:
+		A program P' :
+			* With vocabulary voc_P' \subseteq voc_P
+				- Where C is over voc_P'
+			* With background theory background_P'
+				- ? Where background_P => background_P'
+			* With body body_P  = (V',E')
+				- where 
+					- V' = V except statements can be replaced by SKIP        //TODO: Later drop irrelevant or unreachable statements
+					- E' = E                                                  //TODO: Later remove/contract edges 
+					- v \in V'
+				
+				- condition:
+					- P |- C(v) iff P' |- C(v)
+	//				- P |- Q(v) iff P' |- Q(v)
+	//					* Q is over voc_P' / Q=C / Q is over voc(C) 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Abstract Definition - a slice is:
+		Abstraction function a:
+			- Program locations : a: V -> V' surjective
+			- Expressions       : a: Exp -> Exp'    (Exp/' - set of type correct expressions over P/'.vocabulary)
+			- States            : a: S -> S'
+				- For all expressions e, states S : S |- [e] (S satisfies E) ?iff? a(S) |- [a(e')]		
+			
+		A program P' and abstraction function a() :
+			* Vocabulary voc_P' 
+			* A condition C'(v') over voc_P'
+				- where a(C)(v) = C'(v')
+			* With background theory background_P'
+				- ? Where a(background_P) => background_P'
+			* With body body_P  = (V',E')
+				- where 
+					- a(body_P) = body_P'
+					- a(v)      = v'
+					- a(start)  = start'
+					- a(end)    = end'
+					- v' \in V'
+					
+					- for every trace tv of P (ends in v):
+						- ?? P, tv |-  Q(v) ==> P', a(tv) |-  a(Q)(v') 
+				
+				- condition:
+					- P |- C(v) iff P' |- C(v)
+	//				- P |- Q(v) iff P' |- Q(v)
+	//					* Q is over voc_P' / Q=C / Q is over voc(C) 
+	
+		

@@ -1,0 +1,157 @@
++		this	{C<9>(8)}	Slicer.Analyzers.FOLConverter.CanonicalForms.SU
+		SU.m[9].predecessorLastRevision	53	int
+		JU.m[8].currentRevision	62	int
+		SU.m[9].predecessorNextRevision	61	int
+		et.index	184762	int
+		et.tmIndex	error CS1061: 'Universe.IEmbedTemplate' does not contain a definition for 'tmIndex' and no extension method 'tmIndex' accepting a first argument of type 'Universe.IEmbedTemplate' could be found (are you missing a using directive or an assembly reference?)	
++		gtt	{(Mask@18[null,AVLTreeNode.keys],perm$R)}	Slicer.Analyzers.FOLConverter.CanonicalForms.GTT
+		gtt.index	143180	int
+		gtt.stringCacheN	"(|45521|,|9|)"	string
+		SU.m[9].gttRevisionMap[gtt]	628	int
++		ott	{(Mask@10[Heap@1[this,AVLTreeNode.right],AVLTreeNode.keys],perm$R)}	Slicer.Analyzers.FOLConverter.CanonicalForms.GTT
+		ott.index	138492	int
+		ott.stringCacheN	"(|44423|,|9|)"	string
+		JU.m[8].gttRevisionMap[ott]	42	int
++		JU.m[8].gttMergeMap[ott]	{(Mask@10[Heap@1[this,AVLTreeNode.right],AVLTreeNode.keys],perm$R)}	Slicer.Analyzers.FOLConverter.CanonicalForms.GTT
+		JU.m[8].gttMergeMap[ott].index	138492	int
+
+		
++		this	{TM[118652](C<9>(8))}	Slicer.Analyzers.FOLConverter.CanonicalForms.STemplateMaker {Slicer.Analyzers.FOLConverter.CanonicalForms.SImportTemplateMaker}
++		gtt	{(Mask@10[Heap@1[this,AVLTreeNode.right],AVLTreeNode.keys],perm$R)} {$1}	Slicer.Analyzers.FOLConverter.CanonicalForms.GTT
+		gtt.index	138492	int
++		su	{C<9>(8)}	Slicer.Analyzers.FOLConverter.CanonicalForms.SU
+-		gttSS.tiToTDMap[gtti]	{Slicer.Analyzers.FOLConverter.CanonicalForms.SGTTD}	Slicer.Analyzers.FOLConverter.CanonicalForms.SGTTD
++		allSGFAs	Count = 1	System.Collections.Generic.ICollection<Slicer.Analyzers.FOLConverter.Formulae.Function> {System.Collections.Generic.Dictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, int>.KeyCollection}
++		allSGTIs	Count = 1	System.Collections.Generic.ICollection<int> {System.Collections.Generic.Dictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, int>.ValueCollection}
+		depth	-2	int
+		flags	96	int
++		gtis	{int[2]}	int[]
+		gtti	683	int
+		hasActualGFAs	false	bool
+		hasNewSources	true	bool
+		isActual	false	bool
+		isActualTDUpdated	false	bool
+		isActualUpdated	false	bool
+		isAnyUpdated	true	bool
+		isDepthDownUpdated	true	bool
+		isDepthUpdated	true	bool
+		isFeasible	false	bool
+		isFeasibleUpdated	false	bool
+		isGoal	false	bool
+		isOriginal	false	bool
++		lgtts	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
++		lts	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
+		maxDepth	4	int
+		minDepth	-4	int
++		nlts	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
++		npgtts	Count = 2	System.Collections.Generic.IEnumerable<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
+		pDepth	-2	int
++		pLTs	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
++		pNLTs	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
++		pNPGTTs	Count = 2	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
++		pPGTTs	Count = 2	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
++		pSGFAs	Count = 1	System.Collections.Generic.IDictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, int> {System.Collections.Generic.Dictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, int>}
++		pgtts	Count = 2	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
++		pts	Count = 2	System.Collections.Generic.IEnumerable<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
+		ti	683	int
+		tiP	683	int
+		topDepth	536870911	int
++		Static members		
+		gtti	683	int
+
+		
++		Slicer.Analyzers.FOLConverter.CanonicalForms.TemplateMaker<U, USS, GTD, GTTD, GTSS, GTTSS>.getGTTD returned	{Slicer.Analyzers.FOLConverter.CanonicalForms.SGTTD}	Slicer.Analyzers.FOLConverter.CanonicalForms.SGTTD
++		$1	{(Mask@10[Heap@1[this,AVLTreeNode.right],AVLTreeNode.keys],perm$R)} {$1}	Slicer.Analyzers.FOLConverter.CanonicalForms.GTT
++		this	{TM[118652](C<9>(8))}	Slicer.Analyzers.FOLConverter.CanonicalForms.STemplateMaker {Slicer.Analyzers.FOLConverter.CanonicalForms.SImportTemplateMaker}
++		et	{ET(C<9>(8)):118652}	Slicer.Analyzers.FOLConverter.CanonicalForms.Universe.IEmbedTemplate {Slicer.Analyzers.FOLConverter.CanonicalForms.Universe.EmbedTemplate}
++		pgtt	{(Mask@10[Heap@1[this,AVLTreeNode.right],AVLTreeNode.keys],perm$R)} {$1}	Slicer.Analyzers.FOLConverter.CanonicalForms.GTT
+		gtti	683	int
+-		gttd	{Slicer.Analyzers.FOLConverter.CanonicalForms.SGTTD}	Slicer.Analyzers.FOLConverter.CanonicalForms.SGTTD
++		allSGFAs	Count = 1	System.Collections.Generic.ICollection<Slicer.Analyzers.FOLConverter.Formulae.Function> {System.Collections.Generic.Dictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, int>.KeyCollection}
++		allSGTIs	Count = 1	System.Collections.Generic.ICollection<int> {System.Collections.Generic.Dictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, int>.ValueCollection}
+		depth	-2	int
+		flags	0	int
++		gtis	{int[2]}	int[]
+		gtti	683	int
+		hasActualGFAs	false	bool
+		hasNewSources	false	bool
+		isActual	false	bool
+		isActualTDUpdated	false	bool
+		isActualUpdated	false	bool
+		isAnyUpdated	false	bool
+		isDepthDownUpdated	false	bool
+		isDepthUpdated	false	bool
+		isFeasible	false	bool
+		isFeasibleUpdated	false	bool
+		isGoal	false	bool
+		isOriginal	false	bool
++		lgtts	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
++		lts	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
+		maxDepth	4	int
+		minDepth	-4	int
++		nlts	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
++		npgtts	Count = 0	System.Collections.Generic.IEnumerable<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
+		pDepth	-2	int
++		pLTs	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
++		pNLTs	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
++		pNPGTTs	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
++		pPGTTs	Count = 2	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
++		pSGFAs	Count = 1	System.Collections.Generic.IDictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, int> {System.Collections.Generic.Dictionary<Slicer.Analyzers.FOLConverter.Formulae.Function, int>}
+-		pgtts	Count = 2	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
+-		[0]	{(Mask@10[null,AVLTreeNode.keys],perm$R)}	Slicer.Analyzers.FOLConverter.CanonicalForms.GTT
+		Count	2	int
++		allGTs	Count = 5	System.Collections.Generic.IEnumerable<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
++		allGTsCache	Count = 5	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
++		dataTypes	{<[PermissionComponent]Integer,PermissionComponent>}	Slicer.StateSpace.Types.ITypeTuple {Slicer.StateSpace.Types.TypeTuple}
++		freeVariables	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.Formulae.LVar> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.Formulae.LVar>}
++		functions	Count = 5	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.Formulae.Function> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.Formulae.Function>}
++		fvMS	{Slicer.Analyzers.FOLConverter.CanonicalForms.FVMS}	Slicer.Analyzers.FOLConverter.CanonicalForms.FVMS
++		groundTerms	{Slicer.Analyzers.FOLConverter.CanonicalForms.GT[2]}	Slicer.Analyzers.FOLConverter.CanonicalForms.GT[]
++		gtT	{Slicer.Analyzers.FOLConverter.CanonicalForms.GT[2]}	System.Collections.Generic.IList<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {Slicer.Analyzers.FOLConverter.CanonicalForms.GT[]}
+		hashCache	889041884	int
+		height	2	int
+		index	142496	int
+		isGround	true	bool
++		orderedFreeVariables	Count = 0	System.Collections.Generic.IList<Slicer.Analyzers.FOLConverter.Formulae.LVar> {System.Collections.Generic.List<Slicer.Analyzers.FOLConverter.Formulae.LVar>}
++		pFreeVariables	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.Formulae.LVar> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.Formulae.LVar>}
++		pFunctions	Count = 5	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.Formulae.Function> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.Formulae.Function>}
+		pTopGTs	null	System.Collections.Generic.IList<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>
+		stringCacheN	"(|45355|,|9|)"	string
+		stringNCache	null	string
++		topGTs	Count = 2	System.Collections.Generic.IEnumerable<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.List<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
++		ts	{Slicer.Analyzers.FOLConverter.CanonicalForms.IT[2]}	Slicer.Analyzers.FOLConverter.CanonicalForms.IT[]
+		typeString	"<[PermissionComponent]Integer,PermissionComponent>"	string
+		typeStringCache	"<[PermissionComponent]Integer,PermissionComponent>"	string
++		Static members		
+-		[1]	{(Mask@10[Heap@1[this,AVLTreeNode.right],AVLTreeNode.keys],perm$R)} {$1}	Slicer.Analyzers.FOLConverter.CanonicalForms.GTT
+		Count	2	int
++		allGTs	Count = 11	System.Collections.Generic.IEnumerable<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
++		allGTsCache	Count = 11	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
++		dataTypes	{<[PermissionComponent]Integer,PermissionComponent>}	Slicer.StateSpace.Types.ITypeTuple {Slicer.StateSpace.Types.TypeTuple}
++		freeVariables	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.Formulae.LVar> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.Formulae.LVar>}
++		functions	Count = 13	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.Formulae.Function> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.Formulae.Function>}
++		fvMS	{Slicer.Analyzers.FOLConverter.CanonicalForms.FVMS}	Slicer.Analyzers.FOLConverter.CanonicalForms.FVMS
++		groundTerms	{Slicer.Analyzers.FOLConverter.CanonicalForms.GT[2]}	Slicer.Analyzers.FOLConverter.CanonicalForms.GT[]
++		gtT	{Slicer.Analyzers.FOLConverter.CanonicalForms.GT[2]}	System.Collections.Generic.IList<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {Slicer.Analyzers.FOLConverter.CanonicalForms.GT[]}
+		hashCache	1830940337	int
+		height	3	int
+		index	138492	int
+		isGround	true	bool
++		orderedFreeVariables	Count = 0	System.Collections.Generic.IList<Slicer.Analyzers.FOLConverter.Formulae.LVar> {System.Collections.Generic.List<Slicer.Analyzers.FOLConverter.Formulae.LVar>}
++		pFreeVariables	Count = 0	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.Formulae.LVar> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.Formulae.LVar>}
++		pFunctions	Count = 13	System.Collections.Generic.ISet<Slicer.Analyzers.FOLConverter.Formulae.Function> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.Formulae.Function>}
++		pTopGTs	Count = 2	System.Collections.Generic.IList<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.List<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
+		stringCacheN	"(|44423|,|9|)"	string
+		stringNCache	null	string
++		topGTs	Count = 2	System.Collections.Generic.IEnumerable<Slicer.Analyzers.FOLConverter.CanonicalForms.GT> {System.Collections.Generic.List<Slicer.Analyzers.FOLConverter.CanonicalForms.GT>}
++		ts	{Slicer.Analyzers.FOLConverter.CanonicalForms.IT[2]}	Slicer.Analyzers.FOLConverter.CanonicalForms.IT[]
+		typeString	"<[PermissionComponent]Integer,PermissionComponent>"	string
+		typeStringCache	"<[PermissionComponent]Integer,PermissionComponent>"	string
++		Static members		
++		Raw View		
++		pts	Count = 2	System.Collections.Generic.IEnumerable<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT> {System.Collections.Generic.HashSet<Slicer.Analyzers.FOLConverter.CanonicalForms.GTT>}
+		ti	683	int
+		tiP	683	int
+		topDepth	536870911	int
++		Static members		
+		

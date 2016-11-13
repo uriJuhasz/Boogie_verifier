@@ -1,0 +1,1685 @@
+\begin{thebibliography}{100}
+
+\bibitem{3gppsms}
+{3GPP}.
+\newblock {3GPP TS 23.040 - Technical realization of the Short Message Service
+  (SMS)}, last access 2015.
+\newblock \url{http://www.3gpp.org/ftp/Specs/html-info/23040.htm}.
+
+\bibitem{akhawe13usenix}
+D.~Akhawe and A.~P. Felt.
+\newblock Alice in warningland: A large-scale field study of browser security
+  warning effectiveness.
+\newblock In {\em USENIX Security Symposium}, USENIX'13, 2013.
+
+\bibitem{stackprofit}
+{aleph one}.
+\newblock Smashing the stack for fun and profit, 1996.
+\newblock \url{http://phrack.org/issues/49/14.html}.
+
+\bibitem{amazonappstore}
+{Amazon Inc.}
+\newblock {Amazon Underground}, last access 2015.
+\newblock \url{http://www.amazon.com/b?node=11350978011}.
+
+\bibitem{traynorimc}
+C.~Amrutkar, P.~Traynor, and P.~C. van Oorschot.
+\newblock Measuring {SSL} indicators on mobile browsers: Extended life, or end
+  of the road?
+\newblock In {\em International Information Security Conference}, ISC'12, 2012.
+
+\bibitem{Stajano_inglorious_installers}
+J.~Anderson, J.~Bonneau, and F.~Stajano.
+\newblock {Inglorious Installers: Security in the Application Marketplace}.
+\newblock In {\em Workshop on the Economics of Information Security}, WEIS '10,
+  2010.
+
+\bibitem{accelerate}
+{Apple Inc.}
+\newblock Accelerate framework reference, last access 2015.
+\newblock
+  \url{https://developer.apple.com/library/mac/documentation/Accelerate/Reference/AccelerateFWRef/}.
+
+\bibitem{apn}
+{Apple Inc.}
+\newblock {Apple Push Notification Service}, last access 2015.
+\newblock
+  \url{https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ApplePushService.html}.
+
+\bibitem{iosdevelopment}
+{Apple Inc.}
+\newblock {{iOS} Developer Library}, last access 2015.
+\newblock \url{https://developer.apple.com/library/ios/navigation/}.
+
+\bibitem{applesecurity}
+{Apple Inc.}
+\newblock {iOS} security, last access 2015.
+\newblock \url{https://www.apple.com/business/docs/iOS_Security_Guide.pdf}.
+
+\bibitem{appstore}
+{Apple Inc.}
+\newblock {iTunes AppStore}, last access 2015.
+\newblock \url{https://itunes.apple.com/us/store}.
+
+\bibitem{machkernel}
+{Apple Inc.}
+\newblock {Kernel and Device Drivers Layer}, last access 2015.
+\newblock
+  \url{https://developer.apple.com/library/mac/documentation/MacOSX/Conceptual/OSX_Technology_Overview/SystemTechnology/SystemTechnology.html}.
+
+\bibitem{swift}
+{Apple Inc.}
+\newblock {Swift programming language}, last access 2015.
+\newblock \url{https://developer.apple.com/swift/}.
+
+\bibitem{webkit}
+{Apple Inc.}
+\newblock {The WebKit Open Source Project}, last access 2015.
+\newblock \url{https://www.webkit.org}.
+
+\bibitem{arentz11ubicomp}
+W.~A. Arentz and U.~Bandara.
+\newblock Near ultrasonic directional data transfer for modern smartphones.
+\newblock In {\em International Conference on Pervasive and Ubiquitous
+  Computing}, UbiComp'11, 2011.
+
+\bibitem{ARMTrustZone}
+{ARM Ltd.}
+\newblock {Building a Secure System using TrustZone Technology}, 2009.
+\newblock \url{http://www.arm.com}.
+
+\bibitem{arminstructionset}
+{ARM Ltd.}
+\newblock {ARM and Thumb-2 Instruction Set Quick Reference Card}, last access
+  2015.
+\newblock
+  \url{http://infocenter.arm.com/help/topic/com.arm.doc.qrc0001m/QRC0001_UAL.pdf}.
+
+\bibitem{armctexpress}
+{ARM Ltd.}
+\newblock {ARM Coretile Express}, last access 2015.
+\newblock
+  \url{http://www.arm.com/products/tools/development-boards/versatile-express/coretile-express.php}.
+
+\bibitem{armmbexpress}
+{ARM Ltd.}
+\newblock {ARM Motherboard Express}, last access 2015.
+\newblock
+  \url{http://www.arm.com/products/tools/development-boards/versatile-express/motherboard-express.php}.
+
+\bibitem{neon}
+{ARM Ltd.}
+\newblock {ARM NEON}, last access 2015.
+\newblock \url{http://www.arm.com/products/processors/technologies/neon.php}.
+
+\bibitem{polarssl}
+{ARM Ltd.}
+\newblock {mbed TLS}, last access 2015.
+\newblock \url{https://tls.mbed.org}.
+
+\bibitem{projectne10}
+{ARM Ltd.}
+\newblock {Project Ne10 - An Open Optimized Software Library Project for the
+  ARM Architecture}, last access 2015.
+\newblock \url{http://projectne10.github.io/Ne10/}.
+
+\bibitem{armTZslides}
+{ARM Ltd.}
+\newblock Securing the system with trustzone ready program, last access 2015.
+\newblock
+  \url{http://www.arm.com/files/pdf/Tech_seminar_TrustZone_v7_PUBLIC.pdf}.
+
+\bibitem{authy}
+{Authy Inc.}
+\newblock {Authy}, last access 2015.
+\newblock \url{https://www.authy.com}.
+
+\bibitem{mshield}
+J.~Azema and G.~Fayad.
+\newblock {M-Shield mobile security technology: Making wireless secure}, 2008.
+\newblock \url{http://focus.ti.com/pdfs/wtbu/ti_mshield_whitepaper.pdf}.
+
+\bibitem{Azim2013}
+T.~Azim and I.~Neamtiu.
+\newblock Targeted and depth-first exploration for systematic testing of
+  {Android} apps.
+\newblock In {\em International Conference on Object Oriented Programming
+  Systems Languages and Applications}, OOPSLA'13, 2013.
+
+\bibitem{backes09sp}
+M.~Backes, T.~Chen, M.~D{\"{u}}rmuth, H.~P.~A. Lensch, and M.~Welk.
+\newblock Tempest in a teapot: Compromising reflections revisited.
+\newblock In {\em {IEEE} Symposium on Security and Privacy}, SP'09, 2009.
+
+\bibitem{backes08sp}
+M.~Backes, M.~D{\"{u}}rmuth, and D.~Unruh.
+\newblock Compromising reflections-or-how to read {LCD} monitors around the
+  corner.
+\newblock In {\em {IEEE} Symposium on Security and Privacy}, SP'08, 2008.
+
+\bibitem{baluja08pr}
+S.~Baluja and M.~Covell.
+\newblock Waveprint: Efficient wavelet-based audio fingerprinting.
+\newblock {\em Pattern Recognition}, 41(11), 2008.
+
+\bibitem{bangor}
+A.~Bangor, P.~T. Kortum, and J.~T. Miller.
+\newblock An empirical evaluation of the system usability scale.
+\newblock {\em International Journal of Human-Computer Interaction}, 24(6),
+  2008.
+
+\bibitem{boa}
+{Bank of America}.
+\newblock {SiteKey Authentication}, last access 2015.
+\newblock
+  \url{https://www.bankofamerica.com/privacy/online-mobile-banking-privacy/sitekey.go}.
+
+\bibitem{barclays_pinsentry}
+{Barclays}.
+\newblock {Mobile PINsentry}, last access 2015.
+\newblock
+  \url{http://www.barclays.co.uk/BarclaysMobileBanking/MobilePINsentry/P1242616134119}.
+
+\bibitem{barrera:android}
+D.~Barrera, H.~G. Kayacik, P.~C. van Oorschot, and A.~Somayaji.
+\newblock A methodology for empirical analysis of permission-based security
+  models and its application to {Android}.
+\newblock In {\em {ACM} Conference on Computer and Communications Security},
+  CCS'10, 2010.
+
+\bibitem{bianchi15sp}
+A.~Bianchi, J.~Corbetta, L.~Invernizzi, Y.~Fratantonio, C.~Kruegel, and
+  G.~Vigna.
+\newblock What the app is that? deception and countermeasures in the {Android}
+  user interface.
+\newblock In {\em {IEEE} Symposium on Security and Privacy}, SP'15, 2015.
+
+\bibitem{blackberrysecurity}
+{BlackBerry}.
+\newblock {BlackBerry Java SDK - Security}, last access 2015.
+\newblock
+  \url{http://docs.blackberry.com/en/developers/deliverables/29301/BlackBerry_Java_SDK-Development_Guide--1560066-0531040818-001-7.0_Beta-US.pdf}.
+
+\bibitem{integeroverflow}
+{blexim}.
+\newblock Basic integer overflows, 2002.
+\newblock \url{http://phrack.org/issues/60/10.html}.
+
+\bibitem{bonneau12sp}
+J.~Bonneau, C.~Herley, P.~C. van Oorschot, and F.~Stajano.
+\newblock The quest to replace passwords: {A} framework for comparative
+  evaluation of web authentication schemes.
+\newblock In {\em {IEEE} Symposium on Security and Privacy}, SP'12, 2012.
+
+\bibitem{fourthfactor}
+J.~Brainard, A.~Juels, R.~L. Rivest, M.~Szydlo, and M.~Yung.
+\newblock Fourth-factor authentication: Somebody you know.
+\newblock In {\em {ACM} Conference on Computer and Communications Security},
+  CCS'06, 2006.
+
+\bibitem{bravolillo11sp}
+C.~Bravo{-}Lillo, L.~F. Cranor, J.~S. Downs, and S.~Komanduri.
+\newblock Bridging the gap in computer security warnings: {A} mental model
+  approach.
+\newblock {\em {IEEE} Security {\&} Privacy}, 9(2), 2011.
+
+\bibitem{broadcombcm}
+{Broadcom Corp.}
+\newblock {5G WiFi 802.11ac Client - BCM4354}, last access 2015.
+\newblock
+  \url{https://www.broadcom.com/products/wireless-connectivity/wireless-lan/bcm4354}.
+
+\bibitem{broadcomgps}
+{Broadcom Corp.}
+\newblock {Integrated Monolithic GPS And GLONASS Receiver IC - BCM47521}, last
+  access 2015.
+\newblock
+  \url{http://www.broadcom.com/products/wireless-connectivity/gps/bcm47521}.
+
+\bibitem{sus}
+J.~Brooke.
+\newblock {SUS - {A} quick and dirty usability scale}.
+\newblock {\em Usability evaluation in industry}, 189(194), 1996.
+
+\bibitem{TUD-CS-2011-0127}
+S.~Bugiel, L.~Davi, A.~Dmitrienko, T.~Fischer, and A.-R. Sadeghi.
+\newblock {XManDroid}: A new {Android} evolution to mitigate privilege
+  escalation attacks.
+\newblock Technical Report TR-2011-04, Technische Universit{\"a}t Darmstadt,
+  April 2011.
+
+\bibitem{newxmandroid}
+S.~Bugiel, L.~Davi, A.~Dmitrienko, T.~Fischer, A.-R. Sadeghi, and B.~Shastry.
+\newblock Towards taming privilege-escalation attacks on {Android}.
+\newblock In {\em Annual Network and Distributed System Security Symposium},
+  NDSS'12, 2012.
+
+\bibitem{Bugiel2011}
+S.~Bugiel, L.~Davi, A.~Dmitrienko, S.~Heuser, A.-R. Sadeghi, and B.~Shastry.
+\newblock Practical and lightweight domain isolation on {Android}.
+\newblock In {\em {ACM} workshop on security and privacy in smartphones and
+  mobile devices}, SPSM'11, 2011.
+
+\bibitem{androidsurgery}
+J.~Burns.
+\newblock Developing secure mobile applications for {Android}, 2008.
+\newblock
+  \url{https://www.nccgroup.trust/globalassets/our-research/us/whitepapers/isec_securing_android_apps.pdf}.
+
+\bibitem{imperi13umsurvey}
+{BusinessWire}.
+\newblock Impermium study unearths consumer attitudes toward internet security,
+  last access 2015.
+\newblock
+  \url{http://www.businesswire.com/news/home/20130627005473/en/Impermium-Study-Unearths-Consumer-Attitudes-Internet-Security#.VXryixNrg4M}.
+
+\bibitem{busold2013codaspy}
+C.~Busold, A.~Taha, C.~Wachsmann, A.~Dmitrienko, H.~Seudi{\'e}, M.~Sobhani, and
+  A.-R. Sadeghi.
+\newblock {Smart keys for cyber-cars: secure smartphone-based NFC-enabled car
+  immobilizer}.
+\newblock In {\em ACM conference on Data and application security and privacy},
+  CODASPY'13, 2013.
+
+\bibitem{touchlogger11}
+L.~Cai and H.~Chen.
+\newblock Touchlogger: Inferring keystrokes on touch screen from smartphone
+  motion.
+\newblock In {\em USENIX Summit on Hot Topics in Security}, HotSec'11, 2011.
+
+\bibitem{edgeminer}
+Y.~Cao, Y.~Fratantonio, A.~Bianchi, M.~Egele, C.~Kruegel, G.~Vigna, and
+  Y.~Chen.
+\newblock Edgeminer: Automatically detecting implicit control flow transitions
+  through the {Android} framework.
+\newblock In {\em Annual Network and Distributed System Security Symposium},
+  NDSS'15, 2015.
+
+\bibitem{limits}
+L.~Cavallaro, P.~Saxena, and R.~Sekar.
+\newblock On the limits of information flow techniques for malware analysis and
+  containment.
+\newblock In {\em International Conference on Detection of Intrusions and
+  Malware, and Vulnerability Assessment}, DIMVA'08, 2008.
+
+\bibitem{chandrasekhar11ismir}
+V.~Chandrasekhar, M.~Sharifi, and D.~A. Ross.
+\newblock Survey and evaluation of audio fingerprinting schemes for mobile
+  query-by-example applications.
+\newblock In {\em 12th International Society for Music Information Retrieval
+  Conference}, ISMIR'11, 2011.
+
+\bibitem{cccfingerprint}
+{Chaos Computer Club}.
+\newblock {Chaos Computer Club breaks Apple TouchID}, last access 2015.
+\newblock \url{http://www.ccc.de/en/updates/2013/ccc-breaks-apple-touchid}.
+
+\bibitem{cccfingerprintoriginal}
+{Chaos Computer Club}.
+\newblock {How to fake fingerprints?}, last access 2015.
+\newblock \url{http://dasalte.ccc.de/biometrie/fingerabdruck_kopieren.en}.
+
+\bibitem{honeysp}
+R.~Chatterjee, J.~Bonneau, A.~Juels, and T.~Ristenpart.
+\newblock Cracking-resistant password vaults using natural language encoders.
+\newblock In {\em {IEEE} Symposium on Security and Privacy}, SP'15, 2015.
+
+\bibitem{DBLP:conf/pldi/Chaudhuri09}
+A.~Chaudhuri.
+\newblock Language-based security on {Android}.
+\newblock In {\em ACM Workshop on Programming Languages and Analysis for
+  Security}, PLAS'09, 2009.
+
+\bibitem{iosmemory15}
+L.~Chen.
+\newblock Attacking {WebKit} applications by exploiting memory corruption bugs.
+\newblock CanSecWest, 2015.
+\newblock \url{https://cansecwest.com/slides/2015/Liang_CanSecWest2015.pdf}.
+
+\bibitem{chen10tit}
+T.-C. Chen, S.~Dick, and J.~Miller.
+\newblock Detecting visually similar web pages: Application to phishing
+  detection.
+\newblock {\em ACM Trans. Internet Technol.}, 10(2), 2010.
+
+\bibitem{cherrypy}
+{CherryPy Team}.
+\newblock {CherryPy - A Minimalistic Python Web Framework}, last access 2015.
+\newblock \url{http://www.cherrypy.org/}.
+
+\bibitem{Chia2012}
+P.~H. Chia, Y.~Yamamoto, and N.~Asokan.
+\newblock Is this app safe?: A large scale study on application permissions and
+  risk signals.
+\newblock In {\em International Conference on World Wide Web}, WWW'12, 2012.
+
+\bibitem{chin11mobisys}
+E.~Chin, A.~P. Felt, K.~Greenwood, and D.~Wagner.
+\newblock Analyzing inter-application communication in {Android}.
+\newblock In {\em International Conference on Mobile Systems, Applications, and
+  Services}, MobiSys'11, 2011.
+
+\bibitem{hlrlookup}
+{Comcetera Ltd.}
+\newblock {Number Portability Lookup}, last access 2015.
+\newblock \url{http://www.numberportabilitylookup.com/}.
+
+\bibitem{czeskis12ccs}
+A.~Czeskis, M.~Dietz, T.~Kohno, D.~S. Wallach, and D.~Balfanz.
+\newblock Strengthening user authentication through opportunistic cryptographic
+  identity assertions.
+\newblock In {\em {ACM} Conference on Computer and Communications Security},
+  CCS'12, 2012.
+
+\bibitem{webrtcw3c}
+{Daniel C. Burnett and Adam Bergkvist and Cullen Jennings and Anant Narayanan}.
+\newblock {Media Capture and Streams (W3C Working Draft)}, last access 2015.
+\newblock \url{http://www.w3.org/TR/mediacapture-streams/}.
+
+\bibitem{passwordreuse}
+A.~Das, J.~Bonneau, M.~Caesar, N.~Borisov, and X.~Wang.
+\newblock The tangled web of password reuse.
+\newblock In {\em Annual Network and Distributed System Security Symposium},
+  NDSS'14, 2014.
+
+\bibitem{mocfi}
+L.~Davi, A.~Dmitrienko, M.~Egele, T.~Fischer, T.~Holz, R.~Hund,
+  S.~N{\"{u}}rnberger, and A.~Sadeghi.
+\newblock Mocfi: {A} framework to mitigate control-flow attacks on smartphones.
+\newblock In {\em Annual Network and Distributed System Security Symposium},
+  NDSS'12, 2012.
+
+\bibitem{DD2SW010}
+L.~Davi, A.~Dmitrienko, A.-R. Sadeghi, and M.~Winandy.
+\newblock Privilege escalation attacks on {Android}.
+\newblock In {\em International Conference on Information Security}, ISC'10,
+  2011.
+
+\bibitem{xifer}
+L.~V. Davi, A.~Dmitrienko, S.~N\"{u}rnberger, and A.-R. Sadeghi.
+\newblock Gadge me if you can: Secure and efficient ad-hoc instruction-level
+  randomization for x86 and arm.
+\newblock In {\em {ACM} Symposium on Information, Computer and Communications
+  Security}, ASIACCS '13, 2013.
+
+\bibitem{passwordsstrenghts}
+X.~de~Carn{\'{e}}~de Carnavalet and M.~Mannan.
+\newblock From very weak to very strong: Analyzing password-strength meters.
+\newblock In {\em Annual Network and Distributed System Security Symposium},
+  NDSS'14, 2014.
+
+\bibitem{basebandccc}
+G.~Delugr\'{e}.
+\newblock Reverse-engineering a qualcomm baseband.
+\newblock In {\em Chaos Communication Congress}, CCC'11, 2011.
+
+\bibitem{Denning:1979:DS:356778.356782}
+D.~E. Denning and P.~J. Denning.
+\newblock Data security.
+\newblock {\em ACM Comput. Surv.}, 11(3), Sept. 1979.
+
+\bibitem{dhamija05soups}
+R.~Dhamija and J.~D. Tygar.
+\newblock The battle against phishing: Dynamic security skins.
+\newblock In {\em Symposium on Usable Privacy and Security}, SOUPS'05, 2005.
+
+\bibitem{dhamija06chi}
+R.~Dhamija, J.~D. Tygar, and M.~Hearst.
+\newblock Why phishing works.
+\newblock In {\em SIGCHI Conference on Human Factors in Computing Systems},
+  CHI'06, 2006.
+
+\bibitem{diakos13joe}
+T.~P. Diakos, J.~A. Briffa, T.~W.~C. Brown, and S.~Wesemeyer.
+\newblock Eavesdropping near-field contactless payments: A quantitative
+  analysis.
+\newblock {\em The Journal of Engineering}, 2013.
+
+\bibitem{digitaltrends}
+{Digital Trends}.
+\newblock {Do not use iMessage chat for Android, it's not safe}, last access
+  2015.
+\newblock
+  \url{http://www.digitaltrends.com/mobile/imessage-chat-android-security-flaw/}.
+
+\bibitem{dmitrienko2011trust}
+A.~Dmitrienko, A.-R. Sadeghi, S.~Tamrakar, and C.~Wachsmann.
+\newblock {SmartTokens: Delegable Access Control with NFC-enabled Smartphones}.
+\newblock In {\em International Conference on Trust and Trustworthy Computing},
+  TRUST'11, 2011.
+
+\bibitem{evernotehack}
+{Doug Gross}.
+\newblock {50 million compromised in Evernote hack}, last access 2015.
+\newblock \url{http://edition.cnn.com/2013/03/04/tech/web/evernote-hacked/}.
+
+\bibitem{dua10hotsec}
+A.~Dua, N.~Bulusu, and W.~chang Feng.
+\newblock Towards trustworthy participatory sensing.
+\newblock In {\em USENIX Summit on Hot Topics in Security}, HotSec'09, 2009.
+
+\bibitem{duosecurity}
+{Duo Security, Inc.}
+\newblock {Duo Push}, last access 2015.
+\newblock \url{https://www.duosecurity.com/product/methods/duo-mobile}.
+
+\bibitem{dwork06icapl}
+C.~Dwork.
+\newblock Differential privacy.
+\newblock In {\em International Colloquium on Automata, Languages and
+  Programming}, ICALP'06, 2006.
+
+\bibitem{rasmussen15}
+S.~Eberz, K.~B. Rasmussen, V.~Lenders, and I.~Martinovic.
+\newblock Preventing lunchtime attacks: Fighting insider threats with eye
+  movement biometrics.
+\newblock In {\em Annual Network and Distributed System Security Symposium},
+  NDSS'15. The Internet Society, 2015.
+
+\bibitem{pios}
+M.~Egele, C.~Kruegel, E.~Kirda, and G.~Vigna.
+\newblock {PiOS}: Detecting privacy leaks in {iOS} applications.
+\newblock In {\em Annual Network and Distributed System Security Symposium},
+  NDSS'11, 2011.
+
+\bibitem{egelman2008chi}
+S.~Egelman, L.~F. Cranor, and J.~Hong.
+\newblock You've been warned: an empirical study of the effectiveness of web
+  browser phishing warnings.
+\newblock In {\em SIGCHI Conference on Human Factors in Computing Systems},
+  CHI'08, 2008.
+
+\bibitem{chisecurity}
+S.~Egelman, J.~King, R.~C. Miller, N.~Ragouzis, and E.~Shehan.
+\newblock Security user studies: Methodologies and best practices.
+\newblock In {\em Extended Abstracts on Human Factors in Computing Systems},
+  CHI EA'07, 2007.
+
+\bibitem{rsasecurid}
+{EMC Corporation}.
+\newblock {RSA SecurID}, last access 2015.
+\newblock \url{http://www.emc.com/security/rsa-securid/index.htm}.
+
+\bibitem{rsa}
+{EMC Inc.}
+\newblock {RSA SecurID}, last access 2015.
+\newblock \url{https://www.emc.com/security/rsa-securid.htm/}.
+
+\bibitem{emv}
+{EMV}.
+\newblock {Integrated Circuit Card Specifications for Payment Systems, Book
+  1-4, Version 4.3}, last access 2015.
+\newblock \url{https://www.emvco.com/specifications.aspx?id=223}.
+
+\bibitem{encap}
+{Encap Security}.
+\newblock {Encap Security}, last access 2015.
+\newblock \url{https://www.encapsecurity.com/}.
+
+\bibitem{taintdroid}
+W.~Enck, P.~Gilbert, B.-G. Chun, L.~P. Cox, J.~Jung, P.~McDaniel, and A.~N.
+  Sheth.
+\newblock {TaintDroid}: an information-flow tracking system for realtime
+  privacy monitoring on smartphones.
+\newblock In {\em USENIX Conference on Operating Systems Design and
+  Implementation}, OSDI'10, 2010.
+
+\bibitem{Enck:2009:LMP:1653662.1653691}
+W.~Enck, M.~Ongtang, and P.~McDaniel.
+\newblock On lightweight mobile phone application certification.
+\newblock In {\em {ACM} Conference on Computer and Communications Security},
+  CCS'09, 2009.
+
+\bibitem{transakt}
+Entersekt.
+\newblock {Transakt}, last access 2015.
+\newblock \url{https://www.entersekt.com/Technology-Transakt}.
+
+\bibitem{iosmemory13}
+S.~Esser.
+\newblock {iOS} 6 exploitation 280 days later.
+\newblock CanSecWest, 2013.
+\newblock
+  \url{https://cansecwest.com/slides/2013/CSW2013_StefanEsser_iOS6_Exploitation_280_Days_Later.pdf}.
+
+\bibitem{etsiedge}
+{ETSI}.
+\newblock {Enhanced Data rates for Global Evolution, EDGE}, last access 2015.
+\newblock
+  \url{http://www.etsi.org/index.php/technologies-clusters/technologies/mobile/edge}.
+
+\bibitem{etsigprs}
+{ETSI}.
+\newblock {General Packet Radio Service, GPRS}, last access 2015.
+\newblock
+  \url{http://www.etsi.org/index.php/technologies-clusters/technologies/mobile/gprs}.
+
+\bibitem{etsilte}
+{ETSI}.
+\newblock {Long Term Evolution, LTE}, last access 2015.
+\newblock
+  \url{http://www.etsi.org/technologies-clusters/technologies/mobile/long-term-evolution}.
+
+\bibitem{etsigsm}
+{ETSI}.
+\newblock {Mobile Technologies GSM}, last access 2015.
+\newblock
+  \url{http://www.etsi.org/technologies-clusters/technologies/mobile/gsm}.
+
+\bibitem{ECB2012}
+{European Central Bank}.
+\newblock Report on card fraud, July 2012.
+\newblock \url{http://www.ecb.int/pub/pdf/other/cardfraudreport201207en.pdf}.
+
+\bibitem{threadx}
+{Express Logic Inc.}
+\newblock {ThreadX}, last access 2015.
+\newblock \url{http://rtos.com/products/threadx/}.
+
+\bibitem{eyelock}
+{eyeLock Inc.}
+\newblock {Advanced iris authentication and recognition solutions}, last access
+  2015.
+\newblock \url{http://www.eyelock.com}.
+
+\bibitem{droid09}
+{F-secure}.
+\newblock Warning on possible {Android} mobile trojans, 2010.
+\newblock \url{www.f-secure.com/weblog/archives/00001852.html}.
+
+\bibitem{Felt2011}
+A.~P. Felt, E.~Chin, S.~Hanna, D.~Song, and D.~Wagner.
+\newblock {Android} permissions demystified.
+\newblock In {\em {ACM} Conference on Computer and Communications Security},
+  CCS'11, 2011.
+
+\bibitem{Felt11}
+A.~P. Felt, M.~Finifter, E.~Chin, S.~Hanna, and D.~Wagner.
+\newblock A survey of mobile malware in the wild.
+\newblock In {\em {ACM} workshop on security and privacy in smartphones and
+  mobile devices}, SPSM'11, 2011.
+
+\bibitem{Felt12}
+A.~P. Felt, E.~Ha, S.~Egelman, A.~Haney, E.~Chin, and D.~Wagner.
+\newblock {Android} permissions: User attention, comprehension, and behavior.
+\newblock In {\em Symposium on Usable Privacy and Security}, SOUPS'12, 2012.
+
+\bibitem{felt11w2sp}
+A.~P. Felt and D.~Wagner.
+\newblock Phishing on mobile devices.
+\newblock In {\em Web 2.0 Security and Privacy Workshop}, W2SP'11, 2011.
+
+\bibitem{websocketsrfc}
+I.~Fette and A.~Melnikov.
+\newblock {The WebSocket protocol (RFC 6455)}, 2011.
+\newblock \url{http://tools.ietf.org/html/rfc6455}.
+
+\bibitem{Fette2007}
+I.~Fette, N.~Sadeh, and A.~Tomasic.
+\newblock Learning to detect phishing emails.
+\newblock In {\em International Conference on World Wide Web}, WWW'07, 2007.
+
+\bibitem{fido}
+{FIDO Alliance}.
+\newblock {Fido U2F specifications}, last access 2015.
+\newblock \url{https://fidoalliance.org/specifications/}.
+
+\bibitem{forbes}
+Forbes.
+\newblock {Alleged ``Nazi'' {Android} FBI Ransomware Mastermind Arrested In
+  Russia}, last access 2015.
+\newblock
+  \url{http://www.forbes.com/sites/thomasbrewster/2015/04/13/alleged-nazi-android-fbi-ransomware-mastermind-arrested-in-russia/}.
+
+\bibitem{mastercardpatent}
+P.~Fourez and {Mastercard International Inc.}
+\newblock Location controls on payment card transactions - {Patent No.
+  WO/2011/022062}, 2011.
+\newblock \url{http://patentscope.wipo.int/search/en/WO2011022062}.
+
+\bibitem{touchscreenbiometrics}
+M.~Frank, R.~Biedert, E.~Ma, I.~Martinovic, and D.~Song.
+\newblock Touchalytics: On the applicability of touchscreen input as a
+  behavioral biometric for continuous authentication.
+\newblock {\em Information Forensics and Security, IEEE Transactions on}, 8(1),
+  Jan 2013.
+
+\bibitem{fujitsupalm}
+{Fujitsu}.
+\newblock {PalmSecure}, last access 2015.
+\newblock \url{http://www.fujitsu.com/us/Images/palmsecure_datasheet.pdf}.
+
+\bibitem{Garera2007}
+S.~Garera, N.~Provos, M.~Chew, and A.~D. Rubin.
+\newblock A framework for detection and measurement of phishing attacks.
+\newblock In {\em {ACM} Workshop on Recurring Malcode}, WORM'07, 2007.
+
+\bibitem{okl4}
+{General Dynamics Mission Systems}.
+\newblock {OKL4 Microvisor}, last access 2015.
+\newblock
+  \url{http://gdmissionsystems.com/cyber/products/trusted-computing-cross-domain/microvisor-products/}.
+
+\bibitem{gdsdcard}
+{Giesecke \& Devrient GmbH}.
+\newblock {G\&D Makes Mobile Terminal Devices Even More Secure with New Version
+  of Smart Card in MicroSD Format}, last access 2015.
+\newblock
+  \url{http://www.gi-de.com/en/about_g_d/press/press_releases/G%26D-Makes-Mobile-Terminal-Devices-Secure-with-New-MicroSD-Card-g3592.jsp}.
+
+\bibitem{gilbert10hotmobile}
+P.~Gilbert, L.~P. Cox, J.~Jung, and D.~Wetherall.
+\newblock Toward trustworthy mobile sensing.
+\newblock In {\em ACM International Workshop on Mobile Computing Systems and
+  Applications}, HotMobile'10, 2010.
+
+\bibitem{gilbert11sensys}
+P.~Gilbert, J.~Jung, K.~Lee, H.~Qin, D.~Sharkey, A.~Sheth, and L.~P. Cox.
+\newblock Youprove: authenticity and fidelity in mobile sensing.
+\newblock In {\em International Conference on Embedded Networked Sensor
+  Systems}, SenSys'11, 2011.
+
+\bibitem{DBLP:journals/tse/Girling87}
+C.~G. Girling.
+\newblock {Covert Channels in LAN's}.
+\newblock {\em IEEE Transactions on Software Engineering}, 13(2), 1987.
+
+\bibitem{CovertChannel_NCSC}
+V.~Gligor.
+\newblock A guide to understanding covert channel analysis of trusted systems,
+  version 1 (light pink book).
+\newblock NCSC-TG-030, Library No. S-240,572, 1993.
+\newblock
+  \url{http://www.radium.ncsc.mil/tpep/library/rainbow/NCSC-TG-030.pdf}.
+
+\bibitem{gligor87tse}
+V.~D. Gligor, E.~L. Burch, C.~S. Chandersekaran, R.~S. Chapman, L.~J. Dotterer,
+  M.~S. Hecht, W.-D. Jiang, G.~L. Luckenbaugh, and N.~Vasudevan.
+\newblock On the design and the implementation of secure xenix workstations.
+\newblock In {\em {IEEE} Symposium on Security and Privacy}, SP'86, 1986.
+
+\bibitem{global}
+{GlobalPlatform}.
+\newblock {Card Specification Version 2.2.1}, 2011.
+\newblock \url{http://www.globalplatform.org/specificationscard.asp}.
+
+\bibitem{globalplatformspecs}
+{GlobalPlatform}.
+\newblock {GlobalPlatform Device Specifications}, last access 2015.
+\newblock \url{http://www.globalplatform.org/specificationsdevice.asp}.
+
+\bibitem{androidexploit15ipc}
+G.~Gong.
+\newblock Fuzzing android system services by binder call to escalate privilege.
+\newblock BlackHat USA, 2015.
+\newblock
+  \url{https://www.blackhat.com/docs/us-15/materials/us-15-Gong-Fuzzing-Android-System-Services-By-Binder-Call-To-Escalate-Privilege-wp.pdf}.
+
+\bibitem{androidjb}
+{Google Inc.}
+\newblock {Android 4.1 APIs - Jelly Bean}, last access 2015.
+\newblock \url{http://developer.android.com/about/versions/jelly-bean.html}.
+
+\bibitem{googlebouncer}
+{Google Inc.}
+\newblock {Android and Security}, last access 2015.
+\newblock
+  \url{http://googlemobile.blogspot.ch/2012/02/android-and-security.html}.
+
+\bibitem{androidkernel}
+{Google Inc.}
+\newblock {Android Open Source Project}, last access 2015.
+\newblock \url{https://source.android.com/index.html}.
+
+\bibitem{os-android}
+{Google Inc.}
+\newblock Android {OS}, last access 2015.
+\newblock \url{http://developer.android.com/}.
+
+\bibitem{androidsecurity}
+{Google Inc.}
+\newblock {Android Security}, last access 2015.
+\newblock \url{https://source.android.com/devices/tech/security/index.html}.
+
+\bibitem{dalvik}
+{Google Inc.}
+\newblock {ART and Dalvik}, last access 2015.
+\newblock \url{https://source.android.com/devices/tech/dalvik/}.
+
+\bibitem{google_authentication}
+{Google Inc.}
+\newblock {Google 2-Step Verification}, last access 2015.
+\newblock \url{http://www.google.com/landing/2step/}.
+
+\bibitem{gcm}
+{Google Inc.}
+\newblock {Google Cloud Messaging for Android}, last access 2015.
+\newblock \url{https://developer.android.com/google/gcm/index.html}.
+
+\bibitem{googleplay}
+{Google Inc.}
+\newblock {Google play}, last access 2015.
+\newblock \url{https://play.google.com/store}.
+
+\bibitem{googlewallet}
+{Google Inc.}
+\newblock Google wallet, last access 2015.
+\newblock \url{http://www.google.com/wallet/}.
+
+\bibitem{androidopengl}
+{Google Inc.}
+\newblock {OpenGL ES}, last access 2015.
+\newblock \url{http://developer.android.com/guide/topics/graphics/opengl.html}.
+
+\bibitem{googleappverifiy}
+{Google Inc.}
+\newblock {Protect against harmful apps}, last access 2015.
+\newblock \url{https://support.google.com/accounts/answer/2812853}.
+
+\bibitem{slicklogin}
+{Google Inc.}
+\newblock {SlickLogin}, last access 2015.
+\newblock \url{http://www.slicklogin.com/}.
+
+\bibitem{blink}
+{Google Inc.}
+\newblock {The Chromium Projects - Blink}, last access 2015.
+\newblock \url{http://www.chromium.org/blink}.
+
+\bibitem{webrtc}
+{Google Inc.}
+\newblock {WebRTC}, last access 2015.
+\newblock \url{http://www.webrtc.org/}.
+
+\bibitem{grsecurity}
+{GRSecurity}.
+\newblock The {GRSecurity} project, last access 2015.
+\newblock \url{http://grsecurity.net/features.php}.
+
+\bibitem{gsma2011}
+{GSM Association}.
+\newblock {Requirements for Single Wire Protocol NFC Handsets}, 2011.
+\newblock \url{http://www.gsma.com/mobilenfc/}.
+
+\bibitem{Guida04}
+R.~Guida, R.~Stahl, T.~Bunt, G.~Secrest, and J.~Moorcones.
+\newblock Deploying and using public key technology: lessons learned in real
+  life.
+\newblock {\em IEEE Security Privacy}, 2(4), 2004.
+
+\bibitem{gunson11cs}
+N.~Gunson, D.~Marshall, H.~Morton, and M.~A. Jack.
+\newblock User perceptions of security and usability of single-factor and
+  two-factor authentication in automated telephone banking.
+\newblock {\em Computers \& Security}, 30(4), 2011.
+
+\bibitem{haitsma02}
+J.~Haitsma, T.~Kalker, and J.~Oostveen.
+\newblock An efficient database search strategy for audio fingerprinting.
+\newblock In {\em Workshop on Multimedia Signal Processing}, MMSP'02, 2002.
+
+\bibitem{vaultwww}
+J.~A. Halderman, B.~Waters, and E.~W. Felten.
+\newblock A convenient method for securely managing passwords.
+\newblock In {\em International Conference on World Wide Web}, WWW'05, 2005.
+
+\bibitem{halevi12esorics}
+T.~Halevi, D.~Ma, N.~Saxena, and T.~Xiang.
+\newblock Secure proximity detection for {NFC} devices based on ambient sensor
+  data.
+\newblock In {\em European Symposium on Research in Computer Security},
+  ESORICS'12, 2012.
+
+\bibitem{tomoyo}
+T.~Harada, T.~Horie, and K.~Tanaka.
+\newblock Task oriented management obviates your onus on linux {(TOMOYO
+  Linux)}, 2004.
+\newblock Linux Conference.
+
+\bibitem{haselsteiber06rfidsec}
+E.~Haselsteiner and K.~Breitfuss.
+\newblock Security in near field communication ({NFC}).
+\newblock In {\em RFIDSec '06}, 2006.
+
+\bibitem{hazas02ubicomp}
+M.~Hazas and A.~Ward.
+\newblock A novel broadband ultrasonic location system.
+\newblock In {\em International Conference on Pervasive and Ubiquitous
+  Computing}, UbiComp'02, 2002.
+
+\bibitem{herzberg12}
+A.~Herzberg and R.~Margulies.
+\newblock My authentication album: Adaptive images-based login mechanism.
+\newblock In {\em Information Security and Privacy Research}, 2012.
+
+\bibitem{hong12cacm}
+J.~Hong.
+\newblock The state of phishing attacks.
+\newblock {\em Commun. {ACM}}, 55(1), 2012.
+
+\bibitem{Reducing_timing_channels_with_fuzzy_time}
+W.-M. Hu.
+\newblock Reducing timing channels with fuzzy time.
+\newblock In {\em {IEEE} Symposium on Security and Privacy}, SP'91, 1991.
+
+\bibitem{hu-sp92}
+W.-M. Hu.
+\newblock Lattice scheduling and covert channels.
+\newblock In {\em {IEEE} Symposium on Security and Privacy}, SP'92, 1992.
+
+\bibitem{marketshare}
+{IDC Corporate USA}.
+\newblock {Smartphone OS Market Share, 2015 Q2}, last access 2015.
+\newblock \url{http://www.idc.com/prodserv/smartphone-os-market-share.jsp}.
+
+\bibitem{1password}
+A.~Inc.
+\newblock {1Password}, last access 2015.
+\newblock \url{https://agilebits.com/onepassword}.
+
+\bibitem{6axis}
+{InvenSense Inc.}
+\newblock {ICM-20608-G - 6-axis MotionTracking device}, last access 2015.
+\newblock
+  \url{http://www.invensense.com/products/motion-tracking/6-axis/icm-20608-2/}.
+
+\bibitem{speke}
+D.~Jablon.
+\newblock {The SPEKE Password-Based Key Agreement Methods}, 2003.
+\newblock \url{http://tools.ietf.org/html/draft-jablon-speke-02}.
+
+\bibitem{jackson2007usec}
+C.~Jackson, D.~R. Simon, D.~S. Tan, and A.~Barth.
+\newblock An evaluation of extended validation and picture-in-picture phishing
+  attacks.
+\newblock In {\em International Conference on Financial cryptography and
+  International conference on Usable Security}, FC'07/USEC'07, 2007.
+
+\bibitem{jackson-fincrypto07}
+C.~Jackson, D.~R. Simon, D.~S. Tan, and A.~Barth.
+\newblock An evaluation of extended validation and picture-in-picture phishing
+  attacks.
+\newblock In {\em Financial Cryptography and Data Security}, FC'07, 2007.
+
+\bibitem{linkedinhack}
+{Jaikumar Vijayan}.
+\newblock {Hackers crack more than 60\% of breached LinkedIn passwords}, last
+  access 2015.
+\newblock
+  \url{http://www.computerworld.com/article/2504078/cybercrime-hacking/hackers-crack-more-than-60--of-breached-linkedin-passwords.html}.
+
+\bibitem{memento12}
+S.~Jana and V.~Shmatikov.
+\newblock Memento: Learning secrets from process footprints.
+\newblock In {\em {IEEE} Symposium on Security and Privacy}, SP'12, 2012.
+
+\bibitem{mousebiometrics}
+Z.~Jorgensen and T.~Yu.
+\newblock On mouse dynamics as a behavioral biometric for authentication.
+\newblock In {\em {ACM} Symposium on Information, Computer and Communications
+  Security}, ASIACCS'11, 2011.
+
+\bibitem{honeycomb}
+A.~Juels and R.~L. Rivest.
+\newblock Honeywords: making password-cracking detectable.
+\newblock In {\em {ACM} Conference on Computer and Communications Security},
+  CCS'13, 2013.
+
+\bibitem{isis}
+{JVL Ventures, LLC}.
+\newblock {Softcard}, last access 2015.
+\newblock \url{https://en.wikipedia.org/wiki/Softcard}.
+
+\bibitem{karapanos14usenix}
+N.~Karapanos and S.~Capkun.
+\newblock On the effective prevention of {TLS} man-in-the-middle attacks in web
+  applications.
+\newblock In {\em USENIX Security Symposium}, USENIX'14, 2014.
+
+\bibitem{kari11stc}
+K.~Kostiainen and N.~Asokan.
+\newblock Credential life cycle management in open credential platforms (short
+  paper).
+\newblock In {\em ACM workshop on Scalable trusted computing}, STC'11, 2011.
+
+\bibitem{kostiainen2011acns}
+K.~Kostiainen, N.~Asokan, and A.~Afanasyeva.
+\newblock Towards user-friendly credential transfer on open credential
+  platforms.
+\newblock In {\em International conference on Applied cryptography and network
+  security}, ACNS'11, 2011.
+
+\bibitem{kostiainen09asiaccs}
+K.~Kostiainen, J.-E. Ekberg, N.~Asokan, and A.~Rantala.
+\newblock On-board credentials with open provisioning.
+\newblock In {\em {ACM} Symposium on Information, Computer and Communications
+  Security}, ASIACCS'09, 2009.
+
+\bibitem{kostiainen2011codaspy}
+K.~Kostiainen, E.~Reshetova, J.-E. Ekberg, and N.~Asokan.
+\newblock Old, new, borrowed, blue -- a perspective on the evolution of mobile
+  platform security architectures.
+\newblock In {\em ACM conference on Data and application security and privacy},
+  CODASPY'11, 2011.
+
+\bibitem{kumar07}
+M.~Kumar, T.~Garfinkel, D.~Boneh, and T.~Winograd.
+\newblock Reducing shoulder-surfing by using gaze-based password entry.
+\newblock In {\em Symposium on Usable Privacy and Security}, SOUPS'07, 2007.
+
+\bibitem{lalande13}
+J.-F. Lalande and S.~Wendzel.
+\newblock {Hiding privacy leaks in Android applications using low-attention
+  raising covert channels}.
+\newblock In {\em 2013 International Conference on Availability, Reliability
+  and Security}, {ARES'13}, 2013.
+
+\bibitem{Lampson:note_on_confinment}
+B.~W. Lampson.
+\newblock A note on the confinement problem.
+\newblock {\em Commun. ACM}, 16(10), Oct. 1973.
+
+\bibitem{lee-w2sp14}
+J.~Lee, L.~Bauer, and M.~L. Mazurek.
+\newblock Studying the effectiveness of security images in {Internet} banking.
+\newblock {\em IEEE Internet Computing}, 13(1), 2014.
+
+\bibitem{yahoohack}
+{Lee Munson}.
+\newblock {Yahoo prompts password reset after mass attack on email service},
+  last access 2015.
+\newblock
+  \url{https://nakedsecurity.sophos.com/2014/01/31/yahoo-prompts-password-reset-after-mass-attack-on-email-service/}.
+
+\bibitem{bouncycastle}
+{Legion of the Bouncy Castle}.
+\newblock {Bouncy Castle Crypto APIs}, last access 2015.
+\newblock \url{http://www.bouncycastle.org}.
+
+\bibitem{lever-ndss13}
+C.~Lever, M.~Antonakakis, B.~Reaves, P.~Traynor, and W.~Lee.
+\newblock The core of the matter: Analyzing malicious traffic in cellular
+  carriers.
+\newblock In {\em Annual Network and Distributed System Security Symposium},
+  NDSS'13, 2013.
+
+\bibitem{libonati11ndss}
+A.~Libonati, J.~M. McCune, and M.~K. Reiter.
+\newblock Usability testing a malware-resistant input mechanism.
+\newblock In {\em Annual Network and Distributed System Security Symposium},
+  NDSS'11, 2011.
+
+\bibitem{lin-ndss14}
+C.-C. Lin, H.~Li, X.~Zhou, and X.~Wang.
+\newblock Screenmilker: How to milk your {Android} screen for secrets.
+\newblock In {\em Annual Network and Distributed System Security Symposium},
+  NDSS'14, 2014.
+
+\bibitem{permissions-browser}
+A.~M. Lineberry.
+\newblock These aren't the permissions you're looking for.
+\newblock BlackHat USA, 2010.
+
+\bibitem{Lipner:comment_on_confinment}
+S.~B. Lipner.
+\newblock A comment on the confinement problem.
+\newblock In {\em ACM Symposium on Operating Systems Principles}, SOSP'75,
+  1975.
+
+\bibitem{liu12mobisys}
+H.~Liu, S.~Saroiu, A.~Wolman, and H.~Raj.
+\newblock Software abstractions for trusted sensors.
+\newblock In {\em International Conference on Mobile Systems, Applications, and
+  Services}, MobiSys'12, 2012.
+
+\bibitem{lookout2014}
+{Lookout Inc.}
+\newblock {2014 Mobile Threat Report}, last access 2015.
+\newblock \url{https://www.lookout.com/resources/reports/mobile-threat-report}.
+
+\bibitem{m2syspalm}
+{M2SYS Technology}.
+\newblock {M2-PalmVein - Secure Palm Vein Scanner}, last access 2015.
+\newblock \url{http://www.m2sys.com/palm-vein-reader/}.
+
+\bibitem{spekesec}
+P.~MacKenzie.
+\newblock On the security of the speke password-authenticated key exchange
+  protocol.
+\newblock In {\em In IACR ePrint archive}, 2001.
+\newblock \url{http://eprint.iacr.org/2001/057}.
+
+\bibitem{macrumors}
+MacRumors.
+\newblock {``Masque Attack''} vulnerability allows malicious third-party {iOS}
+  apps to masquerade as legitimate apps, 2014.
+\newblock
+  \url{http://www.macrumors.com/2014/11/10/masque-attack-ios-vulnerability/}.
+
+\bibitem{malisa2015}
+L.~Malisa.
+\newblock Detecting mobile application spoofing attacks by leveraging user
+  visual similarity perception, 2015.
+\newblock Cryptology ePrint Archive: Report 2015/709.
+
+\bibitem{Mannan11}
+M.~Mannan, B.~H. Kim, A.~Ganjali, and D.~Lie.
+\newblock Unicorn: two-factor attestation for data security.
+\newblock In {\em {ACM} Conference on Computer and communications security},
+  CCS'11, 2011.
+
+\bibitem{2013_spsm_marforio}
+C.~Marforio, N.~Karapanos, C.~Soriente, K.~Kostiainen, and S.~Capkun.
+\newblock Secure enrollment and practical migration for mobile trusted
+  execution environments.
+\newblock In {\em {ACM} workshop on security and privacy in smartphones and
+  mobile devices}, SPSM'13, 2013.
+
+\bibitem{mastercarddev}
+{Mastercard International Inc.}
+\newblock {Mastercard Developer Zone}, last access 2015.
+\newblock \url{https://developer.mastercard.com/}.
+
+\bibitem{ramyaheat}
+R.~J. Masti, D.~Rai, A.~Ranganathan, C.~M{\"u}ller, L.~Thiele, and S.~Capkun.
+\newblock Thermal covert channels on multi-core platforms.
+\newblock In {\em USENIX Security Symposium}, USENIX'15, 2015.
+
+\bibitem{maurer-css12}
+M.-E. Maurer and L.~H\"{o}fer.
+\newblock {Sophisticated Phishers Make More Spelling Mistakes: Using URL
+  Similarity against Phishing}.
+\newblock In {\em International Conference on Cyberspace Safety and Security},
+  CSS'12, 2012.
+
+\bibitem{mccune09ndss}
+J.~M. McCune, A.~Perrig, and M.~K. Reiter.
+\newblock Safe passage for passwords and other sensitive data.
+\newblock In {\em Annual Network and Distributed System Security Symposium},
+  NDSS'09, 2009.
+
+\bibitem{nucleos}
+{Mentor Graphics}.
+\newblock {Nucleus RTOS}, last access 2015.
+\newblock \url{http://www.mentor.com/embedded-software/nucleus/}.
+
+\bibitem{iewebrtc}
+{Microsoft Inc.}
+\newblock Bringing interoperable real-time communications to the web, last
+  access 2015.
+\newblock
+  \url{http://blogs.skype.com/2014/10/27/bringing-interoperable-real-time-communications-to-the-web/}.
+
+\bibitem{os-wp7}
+{Microsoft Inc.}
+\newblock {Security for Windows Phone}, last access 2015.
+\newblock
+  \url{https://msdn.microsoft.com/library/windows/apps/ff402533(v=vs.105).aspx}.
+
+\bibitem{windowssecurity}
+{Microsoft Inc.}
+\newblock {Security for Windows Phone 8}, last access 2015.
+\newblock
+  \url{https://msdn.microsoft.com/en-us/library/windows/apps/ff402533(v=vs.105).aspx}.
+
+\bibitem{firefoxgeolocation}
+{Mozilla}.
+\newblock {Location-Aware Browsing}, last access 2015.
+\newblock \url{https://www.mozilla.org/en-US/firefox/geolocation/}.
+
+\bibitem{vmifc}
+S.~K. Nair, P.~N.~D. Simpson, B.~Crispo, and A.~S. Tanenbaum.
+\newblock A virtual machine based information flow control system for policy
+  enforcement.
+\newblock {\em Electron. Notes Theor. Comput. Sci.}, 197(1), Feb. 2008.
+
+\bibitem{ntpprotocol}
+{Network Time Foundation}.
+\newblock {NTP: The Network Time Protocol}, last access 2015.
+\newblock \url{http://www.ntp.org/}.
+
+\bibitem{niu-upsec08}
+Y.~Niu, F.~Hsu, and H.~Chen.
+\newblock {iPhish: Phishing Vulnerabilities on Consumer Electronics}.
+\newblock In {\em Conference on Usability, Psychology, and Security}, UPSEC'08,
+  2008.
+
+\bibitem{unitedbankers}
+{No Author Given}.
+\newblock {United Bankers' Bank Authenticates Customers Online}.
+\newblock {\em {Biometric Technology Today}}, 12(6), 2004.
+
+\bibitem{utahbank}
+{No Author Given}.
+\newblock {Bank of Utah Adopts Keystroke Dynamics}.
+\newblock {\em {Biometric Technology Today}}, 15(5), 2007.
+
+\bibitem{nuanceauth}
+{Nuance Communications Inc.}
+\newblock {Voice biometrics}, last access 2015.
+\newblock
+  \url{http://www.nuance.com/for-business/customer-service-solutions/voice-biometrics/index.htm}.
+
+\bibitem{Android_malware_Oberhide}
+J.~Oberheide.
+\newblock {Android Hax}.
+\newblock SummerCon 2010, June 2010.
+\newblock
+  \url{http://jon.oberheide.org/files/summercon10-androidhax-jonoberheide.pdf}.
+
+\bibitem{Mobile_harder_than_fixed}
+J.~Oberheide and F.~Jahanian.
+\newblock When mobile is harder than fixed (and vice versa): demystifying
+  security challenges in mobile environments.
+\newblock In {\em Workshop on Mobile Computing Systems and Applications},
+  HotMobile'10, 2010.
+
+\bibitem{bouncerdissect}
+J.~Oberheide and C.~Miller.
+\newblock {Dissecting the Android Bouncer}, last access 2015.
+\newblock \url{https://jon.oberheide.org/files/summercon12-bouncer.pdf}.
+
+\bibitem{App_centric_android_security}
+M.~Ongtang, S.~McLaughlin, W.~Enck, and P.~McDaniel.
+\newblock Semantically rich application-centric security in {Android}.
+\newblock In {\em Annual Computer Security Applications Conference}, ACSAC'09,
+  2009.
+
+\bibitem{osmocombb}
+{osmocomBB}.
+\newblock The {OsmocomBB} project, last access 2015.
+\newblock \url{http://bb.osmocom.org}.
+
+\bibitem{owasp_mitb}
+{OWASP Foundation}.
+\newblock Man-in-the-browser attack, last access 2015.
+\newblock \url{https://www.owasp.org/index.php/Man-in-the-browser_attack}.
+
+\bibitem{accessory12}
+E.~Owusu, J.~Han, S.~Das, A.~Perrig, and J.~Zhang.
+\newblock Accessory: Password inference using accelerometers on smartphones.
+\newblock In {\em Workshop on Mobile Computing Systems \& Applications},
+  HotMobile'12, 2012.
+
+\bibitem{whyper}
+R.~Pandita, X.~Xiao, W.~Yang, W.~Enck, and T.~Xie.
+\newblock Whyper: Towards automating risk assessment of mobile applications.
+\newblock In {\em USENIX Security Symposium}, USENIX'13, 2013.
+
+\bibitem{park09acsac}
+F.~S. Park, C.~Gangakhedkar, and P.~Traynor.
+\newblock Leveraging cellular infrastructure to improve fraud prevention.
+\newblock In {\em Annual Computer Security Applications Conference}, ACSAC'09,
+  2009.
+
+\bibitem{parno_trust}
+B.~Parno.
+\newblock Bootstrapping trust in a ``trusted'' platform.
+\newblock In {\em USENIX Summit on Hot Topics in Security}, HotSec'08, 2008.
+
+\bibitem{parno06fc}
+B.~Parno, C.~Kuo, and A.~Perrig.
+\newblock Phoolproof phishing prevention.
+\newblock In {\em International Conference on Financial Cryptography and Data
+  Security}, FC'06, 2006.
+
+\bibitem{paypalkey}
+{PayPal}.
+\newblock {PayPal Security Key}, last access 2015.
+\newblock
+  \url{https://www.paypal.com/webapps/mpp/security/security-protections}.
+
+\bibitem{Petitcolas99informationhiding}
+F.~A. Petitcolas, R.~J. Anderson, and M.~G. Kuhn.
+\newblock Information hiding---a survey.
+\newblock {\em Proceedings of the {IEEE}, special issue on protection of
+  multimedia content}, 87(7), July 1999.
+
+\bibitem{petsas15eurosec}
+T.~Petsas, G.~Tsirantonakis, E.~Athanasopoulos, and S.~Ioannidis.
+\newblock Two-factor authentication: {I}s the world ready?: {Q}uantifying {2FA}
+  adoption.
+\newblock In {\em European Workshop on System Security}, EuroSec'15, 2015.
+
+\bibitem{paranoid:acsac10}
+G.~Portokalidis, P.~Homburg, K.~Anagnostakis, and H.~Bos.
+\newblock Paranoid {Android}: versatile protection for smartphones.
+\newblock In {\em Annual Computer Security Applications Conference}, ACSAC'10,
+  2010.
+
+\bibitem{smsdelay}
+R.~Pries, T.~Hobfeld, and P.~Tran-Gia.
+\newblock On the suitability of the short message service for emergency warning
+  systems.
+\newblock In {\em Vehicular Technology Conference}, VTC'06, 2006.
+
+\bibitem{proxama}
+Proxama.
+\newblock {ARM Click and Pay}, last access 2015.
+\newblock
+  \url{http://www.proxama.com/resource-centre/case-studies/arm-click-pay/}.
+
+\bibitem{raguram11ccs}
+R.~Raguram, A.~M. White, D.~Goswami, F.~Monrose, and J.~Frahm.
+\newblock {iSpy}: Automatic reconstruction of typed input from compromising
+  reflections.
+\newblock In {\em {ACM} Conference on Computer and Communications Security},
+  CCS'11, 2011.
+
+\bibitem{credo}
+H.~Raj, D.~Robinson, T.~Tariq, P.~England, S.~Saroiu, and A.~Wolman.
+\newblock Credo: Trusted computing for guest vms with a commodity hypervisor.
+\newblock Technical Report MSR-TR-2011-130, Microsoft Research, 2011.
+
+\bibitem{rasmussen10usenix}
+K.~B. Rasmussen and S.~Capkun.
+\newblock Realization of {RF} distance bounding.
+\newblock In {\em USENIX Security Symposium}, USENIX'10, 2010.
+
+\bibitem{rasmussenpulse}
+K.~B. Rasmussen, M.~Roeschlin, I.~Martinovic, and G.~Tsudik.
+\newblock Authentication using pulse-response biometrics.
+\newblock In {\em Annual Network and Distributed System Security Symposium},
+  NDSS'14. The Internet Society, 2014.
+
+\bibitem{fingerprint}
+N.~Ratha, R.~Bolle, V.~Pandit, and V.~Vaish.
+\newblock Robust fingerprint authentication using local structural similarity.
+\newblock In {\em IEEE Workshop on Applications of Computer Vision}, 2000.
+
+\bibitem{rensink2002}
+R.~A. Rensink.
+\newblock Change detection.
+\newblock {\em Annual review of psychology}, 53(1), 2002.
+
+\bibitem{stringformat}
+{riq and gera}.
+\newblock Advances in format string exploitation, 2002.
+\newblock \url{http://phrack.org/issues/59/7.html}.
+
+\bibitem{valiente14audiology}
+A.~Rodr\'{i}guez~Valiente, A.~Trinidad, J.~R. Garc\'{i}a~Berrocal,
+  C.~G\'{o}rriz, and R.~Ram\'{i}rez~Camacho.
+\newblock Extended high-frequency (9-20 khz) audiometry reference thresholds in
+  645 healthy subjects.
+\newblock {\em International Journal of Audiology}, 53(8), 2014.
+
+\bibitem{passhash}
+B.~Ross, C.~Jackson, N.~Miyake, D.~Boneh, and J.~C. Mitchell.
+\newblock Stronger password authentication using browser extensions.
+\newblock In {\em USENIX Security Symposium}, USENIX'05, 2005.
+
+\bibitem{russell98amjphys}
+D.~A. Russell, J.~P. Titlow, and Y.-J. Bemmen.
+\newblock Acoustic monopoles, dipoles, and quadrupoles: An experiment
+  revisited.
+\newblock {\em American Journal of Physics}, 67(8), 1999.
+
+\bibitem{rydstedt-woot10}
+G.~Rydstedt, B.~Gourdin, E.~Bursztein, and D.~Boneh.
+\newblock Framing attacks on smart phones and dumb routers: Tap-jacking and
+  geo-localization attacks.
+\newblock In {\em USENIX Workshop on Offensive Technologies}, WOOT'10, 2010.
+
+\bibitem{graphpass}
+A.~Sabzevar and A.~Stavrou.
+\newblock Universal multi-factor authentication using graphical passwords.
+\newblock In {\em IEEE International Conference on Signal Image Technology and
+  Internet Based Systems}, SITIS'08, 2008.
+
+\bibitem{sariou10hotmobile}
+S.~Saroiu and A.~Wolman.
+\newblock I am a sensor, and i approve this message.
+\newblock In {\em ACM International Workshop on Mobile Computing Systems and
+  Applications}, HotMobile'10, 2010.
+
+\bibitem{schechter07sp}
+S.~E. Schechter, R.~Dhamija, A.~Ozment, and I.~Fischer.
+\newblock The emperor's new security indicators.
+\newblock In {\em {IEEE} Symposium on Security and Privacy}, SP'07, 2007.
+
+\bibitem{soundcomber-ndss}
+R.~Schlegel, K.~Zhang, X.~Zhou, M.~Intwala, A.~Kapadia, and X.~Wang.
+\newblock {Soundcomber: A Stealthy and Context-Aware Sound Trojan for
+  Smartphones}.
+\newblock In {\em Annual Network and Distributed System Security Symposium},
+  NDSS'11, 2011.
+
+\bibitem{schurmannS13tmc}
+D.~Sch{\"{u}}rmann and S.~Sigg.
+\newblock Secure communication based on ambient audio.
+\newblock {\em {IEEE} Trans. Mob. Comput.}, 12(2), 2013.
+
+\bibitem{smartSD}
+{SD Association}.
+\newblock {smartSD Memory Cards}, last access 2015.
+\newblock \url{https://www.sdcard.org/developers/overview/ASSD/smartsd/}.
+
+\bibitem{securelist}
+{Secure List}.
+\newblock {The Android Trojan Svpeng now capable of mobile phishing}, last
+  access 2015.
+\newblock
+  \url{http://www.securelist.com/en/blog/8138/The_Android_Trojan_Svpeng_now_capable_of_mobile_phishing}.
+
+\bibitem{naclusenix}
+D.~Sehr, R.~Muth, C.~Biffle, V.~Khimenko, E.~Pasko, K.~Schimpf, B.~Yee, and
+  B.~Chen.
+\newblock Adapting software fault isolation to contemporary cpu architectures.
+\newblock In {\em USENIX Security Symposium}, USENIX'10, 2010.
+
+\bibitem{selhorst10trust}
+M.~Selhorst, C.~St\"{u}ble, F.~Feldmann, and U.~Gnaida.
+\newblock Towards a trusted mobile desktop.
+\newblock In {\em International Conference on Trust and Trustworthy Computing},
+  TRUST'10, 2010.
+
+\bibitem{Shaffer:2008:SDM:1375696.1375703}
+A.~B. Shaffer, M.~Auguston, C.~E. Irvine, and T.~E. Levin.
+\newblock A security domain model to assess software for exploitable covert
+  channels.
+\newblock In {\em ACM Workshop on Programming Languages and Analysis for
+  Security}, PLAS'08, 2008.
+
+\bibitem{keyboardbiometrics}
+S.~Shepherd.
+\newblock Continuous authentication by analysis of keyboard typing
+  characteristics.
+\newblock In {\em European Convention on Security and Detection}, 1995.
+
+\bibitem{shirvanian14}
+M.~Shirvanian, S.~Jarecki, N.~Saxena, and N.~Nathan.
+\newblock Two-factor authentication resilient to server compromise using
+  mix-bandwidth devices.
+\newblock In {\em Annual Network and Distributed System Security Symposium},
+  NDSS'14, 2014.
+
+\bibitem{shrestha14}
+B.~Shrestha, N.~Saxena, H.~Truong, and N.~Asokan.
+\newblock Drone to the rescue: Relay-resilient authentication using ambient
+  multi-sensing.
+\newblock In {\em Financial Cryptography and Data Security}, FC '14, 2014.
+
+\bibitem{openvirtualization}
+{Sierraware}.
+\newblock {Open Virtualization - ARM TrustZone and ARM Hypervisor Open Source
+  Software}, last access 2015.
+\newblock \url{http://www.openvirtualization.org/}.
+
+\bibitem{seandroid}
+S.~Smalley, {NSA}, and {Trust Mechanisms (R2X)}.
+\newblock {SEAndroid}, last access 2015.
+\newblock \url{http://seandroid.bitbucket.org}.
+
+\bibitem{sorber12mobisys}
+J.~Sorber, M.~Shin, R.~A. Peterson, and D.~Kotz.
+\newblock Plug-n-trust: practical trusted sensing for mhealth.
+\newblock In {\em International Conference on Mobile Systems, Applications, and
+  Services}, MobiSys'12, 2012.
+
+\bibitem{sqlite}
+{SQLite Development Team}.
+\newblock {SQLite}, last access 2015.
+\newblock \url{http://www.sqlite.org}.
+
+\bibitem{statcounter}
+{StatCounter}.
+\newblock {StatCounter} global stats, last access 2015.
+\newblock \url{http://gs.statcounter.com/}.
+
+\bibitem{sunshine-usenix09}
+J.~Sunshine, S.~Egelman, H.~Almuhimedi, N.~Atri, and L.~F. Cranor.
+\newblock Crying wolf: An empirical study of ssl warning effectiveness.
+\newblock In {\em USENIX Security Symposium}, USENIX'09, 2009.
+
+\bibitem{tamrakar2013trust}
+S.~Tamrakar and J.-E. Ekberg.
+\newblock Tapping and tripping with nfc.
+\newblock In {\em International Conference on Trust and Trustworthy Computing},
+  TRUST'13, 2013.
+
+\bibitem{tamrakar2011stc}
+S.~Tamrakar, J.-E. Ekberg, and N.~Asokan.
+\newblock Identity verification schemes for public transport ticketing with nfc
+  phones.
+\newblock In {\em {ACM Workshop on Scalable Trusted Computing }}, STC'11, 2011.
+
+\bibitem{telegraph2013roaming}
+Telegraph.
+\newblock {EU} to end mobile roaming charges next year, June 2013.
+\newblock
+  \url{http://www.telegraph.co.uk/finance/newsbysector/mediatechnologyandtelecoms/telecoms/10119159/EU-to-end-mobile-roaming-charges-next-year.html}.
+
+\bibitem{ansi}
+{The American National Standards Insitute}.
+\newblock {ANSI} s1.11-2004 - {S}pecification for octave-band and
+  fractional-octave-band analog and digital filters, 2004.
+
+\bibitem{lookout_privacy_advisor}
+{The Lookout Blog}.
+\newblock {Lookout's} privacy advisor protects your private information, 2010.
+\newblock
+  \url{http://blog.mylookout.com/2010/11/lookout%E2%80%99s-privacy-advisor-protects-your-private-information/}.
+
+\bibitem{vanguard}
+{The Vanguard Group}.
+\newblock {Vanguard Enhanced Logon}, last access 2015.
+\newblock
+  \url{http://www.vanguard.com/us/content/Home/RegEnhancedLogOnContent.jsp}.
+
+\bibitem{crafting_etc_information_flow}
+M.~Tiwari, J.~K. Oberg, X.~Li, J.~Valamehr, T.~Levin, B.~Hardekopf, R.~Kastner,
+  F.~T. Chong, and T.~Sherwood.
+\newblock Crafting a usable microkernel, processor, and {I/O} system with
+  strict and provable information flow security.
+\newblock In {\em Annual International Symposium on Computer Architecture},
+  ISCA'11, 2011.
+
+\bibitem{truong14percom}
+H.~T.~T. Truong, X.~Gao, B.~Shrestha, N.~Saxena, N.~Asokan, and P.~Nurmi.
+\newblock Comparing and fusing different sensor modalities for relay attack
+  resistance in zero-interaction authentication.
+\newblock In {\em International Conference on Pervasive Computing and
+  Communications}, PerCom'14, 2014.
+
+\bibitem{truong13}
+H.~T.~T. Truong, E.~Lagerspetz, P.~Nurmi, A.~J. Oliner, S.~Tarkoma, N.~Asokan,
+  and S.~Bhattacharya.
+\newblock The company you keep: Mobile malware infection rates and inexpensive
+  risk indicators.
+\newblock In {\em International Conference on World Wide Web}, WWW'14, 2014.
+
+\bibitem{trustonicknox}
+{Trustonic}.
+\newblock {Trustonic for Samsung KNOX}, last access 2015.
+\newblock
+  \url{http://www.trustonic.com/assets/common/Trustonic_for_Samsung_Knox_Brochure.pdf}.
+
+\bibitem{Tsai:1990:ICS:79215.79217}
+C.-R. Tsai, V.~D. Gligor, and C.~S. Shandersekaran.
+\newblock On the identification of covert storage channels in secure systems.
+\newblock {\em IEEE Transactions on Software Engineering}, 16, June 1990.
+
+\bibitem{tygar96woec}
+J.~D. Tygar and A.~Whitten.
+\newblock Www electronic commerce and java trojan horses.
+\newblock In {\em USENIX Workshop on Electronic Commerce}, WOEC'96, 1996.
+
+\bibitem{validsoft}
+{ValidSoft}.
+\newblock {ValidPOS}, last access 2015.
+\newblock \url{http://www.validsoft.com/}.
+
+\bibitem{tz-secondfactor}
+R.~van Rijswijk-Deij and E.~Poll.
+\newblock Using trusted execution environment in two-factor authentication:
+  comparing approaches.
+\newblock In {\em Open Identity Summit}, OID'13, 2013.
+
+\bibitem{vasudevan12trust}
+A.~Vasudevan, E.~Owusu, Z.~Zhou, J.~Newsome, and J.~M. McCune.
+\newblock Trustworthy execution on mobile devices: What security properties can
+  my mobile platform give me?
+\newblock In {\em International Conference on Trust and Trustworthy Computing},
+  TRUST'12, 2012.
+
+\bibitem{Smobile_android_market_Analysis}
+T.~Vennon and D.~Stroop.
+\newblock Threat analysis of the {Android} market.
+\newblock Technical report, GTC, June 2010.
+\newblock Smobile systems technical report, Available at
+  \url{http://threatcenter.smobilesystems.com/wp-content/uploads/2010/06/Android-Market-Threat-Analysis-6-22-10-v1.pdf}.
+
+\bibitem{book}
+I.~V\'{e}r and L.~Beranek.
+\newblock {\em Noise and Vibration Control Engineering}.
+\newblock Wiley, 2005.
+
+\bibitem{verifiedbyvisa}
+{VISA Inc.}
+\newblock {Verified by VISA}, last access 2015.
+\newblock \url{http://www.visaeurope.com/en/cardholders/verified_by_visa.aspx}.
+
+\bibitem{visadev}
+{VISA Inc.}
+\newblock {Visa Developer Program}, last access 2015.
+\newblock \url{https://developer.visa.com/}.
+
+\bibitem{Wang06cacm}
+A.~Wang.
+\newblock The shazam music recognition service.
+\newblock {\em Communication {ACM}}, 49(8), 2006.
+
+\bibitem{DBLP:conf/acsac/WangL06}
+Z.~Wang and R.~B. Lee.
+\newblock Covert and side channels due to processor architecture.
+\newblock In {\em Annual Computer Security Applications Conference}, ACSAC'06,
+  2006.
+
+\bibitem{w3cwebbluetooth}
+{Web Bluetooth Community Group}.
+\newblock {Web Bluetooth}, last access 2015.
+\newblock \url{https://webbluetoothcg.github.io/web-bluetooth/}.
+
+\bibitem{basebandwoot}
+R.-P. Weinmann.
+\newblock Baseband attacks: Remote exploitation of memory corruptions in
+  cellular protocol stacks.
+\newblock In {\em USENIX Workshop on Offensive Technologies}, WOOT'12, 2012.
+
+\bibitem{weir09compsec}
+C.~S. Weir, G.~Douglas, M.~Carruthers, and M.~A. Jack.
+\newblock User perceptions of security, convenience and usability for ebanking
+  authentication tokens.
+\newblock {\em Computers {\&} Security}, 28(1-2), 2009.
+
+\bibitem{weir10int}
+C.~S. Weir, G.~Douglas, T.~Richardson, and M.~A. Jack.
+\newblock Usable security: User preferences for authentication methods in
+  ebanking and the effects of experience.
+\newblock {\em Interacting with Computers}, 22(3), 2010.
+
+\bibitem{aircable}
+{Wireless Cables Inc.}
+\newblock {AIRCable}, last access 2015.
+\newblock \url{https://www.aircable.net/extend.php}.
+
+\bibitem{wu-chi06}
+M.~Wu, R.~C. Miller, and S.~L. Garfinkel.
+\newblock Do security toolbars actually prevent phishing attacks?
+\newblock In {\em SIGCHI Conference on Human Factors in Computing Systems},
+  CHI'06, 2006.
+
+\bibitem{wu-soups06}
+M.~Wu, R.~C. Miller, and G.~Little.
+\newblock Web wallet: Preventing phishing attacks by revealing user intentions.
+\newblock In {\em Symposium on Usable Privacy and Security}, SOUPS'06, 2006.
+
+\bibitem{wu-usenix12}
+Z.~Wu, Z.~Xu, and H.~Wang.
+\newblock {Whispers in the Hyper-space: High-speed Covert Channel Attacks in
+  the Cloud}.
+\newblock In {\em USENIX Security Symposium}, USENIX'12, 2012.
+
+\bibitem{xcodeghost}
+C.~Xiao.
+\newblock {Novel Malware XcodeGhost Modifies Xcode, Infects Apple {iOS} Apps
+  and Hits App Store}, last access 2015.
+\newblock
+  \url{http://researchcenter.paloaltonetworks.com/2015/09/novel-malware-xcodeghost-modifies-xcode-infects-apple-ios-apps-and-hits-app-store/}.
+
+\bibitem{xiao-dsn13}
+J.~Xiao, Z.~Xu, H.~Huang, and H.~Wang.
+\newblock {Security Implications of Memory Deduplication in a Virtualized
+  Environment}.
+\newblock In {\em Dependable Systems and Networks}, DSN '13, 2013.
+
+\bibitem{androidexploit15}
+W.~Xu.
+\newblock Ah! universal android rooting is back.
+\newblock BlackHat USA, 2015.
+\newblock
+  \url{https://www.blackhat.com/docs/us-15/materials/us-15-Xu-Ah-Universal-Android-Rooting-Is-Back-wp.pdf}.
+
+\bibitem{taplogger12}
+Z.~Xu, K.~Bai, and S.~Zhu.
+\newblock Taplogger: Inferring user inputs on smartphone touchscreens using
+  on-board motion sensors.
+\newblock In {\em {ACM} Conference on Security and Privacy in Wireless and
+  Mobile Networks}, WISEC'12, 2012.
+
+\bibitem{zu-woot12}
+Z.~Xu and S.~Zhu.
+\newblock Abusing notification services on smartphones for phishing and
+  spamming.
+\newblock In {\em USENIX Workshop on Offensive Technologies}, WOOT'12, 201.
+
+\bibitem{ye2005tissec}
+Z.~Ye, S.~W. Smith, and D.~Anthony.
+\newblock Trusted paths for browsers.
+\newblock {\em ACM Trans. Inf. Syst. Secur.}, 8(2), 2005.
+
+\bibitem{yee2002icics}
+K.-P. Yee.
+\newblock User interaction design for secure systems.
+\newblock In {\em International Conference on Information and Communications
+  Security}, ICICS '02, 2002.
+
+\bibitem{passpet}
+K.-P. Yee and K.~Sitaker.
+\newblock Passpet: Convenient password management and phishing protection.
+\newblock In {\em Symposium on Usable Privacy and Security}, SOUPS'06, 2006.
+
+\bibitem{yubico}
+{Yubico}.
+\newblock {Yubikey hardware}, last access 2015.
+\newblock \url{https://www.yubico.com/}.
+
+\bibitem{yue-www07}
+Y.~Zhang, J.~I. Hong, and L.~F. Cranor.
+\newblock Cantina: A content-based approach to detecting phishing web sites.
+\newblock In {\em International Conference on World Wide Web}, WWW'07, 2007.
+
+\bibitem{zhou2012sp}
+Y.~Zhou and X.~Jiang.
+\newblock Dissecting android malware: Characterization and evolution.
+\newblock In {\em {IEEE} Symposium on Security and Privacy}, SP'12, 2012.
+
+\bibitem{zhou-jiang12sp}
+Y.~Zhou and X.~Jiang.
+\newblock Dissecting {Android} malware: Characterization and evolution.
+\newblock In {\em {IEEE} Symposium on Security and Privacy}, SP'12, 2012.
+
+\bibitem{malwaregenome}
+Y.~Zhou and X.~Jiang.
+\newblock {Android Malware Genome Project}, last access 2015.
+\newblock \url{http://www.malgenomeproject.org}.
+
+\bibitem{zhou12ndss}
+Y.~Zhou, Z.~Wang, W.~Zhou, and X.~Jiang.
+\newblock Hey, you, get off of my market: Detecting malicious apps in official
+  and alternative {Android} markets.
+\newblock In {\em Annual Network and Distributed System Security Symposium},
+  NDSS'12, 2012.
+
+\end{thebibliography}

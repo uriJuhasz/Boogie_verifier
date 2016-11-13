@@ -1,0 +1,40 @@
+Program:
+	
+	* Vocabulary: (P.vocabulary)
+		* TypeName:
+			- global types
+			- procedure type parameters
+	
+		* FunctionName:
+			- global functions
+			- global constants
+	
+		* VariableName:
+			- global variables
+			- local variables
+			- procedure parameters
+			- procedure results
+	
+		* RelationName:
+			- == per type
+			- <= per type
+			
+	* Type environment: (P.typeEnvironment)
+		* typeEnvironment : VariableName -> TypeName
+//		* typeDomain : TypeName -> P(Value)             ///Not now
+			
+	* State Space: (P.stateSpace)
+		E  : VariableName -> Value   //environment    
+		OE : VariableName -> Value   //old environment
+		
+	* Background Theory: (P.backgroudTheory)
+		* axioms : set of predicates over functions and types and relations (no variables)
+		
+	* Body: (P.body, ?P)
+		- Directed graph (V,E) 
+			- V \subseteq Label ->(partial) Statement
+		- start in V - a node without incoming edges
+		- end   in V - a node without outgoing edges
+
+	
+	

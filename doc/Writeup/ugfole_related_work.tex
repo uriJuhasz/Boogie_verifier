@@ -1,0 +1,115 @@
+\newpage
+\section{Related Work}
+
+%\subsection{Interpolants}
+%There has been a lot of work in recent years on the use of interpolants in verification.
+%Interpolants for a pair of formulae in first order logic with equality were introduced in ~\cite{Craig57},~\cite{Craig57a}, 
+%with an effective and complete method to generate the inerpolants. 
+%The algorithm given there can produce non-ground interpolants even when a ground interpolant exists, 
+%and similarly non-CNF interpolants when a CNF-interpolant exists.
+%
+%The conjunction of the clauses we deduce at a program point (including those represented as a congruence closure graph), as presented in this chapter are not exactly an interpolant, as we do not restrict the vocabulary (set of functions and predicates) to be the intersection of the vocabulary of successors and predecessors. We add the vocabulary restriction in chapter \ref{chapter:scoping}.
+%
+%\subsubsection*{Interpolation in verification}
+%Interpolants for propositional logic were used for verification, in the context of inferring an invariant for unbounded SAT based model checking starting with ~\cite{McMillan03}.
+%A method to extract interpolants from resolution proofs for the fragment of ground first order logic with equality (and linear inequalities) was introduced in ~\cite{McMillan04}.
+%A survey of interpolation techniques (extracting an interpolant from a proof) in ground first order logic with equality is given in ~\cite{BonacinaJohansson2015}, with a comparison in the logical strength of the interpolants produced by different systems.\\
+%~\cite{JhalaMcMillan06} introduces the idea of split proofs, also called local proofs in ~\cite{KovacsVoronkov09},
+%which are, broadly speaking, the proofs we are aiming at in our proof search - we discuss these in detail in chapter \ref{chapter:scoping}.\\
+%In ~\cite{FuchsGoelGrundyKrsticTinelli2012} the authors present an algorithm for interpolating the ground equality fragment by colouring a congruence closure graph of the proof. Their interpolants are always a conjunction of Horn clauses.
+%They also present the notion of an interpolation game (section 6) where two sets of formulae communicate only by exchanging Horn-clauses of the common vocabulary in order to generate a refutation.
+%This is related to the back-and-forth way in which we request the propagation of additional axioms, the difference is that they derive the strategy for such an exchange from an existing proof of refutation (for the ground (non-unit) fragment), and do not discuss complexity.\\
+%The main difference between the above works and our work is that they rely on a refutation proof in order to extract an interpolant,
+%while we are actually searching for the proof. 
+%However, several of these works try to modify the proof structure in order to extract better (e.g. smaller) interpolants, for example ~\cite{HoderKovacsVoronkov12}. \\
+%Superposition based proof systems have been suggested that produce a local proof and hence directly an interpolant - notably ~\cite{McMillan08} and ~\cite{KovacsVoronkov09}. We discuss these in detail in chapter \ref{chapter:scoping}.
+%
+%~\cite{JhalaMcMillan06} introduces also the idea of a hierarchy of L-restricted interpolants (L being a fragment of the logical language), 
+%which are similar to our hierarchy of fragment interpolants. \\
+%The main differences are that L-restricted interpolants are only defined for linear program (no branch or join), 
+%and that they limit only the language of the interpolants, while we also limit both the information flow between adjacent nodes (the join of the fragment) and the set of deductive rules used (e.g. we can limit the resolution depth/width, while they only limit the shape of the result).
+%
+%There are several works which extend sequence interpolants to trees and DAGs, mostly based on solving constrained Horn clauses (CHC).\\
+%Using the terminology of ~\cite{McMillanRybalchenko2013}, our CFGs describe linear acyclic CHCs, 
+%while the tree interpolants mentioned in ~\cite{BlancGuptaKovacsKragl13} and ~\cite{McMillanRybalchenko2013} are acyclic and simple - roughly the difference is that, while in our case the interpolant follows from the disjunction of the predecessors, 
+%in tree interpolation the interpolant follows from the conjunction, which is useful for encoding concurrency and recursive function calls.\\
+%~\cite{RummerHojjatKuncak13} introduces another incomparable class of CHCs, called disjunctive CHCs, 
+%which are acyclic and body-disjoint, which roughly means they can encode directly joins (and also conjunctions) but not branches.
+%~\cite{RummerHojjatKuncak15} compares different classes of Horn clauses, along with their interpolation problems.\\
+%The above lines of work use a theorem prover to find a refutation and then generate an interpolant from the refutation.
+	%
+%DAG interpolants are introduced in ~\cite{AlbarghouthiGurfinkelChechik12UFO},
+%and further developed in ~\cite{AlbarghouthiGurfinkelChechik12} (combined with abstract interpretation), 
+%~\cite{VizelGurfinkel14} (combination with IC3) and others.
+%The authors encode the DAG shaped CFG of the unfolding of a program similar to our CFG.\\
+%The main differences are:\\
+%We encode both the transition relation and set of states of a program location in one set of clauses at a cfg-node,
+%while the common encoding is that of set of states at a program point and transition relations on edges.
+%The reason for this encoding is that it allows us to apply all the information we have about the set of reachable states at a cfg-node to simplify the encoding of the transition relation. This includes, for example, constant propagation and the elimination of redundant clauses.\\
+%As in the above works, the authors' technique relies on a SAT/SMT solver in order to generate interpolants and check the safety of an unfolding.
+%As mentioned before, this has the advantage of being able to utilize off the shelf solvers which are often efficient, allowing the solver free choice of the order of evaluation (as opposed to our case and IC3/PDR where an order of evaluation is imposed), and counter examples can be provided to the user. \\
+%The disadvantages are that any prover call is potentially of at least exponential run-time (depending on the prover - SAT is exponential, 
+%SMT is at least exponential depending on the theories involved, and adding quantifier instantiation depends on the specific prover strategy). A time-out of the prover does not ensure progress (that is, no sub-exponential time-out can ensure progress, even if we mine the prover log for top-level learned clauses), and, in general, there is no guarantee of being even RE in the presence of quantifiers. \\
+%We, instead, employ techniques with polynomial bounds for each fragment, but cannot directly use an off the shelf tool and cannot provide counter examples except for trivial cases. We search for proofs of a specific shape (e.g. narrow, local), which can, in some cases, be exponentially longer than those found by CDCL (e.g. ordered resolution is exponentially separated from general resolution). However, on the practical side, in the examples we have analyzed (small software examples, heap using programs), neither the exponential run-time of CDCL nor that of local proofs has been a real problem for proofs of actual programs, rather the main limitation was the handling of quantifiers.\\ 
+%Another property of their encoding is a form of incrementality where an interpolant for a previous unrolling (encoding facts learned about the set of states at the given unrolling) is conjoined with the VC sent to the prover.\\
+%In our case incrementality is tighter in the sense that we can ensure (under some limitations) that no derivation is performed more than once. \\
+%Another issue is that their encoding uses one error state at the end of the CFG, which makes it harder, 
+%in the case where a verification has failed but some intermediate lemmas have been learned, to utilize the intermediate results and eliminate error states that have been proven unreachable, and optimize the cfg for the next pass accordingly.\\
+%We have not experimented with combining our technique with either abstract interpretation or IC3/PDR as in the above works, which would be interesting future work.
+%
+%Interpolation from superposition based proofs were explored in ~\cite{McMillan08} and other works and is discussed in chapter \ref{chapter:scoping}.
+%
+%A method to combine interpolants from different fragments was given in ~\cite{YorshMusuvathi05}.
+%
+
+\subsection{Congruence closure}
+The earlier papers to discuss congruence closure algorithms are ~\cite{DowneySethiTarjan} (efficient algorithms, complexity bounds and alternative implementations), ~\cite{Shostak84} and ~\cite{NelsonOppen80} (combination with other theories). 
+
+A comprehensive analysis of the join of two EC-graphs is given in ~\cite{GulwaniTiwariNecula04}, including a join algorithm that determines the equality of two terms at a join by adding the terms to the EC-graphs of both joinees. 
+The algorithm is eager in the sense that it represents in the join all terms that occur in both joinees, 
+and works bottom up from constants as opposed to our algorithm that works top-down and hence avoids considering irrelevant joinee terms.
+Their algorithm works for one join and does not help determine which terms are relevant at which CFG-node.
+The paper includes several examples, some of which we have repeated here, that show limitations of the congruence closure approach.
+
+In ~\cite{GulwaniNecula07} the problem of global value numbering is discussed, 
+which concerns the analysis of programs that may contain loops, but include only assignments (i.e. no assume statements).
+For loop-less programs this is a strict subset of our problem, as essentially it means that each EC-graph node has exactly one non-constant gfa, and also no cycles. The paper gives an example loop-less program that would require an exponentially sized EC-graph at one program point in order to prove, which we have mentioned.
+
+In ~\cite{NieuwenhuisOliveras03} the authors give a congruence closure algorithm, mostly similar to previous ones, 
+except that they eliminate all functions and replace them by the curry function $\cdot$ of arity two, rewriting all the equations accordingly. They also name sub-terms by constants, for which we simply use the graph nodes. 
+We have seen that some operations, especially at join points, are sensitive to function arity, and so this transformation has some attraction, however it has some important disadvantages in our setting:
+the first disadvantage is that the transformation is arbitrarily non-symmetric, as we can curryfy an n-ary function to either a left or right chain of n $apply$ instances, a tree of applications of depth $log(n)$ or any other form. 
+This makes it harder to keep other fragments predictable to users, and harder to enforce size limitations. In our setting it may also make our algorithm propagate much more equality information than is needed, 
+as the original function symbol is not used in filtering most of the terms requested from predecessors (e.g. the \GFA{} f(a,b,c) will be rewritten to $\cdot(f,\cdot(a,\cdot(b,c)))$, and so may propagate $\cdot(b,c)$ even if $\cdot(a,\cdot(b,c))$ will not be propagated, while in our algorithm propagation will only happen if a term with the symbol $f$ occurs).
+
+In ~\cite{ChangLeino2005} the authors describe an abstract interpretation framework that includes the domains of unit ground equalities and heaps (or generally other base domains). A join operation is described on EC-graphs which is works bottom up and does not use information from successor nodes to determine which terms to represent at the join.
+The authors note the potential for sharing sub-graphs that are equal on both sides. The authors also note the incompleteness of the weak join, and in general the fact that information will be missing for terms that do not occur on both sides of the join, and suggest adding these terms to the graph on both sides without giving a strategy for selecting which terms to add. The reason is mostly that they apply abstract interpretation as a forward analysis, which is essentially goal insensitive, while our algorithm propagates information across joins as needed by later assertions. The algorithm in the paper is also not incremental, as in abstract interpretation the intermediate states represent an under approximation of the set of states, rather than an over approximation (until widening is applied).
+%Hierarchical Superposition / Shostak / Sat mod Sat
+
+\subsection{Information propagation}
+Information propagation in a restricted fragment is the main theme of abstract interpretation (AI) (~\cite{CousotCousot77} and many others).
+The main difference is that abstract interpretation works on a combination of under-approximation and over-approximation of the set of states in order to verify program properties, and can infer invariants, while we only try to verify a given program by calculating over-approximations, and cannot handle invariants with loops or recursion.
+In spite of these differences, there is strong correlation between the join operation of AI and our join operation (although in AI it is usually not incremental - the value at the join node is recalculated), and some of the completeness issues are similar. 
+Mainly, AI domains are analyzed as a fixed domain or combination of domains in a fixed order, either forwards or backwards (in program flow sense). 
+
+As mentioned above (\cite{ChangLeino2005}) has developed an AI domain for congruence closure.
+Several domains have been suggested for the problem of global value numbering - where only assignments are allowed (essentially, for acyclic programs).  This means in our setting that the only assume statements allowed are an equality \m{v_i = t_{i-1}}, 
+where \m{v_i} is the ith DSA version of the variable \m{v} and \m{t_{i-1}} is a term only including constants and variables of the previous DSA version - essentially this means that EC-graphs cannot have loops. This is an early problem coming from compiler optimizations that has an exponential complete solution in \cite{Kildall73} and several other results are compared in \cite{GulwaniTiwariNecula04}.  \cite{Vagvolgyi03b} gives a decision procedure to detect when a join of two sets of equations is finitely generated and gives an algorithm to calculate the join, which stands in accuracy between our strong join and weak join.
+
+For programs with loops, \cite{MullerOlmSeidl04} shows that allowing positive equality assume statements (positive guards) makes the fragment undecidable in the presence of loops, using an encoding of PCP. \cite{GulwaniTiwari07} discuss complexity issues and the relation to unification.
+
+The \textbf{IC3/PDR} (\cite{Bradley12}) is used to infer propositional invariants of programs, essentially by looking at bounded unrollings of the loop and strengthening the invariant for the nth iteration by searching for a pre-image in the transition relation in the n-1 iteration, and if the found pre-image is infeasible, the algorithm tries to strengthen it and propagate it to later iterations.
+IC3 has been extended to EPR (\cite{BjornerGurfinkelKorovinLahav2013}, linear arithmetic (e.g. \cite{BjornerGurfinkel2015} - combined with interpolation and polyhedra abstract interpretation) and others.
+The technique and its further developments offer several ways to propagate and generalize the clause in order to reduce the number of iterations.
+IC3 has proved very effective and has several extensions and generalization strategies, including a combination with interpolation in ~\cite{VizelGurfinkel2014}.\\
+Compared to our work, IC3 can infer invariants and each step of IC3 requires a SAT call (or SMT call in some works) in order to find a counter example, and another call in order to calculate the pre-image, the first call only considers one program point and the second two program points, so that the SAT/SMT problem is much smaller than whole program VC.
+Compared to our information propagation technique, 
+IC3 requests to predecessors are a conjunction of ground literals (a set of models) while we request either a single literal or one ground term. In terms of complexity, IC3 ensures progress for each step, but the worst case cost of each SAT/SMT call is exponential, and even within one unrolling, the number of counter-examples that may be sent as requests can be exponential as well (although it might be that some clause generalization method can prevent this - we are not aware of such a result), and the choice of counter-examples is not easily predictable. As in other SAT/SMT based techniques, it is not immediately clear how to ensure a polynomial run-time for a sub-fragment and how to ensure progress in the presence of quantifiers.\\
+A direct comparison when trying to prove an assertion \m{s=t} is that we try to propagate the whole equivalence classes of \m{s,t} and then compare, while IC3 directly asks whether the pre-image of a specific state where \m{s=t} holds. 
+For propositional queries we request one literal and the reply is a set of clauses, while IC3 requests a conjunction of literals and the reply is one clause. Hence, IC3 asks more specific questions and propagates much less unneeded information (which is necessary in order for invariants to converge), while we ask less specific questions but can bound the number of answers needed for saturation. It would be interesting to see how we can, in some cases, utilize more directed queries as in IC3, while maintaining polynomial bounds.
+In order to handle quantifiers, an efficient representation for infinite counter-examples is needed, we suspect that the representation used in \cite{BaumgartnerPelzerTinelli12} (which extends DPLL to FOL - hence has a representation for partial models with quantifiers) could be a potential, although as above, the problem is that no prover run is guaranteed to even terminate, and no progress is guaranteed for a prover time-out.
+
+Another existing technique is based on modular sat solving (\cite{BaylessValBallHoosHu2013}) - here (in our terminology) each CFG-node gets its own SAT solver, each assertion leaf node searches for a model, which is then communicated to its predecessor (in the paper it is described for a sequence, rather than tree or DAG, CFG), each SAT solver is incremental and can receive new assignments from successors and new lemmas (learned clauses) from predecessors.
+This approach is appealing as it is local and potentially each solver could face a much smaller problem than that of a whole VCG solver.
+It would be interesting to see how this approach fares when extended to SMT and DAGs (in the paper it is described as a method to implement IC3, so in fact loops are supported, but acyclic sub-CFG are converted to one SAT instance - there is no provision for joins).
+However, it faces some of the problems mentioned for IC3 above - each SAT instance could potentially run for exponential time, and a model has to be completely refuted (with an explaining lemma/interpolant) in order to continue verification.

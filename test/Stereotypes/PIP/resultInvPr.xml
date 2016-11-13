@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<boogie version="2.2.30705.1126" commandLine="&quot;C:\boogie\Boogie.exe&quot;  /errorLimit:28 /z3opt:/rs:42 /enhancedErrorMessages:1  /trace /vcsMaxKeepGoingSplits:10 /vcsKeepGoingTimeout:1 /proc:ProveInv Heap.bpl MSet.bpl Region.bpl Auxiliary.bpl TreeStereotype.bpl ListStereotype.bpl  NodeType.bpl TreeInvariant.bpl ListInvariant.bpl  /xml:resultInvPr.xml NodeInvariant.bpl  TreeOperations.bpl ListOperations.bpl InvPrProofs.bpl">
+  <file name="InvPrProofs.bpl">
+    <fileFragment name="Heap.bpl" />
+    <fileFragment name="MSet.bpl" />
+    <fileFragment name="Region.bpl" />
+    <fileFragment name="Auxiliary.bpl" />
+    <fileFragment name="TreeStereotype.bpl" />
+    <fileFragment name="ListStereotype.bpl" />
+    <fileFragment name="NodeType.bpl" />
+    <fileFragment name="TreeInvariant.bpl" />
+    <fileFragment name="ListInvariant.bpl" />
+    <fileFragment name="NodeInvariant.bpl" />
+    <fileFragment name="TreeOperations.bpl" />
+    <fileFragment name="ListOperations.bpl" />
+    <fileFragment name="InvPrProofs.bpl" />
+    <method name="ProveInvPrFrame1" startTime="2011-11-27 14:57:23Z">
+      <conclusion endTime="2011-11-27 14:57:24Z" duration="0.898241" outcome="correct" />
+    </method>
+    <method name="ProveInvPrFrame2" startTime="2011-11-27 14:57:24Z">
+      <conclusion endTime="2011-11-27 14:57:24Z" duration="0.0120007" outcome="correct" />
+    </method>
+    <method name="ProveInvPrInvPrSt" startTime="2011-11-27 14:57:24Z">
+      <conclusion endTime="2011-11-27 14:57:24Z" duration="0.0590034" outcome="correct" />
+    </method>
+    <method name="ProveInvPrRemoveChild" startTime="2011-11-27 14:57:24Z">
+      <conclusion endTime="2011-11-27 14:57:24Z" duration="0.0320018" outcome="correct" />
+    </method>
+    <method name="ProveInvPrAddChild" startTime="2011-11-27 14:57:24Z">
+      <conclusion endTime="2011-11-27 14:57:24Z" duration="0.0300017" outcome="correct" />
+    </method>
+    <method name="ProveInvPrStFrame" startTime="2011-11-27 14:57:24Z">
+      <conclusion endTime="2011-11-27 14:57:24Z" duration="0.0120007" outcome="correct" />
+    </method>
+    <method name="ProveInvPrStFromUpdate" startTime="2011-11-27 14:57:24Z">
+      <conclusion endTime="2011-11-27 14:57:24Z" duration="0.0230013" outcome="correct" />
+    </method>
+    <method name="ProveInvPrStToUpdate" startTime="2011-11-27 14:57:24Z">
+      <conclusion endTime="2011-11-27 14:57:24Z" duration="0.0190011" outcome="correct" />
+    </method>
+    <method name="ProveInvPrStInvPr" startTime="2011-11-27 14:57:24Z">
+      <conclusion endTime="2011-11-27 14:57:24Z" duration="0.017001" outcome="correct" />
+    </method>
+  </file>
+</boogie>

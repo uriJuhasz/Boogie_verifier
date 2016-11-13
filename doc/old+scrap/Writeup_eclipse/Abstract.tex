@@ -1,0 +1,40 @@
+\section{Abstract}
+
+Given a program and specification, a viable method for verifying that the program satisfies the specification is the generation of sufficient verification conditions (VCs) and feeding these to an automated theorem prover (ATP) for first order logic (FOL).
+This process allows the use of of the shelf general purpose ATPs, but naturally a lot of the information explicit in the program is lost or made implicit in conversion to standard FOL. Also, unless the VC generation is done very carefully, a lot of redundancy is introduced (e.g. wp of a branch statement), and even with careful VC encodings, much redundancy can still exist in the proof search for common ATP architectures (e.g. SMT).
+In following the original formulation of program semantics by Hoare, the theorem prover is needed only for the application of the rule of consequence. 
+Often this means that the scope and search space for each such proof is much smaller than for the whole program, and as ATPs are quite sensitive to the input size, we try to construct a correctness proof for the program by applying an instance of a theorem prover per program point, and using the control flow graph (CFG) structure, variable scope and other properties explicitly to search which Hoare triples are needed for the application of the other Hoare rules.
+
+\subsection{Proof Direction}
+VC generation usually uses some variation of weakest precondition (WP) and weakest liberal precondition (WLP).
+This generally treats the program "backwards" (from assertions to entry point).
+Running an SMT solver on such an encoding actually treats the program forward - so the actual decision tree of the SMT solver includes the tree of control flow paths of the program (usually without a way to join information from different paths at a CFG join point).
+The advantage of reasoning forward is that most assignments are much easier to handle forwards, while the disadvantage is that a lot of unnecessary information is generated. On the other hand reasoning backwards is more "goal directed" but can create a lot of redundancy.
+We are interested in the flow of information along the CFG, and try to make it optimal by propagating information (equalities, clauses etc) forward, but only on demand. The relevant clauses to propagate forward are the ones that are potential candidates for resolution/superposition inference - the idea is that any such inference should happen in the earliest point in the program where all the premises hold, but only if it is (potentially) needed to prove some assertion (later) in the program.
+For equalities we have a dedicated congruence closure mechanism that can handle joins, but again only propagates ground terms on demand - and again congruence closure happens at the earliest point an equality is known to hold and so is incremental along the CFG.
+By forcing inferences to the earliest possible point we maximize the potential for sharing information between branches - which is often missed by running a general theorem prover.
+
+\subsection{Control Flow Graph}
+Program compilation and optimization makes heavy use of properties of CFGs, and can rewrite CFGs to improve program performance.
+We try to take advantage of this in order to optimize the program for verification.
+We make heavy use of Floyd's rule of conjunction, so that any (FOL) clause proven at some program point can be taken forward to a later program point (in a passive program). We try to generate and propagate these clauses on demand basis, only considering those that have a chance to participate in a resolution or superposition inference.
+We have a special treatment for branch join points, with a dedicated algorithm for joining equalities, inequalities and unit clauses (and to a lesser extent general clauses)  - this can be a weak point for SMT based ATPs as it usually incurs a lot of redundancy in the proof.\\
+Having explicit CFG information means some of the case-splitting in the proof is done directly following the branches in the program. When this is insufficient, we try to have a kind of case-splitting on demand - when we reach a point in the program where we detect that a case split would give more information about a clause/ground term that is deemed relevant, we can calculate (incrementally) the extra clauses implied by this case split, and sometimes even add the case split directly to the CFG.
+This means we are actually integrating some of the techniques of SMT solvers into a mainly resolution based prover.
+
+\subsection{Scope}
+Many programming languages have scoped variables, which we can use to our advantage by reducing the signature of the ATP instance in each program point to only program variables that are in scope at that point.
+We transform the program to dynamic single assignment (DSA) form, and can further reduce the signature at a given program point by discarding older DSA versions of program variables that are representable as terms over yet older versions of the variable - thus dramatically reducing the signature of each ATP instance without compromising completeness.
+Using a strategy akin to Set of Supports (assuming the axioms are consistent), we can also reduce the number of relevant axioms and deduction steps per ATP instance.
+
+\subsection{Proof Depth}
+A common property of computer program correctness proofs is that they are big but shallow - there are many resolution proof steps, but most of the proof is on ground terms (most Hoare triples are ground) and the actual ground terms that appear in the proofs are not very "far" from those that appear in the program - as opposed to e.g. algebra or calculus proofs with elaborate constructions.
+We try to take advantage of this property by restricting resolution and superposition applications to only those that produce terms at a certain distance from the original program (by a metric we define) - this restricts the search space quite a bit and the radius can always be increased iteratively to get a semi-decision procedure.
+
+\subsection{Heaps}
+Heaps are often encoded into FOL as update-able maps, and the theory has either a builtin decision procedure or is axiomatized (there are complete axiomatizations). However, we can further benefit also from the specific knowledge that each heap assignment creates a new DSA version of the heap and of having a dedicated procedure for handling joins in the CFG. 
+For heap manipulating programs, this distance property means that, in the proof, we only consider heap locations that are near (reachable in a limited number of heap dereferences) to those that appear in the program - this is especially useful for modular verification methodologies that derive global heap properties from local verification conditions.
+For programs using recursive data structures with recursive predicates, this distance property correlates directly with limiting the number of unfoldings of predicates on heap nodes.
+
+\subsection{Summary}
+We are attempting to specialize a resolution theorem prover to proving programs, taking advantage of the specific properties of programs and program proofs and especially modular verification condition generation techniques.

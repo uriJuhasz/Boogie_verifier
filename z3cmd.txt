@@ -1,0 +1,15 @@
+C:\Users\uri\Desktop\Slicer\trunk\test\Chalice\AVLTree
+z3 -smt2 -v:1 -st AVLTree.AVLTreeNode.remove.post.smt2
+\Users\uri\Downloads\provers\cvc4-2016-06-25-win32-opt --no-strict-parsing --no-condense-function-values -v -L smt2  --tlimit=120000 AVLTree.AVLTreeNode.insert.pre.smt2
+\Users\uri\Downloads\provers\cvc4-2016-07-06-win32-opt --mbqi=none --decision=internal --full-saturate-quant --no-strict-parsing --no-condense-function-values -v   -L smt2 --e-matching --tlimit=120000 AVLTree.AVLTreeNode.insert.post.smt2 --force-logic UFLIA
+boogie /trace /traceTimes /proverLog:@PROC@.boogie.smt2 FactorialActor.out
+
+\Users\uri\Downloads\provers\cvc4-2016-07-09-win32-opt --mbqi=none --no-strict-parsing --no-condense-function-values -v   -L smt2 -tlimit=240000 AVLTreeGhostField.CheckWellformed$$Node.Height.build.smt2 --force-logic UFLIA
+
+boogie /trace /traceTimes  /proverOpt:SOLVER=cvc4 /cvc4exe:\Users\uri\Downloads\provers\cvc4-2016-07-06-win32-opt.exe AVLTreeGhostField.AVLTree.Find.6.bpl
+
+devenv C:\work\slicer\src\Boogie2Slicer\Boogie\Source\boogie.sln /build release
+vsperf /launch:C:\work\slicer\src\Boogie2Slicer\Boogie\Binaries\boogie.exe /args:"/slice /noProver avltree.bpl /proc:AVLTreeNode.rebalanceLR" /console
+
+
+C:\work\slicer\test\VCC>vsperf /launch:C:\work\slicer\src\Boogie2Slicer\Boogie\Binaries\boogie.exe /args:"/slice /noProver vcc2_redblacktree.bpl /proc:left_rotate" /console

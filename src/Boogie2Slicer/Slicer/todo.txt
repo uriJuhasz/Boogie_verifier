@@ -1,0 +1,15 @@
+assumedGroundAtomsByPredicateAndPolarity
+tupleAssumedAtomsByPredicate
+
+
+Todo - lazy inequalities?
+	groundTermInequalities
+	
+	
+private bool isUnifiable(IAtomEC a1, IAtomEC a2)
+private IEnumerable<GroundSubstitutionEC> tryUnify(ITermEC t, GroundTermEC ct)
+private bool subsumes(IAtomicFormulaEC super, IAtomicFormulaEC sub)
+
+59793
+60215
+60216

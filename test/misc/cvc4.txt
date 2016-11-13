@@ -1,0 +1,1 @@
+D:\work\Slicer\trunk\test\Chalice\AVLTree>..\..\..\src\Boogie2Slicer\Boogie\Binaries\Boogie.exe /proverOpt:SOLVER=cvc4 AVLTree.bpl /proc:AVLTreeNode.insert /cvc4exe:d:\downloads\cvc4-1.4-win32-opt.exe

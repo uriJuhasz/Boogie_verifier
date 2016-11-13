@@ -1,0 +1,127 @@
+        #region knobs
+
+        #region join
+        public static readonly bool joinGCKnob = true;
+        public static readonly bool joinFCKnob = true;
+        public static readonly bool joinGCCrudeCommonShapeKnob = false;
+        #endregion join
+
+        #region gt
+        public static readonly bool gtSaturateGoalKnob = true;
+        public static readonly bool gtSaturateInRecursionKnob = gtSaturateGoalKnob && false;
+
+        #region gt instantiate
+        public static readonly bool gtInstantiateFLKnob = gtSaturateGoalKnob && true;
+        public static readonly bool gtInstantiateFLNonEqualityKnob = gtInstantiateFLKnob && false;
+
+        public static readonly bool gtInstantiateCLTEqualityKnob = gtSaturateGoalKnob && false;
+        public static readonly bool gtInstantiateCLTNonEqualityKnob = gtSaturateGoalKnob && false;
+        public static readonly bool gtInstantiateFrameRuleKnob = gtInstantiateCLTEqualityKnob && false;
+        #endregion gt instantiate
+
+        #region gt import
+        public static readonly bool gtImportClausesKnob = gtSaturateGoalKnob && true;
+
+        public static readonly bool gtImportGCEqualityKnob       = gtImportClausesKnob && true;
+        public static readonly bool gtImportGCAllKnob            = gtImportClausesKnob && true;
+        public static readonly bool gtImportGCJoinKnob           = gtImportClausesKnob && true;
+
+        public static readonly bool gtImportGLEqualityJoinKnob = gtImportClausesKnob && joinGCKnob && true;
+        public static readonly bool gtImportGLDisequalityJoinKnob = gtImportClausesKnob && joinGCKnob && false;
+
+        public static readonly bool gtImportFCCLTEqualityKnob  = gtImportClausesKnob && gtInstantiateCLTEqualityKnob    && false;
+        public static readonly bool gtImportCLTNonEqualityKnob = gtImportClausesKnob && gtInstantiateCLTNonEqualityKnob && false;
+        public static readonly bool gtImportFLKnob             = gtImportClausesKnob && gtInstantiateFLKnob             && false;
+        public static readonly bool gtImportFrameKnob          = gtImportClausesKnob && gtInstantiateFrameRuleKnob      && false;
+
+        public static readonly bool gtImportGCSelfEqualityGLResolutionKnob = false;
+        public static readonly bool gtImportGCInequalitiesGLResolutionKnob = true;
+        #endregion gt import 
+
+        #region gt builtin
+        public static readonly bool gtBuiltinMapAxiomsKnob = gtSaturateGoalKnob && true;
+        public static readonly bool gtBuiltinMapPropKnob   = gtSaturateGoalKnob && true;
+        public static readonly bool gtBuiltinIntegerKnob   = gtSaturateGoalKnob && true;
+        public static readonly bool gtBuiltinMapReadKnob   = gtSaturateGoalKnob && true;
+
+        public static readonly bool gtBuiltinNonGoalKnob   = gtSaturateGoalKnob && false;
+        public static readonly bool gtBuiltinNonNewKnob    = gtSaturateGoalKnob && false;
+        #endregion gt builtin
+
+        #region disagreement sets
+        public static readonly bool gtDisagreementSetKnob = gtSaturateGoalKnob && false;
+        #endregion disagreement sets
+        #endregion gt
+
+        #region gl
+        public static readonly bool glSaturateGoalKnob = true;
+
+        public static readonly bool glResolveFCKnob           = glSaturateGoalKnob && false;
+        public static readonly bool glResolveFCNonGoalKnob    = glResolveFCKnob && false;
+        public static readonly bool glResolveFCNonAssumedKnob = glResolveFCKnob && false;
+
+        public static readonly bool glImportPathGCKnob = glSaturateGoalKnob && false;
+        public static readonly bool glImportGCKnob     = glSaturateGoalKnob && true;
+        public static readonly bool glImportGCJoinKnob = glImportGCKnob && joinGCKnob && true;
+
+        public static readonly bool glImportFCKnob      = glResolveFCKnob && true;
+        public static readonly bool glImportFCJoinKnob  = glImportFCKnob && joinFCKnob && true;
+        #endregion gl
+
+        #region gc
+        public static readonly bool gcgcSuperpositionKnob = true;
+        public static readonly bool fcgcSuperpositionKnob = true;
+        public static readonly bool fcgtSuperpositionKnob = true;
+        public static readonly bool gtfcSuperpositionKnob = true;
+        public static readonly bool gcfcSuperpositionKnob = true;
+        public static readonly bool gcgcResolutionKnob = true;
+        public static readonly bool gcfcResolutionKnob = true;
+
+        public static readonly bool fcfcResolutionKnob = true;
+
+        public static readonly int resolutionMaxWidth = 4;
+        public static readonly int resolutionMaxWidthDelta = 0;
+        #endregion gc
+
+        #region fl
+        public static readonly bool FLResolveGLKnob = false;
+        public static readonly bool flMatchGTTKnob = false;
+        #endregion fl
+        #region fc
+        public static readonly bool fcGroundInstancesKnob = false;
+        #endregion fc
+
+        #region add gt gtt
+        public static readonly bool addGTKnob = false;
+        public static readonly bool addGTTKnob = false;
+        #endregion add gt gtt
+ 
+
+        #region CFG
+        public static readonly bool cascadeNJoinKnob = true;
+
+        public static readonly bool allClausesAreGoalsKnob = false;
+
+        #region cleanup
+        public static readonly bool cleanupIntKnob = false;
+        public static readonly bool cleanupFreeKnob = false;
+        public static readonly bool transitiveCleanKnob = false;
+        public static readonly bool oneDownCleanKnob = false;
+        #endregion cleanup
+
+
+        public static readonly int superpositionFrequency = 1;
+        public static readonly int superpositionFirstRound = 0;
+        public static readonly int numSaturationRounds = 40;
+        public static readonly bool satBackKnob=true;
+        #endregion CFG
+
+        #region depth
+        public static int originalGTDepth = 0;
+        public static int maxGTDepth = 4;
+        public static int minGTDepth = -maxGTDepth;
+        public static int maxGLRadius = 1;
+        public static int topGTDepth = int.MaxValue / 4;
+        #endregion depth
+
+        #endregion knobs

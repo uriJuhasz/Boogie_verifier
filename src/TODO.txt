@@ -1,0 +1,107 @@
+=======
+Import SP+Res all clauses - FCFLGCGLGNE
+=======
+Join:
+	gt/gtt to jgt/jgtt
+	
+	compress successor inline
+
+	issatinpred GT - transitive merge, check GFAs etc
+	
+	Remove history on the go
+	
+	proper new gl also in JU
+
+====
+Evaluation order in makeTemplate
+
+=====
+check double gtts
+=====
+
+Gradual increase of radius + other params
+
+=====
+
+? transitiveLostGFA
+
+=====
+
+
+
+* Efficient join of xGCx,FC
+* join.importCommon(...)
+* Fix: In GLRT Import also FLs
+** Import also FLs for GL - glImportFL...
+** Match gt only in equality FL
+
+
+++ Merge only when no transitive predecessor has mergees
+
+Cache and fixCache and markSweep for:
+	goalGT UGC GC UFC FC 
+	
+	
+=============================
+Scoping for predicates
+path conditions:
+	???	for ga, if the gclause !ga \/ ga2 exists return ga2
+	
+import Join GTs properly for import NGAs, NGCs : e.g. ZeroCredit[x]==0
+Improve: enqueuePDA redundancies
+
+!!Propagate inequalities further?
+
+check that all gas are saturated to gcs-ngcs
+===========================
+
+* Join: Propagate ineqs, superTuples, atoms, predicates, triggers? on sync
+
+* All: simplify clauses in assumeGroundAtom and assumeAtom
+
+*
+
+* Join: import of triggers
+
+* Join+Clone: ground term import should also get:
+	inequalities
+	
+* Join+Clone: ground tuple import should also get:
+	established atoms
+	
+* Join+Clone: guard invariant with being not up to date with predecessor/joinees
+	
+* Join+Clone: Add to invariant pred/joinee completeness of:
+	established atoms
+	
+Check why assertion@53 gets t!=null
+
+todo import clauses on assume ground atom
+/proc:AVLTree.init
+
+import new triggers
+
+make UnitClause / make Atom
+
+make hashablearrays in termRepo?
+AVLTreeNode.pruneMin
+
+AVLTreeNode.getBalanceFactor
+
+Count hashablearrays....
+
+merge in Join - use as in Clone
+
+==================================
+
+Need to complete GFAs on Join import
+
+======================================
+~~~~~~~~~~~~~~~~~~
+P(x,x) /\ ~P(s,t) -> s!=t
+
+!c2 \/ c1
+
+P \/ c2 => P\/c1 (subsume - order on pcs)
+
+~~~~~~~~~~~~~~~~~~

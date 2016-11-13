@@ -1,0 +1,33 @@
+Compress Universes
+
+Equality factoring
+Equality resolution - free
+Optimizations:
++	removeOrphanFTsAndFTTs:
+		track orphan fvts, ffas and ffts
+		removeOrphanFAFs
+		removeOrphanFCs
+	? remember imported clauses?
++   importFF*
+
++ Check which SP failed derivations can be used to prevent import
+		
++ Fix negative depth when removing gtds
+
++ Superposition + Resolution only between at least one not-imported
+	+ importedGCLR - GC.maxGT not new
+	+ importedGTLR - lgfa and rgfa not new
+
+Fixes:
++	SU.fixPredecessorGoalGroundAtoms
+		Also handle goalGTs
++   SU.sync
+		New source is not in gttMM
+		
+cleanup GT,GTT etc members
+
+		
+		
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++ Incremental join pred disequalities
++ consolidate sp import axioms

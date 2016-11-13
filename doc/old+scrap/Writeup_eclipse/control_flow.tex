@@ -1,0 +1,38 @@
+	\subsubsection{Control Flow}
+When generating the VC for a given program, the CFG has to be encoded into first order logic.
+The exact details of the translation vary (especially between wp and sp) but, in general, at least every basic block would be associated with at least one nullary FOL predicate.
+This predicate will indicate either that the weakest precondition for that program point holds (wp semantics) or that the trace includes this program point (sp semantics).
+There will be some implication between predicates for consecutive program points (potentially with a condition from the CFG edge for branch edges), and for join points a disjunction (possibly qualified by a condition).
+All axioms that describe program statements (assignment etc) would be qualified by the predicate of the basic block that contains them.
+This can make a sound and complete translation of the CFG into FOL, but has some specific properties:
+\begin{itemize}
+	\item Axiom filtering: In general, when trying to prove an assertion at program point p, only a subset of the axioms are relevant for the proof - namely, the global axioms and those that appear on any path that leads to p.
+	In a theorem prover, it would usually be down to the SAT solver to try and eliminate the nullary predicate guard of an axiom in order to use it for the proof, but this is done without the extra knowledge we have about the CFG - e.g it being a DAG, or efficient reachability computation - and so could be improved by a dedicated tool.
+	\item Graph reachability: In general, in SSA/DSA form, a ground lemma that holds for a program point p would hold for all subsequent program points at least until the next join point (and also over branch-join "diamonds") - this we could get for free in a dedicated tool, and so have easier time reusing lemmas, while a (DPLL based) SAT solver would need some grinding to get to the same conclusion.
+	\item Lemma reuse: Regarding (ground) lemmas, when we prove and use a lemma on e.g. the true side of a branch, and that lemma holds also on the branch point and thus the false side of the branch, it might be worth generating the lemma with the guard of the branch point rather than the guard of the true branch, as that would allow reuse of the lemma on the false side and also at the join point of the branch and onwards.
+	In a resolution based prover, which guard the lemma gets depends on the resolution order (selection function) - which has no specific information about the CFG. In DPLL based SAT/SMT solvers, the order in which atoms are chosen decides which is the best guard the prover can use in remembering the lemma, but also requires the DPLL procedure to be able to remember lemmas without the irrelevant guards.
+	With explicit knowledge of the CFG we can generate each lemma at the earliest point in which it holds (or more accurately provable in the same way) and so potentially save some work.
+	We are also able to use a dedicated join of lemmas (and congruence closure) (e.g. ~\cite{DBLP:conf/fsttcs/GulwaniTN04}) which is not easy without explicit knowledge of the CFG.
+	\item Branch condition correlation: given two points in the program p1 and p2, where p1 is a predecessor of p2 on some execution paths, if we can show that the path condition of p2 implies the path condition of p1, then we can use all information from p1 (e.g. lemmas) for free.
+	 A dedicated path condition engine can get some of these correlations much cheaper than a general purpose SAT solver/resolution selection function.
+	\item Case splits: Both resolution based provers and DPLL based provers tend to have some strategy for case splits when attempt to prove a theorem. In both these prover styles, the strategy is oblivious to whether a case-split is done on an actual branch in the program, a case split in an axiom, or just an arbitrary fact.
+	With the explicit knowledge of where the original program branches (and hence case splits), and especially looking at which program variables are modified on which side of a branch, we can make more informed decisions on whether to perform a branch based case-split or an axiom based case split
+\end{itemize}
+
+	\subsubsection{Goal Directed Proofs}
+	Some resolution based theorem provers, when presented with a set of axioms and a theorem, can search for a proof/refutation of the theorem under the assumption that the axioms are consistent.
+	This has the advantage of reducing the proof search space as it only considers proofs that contain the assertion - when the set of axioms is known to be consistent.
+	In the context of program proofs, we have several sets of axioms:
+	\begin{itemize}
+	\item The mathematical axioms for the relevant domains (integers, booleans, sequences etc), which are often known to be consistent.
+	\item The program specific axioms that come from the type system, data structure definitions and aliasing/specification methodology - these are also usually assumed to be consistent and proven separately.
+	\item The axioms that encode the CFG structure - these are also usually consistent by construction, but can encode unreachable CFG nodes by false branch conditions.
+	\item Axioms that encode the executable program statements - these are also usually consistent, but may conflict with axioms that represent specification.
+	\item Axioms that encode assumptions generated by the specification methodology - e.g. pre-conditions, method call-return post-conditions, loop invariants - when these conflict it usually means a program location is unreachable.
+	\item Assertions - when the rest of the axioms (on execution paths leading to the assertion) are consistent, but the addition of the assertion makes them inconsistent, it means the assertion does not hold.
+	So when trying to refute the negation of an assertion a at program point p, we could usually limit ourselves to either showing that p is unreachable or showing that a does not hold at p.
+	As the second case is usually much more common (a program would usually have many small assertions generated by the specification methodology and programming language semantics as well as explicitly by the programmer, and most would be in reachable CFG nodes).
+	\end{itemize}
+	We can bias our proof search in the direction of assertions: we look for a refutation based at the negation of the said assertion (with some weight on the path condition leading to it) and of course completely ignore any CFG node that cannot reach that assertion.
+	We try to prove each assertion separately, and when an assertion CFG node is proven we can trim the CFG so that all nodes lead to at least one assertion node - and remember the lemmas we found on the way whether the refutation succeeded or not.
+	We only do resolution on atoms and clauses coming (transitively) from the assertion and only do quantifier instantiation on ground terms that come (transitively) from an assertion.

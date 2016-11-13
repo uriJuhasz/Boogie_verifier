@@ -1,0 +1,1255 @@
+\newpage
+\section{Ground Unit Interpolation}\label{section:scoping:ugfole}
+In this section, we demonstrate the basics of our interpolation approach, and demonstrate it on the ground unit fragment (although our interpolants are non-unit ground clauses). We also discuss the inherent complexity of interpolation.
+We begin by describing a simple graph-based interpolation procedure for two consecutive CFG-nodes that contain only unit ground clauses, which will form the basis for understanding interpolation for general DAGs and clauses. The treatment here is closely related to the algorithm and interpolation game of ~\cite{FuchsGoelGrundyKrsticTinelli2012}, where the main difference is that they extract an interpolant from a proof (one congruence closure graph) while we search for a proof for two CC graphs whose conjunction is inconsistent - hence we can extend our method for sequences, trees and DAGs.
+We follow with a discussion of improvements to the base algorithm and the necessary modifications to support sequence- and tree-shaped CFGs.
+
+\subsection{The problem}
+The problem we consider in this section is as follows:\\
+We are given two sets of unit clauses (ground equalities and dis-equalities), \m{N^t_0} and \m{N^b_0}.\\
+Our objective is to generate a set of ground clauses \\
+\m{I \in \langI} s.t. \m{N^t_0 \models I} and that if \m{N^t_0 \cup N^b_0 \models \emptyClause} then \m{I \cup N^b_0 \models \emptyClause}.\\
+This is equivalent, in our setting, to having a CFG-node p and its successor n, where \m{N^t_0=\clauses{p},N^b_0=\clauses{n}}.
+
+\textbf{Notation:}\\
+We use the following presentation for all of our examples:\\
+We use the red letters \m{\textcolor{red}{u,v,w,x,y,z}} for constants in \langtp - exclusive to \m{N^t},\\
+the black letters \m{a,b,c,d,e} for constants in the interface language \langI, 
+and the blue letters \m{\textcolor{blue}{l,m,n,o,p}} for constants in \langbp.\\
+For non-nullary functions we use \m{f,g,h}. \\
+Whenever the above symbols are insufficient, we add indices.
+
+\subsection{Basic graph-based algorithm}
+Our algorithm is based on the EC-graphs that have been described in chapter \ref{chapter:ugfole}. This algorithm can also be described for standard terms and congruence closure graphs, but the presentation is made easier by using EC-graphs.\\
+We represent \m{N^t_0} as the EC-graph \m{g^t} by starting with an empty EC-graph and \lstinline{assuming} all clauses in \m{N^t_0},
+and similarly \m{g^b} encodes \m{N^b_0}.\\
+We use the definition of the sources function from chapter \ref{chapter:ugfole}, where: \\
+\m{\forall s \in g^t, t \in g^b \cdot (s \in \sources{b}{t}{n} \Leftrightarrow \terms{s} \cap \terms{t} \neq \emptyset) }\\
+Meaning that the EC-node s in the graph \m{g^t} is a source of the EC-node t in \m{g^b} iff there is a term that is represented by both EC-nodes.\\
+We use \sourcesA{n} where \m{g^b,g^t} are clear from the context.\\
+We use \m{[s]^t} for the EC-node of the term s in \m{g^t} when \m{s \in \terms{g^t}}, and similarly \m{[t]^b}.\\
+We use the source invariant described in chapter \ref{chapter:ugfole}. As we have seen, the source and propagation invariants ensure that for each pair of terms represented in \m{g^b}, if they are equal under the union of equations in \m{g^t,g^b} then they are equal in \m{g^b} - shown formally in figure \ref{fig_propagation_guarantee}.
+
+\begin{figure}
+\m{\forall s,t \in g^t \cdot ((\exists u \in \terms{s},v\in \terms{t} \cdot N^t_0 \cup N^b_0 \models u=v) \Rightarrow s = t)}
+\caption{Propagation guarantee}
+\label{fig_propagation_guarantee}
+\end{figure}
+
+%Our algorithm will enforce the source invariant eagerly, but not necessarily the propagation invariant.\\
+If we enforce scoping, the above guarantee does not hold - for example, consider the example in figure \ref{example_4.2.1.1_0}.
+
+\begin{figure}
+\m{N^t_0=\s{c=f(a,\textcolor{red}{x}),d=f(b,\textcolor{red}{x})}}\\
+\m{N^b_0=\s{a=b,c \neq d}}\\
+\m{\mathfrak{L}^t = \s{a,b,c,d,\textcolor{red}{x}}}\\
+\m{\mathfrak{L}^b = \s{a,b,c,d}}
+\caption{Simple unit ground interpolation example.\\
+The only interpolation clause is \m{a \neq b \lor c=d}.}
+\label{example_4.2.1.1_0}
+\end{figure}
+
+The graphs and sources function are depicted in figure \ref{example_4.2.1.1_1}.\\
+Without scoping:\\
+\m{g^b} \lstinline|add|s the EC-nodes \s{[a],[b],[\textcolor{red}{x}],[c,f([a],\textcolor{red}{x})],[d,f([b],\textcolor{red}{x})]}\\
+After \lstinline|assume(a=b)| and enforcing the invariants we get:\\
+\s{[a,b],[\textcolor{red}{x}],[c,d,f([a,b],\textcolor{red}{x})]}.\\
+However, as \m{\textcolor{red}{x} \notin \langb} in the scoped case, \m{g^b} adds only the EC-nodes\\
+\s{[a,b],[c],[d]} in our unit algorithm, and we do not get a refutation.
+
+\textbf{Basic idea:}\\
+The idea of our algorithm is simple: the two EC-graphs exchange equalities over pairs of nodes connected by the source function,
+each graph performs congruence closure according to the equalities received from the other graph, until one of the graphs is inconsistent. The exchanged equalities are used to form a set of Horn clauses that is an interpolant for the two sets of clauses represented in the graphs.
+We use here a small extension to the EC-graphs that we have mentioned briefly before - dis-equality edges.
+A dis-equality edge is an edge between two \GTs{} (EC-Graph nodes) and represents a dis-equality between the ECs represented in the two \GTs{}. When two \GTs{} are merged, we take the union of the dis-equality edges of both \GTs{} being merged. An EC-graph is consistent iff it has no dis-equality graph that is a self-loop - an inconsistent EC-graph g is denoted by \m{g \models \emptyClause}.
+
+\noindent
+\textbf{Example algorithm run:}\\
+We start with the example and then describe the algorithm.\\
+The initial state is depicted in figure \ref{example_4.2.1.1_1}.\\
+The only possible equality to exchange can be seen in the graph - the only node in \m{g^b} that has more than one source - \m{[a,b]^b}.\\
+The algorithm run begins by \m{g^b} sending \m{[a]^t=[b]^t} to \m{g^t} - which \m{g^t} \lstinline{assumes} - the result is shown in figure \ref{example_4.2.1.1_2}.\\
+Now the propagation invariant of \m{g^b} is broken, as two nodes, \m{[c]^b,[d]^b} share a source \m{[c,d]^t}. \\
+\m{g^t} sends the equality \m{[c]^b=[d]^b} to \m{g^b}, which \lstinline|assumes| the equation - the result is shown in figure \ref{example_4.2.1.1_3}.\\
+Now \m{g^b \models \emptyClause} (as it has a dis-equality self loop on the \GT{} \m{[c,d]^b} and we are done.\\
+The interpolant we have found is the implication \m{a=b \rightarrow c=d}, which we write as the CNF Horn-clause \m{a\neq b \lor c=d}.
+
+\begin{figure}
+\begin{tikzpicture}
+	\node[gttn] (1)              {$()$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{g^t}};
+
+	\node[gtn]  (1a) [above right = 0.6cm and 0.7cm of 1] {\m{a}};
+	\node[gtn]  (1b) [above       = 0.6cm of 1a] {\m{b}};
+	\node[gtn]  (1c) [above       = 0.6cm of 1b] {\stackB{c}{f(a,\textcolor{red}{x})}};
+	\node[gtn]  (1d) [above       = 0.6cm of 1c] {\stackB{d}{f(b,\textcolor{red}{x})}};
+
+	\node[gtn]  (1x) [above left = 0.6cm and 0.7cm of 1] {\m{\textcolor{red}{x}}};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 6cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{g^b}};
+
+	\node[gtn]  (11ab) [above left = 1.2cm and 0.7cm of 11] {\m{a,b}};
+	\node[gtn]  (11c) [above       = 1.2cm of 11ab] {\m{c}};
+	\node[gtn]  (11d) [above       = 1.0cm of 11c] {\m{d}};
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[se] (11ab) to  ( 1a);
+	\draw[se] (11ab) to  ( 1b);
+	\draw[se] (11c) to   ( 1c);
+	\draw[se] (11d) to   ( 1d);
+
+	\draw[ie] (11c) to  ( 11d);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (3.0cm,-0.0cm) to (3.0cm,4.8cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+Simple unit ground interpolation example\\
+Initial state.\\
+Circles represent EC-nodes - \GTs{}.\\
+\textcolor{blue}{Dashed blue edges} represent source edges - edges between \GTs{} of different graphs whose EC shares a term.\\
+Dashed black edges represent dis-equality edges.
+}
+\label{example_4.2.1.1_1}
+\end{figure}
+\begin{figure}
+\begin{tikzpicture}
+	\node[gttn] (1)              {$()$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{g^t}};
+
+	\node[gtn,ultra thick]  (1ab) [above right = 0.6cm and 0.7cm of 1] {\m{\textbf{a,b}}};
+	\node[gtn,ultra thick]  (1cd) [above       = 0.2cm of 1b] {\stackB{c,d}{f(\textbf{[a,b]},\textcolor{red}{x})}};
+
+	\node[gtn]  (1x) [above left = 0.6cm and 0.7cm of 1] {\m{\textcolor{red}{x}}};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 6cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{g^b}};
+
+	\node[gtn]  (11ab)[above left = 0.6cm and 0.7cm of 11] {\m{a,b}};
+	\node[gtn]  (11c) [above       = 0.6cm of 11ab] {\m{c}};
+	\node[gtn]  (11d) [above       = 1.0cm of 11c] {\m{d}};
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[se] (11ab) to  ( 1ab);
+	\draw[se] (11c) to   ( 1cd);
+	\draw[se] (11d) to   ( 1cd);
+
+	\draw[ie] (11c) to  ( 11d);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (3.0cm,-0.0cm) to (3.0cm,3.2cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+Simple unit ground interpolation example\\
+After \lstinline|$\m{g^t}$.assume(a=b)|\\
+Bold text marks where \m{g^t} performed congruence closure
+}
+\label{example_4.2.1.1_2}
+\end{figure}
+
+\begin{figure}
+\begin{tikzpicture}
+	\node[gttn] (1)              {$()$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{g^t}};
+
+	\node[gtn]  (1ab) [above right = 0.6cm and 0.7cm of 1] {\m{a,b}};
+	\node[gtn]  (1cd) [above       = 0.1cm of 1b] {\stackB{c,d}{f([a,b]),\textcolor{red}{x})}};
+
+	\node[gtn]  (1x) [above left = 0.6cm and 0.7cm of 1] {\m{\textcolor{red}{x}}};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 6cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{g^b}};
+
+	\node[gtn]  (11ab)[above left = 0.6cm and 0.7cm of 11] {\m{a,b}};
+	\node[gtn]  (11cd)[above       = 1.2cm of 11ab] {\m{\textbf{c,d}}};
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[se] (11ab) to  ( 1ab);
+	\draw[se] (11cd) to  ( 1cd);
+
+	\draw[ie] (11cd) to[out=45, in=135,looseness=4]  ( 11cd);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (3.0cm,-0.0cm) to (3.0cm,3.2cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+Simple unit ground interpolation example\\
+After \lstinline|$\m{g^b}$.assume(c=d)|\\
+Here, \m{g^b \models \emptyClause}
+}
+\label{example_4.2.1.1_3}
+\end{figure}
+
+\textbf{Algorithm description:}\\
+Given the graphs \m{g^b} and \m{g^t}, we utilize the sources function that connects nodes in \m{g^b} with nodes in \m{g^t} that share at least one term. Any node in \m{g^b} or \m{g^t} that has at least one source edge is termed an \textcolor{blue}{interface node}.\\
+We assume that, at the initial state, the graphs \m{g^b,g^t} satisfy the source and propagation invariants - specifically, no node in \m{g^t} has more than one source-edge. 
+
+The basic step of the algorithm is composed of two stages - the first stage selects a node \m{t \in g^b} where \m{\size{\sourcesA{t}} >1} and then selects a pair of nodes 
+\m{s_0,s_1 \in \sourcesA{t}} s.t. \m{s_0 \neq s_1}, and merges them - that is, applies \\
+\lstinline|g$^{\m{t}}$.assumeEqual(s$_0$,s$_1$)|, which performs congruence closure.
+Before the second stage we enforce the source invariant in \m{g^b}.
+
+The second stage is similar to the dual of the first stage - after the congruence closure in \m{g^t} and the completion of source, we can get several interface nodes in \m{g^t} that are sources to the same interface node in \m{g^b} - that is,
+we have an EC-node \m{s \in g^t} and two EC-nodes \m{t_0,t_1 \in g^b} s.t. \m{s \in \sourcesA{t_0} \cap \sourcesA{t_1}}. 
+We now select a subset of such pairs \m{t_0,t_1} and perform \lstinline|g$^{\m{b}}$.assume(t$_0$=t$_1$)| for each.
+
+When there are no more candidates for either the first or the second stage, we are done (and the propagation invariant holds). 
+We claim that, once no more steps can be taken, \m{(g^b \models \emptyClause \lor g^t \models \emptyClause) \Leftrightarrow (\eqs{g^t} \cup \eqs{g^b} \models \emptyClause)}.
+
+Our informal argument is quite simple - if we take the resulting graph and merge each pair of nodes connected by a source-edge (one from \m{g^t} and one from \m{g^b}), and then replace each of these nodes in the \GFAs{} in which they appear (in both graphs), 
+we get a valid EC-graph without needing to merge any more nodes, as each node is connected with at most one source-edge and each graph is itself congruence and transitively closed. As all dis-equality edges are within a single graph, the combined graph is inconsistent iff one of its constituents is.
+
+
+\textbf{Extracting interpolants:}\\
+The interpolants extracted from our algorithm are always Horn clauses (as noted also in \cite{FuchsGoelGrundyKrsticTinelli2012}).
+The interpolant extracted is the conjunction of one Horn-clause-EC per equation transferred from \m{g^t} to \m{g^b}, 
+where the head is the equation and the body is the disjunction of the negation of all equalities transferred from \m{g^b} to \m{g^t} until the current stage. In order to get an interpolant set of clauses rather than clause-ECs, we select a representative term for each interface EC-node of \m{g^t,g^n} at each stage, which is an interface term. For example, we can select the minimal (by $\prec$) interface term represented by the EC-node.\\
+We discuss the extraction of interpolants in more detail in section \ref{extracting_justification}.
+
+\textbf{Source completeness:}\\
+A slightly less obvious point, which is also the reason that GFOLE admits interpolation, is that some new source-edges may have to be drawn after transferring equations, which may connect nodes that were previously not interface nodes, and hence the interpolant may include terms that are not in the initial problem - consider the example in figure \ref{example_4.2.1.2_0}.
+
+\begin{figure}
+\m{N^t_0=\s{c=f(a,\textcolor{red}{x}),\textcolor{red}{y}=f(b,\textcolor{red}{x}),d=g(\textcolor{red}{y})}}\\
+\m{N^b_0=\s{a=b,d \neq g(c)}}
+\caption{Interpolation with new terms\\
+The interpolant is \m{a\neq b \lor d=g(c)}.\\
+}
+\label{example_4.2.1.2_0}
+\end{figure}
+
+When we transfer \m{a=b} to \m{g^b}, congruence closure merges \m{[c,f(a,\textcolor{red}{x})]^b} and \m{[\textcolor{red}{y},f(b,\textcolor{red}{x})]^b} into \m{[c,\textcolor{red}{y},f([a,b],\textcolor{red}{x})]^b} and hence \m{[d,g([\textcolor{red}{y}])]^b} is updated to\\
+ \m{[d,g([c,\textcolor{red}{y},...])]^b} - the term \m{g(c)} did not appear on the interface originally.\\
+Here the term \m{g(c)} already appears in the original \m{N^b} (but not \m{N^t}), but we can easily modify the example to require an entirely new term - hence it is crucial that we use our EC-graph algorithm to ensure that all necessary source-edges are added - show in figure \ref{example_4.2.1.3_0}. The algorithm run is show in figures \ref{example_4.2.1.2_1}-\ref{example_4.2.1.2_5}.
+
+
+\begin{figure}
+\m{N^t_0=\s{c=g(a,\textcolor{red}{x}),d=g(b,\textcolor{red}{x}),e=h(a,\textcolor{red}{x}),\textcolor{red}{y}=h(b,\textcolor{red}{x})=f(\textcolor{red}{y})}}\\
+\m{N^b_0=\s{a=b,\textcolor{blue}{m} \neq f(\textcolor{blue}{m}),e=g(c,\textcolor{blue}{l}),\textcolor{blue}{m}=g(d,\textcolor{blue}{l})}}
+\caption{Interpolation with new terms\\
+The interpolant is \m{a \neq b \lor c=d, a \neq b \lor e=f(e)}.\\
+The term \m{f(e)} does not appear in the initial problem at all.
+}
+\label{example_4.2.1.3_0}
+\end{figure}
+
+
+\begin{figure}
+\begin{tikzpicture}
+	\node[gttn] (1)              {$()$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{g^t}};
+
+	\node[gtn]  (1a) [above right  = 0.6cm and 0.7cm of 1] {\m{a}};
+	\node[gtn]  (1b) [above       = 0.6cm of 1a] {\m{b}};
+	\node[gtn]  (1c) [above       = 0.6cm of 1b] {\stackB{c}{g(a,\textcolor{red}{x})}};
+	\node[gtn]  (1d) [above       = 0.6cm of 1c] {\stackB{d}{g(b,\textcolor{red}{x})}};
+	\node[gtn]  (1e) [above       = 0.6cm of 1d] {\stackB{e}{h(a,\textcolor{red}{x})}};
+
+	\node[gtn]  (1x) [above left = 0.6cm and 0.7cm of 1] {\m{\textcolor{red}{x}}};
+	\node[gtn]  (1y) [above       = 4.6cm of 1x] {\stackB{\textcolor{red}{y},f(\textcolor{red}{y})}{h(b,\textcolor{red}{x})}};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 6cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{g^b}};
+
+	\node[gtn]  (11ab) [above left = 1.1cm and 0.7cm of 11] {\m{a,b}};
+	\node[gtn]  (11c) [above       = 1.2cm of 11ab] {\m{c}};
+	\node[gtn]  (11d) [above       = 1.2cm of 11c] {\m{d}};
+	\node[gtn]  (11e) [above       = 1.0cm of 11d] {\stackB{e}{g(c,\textcolor{blue}{l})}};
+
+	\node[gtn]  (11l) [above right = 1.2cm and 0.7cm of 11] {\m{\textcolor{blue}{l}}};
+	\node[gtn]  (11m) [above       = 4.0cm of 11l] {\stackB{\textcolor{blue}{m}}{g(d,\textcolor{blue}{l})}};
+	\node[gtn]  (11fm)[above       = 1.0cm of 11m] {\m{f(\textcolor{blue}{m})}};
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[se] (11ab) to  ( 1a);
+	\draw[se] (11ab) to  ( 1b);
+	\draw[se] (11c) to   ( 1c);
+	\draw[se] (11d) to   ( 1d);
+	\draw[se] (11e) to   ( 1e);
+
+	\draw[ie] (11m) to   ( 11fm);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (3.0cm,-0.0cm) to (3.0cm,7.5cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+Interpolation with new terms\\
+Initial state
+}
+\label{example_4.2.1.2_1}
+\end{figure}
+
+\begin{figure}
+\begin{tikzpicture}
+	\node[gttn] (1)              {$()$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{g^t}};
+
+	\node[gtn,ultra thick]  (1ab)[above right  = 0.6cm and 0.7cm of 1] {\m{a,b}};
+	\node[gtn,ultra thick]  (1cd) [above = 0.65cm of 1ab]  {\stackB{c,d,}{g(\textbf{[a,b]},\textcolor{red}{x})}};
+	
+	\node[gtn,ultra thick]  (1ey) [above = 1.0cm of 1cd]  {\stackB{e,\textcolor{red}{y},f([e,\textcolor{red}{y}])}{h(\textbf{[a,b]},\textcolor{red}{x})}};
+	\node[gtn]  (1x) [above left = 0.6cm and 0.7cm of 1] {\m{\textcolor{red}{x}}};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 6cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{g^b}};
+
+	\node[gtn]  (11ab) [above left = 0.6cm and 0.7cm of 11] {\m{a,b}};
+	\node[gtn]  (11c) [above       = 0.6cm of 11ab] {\m{c}};
+	\node[gtn]  (11d) [above       = 0.4cm of 11c] {\m{d}};
+	\node[gtn]  (11e) [above       = 1.0cm of 11d] {\stackB{e}{g(c,\textcolor{blue}{l})}};
+
+	\node[gtn]  (11l) [above right = 0.6cm and 0.7cm of 11] {\m{\textcolor{blue}{l}}};
+	\node[gtn]  (11m) [above       = 2.7cm of 11l] {\stackB{\textcolor{blue}{m}}{g(d,\textcolor{blue}{l})}};
+	\node[gtn]  (11fm)[above       = 1.0cm of 11m] {\m{f(\textcolor{blue}{m})}};
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[se] (11ab) to  ( 1ab);
+	\draw[se] (11c) to   ( 1cd);
+	\draw[se] (11d) to   ( 1cd);
+	\draw[se] (11e) to   ( 1ey);
+
+	\draw[ie] (11m) to   ( 11fm);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (3.0cm,-0.0cm) to (3.0cm,5.5cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+Interpolation with new terms\\
+After \lstinline|$\m{g^b}$.assume(a=b)|
+}
+\label{example_4.2.1.2_2}
+\end{figure}
+
+\begin{figure}
+\begin{tikzpicture}
+	\node[gttn] (1)              {$()$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{g^t}};
+
+	\node[gtn]  (1ab)[above right  = 0.6cm and 0.7cm of 1] {\m{a,b}};
+	\node[gtn]  (1cd) [above = 0.7cm of 1ab]  {\stackB{c,d,}{g([a,b],\textcolor{red}{x})}};
+	
+	\node[gtn]  (1ey) [above = 1.0cm of 1cd]  {\stackB{e,\textcolor{red}{y},f([e,\textcolor{red}{y}])}{h([a,b],\textcolor{red}{x})}};
+	\node[gtn]  (1x) [above left = 0.6cm and 0.7cm of 1] {\m{\textcolor{red}{x}}};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 6cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{g^b}};
+
+	\node[gtn]  (11ab) [above left = 0.6cm and 0.7cm of 11] {\m{a,b}};
+	\node[gtn,ultra thick]  (11cd) [above       = 0.9cm of 11ab] {\m{c,d}};
+
+	\node[gtn,ultra thick]  (11em)[above       = 1.2cm of 11cd] {\stackB{e,\textcolor{blue}{m}}{g(\textbf{[c,d]},\textcolor{blue}{l})}};
+
+	\node[gtn]  (11fm)[above       = 1.0cm of 11em] {\m{f(\textbf{[e,\textcolor{blue}{m}]})}};
+
+	\node[gtn]  (11l) [above right = 0.6cm and 0.7cm of 11] {\m{\textcolor{blue}{l}}};
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[se] (11ab) to  ( 1ab);
+	\draw[se] (11cd) to   (1cd);
+
+	\draw[se] (11em) to   ( 1ey);
+	\draw[pe] (11fm) to   ( 1ey);
+
+	\draw[ie] (11fm) to   (11em);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (3.0cm,-0.0cm) to (3.0cm,5.5cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+Interpolation with new terms\\
+After \lstinline|$\m{g^b}$.assume(c=d)|
+}
+\label{example_4.2.1.2_3}
+\end{figure}
+
+\begin{figure}
+\begin{tikzpicture}
+	\node[gttn] (1)              {$()$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{g^t}};
+
+	\node[gtn]  (1ab)[above right  = 0.6cm and 0.7cm of 1] {\m{a,b}};
+	\node[gtn]  (1cd) [above = 0.7cm of 1ab]  {\stackB{c,d,}{g([a,b],\textcolor{red}{x})}};
+	
+	\node[gtn]  (1ey) [above = 1.0cm of 1cd]  {\stackB{e,\textcolor{red}{y},f([e,\textcolor{red}{y}])}{h([a,b],\textcolor{red}{x})}};
+	\node[gtn]  (1x) [above left = 0.6cm and 0.7cm of 1] {\m{\textcolor{red}{x}}};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 6cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{g^b}};
+
+	\node[gtn]  (11ab) [above left = 0.6cm and 0.7cm of 11] {\m{a,b}};
+	\node[gtn,ultra thick]  (11cd) [above       = 0.9cm of 11ab] {\m{c,d}};
+
+	\node[gtn,ultra thick]  (11em)[above       = 1.2cm of 11cd] {\stackB{e,\textcolor{blue}{m}}{g(\textbf{[c,d]},\textcolor{blue}{l})}};
+
+	\node[gtn]  (11fm)[above       = 1.0cm of 11em] {\m{f(\textbf{[e,\textcolor{blue}{m}]})}};
+
+	\node[gtn]  (11l) [above right = 0.6cm and 0.7cm of 11] {\m{\textcolor{blue}{l}}};
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[se] (11ab) to  ( 1ab);
+	\draw[se] (11cd) to   (1cd);
+
+	\draw[se] (11em) to   ( 1ey);
+	\draw[se,ultra thick] (11fm) to   ( 1ey);
+
+	\draw[ie] (11fm) to   (11em);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (3.0cm,-0.0cm) to (3.0cm,5.5cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+Interpolation with new terms\\
+After \lstinline|$\m{g^b}$.update|
+}
+\label{example_4.2.1.2_4}
+\end{figure}
+
+
+\begin{figure}
+\begin{tikzpicture}
+	\node[gttn] (1)              {$()$};
+	\node[gl]   (1l) [below = 0 of 1] {\m{g^t}};
+
+	\node[gtn]  (1ab)[above right  = 0.6cm and 0.7cm of 1] {\m{a,b}};
+	\node[gtn]  (1cd) [above = 0.7cm of 1ab]  {\stackB{c,d,}{g([a,b],\textcolor{red}{x})}};
+	
+	\node[gtn]  (1ey) [above = 1.0cm of 1cd]  {\stackB{e,\textcolor{red}{y},f([e,\textcolor{red}{y}])}{h([a,b],\textcolor{red}{x})}};
+	\node[gtn]  (1x) [above left = 0.6cm and 0.7cm of 1] {\m{\textcolor{red}{x}}};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (11)  [right = 6cm of 1] {$()$};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{g^b}};
+
+	\node[gtn]  (11ab) [above left = 0.6cm and 0.7cm of 11] {\m{a,b}};
+	\node[gtn]  (11cd) [above       = 0.9cm of 11ab] {\m{c,d}};
+
+	\node[gtn,ultra thick]  (11em)[above       = 1.3cm of 11cd] {\stackB{e,\textcolor{blue}{m},f(\textbf{[e,\textcolor{blue}{m}]})}{g([c,d],\textcolor{blue}{l})}};
+
+	\node[gtn]  (11l) [above right = 0.6cm and 0.7cm of 11] {\m{\textcolor{blue}{l}}};
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[se] (11ab) to  ( 1ab);
+	\draw[se] (11cd) to   (1cd);
+
+	\draw[se] (11em) to   ( 1ey);
+
+	\draw[ie] (11em) to[out=45, in=135,looseness=4]  ( 11em);
+
+\draw[draw=none, use as bounding box] (current bounding box.north west) rectangle (current bounding box.south east);
+
+\begin{pgfinterruptboundingbox}
+	\draw[separator] (3.0cm,-0.0cm) to (3.0cm,5.5cm);
+\end{pgfinterruptboundingbox}
+
+\end{tikzpicture}
+
+\caption{
+Interpolation with new terms, final state\\
+After \lstinline|$\m{g^b}$.assume(e=f(e))|
+The interpolant is \s{a\neq b \lor c=d,a \neq b \lor e = f(e)}\\
+f(e) does not appear in the original problem
+}
+\label{example_4.2.1.2_5}
+\end{figure}
+
+We have not specified how the equalities communicated between the two graphs are selected.
+For the basic algorithm, any selection will work as long as we continue the process until no equations can be communicated in either direction.
+In the next sections, we discuss several improvements of the basic algorithm, 
+including not communicating useless equations, interpolation for several \m{g^bs} and generating stronger interpolants.
+
+
+
+
+\subsection{Selecting equations to communicate}
+In our verification algorithm, interpolation happens in an incremental environment - that is, after we have calculated the interpolant between \m{N^t} and \m{N^b}, new (dis-)equalities can be added to \m{N^t} and \m{N^b} by other fragments and we need then to find the change in the interpolant.
+We are interested in understanding the space of potential interpolants, in order to define an incremental search strategy that generates optimal interpolants 
+(in our setting optimal means smaller and usually stronger, 
+while interpolants intended for invariants have different requirements - see e.g. the discussion in \cite{DBLP:conf/vmcai/DSilvaKPW10}).
+
+Additionally, in some cases, the Horn clauses extracted are not the strongest possible. 
+This happens when not all of the antecedents are needed to prove the consequent, and might depend on the order of communicating equalities.\\
+Consider the example in figure \ref{example_4.2.1.3}.
+
+\begin{figure}
+\m{N^t=\s{e_1=g(a,\textcolor{red}{x}),e_2=g(b,\textcolor{red}{x}),e_3=h(c,\textcolor{red}{x}),e_4=h(d,\textcolor{red}{x})}}\\
+\m{N^b=\s{a=b,c=d,f(e_1,e_3,\textcolor{blue}{l}) \neq f(e_2,e_4,\textcolor{blue}{l})}}
+\caption{Example for order dependence in extracted interpolants\\
+The interpolant extracted by our algorithm is either \\
+\s{a\neq b \lor e_1=e_2,a\neq b \lor c \neq d \lor e_3=e_4} or \\
+\s{c\neq d \lor e_3=e_4,a\neq b \lor c \neq d \lor e_1=e_2},\\
+depending on the order in which we communicate equalities.\\
+The optimal interpolant is:\\
+\s{a\neq b \lor e_1=e_2,c\neq d \lor e_3=e_4}
+}
+\label{example_4.2.1.3}
+\end{figure}
+
+
+\noindent
+Here, if we first communicate \m{a=b} the interpolant we get is\\
+\s{a\neq b \lor e_1=e_2,a\neq b \lor c \neq d \lor e_3=e_4}\\
+While if we first communicate \m{c=d} the interpolant is:\\
+\s{c\neq d \lor e_3=e_4,a\neq b \lor c \neq d \lor e_1=e_2}\\
+The stronger interpolant is: \\
+\s{a\neq b \lor e_1=e_2,c\neq d \lor e_3=e_4}\\
+In this case it seems clear that the graph \m{N^t} has two independent parts, but in some other cases it might not be easy to determine the independent parts of \m{N^t} - we discuss an improvement of the basic interpolation algorithm that produces optimal interpolants in this section.
+In some cases, there are several incomparable interpolants, each of which is sufficient for a refutation - for example, consider the interpolation problems in figures \ref{example_4.2.1.4} and \ref{example_4.2.1.5} - in both cases we have more than one interpolant and they are all of the same size.
+
+\begin{figure}
+\m{N^t=\s{e_1=g(a,\textcolor{red}{x})=h(c,\textcolor{red}{x}),e_2=g(b,\textcolor{red}{x})=h(d,\textcolor{red}{x})}}\\
+\m{N^b=\s{a=b,c=d,f(e_1,\textcolor{blue}{l}) \neq f(e_2,\textcolor{blue}{l})}}
+\caption{Example for incomparable interpolants\\
+The two possible interpolants are:\\
+\s{a\neq b \lor e_1=e_2}\\
+\s{c\neq d \lor e_1=e_2}\\
+Neither is inherently preferable to the other. 
+}
+\label{example_4.2.1.4}
+\end{figure}
+
+
+\begin{figure}
+\m{N^t=\s{e_1=g(a,b,c,\textcolor{red}{x}),e_2=g(b,c,a,\textcolor{red}{x})}}\\
+\m{N^b=\s{a=b=c,e_1 \neq e_2}}
+\caption{Example for incomparable interpolants - transitivity\\
+The three possible interpolants are:\\
+\s{a\neq b \lor a \neq c \lor e_1=e_2}\\
+\s{a\neq b \lor b \neq c \lor e_1=e_2}\\
+\s{a\neq c \lor b \neq c \lor e_1=e_2}\\
+}
+\label{example_4.2.1.5}
+\end{figure}
+
+In the next sections we discuss some modifications of the base interpolation algorithm that allow us to generate better interpolation clauses in an incremental setting, and in a CFG (with one \m{N^t} and several \m{N^bs}).
+
+\subsection{Relevance calculations}
+In this section we describe a modification of the base interpolation algorithm presented above, 
+which allows us to reduce the number of equations that need to be exchanged, without losing completeness.
+We present it here as it is used also in our algorithm for interpolation in the CFG.
+The basic idea is to calculate which interface equalities are \emph{relevant} for \m{N^t}, that is, which interface equality communicated from \m{g^b} to \m{g^t} could lead to an interpolation clause. For example, if we look at figure \ref{example_4.2.1.4}, we can see that the interface equalities \\
+\s{a=b,c=d}\\
+can lead to interpolation clauses, while the interface equalities \\
+\m{\{a=c,a=d,a=e_1,a=e_2,b=c,b=d,b=e_1,b=e_2,}\\
+\m{c=e_1,c=e_2,d=e_1,d=e_2\}} \\
+cannot lead to any interpolation clause, as they do not cause any congruence closure in \m{g^b}.
+Hence there is no point in communicating these equalities from \m{g^b} even if they hold in \m{g^b}.
+
+A slightly more elaborate example is given in figure \ref{f.fs.ug.rc.1}, where the only relevant interface equality is a=b, and removing any of the clauses in \m{g^t} makes all interface equalities irrelevant.
+\begin{figure}[H]
+\m{N^t = \{}\\
+\m{\textcolor{red}{y_0}=f(a,\textcolor{red}{x}),\textcolor{red}{y_1}=f(b,\textcolor{red}{x}),}\\
+\m{\textcolor{red}{z_0}=g(\textcolor{red}{y_0},\textcolor{red}{x}),\textcolor{red}{z_1}=g(\textcolor{red}{y_1},\textcolor{red}{x}),}\\
+\m{c=h(\textcolor{red}{z_0},\textcolor{red}{x}),d=h(\textcolor{red}{z_1},\textcolor{red}{x})\}}\\
+\m{N^b = \s{a=b,f(c,\textcolor{blue}{w}) \neq f(d,\textcolor{blue}{w})}}
+\caption{Example for relevance dependencies\\
+The only possible interpolant is \m{a \neq b \lor c=d}.\\
+Removing any of the clauses from \m{N^t} makes \m{a=b} irrelevant for interpolation
+}
+\label{f.fs.ug.rc.1}
+\end{figure}
+ 
+Remember that our interpolants are sets of Horn clauses, which may have a head (positive equality) or no head (all negative equalities).
+The basic observation is that there are two ingredients necessary for the generation of an interpolation clause, one for the head and one for the rest of the clause:
+\begin{itemize}
+	\item A goal: this is a pair of distinct terms that, if shown equal, contribute an interpolation clause- in one of the following ways:
+		\begin{itemize}
+			\item A direct interface equality - for example, in figure \ref{f.fs.ug.rc.1}, merging \m{[c]^t,[d]^t} produces an interpolation Horn clause with the head c=d, and so the pair \s{c,d} is a goal.
+			\item A non-interface dis-equality - for example, if we were to add \m{\textcolor{red}{z_0}\neq\textcolor{red}{z_1}} in figure \ref{f.fs.ug.rc.1} instead of the equations for c,d, merging the pair \s{[z_0]^t,[z_1]^t} would produce a head-less interpolation clause - \m{a\neq b}
+			\item Equating a non-interface term with an interface term, if it can contribute to one of the above two goals - for example, in figure \ref{example_4.2.1.3_0}, merging \m{[\textcolor{red}{y}]^t,[e]^t} produces an interpolation clause with the head\\ \m{f(e) = e}
+			%\item Equating an interface term with a non-interface term that participates in a dis-equality with another term that is either an interface term or can be equated with one - for example: \\
+%\m{N^t = \s{c=f(b,\textcolor{red}{x}),d=g(b,\textcolor{red}{x}),\textcolor{red}{y}=f(a,\textcolor{red}{x}),\textcolor{red}{z}=g(a,\textcolor{red}{x}),\textcolor{red}{y} \neq \textcolor{red}{z}}}\\
+		%Where we cannot equate \s{c,d} or \s{y,z}, but we can equate \m{c=y,d=z} and get an interpolation clause with the dis-equa
+		\end{itemize}
+	\item A path from interface equalities to the goal, using congruence and transitive closure
+\end{itemize}
+
+\subsubsection*{The relevance Algorithm}
+We use here a set $\textcolor{blue}{\Gamma}$ of interface equalities (equalities on pairs of interface EC-nodes of \m{N^t}) to represent all the equalities that could be communicated from \m{N^b} to \m{N^t} - 
+the algorithm is parametric in $\Gamma$, and we later use $\Gamma$ as an over-approximation of the set of interface equalities between \m{N^t} and a set of \m{N^bs} - the algorithm only assumes that $\Gamma$ includes at least all interface equalities of \m{N^b}.
+
+We discuss the relevance calculations that only depends on \m{g^t} and $\Gamma$ - specifically, we assume we are given \m{g^t}, the interface language \m{\mathfrak{L}^I} and $\Gamma$, but not any \m{N^b} (this is needed so that we can calculate the relevance set for several successor CFG-nodes, as described in section \ref{goal_relevance_CFG}).\\
+We use now 
+%\m{g^t} for the above-mentioned \m{g_n^i} of a given node, and 
+\m{I^t} for the set of (forward) interface EC-nodes of \m{g^t} - all EC-nodes in \m{g^t} for which there is a term over \m{\mathfrak{L}^I}.
+
+Our algorithm calculates, given the EC-graph \m{g^t} and a set of equalities $\Gamma$ not yet assumed in \m{g^t}, 
+a subset of $\Gamma$ that is guaranteed to be the only literals needed in bodies of the interpolation clauses.
+
+The \textbf{basic idea} is somewhat similar to our join algorithm: we first proceed bottom-up and mark equivalence classes of EC-nodes in \m{g^t} that are equal under $\Gamma$, and then we proceed top-down from each goal (non-interface dis-equality or interface equality) where both sides are in the same equivalence class, and mark all pairs that can contribute to showing that the two goal EC-nodes are equal.
+
+We sketch the algorithm in figure \ref{relevance_algorithm}. The algorithm is described using EC-graphs. The input is an EC-graph 
+\lstinline|g| which represents \m{g^t} and a set of equalities $\Gamma$.
+The algorithm creates an EC-graph \lstinline|rg| as a sequential successor of \lstinline|g| using the algorithms we have shown in chapter \ref{chapter:ugfole} - so \lstinline|rg| represents $\Gamma \cup$ \eqs{g^t}, and maintains source-edges to \lstinline|g| - edges between EC-nodes of \lstinline|g| and \lstinline|rg| whose ECs shares a term.
+We now describe the working of the algorithm.
+
+\begin{figure}
+\begin{lstlisting}
+method relevance(g : ECGraph, $\Gamma$ : Set[Equality])
+		: Set[Pair[GT]]
+	var rg := new SequentialECGraph(g)
+	//rg is a sequential successor of g, maintaining 
+	//the propagation and source invariants
+	
+	//assume all equations from $\Gamma$ in rg
+	foreach (eq $\in$ $\Gamma$)
+		rg.assume(eq)
+	
+	//Add all interface nodes from g to rg
+	var irgts := new Set[GT] //interface nodes in rg
+	foreach (gt $\in$ $\m{I^t}$)
+		irgt.add(rg.makeTerm($\m{\textbf{rep}}$(gt)))
+	
+	//Calculate $\m{G}$ - we calculate the inverse source of $\m{G}$
+	var rG := new Set[Pair[GT]] //unordered pairs
+	foreach (rgt in irgts)
+		foreach (u,v $\in$ $\m{\mathbf{sources}}$(rgt))
+			if (u$\neq$v)
+				rG.add((u,v))
+	foreach ((u,v) $\in$ $\m{\mathbf{diseqs}}$(g))
+		ru := rg.makeTerm($\m{\textbf{rep}}$(u))
+		rv := rg.makeTerm($\m{\textbf{rep}}$(v))
+		if (ru==rv) //dis-equality refuted under $\Gamma$
+			rG.add((u,v))
+			
+	return relevance(g,rg,rG)
+	
+method relevance(g,rg : ECGraph, rG : Set[Pair[GT]])
+	//Calculate $\m{R}$
+	var $\m{R}$ := new Set[Pair[GT]] //unordered pairs
+	var todo := new Queue[Pair[GT]](rG)
+	while (!todo.isEmpty) //Up to a quadratic number of pairs
+		var (u,v) := todo.dequeue
+		//Inverse congruence closure
+		foreach ($\fa{f}{s} \in$ u) 
+			foreach ($\fa{f}{t} \in$ v) 
+				foreach (i $\in$ 0..$\arity{f}$)
+					if (s$\m{_i}$ $\neq$ t$\m{_i}$)
+						if ($\m{R}$.add((s$\m{_i}$,t$\m{_i}$))) todo.enqueue((s$\m{_i}$,t$\m{_i}$))
+		
+		//Inverse transitive closure
+		var m := rg.$\m{\sourcesInv{}{}{u}}$ //also rg.$\comm{\m{=\sourcesInv{}{}{v}}}$
+		foreach (w $\in$ $\m{\mathbf{sources}}$(m)$\setminus \{$u,v$\}$)
+			if (u$\notin$I or v$\notin$I or w$\notin$I)
+				if ($\m{R}$.add((u,w))) todo.enqueue((u,w))
+				if ($\m{R}$.add((w,v))) todo.enqueue((w,v))
+					
+		//Return only interface relevant pairs
+		return $\s{(u,v) \in R \mid u,v \in I^t}$
+\end{lstlisting}
+\caption{Relevance algorithm}
+\label{relevance_algorithm}
+\end{figure}
+
+We define first the relation \m{\textcolor{blue}{\eqg}} which is the smallest congruence on \m{g^t} that satisfies \m{\Gamma} - formally, it is the least fixed point of the equations in figure \ref{eqg_def} (represented by \lstinline|rg| - specifically, for a pair of EC-node s (u,v) in \lstinline|g|, \m{u \eqg v \equivdef \exists r \in}\lstinline|rg|\m{\cdot u,v \in \sources{}{}{r}}).
+
+\begin{figure}
+\begin{enumerate}
+	\item \m{\forall s=t \in \Gamma \cdot s \eqg t}
+	\item \m{\forall u,v,w \in g^t \cdot ( ( u \eqg v \land v \eqg w ) \Rightarrow u \eqg w)}
+	\item \m{\forall \tup{u},\tup{v} \in g^t, \fa{f}{s},\fa{f}{t} \in \gfasA{g^t} \cdot (\tup{u} \eqg \tup{v} \Rightarrow [\fa{f}{s}]^t \eqg [\fa{f}{t}]^t)}
+\end{enumerate}
+\caption{Definition of \eqg{}\\
+These equations are the standard transitive congruence closure of $\Gamma$, 
+except that we only allow a congruence closure instance if at least one side of the conclusion is in \m{g^t} }
+\label{eqg_def}
+\end{figure}
+
+In order to determine all of our goals, we need to calculate first which non-interface nodes could potentially become interface nodes under some interface equalities - we encode this using the set \m{\textcolor{blue}{I^{\Gamma}}} which is the least set that satisfies the equations in figure \ref{Igamma_def}.
+
+\begin{figure}
+\begin{enumerate}
+	\item \m{I \subseteq I^{\Gamma}}
+	\item \m{\forall u \in I^{\Gamma}, v \in g^t \cdot u \eqg v \Rightarrow v \in I^{\Gamma}}
+	\item \m{\forall \tup{s} \in I^{\Gamma}, \fa{f}{s} \in \gfasA{g^t} \cdot [\fa{f}{s}]^t \in I^{\Gamma}}
+\end{enumerate}
+\caption{Definition of \m{I^{\Gamma}}\\
+}
+\label{Igamma_def}
+\end{figure}
+
+The first rule includes all interface nodes, 
+the second includes nodes equal in \eqg{} to potential interface nodes, 
+and the third includes \GFAs{} for which the tuple is a potential interface node.
+
+In order to define the top-down part we first define the set of goals \textcolor{blue}{G}, which are pairs of EC-nodes - shown in figure \ref{goals_def}.
+
+\begin{figure}
+\m{G \triangleq \s{\s{u,v} \mid u\neq v \land u \eqg v \land (u,v \in I^{\Gamma} \lor g^t \models u \neq v )}}
+\caption{Definition of G - goal pairs}
+\label{goals_def}
+\end{figure}
+
+
+\noindent
+Goal pairs are pairs of EC-nodes of \m{g^t} that are equivalent in \eqg and either both are potential interface nodes or they share a dis-equality edge.
+Our formulation here is an over-approximation, for example, in:\\
+\m{N^t=\s{c=f(a,\textcolor{red}{x}),\textcolor{red}{y}=f(b,\textcolor{red}{x})}}\\
+\m{\s{c,\textcolor{red}{y}} \in G} although no clause can be generated, while adding either\\
+\s{d=g(a,\textcolor{red}{x}),\textcolor{red}{y}=g(b,\textcolor{red}{x})} or\\
+\s{\textcolor{red}{y} \neq f(\textcolor{red}{y})}\\
+makes this pair a relevant goal.
+We leave refinement of the goal set calculations as future work, the rest of the algorithm is parametric in G.
+We only note here that when we interpolate in a CFG (either sequence, tree or DAG) we must add to the set of goals also pairs of EC-nodes that are on the interface with \emph{predecessor} CFG-nodes, in order to ensure complete propagation.
+
+\noindent
+The top-down part is defined using the symmetric relation \textcolor{blue}{R} (relevant pairs) between EC-nodes of \m{g^t}, which is the least fixed point of the equations in figure \ref{R_def}.
+
+\begin{figure}
+\begin{enumerate}
+	\item \m{\forall \s{u,v} \in G \cup R, \fa{f}{s} \in u,\fa{f}{t} \in v \cdot}\\
+				\m{((u \neq v \land \tup{s} \eqg \tup{t}) \Rightarrow \s{\tup{s},\tup{t}} \in R)}
+	\item \m{\forall \s{u,v} \in G \cup R, w \in g^t \cdot}\\
+	\m{((u \neq w \land w \neq v \land (u \notin I \lor v \notin I \lor w \notin I) \land }\\
+	\m{u \eqg w \land w \eqg v ) \Rightarrow}\\
+	\m{\s{u,w},\s{w,v} \in R)}
+%	\item \m{\forall u \in I^R, v \in I^t \cdot (u,v) \in P \cdot (u,v) \in R}
+\end{enumerate}
+\caption{Definition of R - relevant pairs\\
+Where:\\
+\m{\s{\tup{s},\tup{t}} \in R \equivdef \forall i \cdot (s_i \not\equiv t_i \Rightarrow \s{s_i,t_i} \in R)}\\
+The first rule is inverse congruence closure and the second inverse transitive closure, bounded by \eqg.\\
+The relevant equalities are \m{u=v} s.t. \m{\s{u,v} \in R \cap (I^t)^2}.
+}
+\label{R_def}
+\end{figure}
+
+
+\bigskip
+
+\noindent
+\textbf{Examples:}\\
+(as we discuss only \m{g^t} we use \m{[.]} instead of \m{[.]^t} for EC-nodes for simplicity)
+
+\noindent
+For the example in figure \ref{example_4.2.1.2_0} :\\
+\m{g^t = \s{[\textcolor{red}{x}],[\textcolor{red}{y},f(b,\textcolor{red}{x})],[a],[b],[c,f(a,\textcolor{red}{x})],[d,g(\textcolor{red}{y})]}}\\
+Which we shorten to:\\
+\m{g^t = \s{[\textcolor{red}{x}],[\textcolor{red}{y}],[a],[b],[c],[d]}}\\
+\m{I^t = \s{[a],[b],[c],[d]}}\\
+We show the example for \m{\Gamma = \s{a=b=c=d}}\\
+The graph \lstinline|rg| represents:\\
+\m{g^t/\eqg ~=~ \s{\s{[a],[b],[c],[d],[\textcolor{red}{y}]},\s{[\textcolor{red}{x}]}}}\\
+(\m{\textcolor{red}{y}} is merged with \m{c} by congruence closure).\\
+\m{I^{\Gamma} = \s{[a],[b],[c],[d],[\textcolor{red}{y}]}}\\
+(\m{\textcolor{red}{y}} added to the interface as it was merged with the interface node for \m{c}).\\
+\lstinline|rg| has one interface node \m{[a]_{rg}}.\\
+The set of goal pairs are all pairs of source of merged interface nodes - there are no dis-equalities.\\
+\m{G = I^{\Gamma} \times I^{\Gamma} \setminus id}\\
+In the loop for calculating R, all of the inverse transitive closure are already in G hence the only added pair is
+\m{\s{[a],[b]}} using the inverse congruence closure rule on the \GFAs{} \m{f(a,\textcolor{red}{x}),f(b,\textcolor{red}{x})}
+\m{R =  \s{\s{[a],[b]}}} (obtained using rule 1 from the goal \s{c,\textcolor{red}{y}})\\
+Relevant equalities:\\
+\s{[a]=[b]}
+
+\bigskip
+
+\noindent
+For the example in figure \ref{example_4.2.1.4}:\\
+\m{g^t = \s{[\textcolor{red}{x}],[a],[b],[c],[d],[e_1],[e_2]}}\\
+\m{I^t = \s{[a],[b],[c],[d],[e_1],[e_2]}}\\
+\m{\Gamma = (I^t)^2}\\
+\m{g^t/\eqg ~=~ \s{I^t,\s{[\textcolor{red}{x}]}}}\\
+\m{I^{\Gamma} = I^t}\\
+\m{G = I^{\Gamma} \times I^{\Gamma} \setminus id}\\
+As in the last example, there are no applications of the inverse transitive rule, only the two applications of the inverse congruence closure rule.\\
+\m{R =  \s{\s{[a],[b]},\s{[c],[d]}}} (rule 1 from the goal \s{e_1,e_2})\\
+Relevant equalities:\\
+\s{[a]=[b],[c]=[d]}
+
+\bigskip
+
+\noindent
+Finally, for the example in figure \ref{f.fs.ug.rc.1}:\\
+\m{g^t = \s{[\textcolor{red}{x}],[\textcolor{red}{y_0}],[\textcolor{red}{y_1}],[\textcolor{red}{z_0}],[\textcolor{red}{z_1}],[a],[b],[c],[d]}}\\
+\m{I^t = \s{[a],[b],[c],[d]}}\\
+\m{{\Gamma} = (I^t)^2}\\
+\m{g^t/\eqg ~=~ \s{I^t,\s{[\textcolor{red}{y_0}],[\textcolor{red}{y_1}]},\s{[\textcolor{red}{z_0}],[\textcolor{red}{z_1}]}}}\\
+\m{I^{\Gamma} = I^t}\\
+\m{G = I^{\Gamma} \times I^{\Gamma} \setminus id}\\
+Here the last loop (using \lstinline|todo|) finds only one additional pair - \m{([\textcolor{red}{y_0}],[\textcolor{red}{y_1}])} - 
+using the inverse of congruence closure. For this pair we apply again the inverse of conruence closure to get \m{([\textcolor{red}{z_0}],[\textcolor{red}{z_1}])} and again to get the pair \m{([a],[b])}.\\
+\m{R =  \s{([\textcolor{red}{z_0}],[\textcolor{red}{z_1}]),([\textcolor{red}{y_0}],[\textcolor{red}{y_1}]),([a],[b])}}\\
+Relevant equalities:\\
+\s{[a]=[b]}
+
+Having calculated the relevant equalities, we only communicate these from \m{g^b} to \m{g^t}, and when there are no relevant equalities left to communicate from \m{g^b} to \m{g^t} and no equalities at all to communicate from \m{g^t} to \m{g^b}, we are done.
+
+\textbf{Incremental updates:}\\
+The obvious representation for \eqg{} is a partition (set of disjoint subsets) of \m{g^t}, and for \m{I^{\Gamma}} simply a set.
+G can also be represented as a partition of a subset of  \m{g^t}.
+R can be represented as a set of pairs, although this set can be quite large in extreme cases - a bounded fragment (in this case, bounding the depth of derivation of \eqg) can mitigate this problem at the price of completeness.
+
+If we enhance our basic algorithm with relevance calculations, we need to update the set of relevant equalities after each \lstinline|assume| in \m{g^t}, and after updates to \m{\Gamma}.
+Remember that the interpolation algorithm works more efficiently the less equations there are in $\Gamma$.
+
+Updating after the addition of equations to \m{\Gamma} is easy - each of \eqg,\m{I^{\Gamma}},G and R can only grow.
+
+Removing equations from \m{\Gamma} (e.g. remove \m{s=t} after we have proven the assertion \m{s\neq t}) is more complicated, 
+and we might want to allow \m{\Gamma} only to grow. When we use $\Gamma$ as the approximation of a candidate model for successor nodes in the CFG as in section \ref{section:scoping:gfole}, deleting clauses (e.g. by subsumption) may allow us to weaken $\Gamma$ if we can remove equations from $\Gamma$.\\
+If we merge two EC-nodes \m{u,v \in g^t} because of an equality derived in some other fragment, 
+we should remove the pair \s{u,v} from R and G, however, propagating this change requires some more book-keeping.
+
+ %We can easily see that the only changes come in G and R - when the EC-nodes u,v get merged the pair \s{u,v} is removed from G and R, and potentially more pairs need to be removed. We can perform this calculation incrementally, by remembering, for each pair \m{\s{u,v} \in R}, 
+%which pairs have brought it into R - e.g. in figure \ref{example_4.2.1.4}, both the pairs \m{\s{[a],[b]},\s{[c],[d]} \in R} depend on \m{\s{[e_1],[e_2]} \in R} - once we assume \m{a=b}, the nodes \m{[e_1],[e_2]} are merged and then the pair \m{\s{[e_1],[e_2]}} goes out of R, and hence also \m{\s{[c],[d]}}. This leaves R empty and hence we are done.
+
+\subsubsection*{Goal Relevance}\label{goal_relevance_CFG}
+For binary interpolation, we can use the same relevance calculations at \m{N^b} as follows:\\
+The goals for \m{N^t} are dis-equalities and relevant equalities in \m{N^b}.\\
+The goals for \m{N^b} are dis-equalities and relevant equalities in \m{N^t}.\\
+As we can see we might need a few rounds of communications between \m{N^t} and \m{N^b} in order to establish the exact set of goals and relevant equalities.\\
+The enhanced binary interpolation algorithm with relevance alternates between communicating relevant equalities and actual equations.
+
+\subsection{Scoping in the CFG}
+For \textbf{binary interpolation}, the algorithm given above always generates an interpolant when there is one, and can operate incrementally. 
+The exact interpolant extracted can be tuned (e.g. congruence closure on interface terms can be performed by \m{N^t} or by \m{N^b}).\\
+For \textbf{sequence interpolants} (e.g. an unrolled loop or scoped verification of straight line code), the above algorithm will extend easily.
+
+Each CFG-node n maintains an EC-graph \m{g_n}, which is updated as in the binary case with both its predecessor and successor.
+We can communicate equalities in any order - that is, at each stage select one CFG-node and perform one stage of the above algorithm with its predecessor.
+
+Once all consecutive pairs of CFG-nodes have been saturated - meaning that no interface node has more than one source-edge, we are done.
+If source completeness is enforced we claim that the algorithm is complete for verification and the generation of sequence interpolants.
+
+Source completeness in the CFG means that, for any pair of CFG-nodes \m{n_1,n_2}, on the path P, for any pair of EC-nodes \m{s \in g_1,t \in g_2}, if there are terms \\
+\m{u \in s, v \in t} s.t. \m{\eqs{P} \models u=v} then \m{s \in \sources{2}{1}{t}} - meaning the two EC-nodes are connected by a source chain. We have seen that without joins we can achieve source completeness easily.
+
+The argument for completeness is as for the binary case (we give a proof for a more general case later) - 
+we can merge the EC-graphs of all CFG-nodes by merging each pair of EC-nodes connected by a source edge. Source completeness and the fact that each EC-node has at most one source-edge in each direction (termination condition for the binary algorithm), ensure that the resultant merged EC-graph is congruence and transitive closed - hence it is a model (as an equivalence relations) for the clauses on the path, unless one of the EC-graphs is in conflict.
+
+For \textbf{tree interpolants} (an interpolant for a tree-shaped CFG - different from \cite{BlancGuptaKovacsKragl13} which is discussed later),
+it is no longer sound to \lstinline|assume| at the EC-graph of a CFG-node an equation from a successor, as it may not hold in another successor.
+Here we are essentially calculating a separate sequence interpolant for each path in the CFG, where each CFG-node calculates the interpolant between its prefix (path from the root) and, separately, \emph{each} suffix (path) to an assertion.
+The simplest way to use our algorithm for sequence interpolants is to maintain, at each CFG-node, a separate EC-graph per assertion reachable from it.
+We can then communicate equations only between EC-graphs of the same assertion, and the interpolant at each EC-node is the union (conjunction) of the interpolation clauses for all assertions. While this is sound and complete, this is highly inefficient, as we will have a quadratic number of EC-graphs, and we are not sharing the common work between different paths. This solution also does not extend well to the DAG case, where the number of prefixes and suffixes can be exponential.
+
+\textbf{An example:}
+Consider the example in figure \ref{example_scoping_DAG_interpolation.0}.
+The interpolation clause from \m{n_0} is \m{a\neq b \lor c=d}.
+We cannot simply \lstinline|assume(a=b)| at \m{g_0} because it is not sound - it will allow us to prove the assertion at \m{n_3} which does not hold.
+
+
+\begin{figure}
+\begin{lstlisting}
+$\m{n_0}$:
+c := f(a$_0$,$\m{\textcolor{red}{x}}$)
+d := f(b$_0$,$\m{\textcolor{red}{x}}$)
+
+$\m{n_1}$:
+//Here $\m{\textcolor{red}{x}}$ is out of scope
+a$_1$:=a$_0$
+b$_1$:=b$_0$
+if (a$_1$==b$_1$)
+	//Here a$_{\comm{0}}$,b$_{\comm{0}}$ are out of scope
+	$\m{n_2}$:
+	assume a$_1$==b$_1$
+	assert c==d
+else	
+	$\m{n_3}$:
+	assume a$_1$!=b$_1$
+	assert c==d //does not hold
+\end{lstlisting}
+\caption{Example for interpolation in the CFG}
+\label{example_scoping_DAG_interpolation.0}
+\end{figure}
+
+Our solution is as follows: we maintain two EC-graphs per CFG-node, the first is \m{g_n} as in chapter \ref{chapter:ugfole} which is \emph{sound} in the sense that any equality that holds in \m{g_n} holds at the CFG-node. The second EC-graph, \m{g_n^i}, includes all the equations implied by \emph{all} suffixes, in this sense it is \emph{complete} (any equation on in-scope terms that holds on any path through n holds in \m{g_n^i}). 
+The graph \m{g_n^i} is an over-approximation of the set of EC-graphs we would maintain at n in the naive implementation.
+
+We use these two graphs as follows:\\
+\m{g_n} is maintained as in the unit-ground algorithm of chapter \ref{chapter:ugfole}.\\
+\m{g_n^i} maintains source-edges to \m{g_n} and, independently, to \m{g_s^i} for each direct successor s of n. \m{g_n^i} enforces the source and propagation invariant with \m{g_n} so that all equations that hold in \m{g_n} hold also in \m{g_n^i}, and all terms in \m{g_n} are \lstinline|added| to \m{g_n^i}.
+
+Equations are communicated backwards between \m{g_n^i} and \m{g_p^i} as in the sequence case, except that no forward propagation of equations is performed. 
+Instead of the forward propagation of equalities, we extract the interpolation clauses from \m{g_n^i} as described above,
+represent them as clause-ECs over \m{g_n}, and propagate them as described in section \ref{section:scoping:gfole}, with a slight modification:\\
+The idea is that we can rely on the completeness of superposition with selection (e.g. \cite{BachmairGanzingerSuperposition}) - 
+essentially, whenever there is a negative literal (dis-equality) in a clause, we can \emph{select} a negative literal to be the only literal that participates in derivations, even if there are larger (positive or negative) literals. As our interpolation clauses are Horn-clauses (and as a propagation in a tree-shaped CFG does not use branch conditions), each non-unit clause has at least one negative literal.
+Unit clauses are propagated using EC-graphs as in the unit-ground algorithm.
+We propagate non-unit clauses based on the maximal term of the selected negative literal.
+In our example, \m{g_0^i} encodes the equalities \s{a_0=b_0,f(a_0,\textcolor{red}{x})=c,f(b_0,\textcolor{red}{x})=d} while \m{g_0} encodes only
+\s{f(a_0,\textcolor{red}{x})=c,f(b_0,\textcolor{red}{x})=d} - the added equality \m{a_0=b_0} is in \m{g_0^i} although it does not hold in all transitive successor assertions.\\
+The only generated interpolation clause is \m{a\neq \underline{b} \lor c=d} - propagated only for a request for \m{b} (left-hand-side) - which only comes from \m{n_2}.\\
+When propagated using our EC-graphs, it arrives at \m{n_2} as \m{[a_1] \neq [a_1] \lor [c]=[d]}
+Inspecting the superposition calculus, we can see that all superposition derivations will have a unit left-hand-side and hence they are performed automatically when a clause is propagated, as the clauses are represented as clause-ECs over EC-nodes from \m{g_n}.
+Equality factoring is not relevant as no clause has more than one positive literal, and hence we are left with equality resolution.
+For our example the above is sufficient to prove the assertion. 
+However, we do not cover all cases of equality resolution - we have to perform a new step - we perform equality resolution on the selected negative literal of a clause \emph{modulo \m{g_n^i}}, when that literal is not an interface literal with the successor.
+This means that a clause \m{C \lor \underline{s\neq t}} (\m{s \neq t} selected) at a node n where \m{s,t \notin \langI}, 
+is represented as \m{[C]_n \lor \underline{[s]_n \neq [t]_n}}, we then check if \m{[s]_n^i = [t]_n^i} (that is, \m{g_n^i \models s=t}).
+If this is the case, we extract a set of \emph{justifications} for the equality - each possible body D for an interpolation clause with the head \m{s = t}, and for each such D we add the clause \m{[C]_n \lor [D]_n} to the set of clause-ECs at n.
+
+
+
+\begin{figure}
+\m{N^t=\s{d=f(a,\textcolor{red}{x}),e=f(b,\textcolor{red}{x}),f(c,\textcolor{red}{x})}}\\
+\m{N^b_0=\s{a=b,d \neq e}}
+\m{N^b_1=\s{a=c,g(d,\textcolor{blue}{m}) \neq g(d,\textcolor{blue}{m})}}
+\caption{Example for justification clauses\\
+The justifications for \m{d=e} are:\\
+\s{a=b,a=c}\\
+The interpolation clauses are:\\
+\m{a\neq b \lor d=e}
+\m{a\neq c \lor d=e}
+}
+\label{example_4.2.2.1}
+\end{figure}
+
+\noindent
+For example, consider the example in figure \ref{example_4.2.2.1}.
+Here we see two possible justification clauses, and hence two interpolation clauses.
+
+We also perform the standard equality resolution as a simplification - eagerly replacing \m{[C]_n \lor [s]_n \neq [s]_n} with \m{[C]_n}
+%,and factoring - eagerly replacing \m{[C]_n \lor [A]_n \lor [A]_n} with \m{[C]_n \lor [A]_n}
+.\\
+As in the non-unit case, if we derive a unit clause at n it is \lstinline|assumed| in the graph \m{g_n} (and propagated to successors and to \m{g_n^i} as before).
+
+We claim that this is a complete algorithm for the ground unit fragment on a tree-shaped CFG - 
+the reason is that we over-approximate the derivations of the superposition calculus with selection on each path in the CFG,
+where unit derivations are handled by the EC-graph, As explained above, superposition is also handled by propagation and the EC-graph,
+and equality resolution is handled by over-approximating the equational theory on the path, and adding the relevant assumptions to the conclusion. 
+We do not give a proof here as we prove a more general result in section \ref{section:scoping:gfole}.
+In this section we concentrate on the approximation encoded in \m{g_n^i} and the extraction of assumptions (Horn clause bodies) from \m{g_n^i}.
+
+For \textbf{DAG interpolants}, we use a similar algorithm as for trees, 
+except that now we have branch-conditions in clauses and hence cannot rely solely on unit superposition - we describe the solution in section \ref{section:scoping:gfole}.
+
+%\subsection{Goal sensitivity}
+%In our setting, we do not want to generate all possible interpolation clauses for the EC-graph of an CFG-node, but rather only those that might be relevant for a refutation in the CFG. \\
+%We have used the relation \eqg as an approximation for the equalities in successor nodes. \\
+%For the most accurate results, we can use our DAG-based algorithm above as follows:\\
+%When the verification algorithm has saturated a CFG-node n (and all its transitive predecessors), 
+%we want to generate all relevant interpolation clauses for all paths from n to an assertion.\\
+%For each such path Q, we can collect all equalities along the path in one EC-graph \m{g_Q} (so that they are transitive and congruence closed), 
+%and use \m{g_Q} as our P - we use \m{g_Q} as \m{g^b} (connecting source edges as per the source invariant) and then \m{P = \s{(u,v) \in (g_n)^2 \mid \exists t \in g_Q \cdot \s{u,v} \subseteq \sourcesA{t}}}.\\
+%However, we can have an exponential number of such paths, and furthermore the graph \m{g_Q} will be non-modular in the above formulation.\\
+%Hence we over-approximate P as follows: each CFG-node communicates to its direct predecessors the set of all equalities implied on the interface (as in the basic algorithm). These equalities are translated through the sources function to predecessors and at branch points we take the union of the sets from both branch sides (which is an over-approximation). This propagation proceeds in reverse topological order as normal requests until we reach dead-ends (the root, or no equalities implied on direct predecessors).\\
+%We then proceed as in requests in topological order from the dead-end CFG-nodes, applying our DAG-based interpolation algorithm in order to generate the interpolation clauses which are propagated down the CFG. If our source function is complete, this algorithm is complete, 
+%as P will over-approximate the equalities on all paths to assertions. As we have seen, however, in joins the source function may not be complete.\\
+%The process might allow us to deduce new equalities at successor nodes which will require several passes of the above CFG traversal until saturation.\\
+%If we maintain the DAG of EC-graphs at each CFG-node, the algorithm is incremental as, whenever an equality is added to P we can use the existing results and only add the necessary DAG-nodes and possibly interpolation clauses. The advantage is that we do not repeat work that was done in one path in another path.
+\textbf{An example:}\\
+We show an example of our abstraction of the equality theory of suffixes - in figures \ref{example_4.2.1.8_program} and \ref{example_4.2.1.9_program}.
+We can see that our over-approximation can sometimes produces undesirable interpolation clauses, which would not be produced by per-path interpolation - this is the price of our approximation, but the advantage is that we use only one additional EC-graph per CFG-node.
+
+\begin{figure}
+\begin{lstlisting}
+assume $\m{e_1=g(a,\textcolor{red}{x})}$
+assume $\m{e_2=g(b,\textcolor{red}{x})}$
+assume $\m{e_3=h(c_1,\textcolor{red}{x})=h(c_2,\textcolor{red}{x})}$
+assume $\m{e_4=h(d_1,\textcolor{red}{x})=h(d_2,\textcolor{red}{x})}$
+....
+
+if (*)
+	assume $\m{c_1=d_1}$
+else
+	assume $\m{c_2=d_2}$
+assume $\m{a = b}$
+assert $\m{f(e_1,e_3,\textcolor{blue}{l}) = f(e_2,e_4,\textcolor{blue}{l})}$
+\end{lstlisting}
+\caption{Example for CFG approximations\\
+Here, for the root node, we can use \s{c_1=d_1,c_2=d_2,a=b} as the approximation for the equalities on all paths,
+rather than apply the algorithm twice, once for \s{c_1=d_1,a=b} and once for \s{c_2=d_2,a=b}
+}
+\label{example_4.2.1.8_program}
+\end{figure}
+
+\begin{figure}
+\begin{lstlisting}
+assume $\m{e_1=g(a,\textcolor{red}{x})}$
+assume $\m{e_2=g(b,\textcolor{red}{x})}$
+assume $\m{e_3=h(c_1,c_2,\textcolor{red}{x})}$
+assume $\m{e_4=h(d_1,d_2,\textcolor{red}{x})}$
+...
+if (*)
+	assume $\m{c_1 = d_1}$
+else
+	assume $\m{c_2 = d_2}$
+assume $\m{a = b}$
+assert $\m{f(e_1,e_3,\textcolor{blue}{l}) = f(e_2,e_4,\textcolor{blue}{l})}$
+\end{lstlisting}
+\caption{Example for CFG over-approximation\\
+Here, for the root node, if we use \s{c_1=d_1,c_2=d_2,a=b} \\
+we produce the interpolation clause \m{c_1 \neq c_1 \lor c_2 \neq d_2 \lor e_3=e_4},\\
+which is useless as the body holds on any path
+}
+\label{example_4.2.1.9_program}
+\end{figure}
+
+
+\subsubsection*{Extracting justifications for equalities}\label{extracting_justification}
+We show here a simple algorithm for calculating the set of justifications for each equality on a pair of EC-nodes from \m{g_n} that are merged in \m{g_n^i}. 
+Extracting a proof from congruence closure graphs has been done efficiently in \cite{DBLP:conf/rta/NieuwenhuisO05}, and also implemented for binary interpolation in \cite{FuchsGoelGrundyKrsticTinelli2012} (section 4.5, definition 4.2).\\
+Our requirement is slightly different - we need to get the set of \emph{all} possible premises for a proof that are in $\Gamma$.\\
+For example, for the set of equations \\
+\m{c=f(a_1,\textcolor{red}{x})=f(b_1,\textcolor{red}{x}),d=f(a_2,\textcolor{red}{x})=f(b_2,\textcolor{red}{x})} where\\
+ $\Gamma = \s{a_1=b_1=a_2=b_2=c=d}$,\\
+ for the pair \s{c,d}, we must produce the sets \\
+\m{\s{a_1\neq a_2},\s{a_1\neq b_2},\s{b_1\neq a_2},\s{b_1\neq b_2}}. \\
+But for $\Gamma = \s{a_1=a_2,c=d}$,\\
+ for the pair \s{c,d}, we only need the set \\
+\m{\s{a_1 \neq a_2}}. 
+
+Our algorithm accepts as input the graphs \m{g_n} and \m{g_n^i}, the set of interface equalities $\Gamma$, and the pair of EC-nodes \m{s,t \in g_n} s.t. \\
+\m{\sourcesInv{g_n^i}{g_n}{s} = \sourcesInv{g_n^i}{g_n}{t}}.\\
+We know that \m{\eqs{g_n} \cup \Gamma \models \eqs{g_n^i} \models \eqs{g_n}} and hence the algorithm must return, at least, the set\\
+\s{D \subseteq \Gamma \mid D \cup \eqs{g_n} \models s=t \land \forall D' \subset D \cdot D \cup \eqs{g_n} \not\models s=t}.\\
+The soundness of each set D returned is expressed by \\
+\m{D \cup \eqs{g_n} \models s=t} and \m{D \subseteq (\eqs{g_n^i} \setminus \eqs{g_n})}.\\
+Our algorithm simply collects all possible justifications recursively until saturation (needed as \m{g_n^i} might have cycles).\\
+As the notation for the inverse source function is somewhat cumbersome, we use the notation \m{g_n^i \models u=v} when \m{u,v \in g_n} to denote that both EC-nodes u,v map to the same EC-node in \m{g_n^i}, we denote by \m{u'} the EC-node in \m{g_n^i} to which u maps and so 
+\m{u'=v'} is equivalent to \m{g_n^i \models u=v}.
+
+We define the set P(s,t) of interface premises for a pair of EC-nodes \m{s,t \in g_n} s.t. \m{s'=t'} using a set of equations, where P is the least fixed point of the equations. The equations are described in figure \ref{PR_def}. In order to calculate the set, any algorithm that constructs a least fixed point of equations works. We show a simple algorithm in figure \ref{PR_algorithm}. The algorithm implements the fixed point calculation as defined in figure \ref{PR_def}, from the bottom (equalities in $\Gamma$) up. 
+Each set of pairs S represents the clause \m{\bigvee \s{s\neq t \mid \s{s,t} \in S}}. 
+It is sufficient to include justifications from \m{P(s,t)} that are not subsumed in \m{P(s,t)} - this can be added in the construction algorithm or as a post-step. Also, note that we cache the values of \m{P} we have calculated, so the algorithm is incremental.
+
+
+\begin{figure}
+\begin{lstlisting}
+var m : Map[Pair[GT],Set[Set[Pair[GT]]]
+
+method P(s0,t0:GT) : Set[Clause]
+	//All pairs are unordered
+	var todo := new Queue[Pair[GT]]
+	
+	var RP := relevance($\m{g_n}$,$\m{g_n^i}$,{s0,t0})
+	todo.enqueue(RP)
+	
+	while (!todo.isEmpty)
+		({s,t}) := todo.dequeue
+		var r : Set[Set[Pair[GT]]] := $\emptyset$
+
+		if (s=t)
+			r.add($\emptyset$)
+		else if s=t$\in$$\Gamma$
+			r.add({s,t})
+		else
+			x := $\m{\sourcesInv{}{}{s}}$ //also $\comm{=\sourcesInv{}{}{\m{t}}}$
+			//transitivity
+			foreach (v $\in$ $\sources{}{}{x} \setminus ${s,t})
+				result.add(m[{s,v}] $\biguplus$ m[{v,t}])
+			//congruence closure
+			foreach ($\fa{f}{w} \in $ x.gfas)
+				foreach ($\tup{u},\tup{v} \in \sources{}{}{\tup{w}}$)
+					if ($\tup{u}\neq \tup{v}$)
+						result.add($\m{\biguplus\limits_i}$ m[{u$_\m{i}$,v$_\m{i}$}])
+		//Check if set has changed
+		if (result$\setminus$m[{s,t}] $\neq$ $\emptyset$)
+			enqueueSuperTerms(todo,{s,t})
+		m[{s,t}].add(result)
+
+	return m[{s0,t0}] $\setminus$ {s0,t0}
+	
+	method enqueueSupers({s,t}:Pair[GT])
+		var x := $\m{\sourcesInv{}{}{s}}$
+		foreach (u,v $\in$ $\sources{}{}{x}$)
+			if ({u,v} $\in$ RP)
+				todo.enqueue({u,v})
+		foreach (y $\in$ rg.superTerms[x])
+			foreach (u,v $\in$ $\sources{}{}{y}$)
+				if ({u,v} $\in$ RP)
+					todo.enqueue({u,v})
+\end{lstlisting}
+\caption{Justification extraction algorithm\\
+The algorithm finds the fixed point for the equations in figure \ref{PR_def}.\\
+The algorithm first calculates the subset of $\Gamma$ that is relevant, using the algorithm from figure \ref{relevance_algorithm}.\\
+The algorithm works bottom-up, starting at interface equalities in $\Gamma$.\\
+The map \lstinline|m| is an under-approximation of the function P, constructed as a fixed point.\\
+The method \lstinline |enqueueSuperTerms| ensures changes in \lstinline|m| are propagated, until saturation.
+}
+\label{PR_algorithm}
+\end{figure}
+
+
+\begin{figure}
+\m{P(s,t) \triangleq PR(s,t) \setminus \s{s,t}}
+
+\bigskip
+
+\m{\forall s \cdot \emptyset \in P(s,s)}
+
+\bigskip
+
+\m{\forall s,t \cdot \s{s=t} \in \Gamma \Rightarrow \s{s\neq t} \in P(s,t)}
+
+\bigskip
+Transitivity\\
+\m{\forall s,t \cdot \forall u \in \sources{}{}{s'} \setminus \s{s,t} \cdot PR(s,u) \uplus PR(u,t) \subseteq P(s,t)}
+
+\bigskip
+
+Congruence closure\\
+\m{\forall s,t \cdot \forall \fa{f}{w} \in s', \tup{u},\tup{v} \in \sources{}{}{\tup{w}} \cdot \tup{u} \neq \tup{v} \Rightarrow \biguplus\limits_i PR(u_i,v_i) \subseteq P(s,t)}
+
+
+\bigskip
+
+\noindent
+Where:\\
+\m{U \uplus V \triangleq \s{S \cup T \mid S \in U \land T \in V}}
+
+\caption{Justification extraction from \m{g_n^i}\\
+A justification is a set of dis-equalities on I.\\
+PR(s,t) is a partial function, only defined if \m{s' = t'}\\
+The set PR(s,t) is the least fixed point of the above equations.\\
+The building blocks of justifications are negations of equalities in $\Gamma$.\\
+The rules mimic transitivity, reflexivity and congruence closure, collecting justifications for equality.
+}
+\label{PR_def}
+\end{figure}
+
+
+\textbf{Complexity:} In section \ref{appendix:gamma_approximation} of the appendix we give an alternative algorithm for approximating $\Gamma$.
+We use the alternative algorithm to calculate the space complexity bounds for interpolants - we show that the set calculated by our algorithm in \ref{PR_def} can be of exponential size.
+The alternative algorithm is more complicated and we do not consider it practical in our setting, but it can be used to generate bounded interpolants - where we bound the maximal number of literals of an interpolant (losing completeness), and hence ensure a complexity bound for an incomplete algorithm.
+%In the next sub-section we give an improved algorithm that can be used with a bounded fragment - for example, a bound on clause width means that we should not look for any justification longer than the allowed clause width minus one. For the simple algorithm above, 
+%we can bound clause width simply by calculating bottom up and discarding each set that is too large, but this is not very efficient.
+
+\textbf{Goal relevance:}
+Extending the idea of goal relevance to sequence interpolants seems straightforward - the communication of relevant equalities proceeds as in the binary case, but now we have to communicate also transitive goals - consider the  example in figure \ref{example_4.2.2.3}.
+
+\begin{figure}
+\m{N_1 = \s{f(a_2,\textcolor{red}{x_1})=c_2,f(b_2,\textcolor{red}{x_1})=d_2}}\\
+\m{N_2 = \s{c_3=c_2,d_3=d_2,a_3=a_2,b_3=b_2}}\\
+\m{N_3 = \s{a_3=b_3,f(c_3,\textcolor{blue}{m}) \neq f(d_3,\textcolor{blue}{m})}}
+\caption{Example for transitive propagation of goals\\
+The goal \s{c_3,d_3} is propagated as \m{c_2,d_2} to \m{N_1}.}
+\label{example_4.2.2.3}
+\end{figure}
+
+\noindent
+Here, \s{[c_3]_3,[d_3]_3} is a goal at \m{N_3}, which is communicated to \m{N_2} as \\
+\s{[c_2,c_3]_2,[d_2,d_3]_2} (through source edges), 
+which must be communicated to \m{N_1} as \s{[c_2,f(a_1,\textcolor{red}{x_1})]_1,[d_2,f(b_2,\textcolor{red}{x_1})]_1} in order for \m{N_1} to generate the interpolation clause-EC \m{[a_2\neq b_2 \lor c_2=d_2]_1}.\\
+Note that even in the case of a non-scoped ground superposition proof, we can view dis-equality literals as goals, 
+as the only derivation where a literal of the larger premise is not in the conclusion is equality resolution (equality factoring replaces a literal rather than removing it). We can view the \emph{life cycle} of each dis-equality literal in the premises where, at each proof-tree node whose sub-tree includes the premise, the dis-equality is either copied to the conclusion (if it is not maximal), rewritten using some maximal equality in another clause (negative superposition) or eliminated by equality resolution (dis-equalities that originate from equality factoring start their life cycle at the conclusion of that inference). \\
+The important property is that, for each negative superposition inference in the proof-tree, the proof sub-tree that derives the rewriting clause (the left premise of negative superposition) is independent of the proof-tree deriving the clause with the maximal dis-equality.
+
+Hence, if we use an approximation similar to our \m{g_n^i} which includes all maximal equalities in a set of ground clauses, 
+we can restrict negative superposition to only clauses (right premises) where the maximal dis-equality is false under \m{g_n^i}. 
+This can be extended further (assuming superposition with selection) by only allowing a clause to participate in a derivation if \emph{all} of its negative literals are false under \m{g_n^i} (some care needs to be taken regarding equality factoring).
+
+While the above restriction might not be very effective for general superposition, in our case, we can use the idea to block clause propagation, not just clause derivation - 
+if the maximal dis-equality in a clause is not false under \m{g_n^i}, there is no need to propagate it, as it cannot participate in a refutation in any successor node.
+
+Note that in the non-ground case, the life-cycle of a dis-equality includes unification as well, but some ideas from basic superposition (e.g. \cite{DBLP:conf/esop/NieuwenhuisR92}) might help us reduce the number of unifications that need to be considered.
+
+
+
+\subsection{Related work}
+\textbf{Scoping:}\\
+Lexical scoping in the form we are using was introduced in ALGOL 60 \\
+(~\cite{DBLP:journals/cacm/BackusBGKMPRSVWWW60}).
+
+\subsubsection*{Unit ground equality (UGFOLE) interpolation}
+Interpolation for FOL was first introduced in \cite{Craig57a} with a constructive proof (for non-clausal, non-ground FOL) in \cite{lyndon1959}.
+The use of interpolation for verification was introduced by McMillan in 
+\cite{DBLP:conf/cav/McMillan03}, where interpolants for propositional logic are extracted from SAT refutations and used to refine an invariant. There has been since a lot of work on the generation and use of interpolants.
+Earlier work concentrated on propositional interpolants, mostly extracted from a SAT solver proof for UNSAT on a bounded instance of a model.
+Later work extended interpolation to GFOLE, linear arithmetic  (\cite{McMillan05}) and some other theories.
+Most work has concentrated on extracting interpolants from SMT proofs.
+We deal with the non-unit fragment in the section \ref{section:scoping:gfole}. Universally quantified clauses do not admit interpolation - there are pairs of sets of clauses whose union is inconsistent, but for which there is no universal CNF interpolant - we discuss this issue in \ref{chapter:quantification}.
+
+In \cite{McMillan05} a calculus is given for proofs in UGFOLE which generates an interpolant from a refutation essentially by tracking the assumptions from (in our terminology) \m{N^b} in equalities derived in \m{N^t} (the system also generates interpolants for the combination of unit GFOLE and linear rational arithmetic with inequalities). The calculus used to generate proofs is similar to our CC variants and is less efficient than graph or rewriting based methods.
+
+\cite{BonacinaJohansson2015} gives a survey on ground interpolation, for propositional logic, equality logic and theories.
+
+In \cite{FuchsGoelGrundyKrsticTinelli2012}, the authors present a graph based interpolation method for UGFOLE. 
+The algorithm uses a congruence closure (CC) graph that keeps enough information to recover a proof for each equality derived (as in \cite{DBLP:conf/rta/NieuwenhuisO05}). 
+The main difference from our algorithm is that they use a single CC graph (the proof) and extract an interpolant from it, while we extract an interpolant from two (or more) separate graphs.
+
+In their algorithm, each node represents one term and is colored as in our formulae (red, black or blue),
+Equality edges are colored only red or blue (a pre-process rewrite step ensures the graph is colorable),
+Equality edges stemming from axioms are coloured according to the source of the axioms.
+Equality edges derived from transitive or congruence closure are coloured according to the colour of the two nodes they connect,
+for interface equalities either color may be used.
+The algorithm collects \m{N^b} premises (blue edges and paths) and constructs the interpolation clauses.
+The authors also suggest a generalization which is an interpolation game (for general fragments, not just UGFOLE).
+Two players start each with a set of formulae and, at each stage, exchange formulae, where each formula communicated from one player is implied by that player's set of formulae, and added to the other's set, and is in the common vocabulary. 
+The interpolants are constructed as implications where the right side is a formula communicated forward and the left side is the conjunction of all formulae communicated backwards until that point. It is easy to see that our basic algorithm is an instance of this game. 
+
+The extension of this game to sequence-interpolants seems simple, but the extension to trees or DAGs is not immediately obvious.
+The interpolation game is a general framework for generating interpolants, 
+the authors present one instance (in addition to unit ground equalities) that uses colorable proofs, which we discuss in the next section.
+While our algorithm is similar to, and inspired by, theirs, the aim is different - we generate the proof and the interpolant together, rather than transform the proof in order to derive an interpolant. Our algorithm can be used for generating intrpolants from one set of equations to a set of sets of equations, which is not clear how to do with their algorithm without generating a graph per set of equations. We also add the mechanism for communicating relevance, and interpolation for trees and DAGs.
+
+Other approaches include the encoding of equality to propositional logic and then propositional invariant generation (\cite{DBLP:conf/fmcad/KroeningW07}) and color based approaches, which we discuss in section \ref{section:scoping:ugfole}.
+
+\subsubsection*{Interpolant classes}
+In \cite{JhalaMcMillan06} the authors introduce sequence interpolants, and the idea of searching for a proof and interpolant in logical fragments of increasing strength incrementally, this is done in the context of progressively unrolling a program. Sequence interpolants have since seen much research, mostly in the context of propositional logic (e.g. \cite{DBLP:conf/fmcad/VizelG09}).
+
+\cite{DBLP:conf/vstte/RummerHK13} gives a classification of different classes of Horn clauses, where our DAG-CFG fits in the class of recursion free linear Horn-Clauses,
+ as does \cite{AlbarghouthiGurfinkelChechik12}. Our tree-shaped CFG is encoded as linear head-disjoint recursion free Horn clauses in their classification. The tree interpolants of \cite{BlancGuptaKovacsKragl13} are different as they represent a tree of meets rather than branches and joins, and is used for modeling concurrency and recursion.
+\cite{AlbarghouthiGurfinkelChechik12} extracts a DAG interpolant from a proof of the unreachability of an error state in an unfolding of the program.
+This interpolant is used, together with abstract interpretation, to strengthen the loop invariants in the program. 
+If insufficient the loop is unrolled further. While our DAG-interpolants are similar, we extract them while searching for a proof while they extract the interpolant from an SMT proof.
+
+\subsubsection*{Model based approaches}
+Most approaches described above produce a global proof (mostly using SAT or SMT) and extract an interpolant from the proof.
+Other systems use resolution based coloured local proofs and we discuss these in section \ref{section:scoping:gfole}.
+Another successful approach is that of IC3/PDR (\cite{DBLP:conf/vmcai/Bradley11}, \cite{DBLP:conf/fmcad/EenMB11}).
+In this approach (roughly) a program is unrolled and a failing trace is searched locally \emph{backwards} - 
+each unrolled instance checks for satisfiability vs. a candidate invariant for the pre-state, if a counter example (CEX) is found it is propagated to a source in the predecessor instance (through the transition relation) and then satisfiability is checked there - if a satisfiable path is found to the initial state, the program does not verify, otherwise a clause is derived that "blocks" the CEX (a clause implied by the current candidate invariant and transition relation) and this clause is propagated forward (through the transition relation) in order to strengthen the invariant of successors. In addition checks are done on candidate invariants to see if any of them is an actual invariant for the whole program, in which case the program is proven.
+
+Our approach is similar in that the proof is local and produced incrementally, and also in that information flows in both directions.
+The main difference is that in IC3 the information that flows backwards is full models that are guaranteed, if found feasible, 
+to lead to an assertion failure, while in our system each request (or backward communicated equation) represents a set of models, 
+where the guarantee is that this set of models includes a model for all suffix paths to assertions (in IC3 we usually have one assertion at the end). 
+The complexity difference is that IC3 may request an exponential number of models (if clause generalization does not manage to block them), and finding each potential model can take, in the worst case, exponential time (a SAT-solver call), while each such model is guaranteed to be a real model of a suffix. 
+Furthermore, IC3 is formulated for sequence interpolants, while in a DAG, if we want to only propagate models that lead to assertion failures,
+we would have to propagate a model on each suffix path - again a potential exponential factor.
+The total number of requests and responses in our system can also be exponential (as we have seen some problems have only exponential clausal interpolants), but we do not have the exponential factor from branches and joins, as we over-approximate the set of suffix models.
+We pay the price of over-approximating the set of suffix models by generating useless interpolation clauses.
+Our algorithm is parametric in $\Gamma$ - if we were to use a $\Gamma$ that is exactly the set of models of suffixes, 
+the complexity would be similar to IC3 - it would be interesting future work to find an abstraction for $\Gamma$ less coarse than ours,
+but not as precise as per-path models - this might also be useful for IC3 if we could request the refutation of a set of models rather than one by one.
+%
+%A related variation on IC3 is modular SAT solving (~\cite{DBLP:conf/fmcad/BaylessVBHH13}), 
+%where\\ (roughly) each unwind instance of the program gets its own SAT solver, and the proof and interpolation proceeds by the last (error state) solver deciding an unassigned variable, performing unit propagation, and if no conflict is reached it propagates the (temporary) decision to its predecessor, which performs the same steps. If a conflict is reached at some instance, a clause is generated that describes the conflict, and is propagated forward, undoing the relevant decisions. 
+%While our algorithm does not make temporary decisions (each CFG-node only has clauses that hold at that program location), the simple version of $\Gamma$ is maintained as an EC-graph that cannot un-assume an assumed equality - 
+%for a DAG shaped CFG, if we have managed to prove an assertion (or eliminate a CFG-node in general), we do not need to keep equalities that only hold on paths to that assertion, and so a more accurate formulation of \m{g_n^i} would be able to remove no-longer relevant equations. 
+%Furthermore, the non-unit fragment that we discuss in the next section, $\Gamma$ will be an approximation of a candidate model for a set of CNF clauses, where, if a clause is e.g. subsumed, the candidate model might lose an equation - hence allowing \m{g_n^i} to undo equations might improve efficiency. We leave such an improvement as future work. 
+%

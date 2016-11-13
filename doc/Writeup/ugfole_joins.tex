@@ -1,0 +1,630 @@
+\newpage
+\section{Joins}\label{section:ugfole:joins}
+We have seen, in the previous section, our propagation algorithm for sequential CFG-nodes.
+In this section we show the necessary changes to make the algorithm apply for CFG-nodes with two predecessors, where the semantics is that we can only propagate an equality to the join node if it is implied by both predecessors.
+
+As opposed to the sequential case, for joins we cannot guarantee that any equality that holds at a CFG-node on two represented terms also holds in the EC-graph, simply because not all interpolants are representable as a finite conjunction of equalities - as we have seen e.g. in figure \ref{snippet3.5} - the interpolant between \m{\s{c=a} \sqcup \s{c=b}} and \s{a=b \land a\neq c} cannot be represented as a finite conjunction of unit equations. 
+Furthermore, we have seen that even in the cases where a unit interpolant exists, the smallest such interpolant may be exponential in the program size, even in the sub-fragment that does not allow cycles in EC-graphs. In light of the above, our algorithm for joins guarantees only a weaker property - we guarantee, for each join, that any pair of terms represented in both joinees and at the join, are equal at the join EC-graph iff they are equal at both joinees. 
+The guarantee for source-edge chains is weakened so that, if a term t is represented at a CFG-node n and at some transitive predecessor p, we can only guarantee that \m{[t]_n} is connected by a source-edge chain to \m{[t]_p} if there is a cut in the graph between n and the root that includes p (that is, a set of CFG-nodes that pairwise do not share a path, but that every path from the root to n includes one node in the set) and t is represented on each member of the cut - this simply means that, at any join between p and n, t is represented in both joinees.\\
+For equality propagation our aim is to guarantee that if
+\m{n \models s=t} for some CFG-node n, and \m{s,t \in \terms{g_n}}, then if there is a cut in the CFG between n and the root where each node \m{p} in the cut satisfies \m{[s]_p=[t]_p} then \m{[s]_n=[t]_n}. A formal proof remains as future work.
+
+\subsection{Equality propagation}
+The main difference with joins is that we do not add the \GFAs{} from all sources of a \GT{} to the \GT{}, 
+but rather only \GFAs{} that have a corresponding source-\GFA{} in \emph{both} joinees.\\
+Consider the example in figure \ref{EC_join_graph_1.0}.\\
+We match the \GFAs{} \m{f([b]_0)} and \m{f([a,b]_1)} because they share the same function symbol f, 
+and both \GFAs{} are in the sources of the same \GT{}.\\
+Compare the situation to the one in figure \ref{EC_join_graph_1.1} - here the function labels f,g do not match, hence we do not add a \GFA{} to the \GT{} \m{[f(a)]_n} - we do have the matching \GFAs{} \m{f([a]_0)} and \m{f([a,b]_1)}, for which we already have a \GFA{} with the inverse source of the tuple - \m{[a]_n}. We can see also how the condition for merging with common sources works - while for the sequential case any two \GTs{} that share a source are merged, for the join case we merge \GTs{} only if they share a source in \emph{all} joinees.\\
+Now consider the situation in figure \ref{EC_join_graph_1.1} - here we have a \GT{} in \m{g_n} which represents no terms.
+We denote such a \GT{} as an \newdef{infeasible} \GT{}, where a \GT{} is feasible if it represents at least one term.\\
+Such infeasible \GTs{} do not arise in the sequential case for consistent EC-graphs, although they do when scoping or depth restrictions are in place.
+Our algorithm allows such \GTs{}, but they are only visible to internal methods of the EC-graph. Essentially, they serve as witnesses that the EC-graph is consistent, but they are not visible to users of the EC-graph - that is, the \lstinline|gfas| and \lstinline|superTerms| fields visible to users of the EC-graph do not contain these \GTs{} and any \GFA{} whose tuple is infeasible).\\
+For example, if we perform E-matching on the EC-graph of \ref{EC_join_graph_1.1}, matching the (non-ground) term \m{f(x)} with the \GT{} \m{[f(a)]_n}, we get exactly one match (substitution) which is \m{[x \mapsto [a]_n]}. 
+These infeasible \GTs{} and \GFAs{} that contains them are also not visible to successors of the EC-node - they cannot be the target of source-edges, although they can be the source of source-edges (in fact they must have a source in each joinee), as shown in the example.
+
+
+\begin{figure}
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 2.5cm and 0cm of 1] {};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+	\node[gtn,label=center:\m{a}]  (12) [above left  = 0.5cm and 1cm of 11] {\phantom{B}};
+	\node[gtn,label=center:\m{b}]  (14) [above right = 0.5cm and 1cm of 11] {\phantom{B}};
+	
+	\node[gtn,ultra thick]  (18) [above = 2cm of 11] {\stackB{f(a)}{f(b)}};
+	\draw[gfa]  (18) to node[el] {\m{f}} (12);
+	\draw[gfa,ultra thick]  (18) to node[el,anchor=west] {\m{f}} (14);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (21)  [below right= 2.5cm and 0cm of 1] {};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+  \node[gtn,label=center:\m{a,b}]  (22) [above  = 0.5cm of 21] {\phantom{B,B}};
+
+  \node[gtn,ultra thick]  (28) [above = 1cm of 22] {\stackB{f(a)}{f(b)}};
+	\draw[gfa,ultra thick]  (28) to node[el] {\m{f}} (22);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 6cm of 1] {};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+  \node[gtn,label=center:\m{a}]  (32) [above left  = 0.5cm and 1cm of 31] {\phantom{B}};
+  \node[mgtn,label=center:\m{\textcolor{red}{b}}]  (34) [above right = 0.5cm and 1cm of 31] {\phantom{B}};
+
+	\node[gtn,ultra thick]  (38) [above = 2cm of 31] {\stackB{f(a)}{\textcolor{red}{f(b)}}};
+	\draw[gfa]  (38) to node[el,anchor=south east] {\m{f}} (32);
+	\draw[mgfa,ultra thick,dashed] (38) to node[ml,anchor=south west] {\m{f}} (34);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\node (15a) [right = 0.5cm of 15] {};
+%	\node (35b) [above left = 0.2cm and 1.5cm of 35] {};
+%	\node (35c) [below left = 0.2cm and 1.5cm of 35] {};
+%	\node (37b) [above left = 0.2cm and 1.5cm of 37] {};
+%	\node (37c) [below left = 0.2cm and 1.5cm of 37] {};
+%	\draw[se,ultra thick] (37) to[out=180,in=0] (37b) to[out=180,in=0] (17);
+%	\draw[se,ultra thick] (37) to[out=180,in=0] (37c) to[out=180,in=0] (25);
+
+	\node (18a) [right = 0.5cm of 18] {};
+	\node (38b) [above left = 0.2cm and 1.5cm of 38] {};
+	\node (38c) [below left = 0.2cm and 1.5cm of 38] {};
+	\draw[se,ultra thick] (38) to[out=180,in=0] (38b) to[out=180,in=0] (18a) to[out=180,in=0] (18);
+	\draw[se,ultra thick] (38) to[out=180,in=0] (38c) to[out=180,in=0] (28);
+
+\end{tikzpicture}
+
+\caption{Example for \GFA{} completeness for joins\\
+The join is \m{\s{a=b} \sqcup \s{f(a)=f(b)}}.\\
+The matching function edges are shown in bold.}
+\label{EC_join_graph_1.0}
+\end{figure}
+
+\begin{figure}
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 2.5cm and 0cm of 1] {};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+	\node[gtn,label=center:\m{a}]  (12) [above left  = 0.5cm and 1cm of 11] {\phantom{B}};
+	\node[gtn,label=center:\m{b}]  (14) [above right = 0.5cm and 1cm of 11] {\phantom{B}};
+	
+	\node[gtn,ultra thick]  (18) [above = 2cm of 11] {\stackB{f(a)}{g(b)}};
+	\draw[gfa]  (18) to node[el] {\m{f}} (12);
+	\draw[gfa,ultra thick]  (18) to node[el,anchor=west] {\m{g}} (14);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (21)  [below right= 2.5cm and 0cm of 1] {};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+  \node[gtn,label=center:\m{a,b}]  (22) [above  = 0.5cm of 21] {\phantom{B,B}};
+
+  \node[gtn,ultra thick]  (28) [above = 1cm of 22] {\stackB{f(a)}{f(b)}};
+	\draw[gfa,ultra thick]  (28) to node[el] {\m{f}} (22);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 6cm of 1] {};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+  \node[gtn,label=center:\m{a}]  (32) [above left  = 0.5cm and 1cm of 31] {\phantom{B}};
+%  \node[mgtn,label=center:\m{\textcolor{red}{b}}]  (34) [above right = 1cm and 1cm of 31] {\phantom{B}};
+
+	\node[gtn,ultra thick]  (38) [above = 2cm of 31] {\m{f(a)}};
+	\draw[gfa]  (38) to node[el,anchor=south east] {\m{f}} (32);
+%	\draw[mgfa,ultra thick,dashed] (38) to node[ml,anchor=south west] {\m{f}} (34);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\node (15a) [right = 0.5cm of 15] {};
+%	\node (35b) [above left = 0.2cm and 1.5cm of 35] {};
+%	\node (35c) [below left = 0.2cm and 1.5cm of 35] {};
+%	\node (37b) [above left = 0.2cm and 1.5cm of 37] {};
+%	\node (37c) [below left = 0.2cm and 1.5cm of 37] {};
+%	\draw[se,ultra thick] (37) to[out=180,in=0] (37b) to[out=180,in=0] (17);
+%	\draw[se,ultra thick] (37) to[out=180,in=0] (37c) to[out=180,in=0] (25);
+
+	\node (18a) [right = 0.5cm of 18] {};
+	\node (38b) [above left = 0.2cm and 1.5cm of 38] {};
+	\node (38c) [below left = 0.2cm and 1.5cm of 38] {};
+	\draw[se,ultra thick] (38) to[out=180,in=0] (38b) to[out=180,in=0] (18a) to[out=180,in=0] (18);
+	\draw[se,ultra thick] (38) to[out=180,in=0] (38c) to[out=180,in=0] (28);
+
+\end{tikzpicture}
+
+\caption{Example for \GFA{} completeness for joins\\
+The join is \m{\s{a=b} \sqcup \m{f(a)=g(b)}}.\\
+In this case the highlighted function edges do not match.}
+\label{EC_join_graph_1.1}
+\end{figure}
+
+
+
+\begin{figure}
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 2.5cm and 0cm of 1] {};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+	\node[gtn,label=center:\m{a}]  (12) [above left  = 0.5cm and 1cm of 11] {\phantom{B}};
+	\node[gtn,label=center:\m{b}]  (14) [above right = 0.5cm and 1cm of 11] {\phantom{B}};
+	
+	\node[gtn,ultra thick]  (18) [above = 2cm of 11] {\stackB{f(a)}{f(b)}};
+	\draw[gfa]  (18) to node[el] {\m{f}} (12);
+	\draw[gfa,ultra thick]  (18) to node[el,anchor=west] {\m{f}} (14);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (21)  [below right= 3.0cm and 0cm of 1] {};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+  \node[gtn,label=center:\m{a,b}]  (22) [above  = 0.5cm of 21] {\phantom{B,B}};
+
+  \node[gtn,ultra thick]  (28) [above = 1cm of 22] {\stackB{f(a)}{f(b)}};
+	\draw[gfa,ultra thick]  (28) to node[el] {\m{f}} (22);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 6cm of 1] {};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+  \node[gtn,label=center:\m{a}]  (32) [above left  = 0.5cm and 1cm of 31] {\phantom{B}};
+  \node[gtn,,ultra thick,label=center:\m{}]  (34) [above right = 0.5cm and 1cm of 31] {\phantom{B}};
+
+	\node[gtn,ultra thick]  (38) [above = 2.5cm of 31] {\m{f(a)}};
+	\draw[gfa]  (38) to node[el,anchor=south east] {\m{f}} (32);
+	\draw[gfa,ultra thick] (38) to node[el,anchor=south west] {\m{f}} (34);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\node (15a) [right = 0.5cm of 15] {};
+%	\node (35b) [above left = 0.2cm and 1.5cm of 35] {};
+%	\node (35c) [below left = 0.2cm and 1.5cm of 35] {};
+%	\node (37b) [above left = 0.2cm and 1.5cm of 37] {};
+%	\node (37c) [below left = 0.2cm and 1.5cm of 37] {};
+%	\draw[se,ultra thick] (37) to[out=180,in=0] (37b) to[out=180,in=0] (17);
+%	\draw[se,ultra thick] (37) to[out=180,in=0] (37c) to[out=180,in=0] (25);
+
+	\node (18a) [right = 0.5cm of 18] {};
+	\node (38b) [above left = 0.2cm and 1.5cm of 38] {};
+	\node (38c) [below left = 0.2cm and 1.5cm of 38] {};
+	\draw[se,ultra thick] (38) to[out=180,in=0] (38b) to[out=180,in=0] (18a) to[out=180,in=0] (18);
+	\draw[se,ultra thick] (38) to[out=180,in=0] (38c) to[out=180,in=0] (28);
+
+\end{tikzpicture}
+
+\caption{Example for \GFA{} completeness for joins\\
+The join is \m{\s{a=b} \sqcup \s{f(a)=f(b)}}.\\
+The matching function edges are highlighted.}
+\label{EC_join_graph_1.2}
+\end{figure}
+
+\bigskip
+\noindent
+We phrase now the version of the local invariant for joins - showing each conjunct.
+
+The conjunct that defines source edges is unchanged.
+The first conjunct defines when we have to add a \GFA{} to a \GT{} based on its sources - when there are \GFAs{} in both sources that agree on the function symbol:
+\begin{figure}[H]
+%\textbf{The local source correctness invariant:}\\
+For a CFG-node n.\\
+\m{\forall u \in g_n, v_0 \in \sources{}{0}{u}, \fa{f}{s_0} \in v_0, v_1 \in \sources{}{1}{u}, \fa{f}{s_1} \in v_1 \cdot}\\
+\m{~~~\exists \fa{f}{t} \in u \cdot \tup{s_0} \in \sources{}{0}{\tup{t}} \land \tup{s_1} \in \sources{}{1}{\tup{t}}}
+\end{figure}
+
+\noindent
+The second conjunct defines when we have to merge two \GTs{} at the join - as we have seen, when they share a source in \emph{all} predecessors.
+
+\noindent
+Consider the example in figure \ref{snippet3.17a_graph.0}.
+No two \GTs{} at the join share both sources, but they all share one source.\\
+We now want to invoke \m{n}.\lstinline|assumeEqual([a],[c])| - if we look at the join, we see that \m{(a=b \lor b=c) \land a=c \models a=b=c}.\\
+ In figure \ref{snippet3.17a_graph.1} we can see the state after the first merge step of \lstinline|assumeEqual|.
+We can see that \m{[a,c]_n} and \m{[b]_n} share sources in both joinees, and hence they are merged.
+In our implementation, we mark these \GTs{} for merging already in the 
+\lstinline|addSource| method - at the point where a new source is assigned.
+
+\noindent
+The invariant conjunct defining this behaviour is:
+\begin{figure}[H]
+%\textbf{The local source correctness invariant:}\\
+For a CFG-node n.\\
+\m{\forall u,v \in g_n \cdot}\\
+\m{~~~(\forall p \in \preds{n} \cdot \sources{}{p}{u} \cap \sources{}{p}{v} \neq \emptyset) \Rightarrow u=v}
+\end{figure}
+
+
+\begin{figure}
+\begin{subfigure}[t]{0.99\textwidth}
+\framebox[\textwidth]{
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 1.5cm and 0cm of 1] {};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+  \node[gtn,label=center:\phantom{B,B}]  (12) [above left  = 1cm and 1cm of 11] {\m{a,b}};
+  \node[gtn,label=center:\phantom{B,B}]  (14) [above right = 1cm and 1cm of 11] {\m{c}};
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (21)  [below right= 1.5cm and 0cm of 1] {};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+  \node[gtn,label=center:\phantom{B,B}]  (22) [above left  = 1.0cm and 1.0cm of 21] {\m{a}};
+  \node[gtn,label=center:\phantom{B,B}]  (23) [above right = 1.0cm and 1.0cm of 21] {\m{b,c}};
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 5cm of 1] {};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+%  \node (31jl)  [above left = -0.2cm and 0cm of 31] {$\sqcup$};
+
+  \node[gtn,label=center:\phantom{B,B}]  (32) [above left  = 1.0cm and 1.2cm of 31] {\m{a}};
+  \node[gtn,label=center:\phantom{B,B}]  (33) [above       = 0.9cm           of 31] {\m{b}};
+  \node[gtn,label=center:\phantom{B,B}]  (34) [above right = 1.0cm and 1.2cm of 31] {\m{c}};
+	
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\draw[se] (31) to[out=180,in=0] (11);
+%	\draw[se] (31) to[out=180,in=0] (21);
+
+	\node (12a) [right = 0.5cm of 12] {};
+	\node (23a) [right = 0.5cm of 23] {};
+	\draw[se] (32) to[out=180,in=0] (12a) to[out=180,in=0] (12);
+	\draw[se] (32) to[out=180,in=0] (22);
+	\draw[se] (33) to[out=180,in=0] (12a)  to[out=180,in=0] (12);
+	\draw[se] (33) to[out=180,in=0] (23a)  to[out=180,in=0] (23);
+	\draw[se] (34) to[out=180,in=0] (14);
+	\draw[se] (34) to[out=180,in=0] (23a) to[out=180,in=0] (23);
+
+\end{tikzpicture}
+}
+\caption{
+Join shared sources\\
+before \m{n}.\lstinline|assumeEqual([a],[c])|
+}
+\label{snippet3.17a_graph.0}
+\end{subfigure}
+
+\begin{subfigure}[t]{0.99\textwidth}
+\framebox[\textwidth]{
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 1.5cm and 0cm of 1] {};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+  \node[gtn,label=center:\phantom{B,B}]  (12) [above left  = 1cm and 1cm of 11] {\m{a,b}};
+  \node[gtn,label=center:\phantom{B,B}]  (14) [above right = 1cm and 1cm of 11] {\m{c}};
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (21)  [below right= 1.5cm and 0cm of 1] {};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+  \node[gtn,label=center:\phantom{B,B}]  (22) [above left  = 1.0cm and 1.0cm of 21] {\m{a}};
+  \node[gtn,label=center:\phantom{B,B}]  (23) [above right = 1.0cm and 1.0cm of 21] {\m{b,c}};
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 5cm of 1] {};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+%  \node (31jl)  [above left = -0.2cm and 0cm of 31] {$\sqcup$};
+
+  \node[gtn,label=center:\phantom{B,B}]  (32) [above left  = 1.0cm and 0.6cm of 31] {\m{a,c}};
+  \node[gtn,label=center:\phantom{B,B}]  (33) [above  right= 0.9cm and 0.6cm of 31] {\m{b}};
+	
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\draw[se] (31) to[out=180,in=0] (11);
+%	\draw[se] (31) to[out=180,in=0] (21);
+
+	\node (12a) [right = 0.5cm of 12] {};
+	\node (23a) [right = 0.5cm of 23] {};
+	\draw[se,ultra thick] (32) to[out=180,in=0] (12a) to[out=180,in=0] (12);
+	\draw[se] (32) to[out=180,in=0] (22);
+	\draw[se] (32) to[out=180,in=0] (14);
+	\draw[se,ultra thick] (32) to[out=180,in=0] (23a) to[out=180,in=0] (23);
+	\node (32u) [above left = 0.5cm and 0.5cm of 32] {};
+	\draw[se,ultra thick] (33) to[out=180,in=-5] (32u) to[out=175,in=0] (12a)  to[out=180,in=0] (12);
+	\draw[se,ultra thick] (33) to[out=180,in=0] (23a)  to[out=180,in=0] (23);
+
+\end{tikzpicture}
+}
+\caption{
+Join shared sources\\
+after merging \m{[a],[c]}\\
+Common sources are highlighted
+}
+\label{snippet3.17a_graph.1}
+\end{subfigure}
+
+\begin{subfigure}[t]{0.99\textwidth}
+\framebox[\textwidth]{
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 1.5cm and 0cm of 1] {};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+  \node[gtn,label=center:\phantom{B,B}]  (12) [above left  = 1cm and 1cm of 11] {\m{a,b}};
+  \node[gtn,label=center:\phantom{B,B}]  (14) [above right = 1cm and 1cm of 11] {\m{c}};
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (21)  [below right= 1.5cm and 0cm of 1] {};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+  \node[gtn,label=center:\phantom{B,B}]  (22) [above left  = 1.0cm and 1.0cm of 21] {\m{a}};
+  \node[gtn,label=center:\phantom{B,B}]  (23) [above right = 1.0cm and 1.0cm of 21] {\m{b,c}};
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 5cm of 1] {};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+  \node[gtn,label=center:\phantom{B,B}]  (33) [above       = 0.9cm           of 31] {\m{a,b,c}};
+	
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\draw[se] (31) to[out=180,in=0] (11);
+%	\draw[se] (31) to[out=180,in=0] (21);
+
+	\node (12a) [right = 0.5cm of 12] {};
+	\node (23a) [right = 0.5cm of 23] {};
+	\draw[se] (33) to[out=180,in=0] (12a) to[out=180,in=0] (12);
+	\draw[se] (33) to[out=180,in=0] (22);
+	\draw[se] (33) to[out=180,in=0] (14);
+	\draw[se] (33) to[out=180,in=0] (23a) to[out=180,in=0] (23);
+
+\end{tikzpicture}
+}
+\caption{
+Join shared sources\\
+Final state
+}
+\label{snippet3.17a_graph.2}
+\end{subfigure}
+\end{figure}
+
+
+
+
+
+
+
+\noindent
+The third conjunct defines when we have to replace an \RGFA{} with a \GT{} - this condition is crucial for performance and even termination - if we force replacing an \RGFA{} with a \GT{} if \emph{any} of the predecessors represents any term represented by the \RGFA{}, we may have an infinite number of \GTs{} - for example, in the join \m{\s{a=f(a)} \sqcup \s{a=b}}, where some successor of the join includes the equation \m{a=f(a)}, we will have to add a \GT{} for each of \s{f^i(a) \mid i \in \mathbb{N}}, as \m{f(a)=a} does not hold at the join. 
+Hence our condition is that an \RGFA{} must be replaced with a \GT{} only if a term is represented in \emph{all} predecessors.\\
+The previous rule for merging \GTs{} ensures that in this case the join will not grow larger than the product of the sizes of the joinees (as we have seen in several examples), as each such added \GT{} must have a source at each joinee, and there are at most \m{m \times n} pairs of such sources. This affects the code of \lstinline|update| and \lstinline|propagateUpNewSources|, which are responsible for replacing \RGFAs{} with \GTs{}.\\
+Formally, the conjunct is as follows:
+\begin{figure}[H]
+\m{\forall \tup{t} \in g_n, f \cdot}\\
+\m{~~~(\forall p \in \preds{n} \cdot \exists \tup{s} \in \sources{}{p}{\tup{t}} \cdot \fa{f}{s} \in \gfas{p}) \Rightarrow \fa{f}{t} \notin \rgfas{n}}
+\end{figure}
+
+The rest of the conjuncts remain the same, defining when an \RGFA{} or \GFA{} must exist in a predecessor and which source-edges must exist for each \GT{}.
+
+\subsection{Strong join}
+The join we have defined in the previous section is weak in the sense that it does not guarantee propagating equalities for terms not represented on both sides of the join. In this section we show two such examples, and describe how our algorithm handles them.
+
+
+\bigskip
+\noindent
+The first example is show in figure \ref{EC_strong_join.1}.\\
+Here, \m{a=b \lor f(a)=f(b) \models f(a)=f(b)}, but our algorihtm for the weak join does not add the \GFA{} \m{f([b]_n)} to \m{[f(a)]_n}, as there is no corresponding \GFA{} for \m{f([a]_0)} - \m{f(a)} is not represented in \m{p_1}.
+
+\bigskip
+\noindent
+Before presenting our solution, we show another example - in figure \ref{EC_strong_join.2} (the green markings are explained below).\\
+In this example, we have invoked \lstinline|assumeEqual(f([a]_n),g([c]_n)| and now we are in the middle of invoking 
+\lstinline|assumeEqual(f([b]_n),g([d]_n)| - we have merged the \GTs{} \m{[f(b)]_n} and \m{[g(d)]_n}, but now no invariant forces us to merge \m{[f(a),g(c)]_n} with \m{[f(b),g(d)]_n}.\\
+Here \m{(a=b \lor c=d) \land f(a)=g(c) \land f(b)=g(d) \models f(a)=f(b)=g(c)=g(d)},\\
+ but our weak join algorithm fails to propagate these equalities as \\
+\m{f(a),f(b),g(c),g(d)} are all not represented in the predecessors.
+
+\bigskip
+\noindent
+We sketch here our solution to this problem without getting into many details, as we do not believe they help clarify the solution.
+The approach is to maintain a representation of the congruence \m{n \sqcap p_i} for each \m{i\in\s{0,1}} where $\sqcap$ is a meet (conjunction) - each EC in the meet is called a \newdef{join-EC}, and each join-EC for \m{p_i} is associated with a set of \GTs{} from both \m{g_n} and \m{g_i}. Each \GT{} in \m{g_n} is associated with exactly one join-EC and each \GT{} in \m{g_i} is associated with \emph{at most} one join-EC. Rather than merge \GTs{} in \m{g_n} that share sources in all predecessors, we merge them when they share the join-EC in all predecessors. In addition, we perform congruence and transitive closure on join-ECs.\\
+In figure \ref{EC_strong_join.2}, the numbered green lines represent the fact that two \GTs{} share the same join-EC for that predecessor - for example, \m{[f(a),g(c)]_n} shares the same join-EC with \m{[f(b),g(d)]_n} for \m{p_0} because of congruence closure from \m{[a]_n,[b]_n}, that share a join-EC for \m{p_0} as they share a source, and similarly for \m{p_1} because of congruence closure from  \m{[c]_n,[d]_n}.
+
+Looking at the example in figure \ref{EC_strong_join.1}, we modify the rule for adding \GFAs{} from predecessors as follows:\\
+Until now, we only allowed adding a \GFA{} if \emph{both} joinees had a \GFA{} in sources with the same function symbol, 
+and the tuple of the result had the corresponding source tuple in each. \\
+Now we allow adding such a \GFA{} at \m{g_n} if e.g. \m{p_0} has a \GFA{} \m{f(ptt)} and our \GT{} also has \GFA{} (in \m{g_n}) \m{f(tt)}. the resulting tuple will be in the same join-EC for \m{p_0} with \m{ptt} (which may have to be added) and the same join-EC for \m{p_1} with \m{tt}.\\
+For our example, this solution is depicted in \ref{EC_strong_join.1a}. We can see that the new \GT{} shares now two sources with the \GFAs{} with the same function symbol - b, which allows us to use the weak join rules to complete this example.\\
+The key here is that we only allow adding \GTs{} if they belong to some join-EC for \emph{all} predecessors - otherwise the algorithm might not terminate if one predecessor has a cycle in the EC-graph.
+
+The modifications described above require some more book-keeping state and code to hande join-ECs, but does not increase the worst case space complexity asymptotically and does not break the incrementallity property - that no operation is performed twice. The worst-case space complexity for the weak join is \m{\size{\gfas{0}} \times \size{\gfas{1}} + \size{\gfas{n}}} because each added \GFA{} is associated with a unique pair of sources - one from each predecessor. For the strong join, the formula changes to \\
+\m{\size{\gfas{0}} \times \size{\gfas{1}} + \size{\gfas{0}} \times \size{\gfas{n}} + \size{\gfas{1}} \times \size{\gfas{n}} + \size{\gfas{n}}},\\
+ according to the number of possible \GFAs{} added.\\
+In experiments, we have encountered only a few cases where the strong join discovered equalities not covered by the weak join, but at the same time performance of the strong join was not significantly slower.
+
+\begin{figure}
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 2.5cm and 0cm of 1] {};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+	\node[gtn,label=center:\m{a}]  (12) [above left  = 0.5cm and 1cm of 11] {\phantom{B}};
+	\node[gtn,label=center:\m{b}]  (14) [above right = 0.5cm and 1cm of 11] {\phantom{B}};
+	
+	\node[gtn,ultra thick]  (18) [above = 2cm of 11] {\stackB{f(a)}{f(b)}};
+	\draw[gfa]  (18) to node[el] {\m{f}} (12);
+	\draw[gfa,ultra thick]  (18) to node[el,anchor=west] {\m{f}} (14);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (21)  [below right= 2.5cm and 0cm of 1] {};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+  \node[gtn,label=center:\m{a,b}]  (22) [above  = 0.5cm of 21] {\phantom{B,B}};
+
+%  \node[gtn,ultra thick]  (28) [above = 1cm of 22] {\stackB{f(a)}{f(b)}};
+%	\draw[gfa,ultra thick]  (28) to node[el] {\m{f}} (22);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 6cm of 1] {};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+  \node[gtn,label=center:\m{a}]  (32) [above left  = 0.5cm and 1cm of 31] {\phantom{B}};
+
+	\node[gtn,ultra thick]  (38) [above = 2cm of 31] {\m{f(a)}};
+	\draw[gfa]  (38) to node[el,anchor=south east] {\m{f}} (32);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\node (12a) [right = 0.5cm of 11] {};
+	\node (32b) [above left = 0.2cm and 1.5cm of 32] {};
+	\node (32c) [below left = 0.2cm and 1.5cm of 32] {};
+	\draw[se] (32) to[out=180,in=0]  (12);
+	\draw[se] (32) to[out=180,in=0]  (22);
+
+	\node (18a) [right = 0.5cm of 18] {};
+	\node (38b) [above left = 0.2cm and 1.5cm of 38] {};
+	\node (38c) [below left = 0.2cm and 1.5cm of 38] {};
+	\draw[se] (38) to[out=180,in=0]   (18);
+%	\draw[se,ultra thick] (38) to[out=180,in=0] (38c) to[out=180,in=0] (28);
+
+\end{tikzpicture}
+
+\caption{Example for the strong join\\
+The join is \m{\s{a=b} \sqcup \m{f(a)=g(b)}}.\\
+In this case the highlighted function edges do not match.}
+\label{EC_strong_join.1}
+\end{figure}
+
+
+
+\begin{figure}
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 1.5cm and 0cm of 1] {};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+	\node[gtn]  (12) [above = 1cm of 11] {\m{a,b}};
+	
+%	\draw[gfa]  (12.270)  to[bend right] node[el,anchor=east]  {\m{a}} (11.90);
+%	\draw[gfa]  (12.270)  to[bend left]  node[el,anchor=west]  {\m{b}} (11.90);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (21)  [below right= 1.5cm and 0cm of 1] {};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+  \node[gtn]  (22) [above  = 1.0cm of 21] {\m{c,d}};
+	
+%  \draw[gfa] (22.270) to[bend right] node[el,anchor=east] {\m{c}} (21.90);
+%  \draw[gfa] (22.270) to[bend left]  node[el,anchor=west] {\m{d}} (21.90);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [below right = 0.4cm and 5cm of 1] {};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+	\node[gtn,label=center:\m{a}]   (32) [above left  = 1cm and 2cm of 31] {\phantom{B}};
+	\node[gtn,label=center:\m{b}]   (33) [above left  = 1cm and 0.7cm of 31] {\phantom{B}};
+	\node[gtn,label=center:\m{c}]   (34) [above right = 1cm and 0.7cm of 31] {\phantom{B}};
+	\node[gtn,label=center:\m{d}]   (35) [above right = 1cm and 2cm of 31] {\phantom{B}};
+	
+	\node[gtn]   (36) [above = 1cm of 33] {\stackB{f(a)}{g(c)}};
+	\draw[gfa]   (36.270) to node[el,anchor=east] {\m{f}} (32.90);
+	\draw[gfa]   (36.270) to node[el,anchor=south west,pos=0.7] {\m{g}} (34.90);
+
+	\node[gtn]   (37) [above = 1cm of 34] {\stackB{f(b)}{g(d)}};
+	\draw[gfa]   (37.270) to node[el,anchor=south east,pos=0.7] {\m{f}} (33.90);
+	\draw[gfa]   (37.270) to node[el,anchor=west] {\m{g}} (35.90);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\draw[green] (36.0) to node[pl,anchor=north,text=green] {$\m{0,1}$} (37);
+
+	\draw[green] (32) to node[pl,anchor=north,text=green] {$\m{0}$} (33);
+
+	\draw[green] (34) to node[pl,anchor=south,text=green] {$\m{1}$} (35);
+
+	\node (32nw) [above left = 0.2cm and 1.0cm of 32] {};
+	\node (33nw) [above left = 0.2cm and 1.0cm of 33] {};
+	\draw[se] (32) to (32nw) to (12);
+	\draw[se] (33) to (33nw) to (32nw)to (12);
+
+	\node (34sw) [below left = 0.11cm and 1.0cm of 34] {};
+	\node (35sw) [below left = 0.09cm and 1.0cm of 35] {};
+	\draw[se] (34) to (34sw) to (22);
+	\draw[se] (35) to (35sw) to (34sw) to (22);
+
+\end{tikzpicture}
+\caption{
+Strong join\\
+after the first step of $\m{n}$.\lstinline{assume(f(b)=g(d))}
+}
+\label{EC_strong_join.2}
+\end{figure}
+
+
+
+
+\begin{figure}
+\begin{tikzpicture}
+  \node (1)  {};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \node[gttn] (11)  [above right= 2.5cm and 0cm of 1] {};
+	\node[gl]   (11l) [below = 0 of 11]   {\m{p_0}};
+
+	\node[gtn,label=center:\m{a}]  (12) [above left  = 0.5cm and 1cm of 11] {\phantom{B}};
+	\node[gtn,label=center:\m{b}]  (14) [above right = 0.5cm and 1cm of 11] {\phantom{B}};
+	
+	\node[gtn,ultra thick]  (18) [above = 2cm of 11] {\stackB{f(a)}{f(b)}};
+	\draw[gfa]  (18) to node[el] {\m{f}} (12);
+	\draw[gfa,ultra thick]  (18) to node[el,anchor=west] {\m{f}} (14);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\node[gttn] (21)  [below right= 2.5cm and 0cm of 1] {};
+	\node[gl]   (21l) [below = 0 of 21]   {\m{p_1}};
+
+  \node[gtn,label=center:\m{a,b}]  (22) [above  = 0.5cm of 21] {\phantom{B,B}};
+
+%  \node[gtn,ultra thick]  (28) [above = 1cm of 22] {\stackB{f(a)}{f(b)}};
+%	\draw[gfa,ultra thick]  (28) to node[el] {\m{f}} (22);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \node[gttn] (31)  [right = 6cm of 1] {};
+	\node[gl]   (31l) [below = 0 of 31]   {\m{n}};
+
+  \node[gtn,label=center:\m{a}]  (32) [above left  = 0.5cm and 1cm of 31] {\phantom{B}};
+  \node[gtn,label=center:\m{}]  (33) [above right  = 0.5cm and 1cm of 31] {\phantom{B}};
+
+	\node[gtn,ultra thick]  (38) [above = 2cm of 31] {\m{f(a)}};
+	\draw[gfa]  (38) to node[el,anchor=south east] {\m{f}} (32);
+	\draw[gfa]  (38) to node[el,anchor=south west] {\m{f}} (33);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\node (12a) [right = 0.5cm of 11] {};
+	\node (32b) [above left = 0.2cm and 1.5cm of 32] {};
+	\node (32c) [below left = 0.2cm and 1.5cm of 32] {};
+	\draw[se] (32) to[out=180,in=0]   (12);
+	\draw[se] (32) to[out=180,in=0]  (22);
+	\draw[se] (33) to[out=180,in=0]  (14);
+	\draw[se] (33) to[out=180,in=0]  (22);
+
+	\node (18a) [right = 0.5cm of 18] {};
+	\node (38b) [above left = 0.2cm and 1.5cm of 38] {};
+	\node (38c) [below left = 0.2cm and 1.5cm of 38] {};
+	\draw[se] (38) to[out=180,in=0]  (18);
+%	\draw[se,ultra thick] (38) to[out=180,in=0] (38c) to[out=180,in=0] (28);
+
+	\draw[green] (33) to node[pl,anchor=south,text=green] {$\m{1}$} (32);
+
+\end{tikzpicture}
+
+\caption{Example for the strong join\\
+The join is \m{\s{a=b} \sqcup \m{f(a)=g(b)}}.}
+\label{EC_strong_join.1a}
+\end{figure}
+
+
+\subsubsection*{Summary}
+We have shown how our algorithm supports an incremental, on-demand join for the unit ground equality fragment. 
+The algorithm is not changed significantly from the one for sequential nodes, but the guarantee given by the algorithm is weaker.
+The space requirement of a join is at most quadratic in the size of the input including all auxiliary data-structures (and infeasible \GTs{}) - we use depth limitations to prevent an exponential blowup for joins in sequence, described in chapter \ref{chapter:bounds}.
+In our implementation the scoping and size restrictions are integrated into the entire algorithm including the join.\\
+The complexity of our algorithm for each join is, in fact, proportional to the product of the total sizes (number of \GFAs{}) of all the \emph{relevant} ECs at the join - the algorithm never looks at any predecessor \GT{} or \GFA{} that does not represent a sub-term of a member of an EC of one of the requested terms at the join. 

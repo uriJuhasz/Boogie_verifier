@@ -1,0 +1,36 @@
+;Analysis time until now:     5s
+(set-option :print-success false)
+(set-info :smt-lib-version 2.0)
+(set-option :AUTO_CONFIG false)
+(set-option :pp.bv_literals false)
+(set-option :MODEL.V2 true)
+(set-option :smt.PHASE_SELECTION 0)
+(set-option :smt.RESTART_STRATEGY 0)
+(set-option :smt.RESTART_FACTOR |1.5|)
+(set-option :smt.ARITH.RANDOM_INITIAL_VALUE true)
+(set-option :smt.CASE_SPLIT 3)
+(set-option :smt.DELAY_UNITS true)
+(set-option :NNF.SK_HACK true)
+(set-option :smt.MBQI false)
+(set-option :smt.QI.EAGER_THRESHOLD 100)
+(set-option :TYPE_CHECK true)
+(set-option :smt.BV.REFLECT true)
+(set-option :TIMEOUT 0)
+(set-logic  UFNIA)
+;(set-option :produce-unsat-cores true)
+; done setting options
+;Sorts
+(declare-sort T 0)
+(declare-fun P ( T) Bool )
+(declare-fun f ( T) T )
+(declare-fun c () T)
+(declare-fun d () T)
+
+;Program
+;(assert (= (f c) c ))
+(assert (or (P c) (P d)))
+(assert (forall ((x T)) (and (P x) (not (P (f x))) )))
+;(assert (forall ((x T)) (!(and (P (f (f x))) (not (P (f x)))) :pattern ((P (f x))) )))
+;Commands
+   (check-sat)
+   ;(get-unsat-core)

@@ -1,0 +1,21 @@
+\section{Related work}
+\subsection{Theorem proving and CFGs}
+For DPLL based SMT solvers, the main technique we are aware of for avoiding interference between unrelated program points (that is, clauses that occur on parallel branches), is lazy CNF conversion (\cite{DBLP:conf/cav/BarrettDS02}), together with a VC encoding that ensures that a branch side is decided before the encoding of the statements on that branch are available. This technique achieves the same separation that we do, but does not support joins directly (only through CDCL), and does not admit a natural form of incremental verification. \\
+For saturation based solvers that suffer from inefficiency in the propositional fragment, a technique has been suggested that combines DPLL and superposition (\cite{Voronkov14}). 
+The technique, very roughly, abstracts a first order CNF formula to a propositional problem by abstracting each atom to a distinct propositional atom (all occurrences of the exact same atom are mapped to the same propositional atom). 
+The technique sends the abstraction of some of the clauses to the propositional problem to SAT solver -  if found unsatisfiable, so is the original problem, otherwise, they use the satisfying assignment to filter the clauses that superposition can use. 
+In theory, this technique can allow the prover to avoid most of the interference between opposing branches, 
+but much depends on the details of which part of the problem is sent to the SAT solver (remember that the superposition solver uses CNF form, so it is not clear if a dedicated VC as works for lazy CNF can be used here). It will be interesting to compare the approach to ours and determine if join lemmas are actually derived.
+
+
+\subsection{Clause join}
+Clause join is basically a combination of the term join for which we have discussed related work in chapter \ref{chapter:ugfole}, 
+and simple propositional clause join.
+The problem has been viewed, in a related setting, as unification in \cite{DBLP:conf/vmcai/GulwaniT07}.
+There the authors describe the use of unification under a theory in order to join (and abstract) unit clauses in the theory with equality, although most of the theories they handle are convex and they handle only unit clauses (they handle also programs with loops, so the setting is somewhat different). However, the paper suggests an algorithm for unification in the presence of linear integer arithmetic, which we believe might have a lot of potential for simplifying clause joins in our setting.
+E-unification (unification under a conjunction of equations) is described in \cite{Baader2001445}.
+We essentially unify clauses under a non-convex equational theory, where either the equalities on one joinee and the join holds, or the other joinee and the join.
+Our algorithm essentially calculates first an approximation for the join of the equational theories (by calculating the term representatives), which produces a convex theory at the join, and then performs a rough approximation of set-cover calculations to ensure that all joined clauses are covered. 
+CDCL (\cite{GRASP}) does not directly join clauses, but instead can learn a lemma that holds at the join as follows: first an assertion is proven on a single path, and then the proof is generalized by looking at the clauses used in the proof - any part of the proof that does not depend on the choice of a branch side for a given branch can be learned as a lemma that is useful also for the proof of the path on the other side of the branch. However, CDCL does not have enough information on one path to select a representative for a join lemma that is also useful on the other branch, as it does not know which part of the congruence relation is shared between both sides of  branch. 
+We are not aware of work that performs a join that is aware of term ordering.
+

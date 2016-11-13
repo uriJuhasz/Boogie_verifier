@@ -1,0 +1,50 @@
+		\subsection{Ground Terms}
+	Many mathematical proofs start with a set of known to be consistent axioms (mostly quantified), and try to prove another quantified theorem.
+	In computer programs proofs, the situation is often quite different:
+	\begin{itemize}
+		\item Axioms relating to the data domains of the program (e.g. sets) are often quantified
+		\item Axioms that describe the actual program statements are often ground, as atomic operations are usually local.
+		\item Axioms that come from the translation of specifications (pre- and post-conditions both of the method being verified and callees, loop invariants) are quantified (usually over the data domains) if the user given specification is quantified, otherwise it is up to the translation tool but often ground.
+		This category includes often a large part of the assertions to be proven (i.e. not known to be consistent)
+		\item Axioms of the specification methodology can be both ground and non-ground, the VCG tool can provide a more succinct VC with quantified (usually with carefully designed triggers) axioms, or instantiate some of the quantifiers itself.
+		For example, a general quantified frame rule can be given, or ground assumptions about specific relevant memory locations can be given by the tool.
+		This category includes also some of the assertions to be proven (e.g. the Chalice VCG will insert here assertions to ensure that any heap read has sufficient permissions).
+	\end{itemize}
+	
+	In general, it would seem that the assertions to be proven are often ground except for two cases:
+	\begin{itemize}
+		\item Quantification over data domains coming from the user specifications (e.g. all elements of an integer sequence are non-negative) - for these there is not much we can offer, except for giving better information on the (ground) heap locations accessed.
+		\item Quantification over heap locations - such as frame axioms - here we can bias the instantiation in several interesting ways:
+		\begin{itemize}
+			\item As we know which memory locations are accessed directly in all CFG nodes dominated by the location of the quantified axiom, we can bias the instantiation towards these, and so gain potentially useful lemmas even about  heap locations that are accessed in much later DSA versions of the heap
+			\item When a ground instance of such an axiom gives us more information about a memory location that is needed by a later assertion, but is qualified by some extra condition (e.g. for dynamic frames, the frame rule qualification for preservation of memory value over a method call would be that the location is not in the modifies dynamic frame of the method) we can add this condition to the high priority assertions we try to prove/refute, or even in some cases case-split on it.
+		\end{itemize}
+	\end{itemize}
+		
+		In general, it would seem that the bigger part of most computer program proofs is ground, and so concentrating on which ground terms (and hence formulae and clauses) are allowed in the proof can help in reducing the proof search space.
+		Another property that seems common in reasoning about computer programs, is that the heap accesses in the proof are not very far from the heap access in the actual program + specifications.
+		The major patterns of heap access in proofs seem to be:
+		\begin{itemize}
+			\item Access to a memory location that is also accessed in the program + specification - no new ground term
+			\item Direct ground access to a specific location - for example, a methodology that has "fold" and "unfold" for predicates or invariants would assert the predicate body and then assume the predicate - in some cases (e.g. Chalice) the VCG would generate the actual code to assert each part of the predicate body, hence all ground, while in other cases a quantified definition of the predicate might have to be instantiated, thus potentially creating new ground heap access terms.
+			\item A quantified invariant that gives (potentially recursive) information, usually starting at a given heap location (e.g. Chalice function definitions).
+			In this case a common way of handling recursive definitions (invariants, predicates, functions) is to unfold them up to a fixed depth - we adopt and generalize this approach.
+			\item Many modular specification methodologies try to be local, and so the proof obligations would be local and a soundness proof for the methodology would give us the global property (which is often not needed in the actual proof of a single method).
+			In less local methodologies, a quantified global property would be assumed (e.g. an ownership invariant) at entry to the method, then some heap DSA versions might break the property for a subset of the heap (that is related to the heap locations mentioned in the program, but not always simply by reachability) and then try to reestablish the property by showing that it holds also for the modified locations.
+			We do not try to improve on the proving process in this case and concentrate on modular local methodologies.
+		\end{itemize}
+		
+		There are two cases here where explicit knowledge of the program can help make more guided decisions:
+		The first case is the connection between heap reads of the same location on different DSA versions of the heap.
+		As we often have full knowledge of the DSA chain of heap versions, (Boogie itself often creates them) we can generate the terms for all relevant reads on seeing a read to some later version (or do this only on demand).
+		Creating a heap read on a DSA version that is a heap write on an earlier version, immediately raises the question of whether the indices are equal or not - if this cannot be determined easily (e.g. read/write from a different field where we have the field inequality) then we add the equality/inequality between the indices to the set of important facts on which we try to establish/refute.
+		In the case of propagating such a read over a join, where one side of the join has a potentially matching write to the heap we would try to evaluate the index equality and at the worst case we have a small set of potential values for the memory read at the join point.
+		Propagating a read over a frame axiom (which, in the narrow sense, breaks a DSA chain) can give us hints as to the relevant facts that can determine where we get the value for that read (e.g. in Chalice the frame rule would use the permission mask at the same location, in dynamic frames set inclusion in the modifies clause) - we mark these facts as important for the proof and try to evaluate them.
+		Regarding recursive definitions, a common technique is to allow a bounded number of unrollings of the functions.
+		We adopt and generalize this approach, where we define a "radius" or "distance" for each ground term in the proof search, that denotes how far it is from the ground terms that appear in the original problem (axiom or assertion). We only allow the creation of terms within the radius bound when resolving non-ground clauses/instantiating quantifiers.
+		The exact formula for a term radius depends on several factors, but what they have in common is that all terms in the original problem are of radius 0, and other terms have their radius calculated relative to the minimal number of steps it takes to get to that terms from a radius 0 term - steps could be function application, quantifier instantiation or resolution and we can define other shortcuts (e.g. to get a heap read evaluated over the relevant DSA version regardless of the DSA chain length, as done in Boogie indirectly).
+		As we maintain a congruence set of ground term equivalence classes, we assign each equivalence class the minimal radius of its members - this allows us to "reach further" but still have control over the ground terms over which we search and hence the proof size.
+		It would also seem that, except in programs with complicated algebraic/number theory proofs (that can rarely be handled by automatic tools without hints), looking only at a short term radius is in fact sufficient for many computer program proofs.
+		
+
+		

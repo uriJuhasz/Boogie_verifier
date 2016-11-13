@@ -1,0 +1,41 @@
+\section{Bounded Fragments}
+As FOLE is only semi-decidable, and combined with some theories becomes not even recursively enumerable (e.g. linear integer arithmetic with uninterpreted functions and quantifiers as shown in \cite{DBLP:conf/csl/KorovinV07}), 
+it is common for program reasoning tools to select decidable fragments of the logic with lower complexity in order to ensure the predictability of the tool. For example, compilers often approximate the possible set of values of variables at each program point using analyses that are guaranteed to terminate quickly, such as constant propagation and definite assignment, for optimization and for reporting warnings and errors to the programmer.
+
+Often, the result of simple and efficient analyses can be used to simplify a program VC, which sometimes shortens verification time.
+We take advantage of several such simple analyses and apply them exhaustively after each application of stronger and more expensive fragments - rather than just as a pre-process. 
+
+We verify the program by defining a hierarchy of logical fragments, each of which has a predictable polynomial complexity, and apply these fragments in succession until the program is proven or a user-chosen limit is reached. Our approach differs from refinement methods such as \cite{DBLP:journals/jacm/ClarkeGJLV03} in that the user can select exactly which fragments are applied (rather than depending on a counter-example whose choice is less predictable), 
+and so the performance should be more predictable. The intuition is that, while the proof for an entire program VC may be very deep, the actual part of the proof performed at each program point (in e.g. Hoare logic) is often small.
+We define the hierarchy of fragments in a way that allows us to search first for small lemmas at program points which combine together to form a proof for the whole program.
+
+%Most theorems proven in mathematics are quantified and are proven from a set of axioms most of which are also quantified.
+%For the verification of computer programs, however, a ground VC can be found in several cases.
+%The VC generated for a program that contains only assignments, conditionals and ground specifications (assertions, pre- and post-conditions and invariants) is often ground, although quantifiers may be needed in order to model the behavior of arrays and heaps, or to allow under-specification (as abstraction) in method pre- and post-conditions. 
+%Hence, it is our experience that a program VC in e.g. CNF form commonly contains a very small proportion of quantified clauses, most which are global axioms.
+%
+%Theories used in program verification, such as arrays and linear arithmetic, can be axiomatized using quantified axioms, 
+%however, efficient decision procedures exist for the ground fragments of several of these theories and the ground fragment is sufficient for proving many programs.
+%
+%The use of quantified specification in program verification arises in several cases including:
+%\begin{itemize}
+	%\item Modeling of the data domains of the program or specification, such as sets
+	%\item Loop and recursion invariants may require quantifiers even when the rest of the VC is ground
+	%\item Modeling non-trivial state of arrays often requires quantification
+	%\item Method pre- and post-conditions may use quantifiers in order to abstract away implementation details 
+	%\item A verification methodology, such as aliasing control (e.g. using permissions, dynamic frames or ownership), often includes quantified axioms, such as frame rules, and adds certain checks to the VC (e.g. that a memory location specified as not modified is indeed not modified) which require quantification
+%\end{itemize}
+%
+%While decision procedures for several theories have been developed, and active research	exists for other theories, 
+%the ability of an intermediate verification language to handle arbitrary quantified axioms greatly increases its generality and the ability to prototype, experiment and use theories for which no efficient decision procedures is implemented.
+
+
+\textbf{Bounded terms:}
+The intuition for limiting the size of terms comes from axiomatizations of recursive abstract predicates used in specification (e.g. for modeling recursive data structures as in \cite{DBLP:conf/ecoop/HeuleKMS13}) and generally from proofs of heap manipulating programs. Often, the recursive definition of a predicate is given as an axiom which, when instantiated, allows to \emph{unfold} the definition of the predicate once - e.g. for a predicate defining the validity of a recursive search tree, instantiating the defining axiom for a node produces the instances of the predicate for the node's children. Such an axiomatization is not complete in FOLE, but is sufficient in many cases. In our experience, proofs for such structures do not often require an arbitrary depth of unfolding of the predicate, and hence limiting instantiation to instances with terms that are not very distant (in terms of number of function applications) from input VC terms, should allow us to look first for proofs that do not look in the heap much deeper than the actual program does. 
+We define a measure of term depth that is relative to the set of original VC terms, and also takes into account any equalities derived for the terms. Using this measure, we define a hierarchy of logical fragments where each fragment extends the limit on the relative size of terms.
+
+\textbf{Bounded derivation depth:}
+We try to prioritize the search for simpler proofs over the search for complicated proofs, and hence we limit the shape of the proof DAG by classifying inferences according to a cost measure, and limiting the number of inferences of each class in each path in the proof DAG. Inferences that strictly reduce the VC size and are cheap to perform (such as unit propagation), are not limited.
+Other more expensive inferences (such as ground superposition) are limited for each fragment by the maximal number allowed on each proof DAG path. The most expensive inferences, such as superposition of non-unit clauses with two non-ground premises where the conclusion has many free variables, are restricted more. Using the maximal number in a proof DAG path is a compositional measure in the sense that it is easy to calculate the measure for each node of a proof DAG from the measure of its immediate children.
+
+We also use a bound on the number of literals allowed in a clause, in order to prevent some cases of combinatorial explosion.

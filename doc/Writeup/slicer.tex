@@ -1,0 +1,207 @@
+\documentclass[a4paper]{report}
+%\usepackage{geometry}
+%\geometry{a4paper, portrait, margin=3cm}
+
+\usepackage[dvipsnames]{xcolor}
+\usepackage{amssymb,amsmath}
+%\usepackage{subfigure}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage[font=small]{caption}
+\usepackage{textcomp}
+\usepackage{proof}
+\usepackage{amsthm}
+\usepackage{stmaryrd}
+\usepackage{cancel}
+\usepackage{ifthen}
+\usepackage{adjustbox}
+
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{enumitem}
+\usepackage[normalem]{ulem}
+
+% graphs
+\usepackage{tikz}
+\usetikzlibrary{positioning,calc, shapes, backgrounds,arrows,automata}
+%\usepackage{dot2texi}
+%\usepackage{tikz}
+%\usetikzlibrary{shapes,arrows}
+
+\usepackage{etoolbox}
+\apptocmd{\thebibliography}{\raggedright}{}{}
+
+\usepackage{float}
+\floatstyle{boxed}
+\restylefloat{table}
+\restylefloat{figure}
+
+\theoremstyle{definition}
+%\renewenvironment{proof}[1]{{\bfseries Proof}}{\textnormal{#1}}
+
+\include{macros}
+
+
+
+\AtBeginDocument{%
+  \renewcommand{\thelstlisting}{%
+		\ifnum\value{subsection}=0
+      \thesection.\arabic{lstlisting}%
+    \else
+      \ifnum\value{subsubsection}=0
+        \thesubsection.\arabic{lstlisting}%
+      \else
+        \thesubsubsection.\arabic{lstlisting}%
+      \fi
+    \fi
+  }
+}
+
+\makeatletter
+\def\pgf@plot@curveto@handler@finish{%
+  \ifpgf@plot@started%
+    \pgfpathcurvebetweentimecontinue{0}{0.995}{\pgf@plot@curveto@first}{\pgf@plot@curveto@first@support}{\pgf@plot@curveto@second}{\pgf@plot@curveto@second}%
+  \fi%
+}
+\makeatother
+
+% commands to set the information required for the title and imprint page
+\renewcommand{\title}[1]{\renewcommand{\titlestring}{#1}}
+\newcommand{\titlestring}{}
+\newcommand{\dissnum}[1]{\renewcommand{\dissnumstring}{#1}}
+\newcommand{\dissnumstring}{}
+\newcommand{\tiknum}[1]{\renewcommand{\tiknumstring}{#1}}
+\newcommand{\tiknumstring}{}
+\newcommand{\dedication}[1]{\renewcommand{\dedicationstring}{#1}}
+\newcommand{\dedicationstring}{}
+\renewcommand{\author}[1]{\renewcommand{\authorstring}{#1}}
+\newcommand{\authorstring}{}
+\newcommand{\acatitle}[1]{\renewcommand{\acatitlestring}{#1}}
+\newcommand{\acatitlestring}{}
+\newcommand{\degree}[1]{\renewcommand{\degreestring}{#1}}
+\newcommand{\degreestring}{}
+\newcommand{\dateofbirth}[1]{\renewcommand{\dateofbirthstring}{#1}}
+\newcommand{\dateofbirthstring}{}
+\newcommand{\citizen}[1]{\renewcommand{\citizenstring}{#1}}
+\newcommand{\citizenstring}{}
+\newcommand{\examiner}[1]{\renewcommand{\examinerstring}{#1}}
+\newcommand{\examinerstring}{}
+\newcommand{\coexaminer}[1]{\renewcommand{\coexaminerstring}{#1}}
+\newcommand{\coexaminerstring}{}
+\renewcommand{\date}[1]{\renewcommand{\datestring}{#1}}
+\newcommand{\datestring}{}
+\newcommand{\isbn}[1]{\renewcommand{\isbnstring}{#1}}
+\newcommand{\isbnstring}{}
+\newcommand{\publisher}[1]{\renewcommand{\publisherstring}{#1}}
+\newcommand{\publisherstring}{}
+
+% define a title page that conforms to the regulations of ETH Zurich
+\renewcommand\maketitle{
+  \begin{titlepage}
+    \setlength{\baselineskip}{8mm}
+    \begin{center}
+      \large Diss.~ETH No.~\dissnumstring \\
+    \end{center}
+    \vfill
+    \begin{center}
+      \textbf{\huge\titlestring}
+    \end{center}
+   \vfill
+    \begin{center}
+      \large A thesis submitted to attain the degree of
+    \end{center}
+    \vspace{0.5\fill}
+    \begin{center}
+      \large Doctor of Sciences of \textsc{ETH Zurich}
+    \end{center}
+    \vspace{0.5\fill}
+    \begin{center}
+      \large presented by \\[1.5ex]
+      \textsc{\Large\authorstring} \\[1.5ex]
+      \acatitlestring \\[1.5ex]
+       born on \dateofbirthstring \\[1.5ex]
+      citizen of \citizenstring
+    \end{center}
+    \vspace{0.5\fill}
+    \begin{center}
+      \large accepted on the recommendation of \\[1.5ex]
+      \examinerstring \\ \coexaminerstring
+    \end{center}
+    \vspace{0.5\fill}
+    \begin{center}
+      \large\datestring
+    \end{center}
+    \if@twoside
+      \newpage
+      \thispagestyle{empty}
+    \fi
+  \end{titlepage}
+}
+
+
+\begin{document}
+
+\title{Incremental Verification}
+\author{Uri Juhasz}
+\dissnum{XXXXXXX}
+\acatitle{Msc in Computer Science, \\Tel Aviv University}
+\dateofbirth{18.01.1979}
+\citizen{Israel}
+\examiner{Prof.~Peter Muller, examiner}
+\coexaminer{Prof.~Arie Gurfinkel, co-examiner \\
+Prof.~Clark Barrett, co-examiner\\
+Prof.~Martin Vechev, co-examiner
+}
+\date{20XX}
+\maketitle
+
+\setcounter{tocdepth}{4}
+\setcounter{secnumdepth}{4}
+\renewcommand{\thelstlisting}{\thesection-\arabic{lstlisting}}
+
+
+\tableofcontents
+
+\newpage
+
+\input{macros_tikz}
+
+\renewcommand{\ttdefault}{pcr}
+\lstdefinestyle{myCode}{
+	mathescape,
+  escapeinside={\^}{\^},
+	language={Java},
+  basicstyle=\ttfamily\small,
+	commentstyle=\color{gray}\ttfamily,
+	keywordstyle=\bfseries\color{black}\ttfamily,
+	tabsize=3,
+	mathescape,
+	showstringspaces=false,
+	showspaces=false
+	numbers=left,
+	keywordstyle=\bfseries\color{black!40!black},
+	morekeywords={var,method,then,and,or,xor,not,until,method,requires,method,ensures,until,foreach,variant,invariant}
+}
+\lstset{style=myCode}
+
+
+\input{abstract}
+%\input{acknowledgments}
+\input{introduction}
+\input{preliminaries}
+\input{ugfole}
+\input{gfole}
+\input{scoping}
+\input{bounded_fragments}
+\input{fole}
+\input{implementation}
+\input{conclusion}
+\input{appendix}
+
+\bibliography{slicer}
+\bibliographystyle{alpha}
+	
+\input{CV}
+\end{document}

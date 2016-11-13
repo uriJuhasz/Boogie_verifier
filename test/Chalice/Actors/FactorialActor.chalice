@@ -1,0 +1,377 @@
+
+
+//To make this work with minimum of subtyping problems it is here assumed that it is 
+//FactorialCont actors that send Value messages
+
+channel Queue(msg:Message) where msg!=null && rd(msg.type) && 
+	(msg.type==1 ==> msg.invValue) &&
+	(msg.type==2 ==> msg.invResult1) &&
+	(msg.type==3 ==> msg.invResult2) &&
+	(msg.type==4 ==> msg.invFinalResult)
+
+//Statically typed future
+class Future{
+	ghost var sent:Message; //type Value
+	var value:Message; //type FinalResult
+	var q:Queue;
+	
+	method init()
+	requires acc(q) && acc(value) 
+	ensures rd(q,this) && acc(value) && q!=null
+	{
+		q:=new Queue;
+	}
+	
+	method get() returns (m:Message)
+	requires acc(value) && rd(sent,this) && rd(sent.vo1,this)  && 
+		rd(value.type,this) && rd(q,this) && q!=null && rd(q.mu,this) && sent!=null && sent.vo1>=0 &&
+		(value!=null ==> 
+		(value.type==4 && value.invFinalResult &&  rd(value.vr3,this) && value.vr3==sent.factorial(sent.vo1) ));
+	requires credit(q,1) && waitlevel<<q.mu ;
+	ensures acc(value) && rd(sent,this) &&  rd(value.vr3,this) && rd(sent.vo1,this) &&
+		rd(value.type,this) && rd(q,this) && value!=null && sent.vo1>=0 &&  m==value && 
+		(value.type==4 &&  value.invFinalResult && value.vr3==sent.factorial(sent.vo1))
+	{
+		if(value==null){
+			var v:Message;
+			receive v:=q;
+			assume v.type==4;
+			assume v.vr3==sent.factorial(sent.vo1);
+			value:=v;
+		}
+		m:=value;
+	}
+	
+	function getQ():Queue
+	requires rd(q,this) && q!=null && rd(q.mu,this)
+	{
+		q
+	}
+}
+
+
+//Message type: 1=Value1, 2=Result, 3=Result2, 4=FinalResult
+class Message{
+	var type:int;
+	var sender1:Future;
+	var sender3:Future;
+	var sender2:Future;
+	var sender4:FactorialCont;
+	var receiver1:FactorialActor;
+	var receiver2:FactorialCont;
+	var receiver3:FactorialCont;
+	var receiver4:Future;
+	var v1:int;
+	var vo1:int;
+	var cust1:FactorialCont;
+	var vr1:int;
+	var old1:FactorialActor;
+	var vr2:int;
+	var old2:FactorialCont;
+	var vr3:int;
+	
+	unlimited function factorial(v:int) :int
+	requires v>=0;
+	ensures v==0 ==> factorial(v)==1;
+	ensures v>0 ==> factorial(v)==v*factorial(v-1);
+	{
+		(v==0) ? 1 : v*factorial(v-1)
+		
+	}
+	
+	predicate invValue{
+		rd(sender1) && rd(receiver1) && rd(cust1) && rd(v1) && rd(vo1) &&
+		sender1!=null && rd(sender1.q) && sender1.q!=null && rd(sender1.q.mu) && v1>=0 && vo1>=0
+		&& (cust1==null ==> v1==vo1) && (cust1!=null ==> (rd(cust1.q) && cust1.q!=null && 
+		rd(cust1.q.mu) && rd(cust1.v)  &&  rd(cust1.vo)  && v1==cust1.v-1 && vo1==cust1.vo ))
+	}
+	
+	predicate invResult1{
+		rd(sender2) && rd(receiver2) && rd(vr1) && rd(old1) && 
+		(sender2!=null && rd(sender2.q) && sender2.q!=null && rd(sender2.q.mu)  && vr1==factorial(0))
+	}
+	
+	predicate invResult2{
+		rd(sender3) && rd(receiver3) && rd(vr2) && rd(old2) &&
+		(sender3!=null && rd(sender3.q) && sender3.q!=null && rd(sender3.q.mu)  && 
+		rd(old2.v)&& rd(old2.vo)&& rd(old2.cust) && 
+		old2.v>=0 && old2.vo >=0 && vr2==factorial(old2.v) && old2.cust==receiver3)
+	}
+	
+	predicate invFinalResult{
+		rd(sender4) && rd(receiver4) && rd(vr3)
+	}
+	
+	
+	
+	method setValue(v:int, vo:int,cust:FactorialCont, receiver:FactorialActor)
+	requires acc(type) && acc(sender1) && acc(receiver1) && 
+		acc(v1) && acc(vo1) && acc(cust1) &&
+		sender1!=null && rd(sender1.q,this) && sender1.q!=null && 
+		rd(sender1.q.mu,this) && v>=0 && vo>=0 && 
+		(cust==null ==> v==vo) && (cust!=null ==> 
+		(rd(cust.q,this) && cust.q!=null && rd(cust.q.mu,this) && rd(cust.v,this) && 
+		rd(cust.vo,this) && v==cust.v-1 && vo==cust.vo))
+	ensures invValue && rd(type,this) && type==1
+	{
+		type:=1;
+		v1:=v;
+		vo1:=vo;
+		cust1:=cust;
+		receiver1:=receiver;
+		fold invValue;
+	}
+	
+	method setResult1(v:int, oldv:FactorialActor, receiver:FactorialCont)
+	requires acc(type) &&  acc(sender2) && acc(receiver2) &&   
+		acc(vr1) && acc(old1)  &&
+		(sender2!=null &&  rd(sender2.q,this) && sender2.q!=null && rd(sender2.q.mu,this) && 
+		v==factorial(0))
+	ensures invResult1 && rd(type,this) && type==2 && rd(receiver2,this) && receiver2==receiver
+	{
+		type:=2;
+		vr1:=v;
+		old1:=oldv;
+		receiver2:=receiver;
+		fold invResult1;
+	}
+	
+	method setResult2(v:int,oldv:FactorialCont,receiver:FactorialCont)
+	requires acc(type) &&  acc(sender3) && acc(receiver3)  && 
+		acc(vr2) && acc(old2) && oldv!=null && rd(oldv.v) && rd(oldv.cust) && 
+		rd(oldv.cust.vo) && rd(receiver.vo) &&
+		(sender3!=null && rd(sender3.q,this) && sender3.q!=null && rd(sender3.q.mu,this)  &&
+		rd(oldv.v,this) &&  rd(oldv.vo,this) && 
+		rd(oldv.cust,this) && oldv.v>=0 && oldv.vo>=0 && v==factorial(oldv.v) && oldv.cust==receiver)
+	ensures invResult2 && rd(type,this) && type==3
+	{
+		type:=3;
+		vr2:=v;
+		old2:=oldv;
+		receiver3:=receiver;
+		fold invResult2;
+	}
+	
+	method setFinalResult(vr:int,receiver:Future)
+	requires acc(type) && acc(sender4) && acc(receiver4) && acc(vr3) &&
+		(sender4!=null ==> (rd(sender4.q,this) && sender4.q!=null)) //Sender null used sometimes for simplicity
+	ensures invFinalResult && rd(type,this) && type==4 && rd(vr3,this) && vr3==vr
+	{
+		type:=4;
+		vr3:=vr;
+		receiver4:=receiver;
+		fold invFinalResult;
+	}
+}
+
+
+class FactorialActor {
+	var q:Queue
+	
+	method init()
+	requires acc(q)
+	ensures rd(q) && q!=null && rd(q.mu);
+	{
+		q:=new Queue;
+	}
+	method act()
+	requires rd(q) && q!=null && rd(q.mu);
+	requires credit(q,1) && waitlevel<<q.mu
+	{
+		var current:Message:=null;
+		while(true)
+		invariant rd(q) && q!=null && rd(q.mu);
+		invariant credit(q,1) && waitlevel<<q.mu 
+		{
+			receive current:=q;
+			//Value(v1,cust1)
+			if(current.type==1){
+				unfold current.invValue;
+				if(current.v1==0){
+					if (current.cust1==null){
+						//begin reply(FinalResult(1,this))
+						var m:=new Message;
+						m.sender4:=null; //Cheating should be this
+						call m.setFinalResult(1,current.sender1); 
+						//unfold m.invFinalResult;
+						assert m.vr3==m.factorial(current.vo1) //assert send obligation of old message
+						//fold m.invFinalResult;
+						var queue:Queue:=current.sender1.getQ();
+						send queue(m);
+						//send obligation
+						//end reply(FinalResult(1,this));
+					}
+					else{
+						//begin cust1.forward(Result(1,this))
+						var m:=new Message;
+						m.sender2:=current.sender1;
+						call m.setResult1(1,this,current.cust1);
+						var queue:Queue:=current.cust1.getQ();
+						send queue(m);
+						//send obligation
+						var r:Message:=new Message;
+						r.type:=4;
+						assert r.vr3==r.factorial(current.cust1.vo) ==>r.vr3==m.factorial(current.vo1); //check send obligation of new message)
+						//end cust1.forward(Result(1,this))
+					}
+				}else{
+					var cont:=new FactorialCont;
+					call cont.init(current.v1,current.vo1,current.cust1);
+					fork cont.act();
+					//begin forward(Value(v1-1,cont)
+					var m:=new Message;
+					m.sender1:=current.sender1;
+					call m.setValue(current.v1-1,current.vo1,cont,this);
+					var queue:Queue:=getQ();
+					send queue(m);
+					//send obligation
+					var r:Message:=new Message;
+					r.type:=4;
+					assert r.vr3==m.factorial(m.vo1) ==> r.vr3==m.factorial(current.vo1) //assume send obligation of new message)
+					//end forward(Value(v1-1,cont)
+				}
+			}else{
+				assume false
+			}
+	  		
+	  	}
+	}
+	
+	function getQ():Queue
+	requires rd(q) && q!=null && rd(q.mu)
+	{
+		q
+	}
+}
+
+  
+
+class FactorialCont{
+	var q:Queue;
+	var v:int;
+	var vo:int;
+	var cust:FactorialCont;
+	
+	method init(vp:int, vop:int,custp:FactorialCont)
+	requires acc(v) &&acc(vo) && acc(cust) && acc(q) && vp>=0 &&  vop>=0 &&
+		(custp!=null ==>	(rd(custp.q,this) && custp.q!=null && rd(custp.q.mu,this) && rd(custp.vo,this) && vop==custp.vo))
+	ensures rd(v,this) && rd(vo,this) && rd(cust,this) && rd(q,this) && q!=null && 
+		rd(q.mu,this)&& v>=0 && vo>=0 &&
+		(cust!=null  ==> (rd(cust.q,this) && cust.q!=null && rd(cust.q.mu,this) && rd(cust.vo,this) && cust.vo==vo ) )
+	{
+		v:=vp;
+		vo:=vop;
+		cust:=custp;
+		q:=new Queue;
+	}
+	
+	method act()
+	requires rd(q,this) && rd(v,this) && rd(vo,this) && q!=null && rd(q.mu,this) && v>=0 && vo>=0;
+	requires rd(cust,this) && (cust !=null ==> (rd(cust.q,this) && cust.q!=null && rd(cust.q.mu,this) && rd(cust.vo,this) && cust.vo==vo));
+	requires credit(q,1) && waitlevel<<q.mu
+	{
+		var current:Message:=null;
+		while(true)
+		invariant rd(q,this) && q!=null && rd(q.mu,this) && rd(v,this) && rd(vo,this) && v>=0 && vo>=0;
+		invariant rd(cust,this) && (cust!=null ==> rd(cust.q,this) && cust.q!=null && rd(cust.q.mu,this) && rd(cust.vo,this) && cust.vo==vo);
+		invariant credit(q,1) && waitlevel<<q.mu
+		{
+			receive current:=q;
+			//Result(vr1,old1)
+			if(current.type==2){
+				unfold current.invResult1;
+				if(cust==null){
+					//begin reply(FinalResult(vr1*v,this))
+					var m:=new Message;
+					m.sender4:=this;
+					//Receiver is a future so ignore the receiver for simplicty
+					//Factorial function is here f(x)=1, since Chalice dislikes recursive functions
+					call m.setFinalResult(current.vr1*v, current.sender2); 
+					unfold m.invFinalResult;
+					assert m.vr3==m.factorial(this.vo); //assert send obligation of old message
+					fold m.invFinalResult;
+					var queue:Queue:=current.sender2.getQ();
+					send queue(m);
+					//send obligation
+					//end reply(FinalResult(v*vr,this))
+				}
+				else{
+					//begin cust.forward(Result(v*vr1,this))
+					var m:=new Message;
+					m.sender3:=current.sender2;
+					call m.setResult2(current.vr1*v, this, cust);
+					var queue:Queue:=cust.getQ();
+					send queue(m);
+					//send obligation
+					var r:Message:=new Message;
+					r.type:=4;
+					assert r.vr3==m.factorial(cust.vo) ==> r.vr3==m.factorial(this.vo); //check send obligation of new message)
+					//end cust.forward(Result(v*vr1,this))
+				}
+			}else
+			//Result(vr2,old2)
+			if(current.type==3){
+				unfold current.invResult2;
+				var m:=new Message;
+				if(cust==null){
+					//begin reply(FinalResult(v*vr2,this))
+					m.sender4:=this
+					//Receiver is a future so ignore the receiver for simplicty
+					call m.setFinalResult(current.vr2*v, current.sender3);
+					unfold m.invFinalResult;
+					assert m.vr3==m.factorial(this.vo); //assert send obligation of old message
+					fold m.invFinalResult;
+					var queue:Queue:=current.sender3.getQ();
+					send queue(m);
+					//send obligation
+					//end reply(FinalResult(v*vr2,this))
+				}
+				else{
+					//begin cust.forward(Result(v*vr2,this))
+					m.sender3:=current.sender3;
+					//Factorial function is here f(x)=1
+					call m.setResult2(current.vr2*v, this,cust);
+					var queue:Queue:=cust.getQ();
+					send queue(m);
+					//send obligation
+					var r:Message:=new Message;
+					r.type:=4;
+					assert r.vr3==m.factorial(cust.vo) ==>  r.vr3==m.factorial(this.vo); //check send obligation of new message)
+					//end cust.forward(Result(v*vr2,this))
+				}
+			}
+			else{
+				assume false;
+			}
+		}
+    }
+	
+	function getQ():Queue
+	requires rd(q) && q!=null && rd(q.mu)
+	{
+		q
+	}
+	
+	method main(){
+	
+		var actor:FactorialActor:=new FactorialActor;
+		call actor.init();
+		fork actor.act(); 
+		
+		var m:Message:=new Message;
+		var f:Future:=new Future;
+		call f.init();
+		m.sender1:=f;
+		call m.setValue(5,5,null,actor);
+		send actor.q(m);
+		f.sent:=m;
+		
+		
+		var res:Message:=null;
+		call res:=f.get();
+		
+		
+		assert res.vr3==m.factorial(5);
+	}
+}
+

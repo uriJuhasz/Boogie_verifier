@@ -1,0 +1,12 @@
+
+***Preprocessing clauses         [0] start  - g/n   1/   6  c/a   133/  2066
+   CNF Conversion
+   CNF Conversion - expressions: 292+1
+   **Done - clauses:  550,atoms:  1428
+***Preprocessing clauses         [0] end    - g/n   1/   6  c/a   515/   917 - proved   0 - time [     0s]/[     0s]
+   [   1]
+   [   0]
+   [  PC]
+
+***Extracting CFG                [0] start  - g/n   1/   6  c/a   515/   917
+Fail: 

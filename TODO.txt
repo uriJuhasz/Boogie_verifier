@@ -1,0 +1,4 @@
+V Ensure at end of templatemaker no updated flags
++ sources complete after embedTermStructure
+? Garbage collect non-actual GTD+GTTDs after actuals
+---- Mark also non-actual gtds - care about rgfa/rgtt
