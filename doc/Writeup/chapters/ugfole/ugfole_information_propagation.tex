@@ -1,4 +1,4 @@
-\newpage
+%\newpage
 \section{Information Propagation}\label{section:ugfole:propagation}
 We have seen in the previous section that verification using a DPLL or CDCL based solvers suffers from some inherent problems when joins are concerned, even when all clauses are unit ground clauses. 
 While the example program we have seen (figure \ref{linear_join_proof}) is a synthetic example that we do not expect to see as a real program, we have encountered the same problem when quantifiers are involved - namely, 
@@ -405,7 +405,7 @@ While both propagation criteria have advantages and disadvantages, and both prop
 For larger fragments (non ground and/or non-unit) we will use a hybrid method, where the unit fragment will serve as a base.
 In this chapter we only discuss unit ground equalities using EC-graphs from now on, and in chapter \ref{chapter:gfole} we handle joining non-unit clauses.
 
-\newpage
+%\newpage
 \subsection{Ground unit equality propagation}
 In this section we describe the data structure and algorithm used to propagate ground unit equalities.
 This algorithm and data structure form the basis of all the other fragments we consider in this thesis.

@@ -1,66 +1,6 @@
-\newpage
+%\newpage
 \section{Related Work}
 
-%\subsection{Interpolants}
-%There has been a lot of work in recent years on the use of interpolants in verification.
-%Interpolants for a pair of formulae in first order logic with equality were introduced in ~\cite{Craig57},~\cite{Craig57a}, 
-%with an effective and complete method to generate the inerpolants. 
-%The algorithm given there can produce non-ground interpolants even when a ground interpolant exists, 
-%and similarly non-CNF interpolants when a CNF-interpolant exists.
-%
-%The conjunction of the clauses we deduce at a program point (including those represented as a congruence closure graph), as presented in this chapter are not exactly an interpolant, as we do not restrict the vocabulary (set of functions and predicates) to be the intersection of the vocabulary of successors and predecessors. We add the vocabulary restriction in chapter \ref{chapter:scoping}.
-%
-%\subsubsection*{Interpolation in verification}
-%Interpolants for propositional logic were used for verification, in the context of inferring an invariant for unbounded SAT based model checking starting with ~\cite{McMillan03}.
-%A method to extract interpolants from resolution proofs for the fragment of ground first order logic with equality (and linear inequalities) was introduced in ~\cite{McMillan04}.
-%A survey of interpolation techniques (extracting an interpolant from a proof) in ground first order logic with equality is given in ~\cite{BonacinaJohansson2015}, with a comparison in the logical strength of the interpolants produced by different systems.\\
-%~\cite{JhalaMcMillan06} introduces the idea of split proofs, also called local proofs in ~\cite{KovacsVoronkov09},
-%which are, broadly speaking, the proofs we are aiming at in our proof search - we discuss these in detail in chapter \ref{chapter:scoping}.\\
-%In ~\cite{FuchsGoelGrundyKrsticTinelli2012} the authors present an algorithm for interpolating the ground equality fragment by colouring a congruence closure graph of the proof. Their interpolants are always a conjunction of Horn clauses.
-%They also present the notion of an interpolation game (section 6) where two sets of formulae communicate only by exchanging Horn-clauses of the common vocabulary in order to generate a refutation.
-%This is related to the back-and-forth way in which we request the propagation of additional axioms, the difference is that they derive the strategy for such an exchange from an existing proof of refutation (for the ground (non-unit) fragment), and do not discuss complexity.\\
-%The main difference between the above works and our work is that they rely on a refutation proof in order to extract an interpolant,
-%while we are actually searching for the proof. 
-%However, several of these works try to modify the proof structure in order to extract better (e.g. smaller) interpolants, for example ~\cite{HoderKovacsVoronkov12}. \\
-%Superposition based proof systems have been suggested that produce a local proof and hence directly an interpolant - notably ~\cite{McMillan08} and ~\cite{KovacsVoronkov09}. We discuss these in detail in chapter \ref{chapter:scoping}.
-%
-%~\cite{JhalaMcMillan06} introduces also the idea of a hierarchy of L-restricted interpolants (L being a fragment of the logical language), 
-%which are similar to our hierarchy of fragment interpolants. \\
-%The main differences are that L-restricted interpolants are only defined for linear program (no branch or join), 
-%and that they limit only the language of the interpolants, while we also limit both the information flow between adjacent nodes (the join of the fragment) and the set of deductive rules used (e.g. we can limit the resolution depth/width, while they only limit the shape of the result).
-%
-%There are several works which extend sequence interpolants to trees and DAGs, mostly based on solving constrained Horn clauses (CHC).\\
-%Using the terminology of ~\cite{McMillanRybalchenko2013}, our CFGs describe linear acyclic CHCs, 
-%while the tree interpolants mentioned in ~\cite{BlancGuptaKovacsKragl13} and ~\cite{McMillanRybalchenko2013} are acyclic and simple - roughly the difference is that, while in our case the interpolant follows from the disjunction of the predecessors, 
-%in tree interpolation the interpolant follows from the conjunction, which is useful for encoding concurrency and recursive function calls.\\
-%~\cite{RummerHojjatKuncak13} introduces another incomparable class of CHCs, called disjunctive CHCs, 
-%which are acyclic and body-disjoint, which roughly means they can encode directly joins (and also conjunctions) but not branches.
-%~\cite{RummerHojjatKuncak15} compares different classes of Horn clauses, along with their interpolation problems.\\
-%The above lines of work use a theorem prover to find a refutation and then generate an interpolant from the refutation.
-	%
-%DAG interpolants are introduced in ~\cite{AlbarghouthiGurfinkelChechik12UFO},
-%and further developed in ~\cite{AlbarghouthiGurfinkelChechik12} (combined with abstract interpretation), 
-%~\cite{VizelGurfinkel14} (combination with IC3) and others.
-%The authors encode the DAG shaped CFG of the unfolding of a program similar to our CFG.\\
-%The main differences are:\\
-%We encode both the transition relation and set of states of a program location in one set of clauses at a cfg-node,
-%while the common encoding is that of set of states at a program point and transition relations on edges.
-%The reason for this encoding is that it allows us to apply all the information we have about the set of reachable states at a cfg-node to simplify the encoding of the transition relation. This includes, for example, constant propagation and the elimination of redundant clauses.\\
-%As in the above works, the authors' technique relies on a SAT/SMT solver in order to generate interpolants and check the safety of an unfolding.
-%As mentioned before, this has the advantage of being able to utilize off the shelf solvers which are often efficient, allowing the solver free choice of the order of evaluation (as opposed to our case and IC3/PDR where an order of evaluation is imposed), and counter examples can be provided to the user. \\
-%The disadvantages are that any prover call is potentially of at least exponential run-time (depending on the prover - SAT is exponential, 
-%SMT is at least exponential depending on the theories involved, and adding quantifier instantiation depends on the specific prover strategy). A time-out of the prover does not ensure progress (that is, no sub-exponential time-out can ensure progress, even if we mine the prover log for top-level learned clauses), and, in general, there is no guarantee of being even RE in the presence of quantifiers. \\
-%We, instead, employ techniques with polynomial bounds for each fragment, but cannot directly use an off the shelf tool and cannot provide counter examples except for trivial cases. We search for proofs of a specific shape (e.g. narrow, local), which can, in some cases, be exponentially longer than those found by CDCL (e.g. ordered resolution is exponentially separated from general resolution). However, on the practical side, in the examples we have analyzed (small software examples, heap using programs), neither the exponential run-time of CDCL nor that of local proofs has been a real problem for proofs of actual programs, rather the main limitation was the handling of quantifiers.\\ 
-%Another property of their encoding is a form of incrementality where an interpolant for a previous unrolling (encoding facts learned about the set of states at the given unrolling) is conjoined with the VC sent to the prover.\\
-%In our case incrementality is tighter in the sense that we can ensure (under some limitations) that no derivation is performed more than once. \\
-%Another issue is that their encoding uses one error state at the end of the CFG, which makes it harder, 
-%in the case where a verification has failed but some intermediate lemmas have been learned, to utilize the intermediate results and eliminate error states that have been proven unreachable, and optimize the cfg for the next pass accordingly.\\
-%We have not experimented with combining our technique with either abstract interpretation or IC3/PDR as in the above works, which would be interesting future work.
-%
-%Interpolation from superposition based proofs were explored in ~\cite{McMillan08} and other works and is discussed in chapter \ref{chapter:scoping}.
-%
-%A method to combine interpolants from different fragments was given in ~\cite{YorshMusuvathi05}.
-%
 
 \subsection{Congruence closure}
 The earlier papers to discuss congruence closure algorithms are ~\cite{DowneySethiTarjan} (efficient algorithms, complexity bounds and alternative implementations), ~\cite{Shostak84} and ~\cite{NelsonOppen80} (combination with other theories). 
