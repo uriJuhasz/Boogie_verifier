@@ -28,19 +28,50 @@ Prof.~Dr.~Martin Vechev
 \renewcommand{\thelstlisting}{\thesection-\arabic{lstlisting}}
 
 
+
 %=========================================================================
-%%%%%%TOC + abstract
+%%%%%%Abstract
+
+%\pagenumbering{gobble}
+
+\thispagestyle{empty}
+\cleardoublepage
+\newpage
+\cleardoublepage
+\newpage
 
 \pagenumbering{roman}
+
+\thispagestyle{plain}
+\input{prepost/abstract}
+\thispagestyle{plain}
+
+\cleardoublepage
+\input{prepost/acknowledgments}
+
+\newpage
+
+\thispagestyle{plain}
+
+\newpage
+
+
+
+%=========================================================================
+%%%%%%TOC
+\cleardoublepage
+
 \pagestyle{plain}
 \thispagestyle{plain}
 \tableofcontents
 \thispagestyle{plain}
 
+\cleardoublepage
+\newpage
+\cleardoublepage
+\newpage
 
-
-\input{prepost/abstract}
-%\input{acknowledgments}
+\newpage
 
 
 %=========================================================================
@@ -63,7 +94,7 @@ Prof.~Dr.~Martin Vechev
 %%%%%%Post stuff
 
 \pagestyle{appPS}
-%\input{chapters/appendix/appendix}
+\input{chapters/appendix/appendix}
 
 \pagestyle{bibPS}
 \bibliography{slicer}
