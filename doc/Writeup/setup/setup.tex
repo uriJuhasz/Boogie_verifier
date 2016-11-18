@@ -1,4 +1,3 @@
-
 \usepackage[dvipsnames]{xcolor}
 \usepackage{amssymb,amsmath}
 \usepackage{listings}
@@ -18,12 +17,12 @@
 
 \usepackage{enumitem}
 \usepackage[normalem]{ulem}
-\usepackage[pagestyles,raggedright]{titlesec}
+\usepackage[pagestyles]{titlesec}
+\usepackage[titletoc]{appendix}
 
 \usepackage{tikz}
 \usetikzlibrary{positioning,calc, shapes, backgrounds,arrows,automata}
 
-%\newcommand{\sectionbreak}{\clearpage}
 
 \usepackage{etoolbox}
 \apptocmd{\thebibliography}{\raggedright}{}{}
@@ -34,10 +33,8 @@
 \restylefloat{figure}
 
 \theoremstyle{definition}
-%\renewenvironment{proof}[1]{{\bfseries Proof}}{\textnormal{#1}}
 
 \raggedbottom
-
 
 \AtBeginDocument{%
   \renewcommand{\thelstlisting}{%
@@ -61,142 +58,25 @@
 }
 \makeatother
 
-% commands to set the information required for the title and imprint page
-\renewcommand{\title}[1]{\renewcommand{\titlestring}{#1}}
-\newcommand{\titlestring}{}
-\newcommand{\dissnum}[1]{\renewcommand{\dissnumstring}{#1}}
-\newcommand{\dissnumstring}{}
-\newcommand{\tiknum}[1]{\renewcommand{\tiknumstring}{#1}}
-\newcommand{\tiknumstring}{}
-\newcommand{\dedication}[1]{\renewcommand{\dedicationstring}{#1}}
-\newcommand{\dedicationstring}{}
-\renewcommand{\author}[1]{\renewcommand{\authorstring}{#1}}
-\newcommand{\authorstring}{}
-\newcommand{\acatitle}[1]{\renewcommand{\acatitlestring}{#1}}
-\newcommand{\acatitlestring}{}
-\newcommand{\degree}[1]{\renewcommand{\degreestring}{#1}}
-\newcommand{\degreestring}{}
-\newcommand{\dateofbirth}[1]{\renewcommand{\dateofbirthstring}{#1}}
-\newcommand{\dateofbirthstring}{}
-\newcommand{\citizen}[1]{\renewcommand{\citizenstring}{#1}}
-\newcommand{\citizenstring}{}
-\newcommand{\examiner}[1]{\renewcommand{\examinerstring}{#1}}
-\newcommand{\examinerstring}{}
-\newcommand{\coexaminer}[1]{\renewcommand{\coexaminerstring}{#1}}
-\newcommand{\coexaminerstring}{}
-\renewcommand{\date}[1]{\renewcommand{\datestring}{#1}}
-\newcommand{\datestring}{}
-\newcommand{\isbn}[1]{\renewcommand{\isbnstring}{#1}}
-\newcommand{\isbnstring}{}
-\newcommand{\publisher}[1]{\renewcommand{\publisherstring}{#1}}
-\newcommand{\publisherstring}{}
-
-%\usepackage[scaled]{helvet}
-%\usepackage[T1]{fontenc}
-
-\newgeometry{top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm}
-
-% define a title page that conforms to the regulations of ETH Zurich
-\renewcommand\maketitle{
-  \begin{titlepage}
-		\newgeometry{top=3cm,bottom=3cm}
-		\begingroup
-%\renewcommand\familydefault{\sfdefault} 
-%		\fontfamily{arial}\selectfont
-    \setlength{\baselineskip}{8mm}
-		
-%		\vspace{2.5cm}
-		
-    \begin{center}
-      \large DISS.~ETH NO.~\dissnumstring \\
-    \end{center}
-    
-		\vspace{2.2cm}
-
-%    \vfill
-    \begin{center}
-      \textbf{\huge\titlestring}
-    \end{center}
-
-		\vspace{2.0cm}
-
-%    \vspace{2pt}
-%   \vfill
-    \begin{center}
-      \large A thesis submitted to attain the degree of
-    \end{center}
-%    \vspace{0.5\fill}
-%
-%		\vspace{1.5cm}
-%
-    \begin{center}
-      \large DOCTOR OF SCIENCES of \textsc{ETH Zurich}\\
-			
-			\vspace{0.5cm}
-			
-			\large (Dr. sc. ETH Zurich)
-    \end{center}
-%   \vspace{0.5\fill}
-
-		\vspace{1.0cm}
-
-    \begin{center}
-      \large presented by \\[1.5ex]
-
-		\vspace{0.2cm}
-
-      \textsc{\Large\authorstring} \\[1.5ex]
-    \end{center}
-		
-		\vspace{0.8cm}
-		
-    \begin{center}
-      \large \acatitlestring \\[1.5ex]
-
-				\vspace{0.8cm}
-
-       born on \dateofbirthstring \\[1.5ex]
-
-		\vspace{0.2cm}
-
-      citizen of \citizenstring
-    \end{center}
-%    \vspace{0.5\fill}
-
-		\vspace{2.0cm}
-
-    \begin{center}
-      \large accepted on the recommendation of \\[1.5ex]
-      \examinerstring \\[1.5ex] \coexaminerstring
-    \end{center}
-%    \vspace{0.5\fill}
-
-		\vspace{2.0cm}
-
-
-    \begin{center}
-      \large\datestring
-    \end{center}
-		\endgroup
-    \if@twoside
-      \newpage
-      \thispagestyle{empty}
-    \fi
-		\restoregeometry
-  \end{titlepage}
-}
+\input{setup/title_page}
 
 \newpagestyle{main}{%
-   \sethead[\thepage][][\chaptername\ \thechapter: \chaptertitle]{\chaptername\ \thechapter: \chaptertitle}{}{\thepage}
+   %\sethead[\thepage][][\chaptername\ \thechapter: \chaptertitle]{\chaptername\ \thechapter: \chaptertitle}{}{\thepage}
+	   \sethead*{\chaptername\ \thechapter: \chaptertitle}{}{\thepage}
    \headrule
+}
+
+\renewpagestyle{plain}{%
+   \setfoot*{}{\thepage}{}%{}{\thepage}{}
+%	\footrule
 }
 
 \newpagestyle{bibPS}{%
-   \sethead[\thepage][][\chaptertitle]{\chaptertitle}{}{\thepage}
+   \sethead*{\chaptertitle}{}{\thepage}%{\chaptertitle}{}{\thepage}
    \headrule
 }
 \newpagestyle{appPS}{%
-   \sethead[\thepage][][Appendix\ \thechapter: \chaptertitle]{Appendix\ \thechapter: \chaptertitle}{}{\thepage}
+   \sethead*{Appendix\ \thechapter: \chaptertitle}{}{\thepage}%{Appendix\ \thechapter: \chaptertitle}{}{\thepage}
    \headrule
 }
 
@@ -230,3 +110,40 @@
 	morekeywords={var,method,then,and,or,xor,not,until,method,requires,method,ensures,until,foreach,variant,invariant}
 }
 \lstset{style=myCode}
+
+
+
+
+\makeatletter
+\newif\if@abstractmode
+
+\renewenvironment{titlepage}
+{
+  \if@twocolumn
+  \@restonecoltrue\onecolumn
+  \else
+  \@restonecolfalse\newpage
+  \fi
+  \if@abstractmode
+  \thispagestyle{plain}%
+  \stepcounter{page}%
+  \else
+  \thispagestyle{empty}%
+  \setcounter{page}\@ne%
+  \fi
+}%
+{\if@restonecol\twocolumn \else \newpage \fi
+  \if@twoside\else
+  \if@abstractmode
+  \else
+  \setcounter{page}\@ne%
+  \fi
+  \fi
+}
+
+\AtBeginEnvironment{abstract}{%
+  \@abstractmodetrue%
+}
+
+
+\makeatother

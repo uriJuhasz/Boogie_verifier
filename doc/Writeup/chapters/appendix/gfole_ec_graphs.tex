@@ -1,4 +1,4 @@
-\section{Combining EC-graphs and clauses}\label{section:appendix:gfole_ECGraph}
+\chapter{Combining EC-graphs and clauses}\label{section:appendix:gfole_ECGraph}
 In this section we show a combination of the verification algorithm for the non-unit ground fragment from section \ref{section:gfole_basic} with the EC-graph algorithm for the unit ground fragment presented in chapter \ref{chapter:ugfole}.
 The main motivation to combine these fragments comes from the need for joins, and as an attempt to keep the representation in each CFG-node small by keeping all elements (term, clauses etc.) in normal form.
 As we have seen in section \ref{section:ugfole:joins} regarding joins in the unit ground fragment, and in \ref{section:gfole:joins} regarding joins in the non-unit ground fragment, more equalities known at the join often translate to a better join.
@@ -23,7 +23,7 @@ We propagate ground unit equalities as in chapter \ref{chapter:ugfole}, and addi
 
 The conceptual difference from the algorithm presented in section \ref{section:gfole_basic} is that representing clauses as clause-ECs means that all clauses are fully reduced using rewrite by unit equalities, and using EC-nodes for requests allows us to reduce the overall number of requests both because of the sources function and because several requests are collected into one.
 
-\subsection*{Representation}
+\section*{Representation}
 Each clause at a CFG-node is represented by a \textcolor{blue}{clause-EC} - this is essentially a clause where each top-term in a literal is represented by an EC-node - formally:\\
 An \textcolor{blue}{atom-EC} is \m{s=t} where s,t are EC-nodes.\\
 A \textcolor{blue}{literal-EC} is A or $\lnot$A where A is an atom-EC.\\
@@ -101,7 +101,7 @@ And\\
 This allows us to propagate a simplified clause over a join with a clause-path-prefix as long as all branch literals are smaller than all other literals, and as long as the equality is also represented at the join.
 
 
-\subsection*{Notation}
+\section*{Notation}
 For a node n, we use \m{[t]_n} to represent the EC-node in \m{g_n} for the term t when \m{t \in \terms{g_n}}.
 In some cases we write \m{[s,t]_n} when we know that \\
 \m{s,t \in g_n \land [s]_n = [t]_n}.
@@ -123,7 +123,7 @@ For two EC-nodes s,t of the same EC-graph, we use \m{s \trianglelefteq t} as fol
 
 \bigskip 
 
-\subsection*{CFG-Node state}
+\section*{CFG-Node state}
 The state we maintain at each CFG-node n is as follows:
 \begin{itemize}
 	\item An EC-graph \m{g_n} that includes all terms in all clauses in n, as described in chapter \ref{chapter:ugfole}, including the sources function that connects it to the EC-graphs of direct predecessors.
@@ -136,7 +136,7 @@ The state we maintain at each CFG-node n is as follows:
 
 \bigskip 
 
-\subsection*{Main changes from the basic algorithm}
+\section*{Main changes from the basic algorithm}
 Our combined EC-graph with non-unit algorithm is based on the non-unit algorithm from section \ref{section:gfole_basic}, using clause-ECs and term-ECs rather than clauses and terms, with the following differences:
 \begin{itemize}
 	\item Unit equalities are represented using \GTs{} (term-ECs) and hence there is no need to perform unit superposition. 

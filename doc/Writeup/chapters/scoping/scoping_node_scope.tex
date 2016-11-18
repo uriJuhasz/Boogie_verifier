@@ -154,7 +154,15 @@ In the first two cases (variable explicitly assigned one value), we would expect
 which would mean that, if we search for a proof with increasing depth as in our example, reasoning will be forced to be more local.
 
 
-\begin{figure}
+
+In the third case, we can add path condition qualified non-unit clauses that correlate the join DSA version with the recursively replaced versions of the value assigned at each branch, also recursively, for example, consider the code in figure \ref{snippet4.2.5}.
+If we add n such branches in sequence, we would need \m{2^n} clauses, each n literals wide, for the strongest post-condition, if we remove join DSA versions from the scope, and \m{2n} clauses without removing the join DSA versions.
+In the above case we can propagate more goal directed clauses also without the join DSA versions, but it is not clear that this can be done in the general case. Examples such as the above motivate us not to remove join DSA versions from the scope.
+
+For all the uninitialized cases, we would also want to keep the uninitialized DSA version of the variable in scope as in this case there is no other way to represent the value of these variables. 
+Intuitively, it would make sense that e.g. the return value of a function is a useful value later in the program, and so we should be able to refer to it in clauses.
+
+\begin{figure}[H]
 \begin{lstlisting}
 $\m{s:}$
 	... //Heap axioms
@@ -194,12 +202,6 @@ $\m{n_a:}$
 \label{snippet4.2.5}
 \end{figure}
 
-In the third case, we can add path condition qualified non-unit clauses that correlate the join DSA version with the recursively replaced versions of the value assigned at each branch, also recursively, for example, consider the code in figure \ref{snippet4.2.5}.
-If we add n such branches in sequence, we would need \m{2^n} clauses, each n literals wide, for the strongest post-condition, if we remove join DSA versions from the scope, and \m{2n} clauses without removing the join DSA versions.
-In the above case we can propagate more goal directed clauses also without the join DSA versions, but it is not clear that this can be done in the general case. Examples such as the above motivate us not to remove join DSA versions from the scope.
-
-For all the uninitialized cases, we would also want to keep the uninitialized DSA version of the variable in scope as in this case there is no other way to represent the value of these variables. 
-Intuitively, it would make sense that e.g. the return value of a function is a useful value later in the program, and so we should be able to refer to it in clauses.
 
 \textbf{Implementation:}
 We have implemented an (optional) pre-processing step that determines a scope for each CFG-node, based on the above:
