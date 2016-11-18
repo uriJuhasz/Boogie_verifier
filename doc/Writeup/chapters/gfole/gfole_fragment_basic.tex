@@ -662,6 +662,14 @@ The first idea is that we have more chances to apply unit propagation and simpli
 The second idea is that, for a pair of clauses \m{C,D} that share a path (C being earlier on the path) and have a valid inference, 
 if there is a clause E on the path between C and D, that either subsumes or simplifies C so that it is no longer relevant for D, then we can avoid the inference, while a prover running on a flat VC cannot take advantage of these simplifications without allowing path literals to be maximal - which essentially amounts to enumerating execution paths. For the per-path VC we can see that more simplifications can be performed, as it can treat the clauses on a path as a set and hence also subsume clauses regardless of the location of the subsuming clause in the execution order - which helps explain, to some degree, the success of lazy-CNF SMT solvers in proving VCs that are encoded directing the solver to explore paths.
 
+
+In order to demonstrate the differences we use only the simplification inferences depicted in \ref{simp_rules.1} , applying them eagerly.
+We have omitted some of the rules for simplicity of presentation, but the principles remain the same.
+Specifically, we have omitted rewriting by unit ground equalities (demodulation) - as it would be handled by EC-graphs in our technique (detailed in a later sub-section) - 
+including demodulation would give our technique an even more significant advantage.
+In our algorithm, we simplify each term w.r.t. \lstinline|todo$\m{_n}$| $\cup$ \lstinline|done$\m{_n}$| before it is added to one of these sets,
+except for simplifications that modify the maximal literal.
+
 \begin{figure}
 $
 \begin{array}[c]{llll}
@@ -687,12 +695,11 @@ $\cancel{\m{C}}$ denotes that the premise $\m{C}$ is redundant after the additio
 \label{simp_rules.1}
 \end{figure}
 
-In order to demonstrate the differences we use only the simplification inferences depicted in \ref{simp_rules.1} , applying them eagerly.
-We have omitted some of the rules for simplicity of presentation, but the principles remain the same.
-Specifically, we have omitted rewriting by unit ground equalities (demodulation) - as it would be handled by EC-graphs in our technique (detailed in a later sub-section) - 
-including demodulation would give our technique an even more significant advantage.
-In our algorithm, we simplify each term w.r.t. \lstinline|todo$\m{_n}$| $\cup$ \lstinline|done$\m{_n}$| before it is added to one of these sets,
-except for simplifications that modify the maximal literal.
+
+
+In figure ~\ref{snippet4.1.2.1} we present a small example program. 
+The program has six program points, \m{n_0} to \m{n_5}, of which \m{n_4,n_5} are assertion (goal) nodes.
+In figure \ref{snippet4.1.2.1_flatvc.2} we show the proof in our technique:
 
 
 \begin{figure}
@@ -723,12 +730,6 @@ The node \m{n_5} was added to ensure all joins are binary.
 }
 \label{snippet4.1.2.1}
 \end{figure}
-
-
-
-In figure ~\ref{snippet4.1.2.1} we present a small example program. 
-The program has six program points, \m{n_0} to \m{n_5}, of which \m{n_4,n_5} are assertion (goal) nodes.
-In figure \ref{snippet4.1.2.1_flatvc.2} we show the proof in our technique:
 
 \begin{figure}
 \begin{tabular}{l|l|l|l|l}

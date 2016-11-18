@@ -166,7 +166,7 @@ We find this method interesting because it shares with DPLL the property that th
 An extension for first order logic is given in \cite{Björk2009}.
 We have not tried to adapt this technique to our setting, but the kinds of joins used, both in the PL and FOLE versions, are related to the joins we perform in join nodes in the CFG.
 
-\subsubsection*{Model evolution}
+\subsubsection*{Model Evolution}
 An algorithm for theorem proving related to DPLL is that of \textit{model evolution} (\cite{BaumgartnerPelzerTinelli12}) implemented in the Darwin theorem prover (\cite{Fuchs:Darwin:Thesis:2004}). Model evolution behaves like DPLL but decides also non-ground literals where, essentially, unification is used to select substituted versions of quantified literals to decide upon. The model evolution calculus has the advantage that quantifiers are handled directly, and unification is used for directing instantiation. 
 However, as with the methods for handling quantifiers in SMT solvers, a conflict must be reached in order to learn new information, and the search depth is not bounded.
 

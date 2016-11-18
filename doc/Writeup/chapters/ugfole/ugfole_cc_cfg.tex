@@ -1,7 +1,7 @@
+\newpage
 \section{Congruence closure graphs for verification}
 In this section we show an algorithm that uses our congruence closure graph data structure to verify a program VC where all clauses are unit ground equality clauses. 
 This is not intended as a practical algorithm, but we use it to highlight the challenges posed by the CFG structure and how our data structures are built to answer these challenges. The algorithm mimics, in a sense, the operation of a DPLL prover on a certain class of VCs generated from such a program (including only unit ground equalities and dis-equalities).
-
 
 \begin{figure}
 \begin{lstlisting}
@@ -554,7 +554,7 @@ $\m{n_i}:$
 \label{snippet3.30}
 \end{figure}
 
-The next example, in figure \ref{snippet3.30} (based on an example from \cite{GulwaniTiwariNecula04}), shows an infinite equivalence class \emph{after} the join - the set of provable equalities for \m{g(a)} at n is infinite - namely \s{g(a)=g(f^k(b)) \mid k \in \mathbb{N}}. If there is a fragment interpolant then only a finite subset of each such infinite equivalence class is needed to prove the program.
+The next example, in figure \ref{snippet3.30} (based on \cite{GulwaniTiwariNecula04}), shows an infinite equivalence class \emph{after} the join - the set of provable equations for \m{g(a)} at n is infinite - namely \s{g(a)=g(f^k(b)) \mid k \in \mathbb{N}}. If there is a fragment interpolant then only a finite subset of each such infinite equivalence class is needed to prove the program.
 
 \begin{figure}
 \begin{lstlisting}

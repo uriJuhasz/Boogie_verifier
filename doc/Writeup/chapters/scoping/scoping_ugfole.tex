@@ -941,9 +941,7 @@ The interpolation clauses are:\\
 For example, consider the example in figure \ref{example_4.2.2.1}.
 Here we see two possible justification clauses, and hence two interpolation clauses.
 
-We also perform the standard equality resolution as a simplification - eagerly replacing \m{[C]_n \lor [s]_n \neq [s]_n} with \m{[C]_n}
-%,and factoring - eagerly replacing \m{[C]_n \lor [A]_n \lor [A]_n} with \m{[C]_n \lor [A]_n}
-.\\
+We also perform standard equality resolution as a simplification - eagerly replacing \m{[C]_n \lor [s]_n \neq [s]_n} with \m{[C]_n}.
 As in the non-unit case, if we derive a unit clause at n it is \lstinline|assumed| in the graph \m{g_n} (and propagated to successors and to \m{g_n^i} as before).
 
 We claim that this is a complete algorithm for the ground unit fragment on a tree-shaped CFG - 
@@ -1161,9 +1159,9 @@ The goal \s{c_3,d_3} is propagated as \m{c_2,d_2} to \m{N_1}.}
 \end{figure}
 
 \noindent
-Here, \s{[c_3]_3,[d_3]_3} is a goal at \m{N_3}, which is communicated to \m{N_2} as \\
+Here, \s{[c_3]_3,[d_3]_3} is a goal at \m{N_3}, which is communicated to \m{N_2} as 
 \s{[c_2,c_3]_2,[d_2,d_3]_2} (through source edges), 
-which must be communicated to \m{N_1} as\\ \s{[c_2,f(a_1,\textcolor{red}{x_1})]_1,[d_2,f(b_2,\textcolor{red}{x_1})]_1} in order for \m{N_1} to generate the interpolation clause-EC \m{[a_2\neq b_2 \lor c_2=d_2]_1}.\\
+which must be communicated to \m{N_1} as \s{[c_2,f(a_1,\textcolor{red}{x_1})]_1,[d_2,f(b_2,\textcolor{red}{x_1})]_1} in order for \m{N_1} to generate the interpolation clause-EC \m{[a_2\neq b_2 \lor c_2=d_2]_1}.\\
 Note that even in the case of a non-scoped ground superposition proof, we can view dis-equality literals as goals, 
 as the only derivation where a literal of the larger premise is not in the conclusion is equality resolution (equality factoring replaces a literal rather than removing it). We can view the \emph{life cycle} of each dis-equality literal in the premises where, at each proof-tree node whose sub-tree includes the premise, the dis-equality is either copied to the conclusion (if it is not maximal), rewritten using some maximal equality in another clause (negative superposition) or eliminated by equality resolution (dis-equalities that originate from equality factoring start their life cycle at the conclusion of that inference). \\
 The important property is that, for each negative superposition inference in the proof-tree, the proof sub-tree that derives the rewriting clause (the left premise of negative superposition) is independent of the proof-tree deriving the clause with the maximal dis-equality.

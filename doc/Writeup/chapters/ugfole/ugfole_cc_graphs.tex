@@ -1,3 +1,4 @@
+
 \section{Congruence closure graphs}
 We define a congruence closure graph data structure that forms the basis of our verification algorithm. Each node in the graph represents an equivalence class of terms.
 The data structure presented here is a variant on the common representation for congruence closure, dating back as far as \cite{DowneySethiTarjan} and earlier, but instantiated per CFG-node, and with edges added between instances to communicate equalities. We show our basic version here in order to fix the vocabulary and as a basis for the full version that we show in section \ref{section:ugfole:propagation}.
@@ -519,7 +520,7 @@ The graph in \ref{ec_graph_example_cyclic3} is obtained by:\\
 \lstinline|makeTerm(f,([a],[b])); makeTerm(g,([b],[a]))|\\
 \lstinline|assumeEqual([f(a,b)],[a]); assumeEqual([g(b,a)],b)|
 
-\begin{figure}[H]
+\begin{figure}
 \centering
 \begin{subfigure}[t]{0.43\textwidth}
 	\framebox[\textwidth]{

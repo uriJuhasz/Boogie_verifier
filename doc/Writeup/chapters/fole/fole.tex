@@ -41,33 +41,33 @@ For a term t and a substitution $\sigma$ \textcolor{blue}{applying the substitut
 The \textcolor{blue}{domain of a substitution} $\sigma$ is the set \m{\textcolor{blue}{dom(\sigma)} = \s{v \in V \mid \sigma(v) \neq v}}  and the \textcolor{blue}{range of a substitution} is the set \m{\textcolor{blue}{ran(\sigma)} = \s{x\sigma \mid x \in dom(\sigma)}}.
 
 
-\bigskip
+%\bigskip
 \noindent
 A \textcolor{blue}{renaming} is a substitution $\sigma$ s.t. \m{ran(\sigma) \subseteq V} and \m{\size{ran(\sigma)}=\size{dom(\sigma)}} - that is, variables are mapped only to variables and no two variables are mapped to the same variable.
 
-\bigskip
+%\smallskip
 \noindent
 A \textcolor{blue}{composition of substitutions $\sigma\tau$} is simply functional composition -\\
  \m{x(\sigma\tau) = (x\sigma)\tau}.
 
-\bigskip
+%\smallskip
 \noindent
 We say that a substitution is \textcolor{blue}{fully reduced} if it is idempotent - essentially, no element of the range has any free variable that is in the domain - formally:\\
 \m{\forall x \cdot \Vars{x\sigma} \cap dom(\sigma) = \emptyset}
 
-\bigskip
+%\smallskip
 \noindent
 We use a partial order on substitutions denoted by $\leqdot$. We say that $\sigma$ is \textcolor{blue}{more general} than $\tau$ if $\textcolor{blue}{\sigma \leqdot \tau.}$ The definition of the order is as follows:\\
 $\sigma \leqdot \tau \equivdef \exists \tau' \cdot \tau = \sigma\tau'$
 
-\bigskip
+%\smallskip
 \noindent
 A \textcolor{blue}{unifier} of two terms \m{s,t \in T} is a substitution $\sigma$ s.t. \m{s\sigma = t\sigma}.\\
 A \textcolor{blue}{most general unifier - mgu(s,t)} of two terms \m{s,t \in T} is a unifier $\sigma$ for s,t that is more general than all other unifiers for s,t - formally:\\
 \m{\sigma=mgu(s,t) \equivdef (\forall \tau \cdot (s\tau=t\tau \Rightarrow \sigma \leqdot  \tau))}.\\
 For first order logic each unifiable pair of terms has an mgu (shown in e.g. ~\cite{Baader2001445}) that is further unique up to renaming. 
 
-\bigskip
+%\bigskip
 \noindent
 We use some quantifier instantiation in addition to superposition, as it allows some shorter proofs as we discuss below. Quantifier instantiation with EC-graphs requires E-unification.
 An \textcolor{blue}{E-unifier} for an equational theory E (a congruence relation \m{=_E}) for two terms s,t is a substitution $\sigma$ s.t. \m{s\sigma =_E t\sigma}. Depending on E, an E-unifiable pair s,t may have one mgu (up to renaming and E-equivalence) or the minimal size of a minimal set of minimal E-unifiers 
@@ -76,10 +76,11 @@ The direct extension of our ground algorithm with clause-ECs to quantified formu
 as each clause-EC represents the minimal member of its EC and hence we only need standard unification between maximal terms of minimal representative clauses.\\
 However, in some cases, using E-unification can help reduce the derivation depth of some assertions. We discuss this in section \ref{section:fole:ECgraphs}.
 
+\noindent
 An equality theory E is called \textcolor{blue}{finitely presented} if there is a finite set of ground equations for which \m{=_E} is the smallest containing congruence.
 
 
-
+\newpage
 \subsection*{Calculus}
 We use the standard superposition calculus with a transfinite Knuth-Bendix order.
 The order we use is, as before, tkbo, with the definition repeated in figure \ref{fig_tkbo}.
