@@ -14,7 +14,7 @@ The main idea is to apply the superposition calculus to \m{N^t} with, instead of
 The standard completeness proof for superposition (e.g. \cite{BachmairGanzingerSuperposition}) shows how to build a model for a set of clauses saturated w.r.t. superposition that does not contain the empty clause, where the model is the smallest congruence that includes the maximal equalities of non-redundant clauses from the set. 
 
 We define a set of equalities $\Gamma$ over \langI{} that is constructed from maximal equalities of clauses in \m{N^b} and hence over-approximate a model for \m{N^b}, and we define a congruence relation \eqg{} that satisfies all equations in $\Gamma$.
-and saturate \m{N^t} w.r.t. superposition with unification modulo \eqg{}.
+Our calculus saturates \m{N^t} w.r.t. superposition with unification modulo \eqg{}.
 Whenever unification in an inference uses information from \eqg{}, we add the assumptions used, as a set of negated equations, to the conclusion, in order to preserve soundness, as \m{=_{\Gamma}} is an over-approximation.
 This process implies, in fact, two-way communications between \m{N^t} and \m{N^b}, as the maximal equality of a clause in \m{N^b} can add an equality to $\Gamma$ which can enable a derivation in \m{N^t} which in turn produces a clause in \m{N^b}.
 

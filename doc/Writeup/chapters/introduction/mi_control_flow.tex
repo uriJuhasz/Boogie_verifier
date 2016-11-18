@@ -10,7 +10,7 @@ However, in any encoding into a logic that does not support graph structures dir
 % - for proving each of the assertions \lstinline|e1,e2,e3,e4| a different subset of the statements \lstinline|S1,S2,S3,S4|
 To prove that an assertion holds, it must be shown that it holds on any path reaching it from the root.
 For each such path, the prover has to show that after executing the statements on the path the assertion holds.
-As we only treat passive statements (\lstinline|assert| and \lstinline|assume|) for the DSA form of the program, the order of execution of the statements on the path does not matter for the proof of the program - hence for each path we have to show that the set of assumed or asserted formulae on the path implies the formula in the assertion. We call these sets of formulae the relevant sets for proving the assertion - for example,  in the program in figure \ref{snippet_1.1},
+As we only treat passive statements (\lstinline|assert| and \lstinline|assume|), the order of execution of the statements on the path does not matter for the proof of the program - hence for each path we have to show that the set of assumed or asserted formulae on the path implies the formula in the assertion. We call these sets of formulae the relevant sets for proving the assertion - for example,  in the program in figure \ref{snippet_1.1},
 for \lstinline{assert e3}, the set $\{\{$\lstinline{S1,S3}$\}$,$\{$\lstinline{S2,S3}$\}\}$ is the set of all relevant subsets of the program statements relevant for the assertion. Each such subset represents a path reaching the assertion from the root. 
 
 

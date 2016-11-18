@@ -110,6 +110,7 @@ method enqueueMerge(gt0,gt1:GT)
 	var tgt = transitiveMerge(gt1)
 	if (sgt!=tgt)
 		mergeMap[sgt]:=tgt
+		mergeQ.enqueue(sgt)
 		
 method transitiveMerge(gt)
 	while gt$\in$mergeMap.keys

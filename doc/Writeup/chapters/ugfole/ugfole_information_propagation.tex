@@ -1489,7 +1489,7 @@ The \lstinline|addGT| method enqueues the newly added \GT{} in \lstinline|propQ|
 \begin{lstlisting}
 method makeTerm(f:Function, tt : Tuple[GT]) : GT
 	t:=addGT(f,tt)
-	mainLoop
+	mainLoop()
 	return transitiveMerge(t)
 	
 method addGT(f:Function, tt: Tuple[GT) : GT
@@ -1537,7 +1537,7 @@ method assumeEqual(gt1,gt2:GT)
 		
 	enqueueMerge(gt1,gt2)
 	
-	mainLoop
+	mainLoop()
 \end{lstlisting}
 \caption{The algorithm for \lstinline|assumeEqual|\\
 }
@@ -1575,7 +1575,7 @@ method update(updatedGTs : Set[GT], newGTs : Set[GT])
 					if (gt!=null)
 						addSource(gt,pgt)
 				
-	mainLoop
+	mainLoop()
 \end{lstlisting}
 \caption{The algorithm for \lstinline|update|\\
 The inputs are the set of predecessor \GTs{} updated (that is, that have been merged with another \GT{} or have had a \GFA{} added)
@@ -1601,7 +1601,7 @@ The method also propagates source information for super-terms from new source ed
 
 \begin{figure}
 \begin{lstlisting}
-method mainLoop
+method mainLoop()
 	while (!mergeQueue.isEmpty || !propQ.isEmpty)
 		while (!mergeQ.isEmpty)
 			mergeOne(mergeQ.dequeue)

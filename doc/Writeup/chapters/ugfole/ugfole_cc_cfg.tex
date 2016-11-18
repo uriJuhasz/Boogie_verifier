@@ -276,7 +276,7 @@ As the example above shows there are programs with worst case (single) exponenti
 will fall-back to non-unit clauses at joins and rely on resolution and superposition at \node{j_1} in order to derive a contradiction.
 
 \subsubsection*{Calculating a join}
-We now discuss how a fragment interpolant can be calculated at the join, Which mainly centers around determining which terms need to be represented at the join.
+We now discuss how a fragment interpolant can be calculated at the join, which mainly centers around determining which terms need to be represented at the join.
 
 In ~\cite{GulwaniTiwariNecula04}, an \bigO{n^2} algorithm is given for joining two sets of unit equalities, which guarantees that any term that is represented on both sides (that is, for which there is a node in the graph that represents its equivalence class), is also represented at the join, and the join contains the full equivalence class for that term.
 The basic reason for this complexity is that any equivalence class at the join must correspond to a pair of equivalence classes, one from each joinee, while not necessarily all such pairs are needed in order to represent all the common terms (that is - terms represented on both sides of the join) at the join.

@@ -565,7 +565,7 @@ The rule \m{con_I} follows the definition of congruence closure.
 \bigskip
 
 \section*{Programs}\label{section:preliminaries_programs}
-We assume as input a program in the Boogie (\cite{BarnettCDJL05}) intermediate verification language (or a similar IVL) that has been generated as a verification condition (VC) for some \newdef{source program} (and potentially some annotation).
+We assume as input a program in the Boogie (\cite{BarnettCDJL05}) intermediate verification language(IVL) (or a similar IVL) that has been generated as a verification condition (VC) for some \newdef{source program} (and potentially some annotation).
 We assume a low level Boogie representation that includes a DAG-shaped CFG (loops and method calls are removed using annotations) and the only statements are \lstinline|assume| and \lstinline|assert| (a passified program as described in \cite{Leino:2005:EWP:1066417.1710882}). CFG-nodes in the input represent basic blocks of the Boogie program, and often correspond to basic blocks of the source program.\\
 We modify this input slightly by splitting each CFG-node at each assertion statement \lstinline|assert e| that occurs in it and replacing the assertion with an outgoing edge to a new leaf node with the statement \lstinline|assume $\lnot$e|. 
 Now each CFG-node has only \lstinline|assume| statements and the order of statements within each CFG-node is unimportant - hence each CFG-node can be treated as a set of FOLE formulae. 
