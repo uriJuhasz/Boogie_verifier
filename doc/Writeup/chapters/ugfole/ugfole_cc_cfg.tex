@@ -1,0 +1,661 @@
+\section{Congruence closure graphs for verification}
+In this section we show an algorithm that uses our congruence closure graph data structure to verify a program VC where all clauses are unit ground equality clauses. 
+This is not intended as a practical algorithm, but we use it to highlight the challenges posed by the CFG structure and how our data structures are built to answer these challenges. The algorithm mimics, in a sense, the operation of a DPLL prover on a certain class of VCs generated from such a program (including only unit ground equalities and dis-equalities).
+
+
+\begin{figure}
+\begin{lstlisting}
+method verify(p: CFG)
+	notVerifiedAssertions = $\emptyset$
+	s := new Stack[ECGraph]
+	g := new ECGraph
+	
+	traverseInPreOrder(p, entryVisitor, exitVisitor)
+
+method entryVisitor(n : CFGNode)
+	s.push(g)
+	foreach ($\m{s=t}$$\in$$\clauses{n}$)
+		g.assumel(s=t)
+		
+	if (n.isLeaf)
+		foreach ($\m{s\neq t}$$\in$$\clauses{n}$)
+			if (g.makeTerm(s)==g.makeTerm(t))
+				return
+		notVerifiedAssertions.add(n)
+	
+method exitVisitor
+	g := s.pop
+	
+\end{lstlisting}
+\caption{Basic equality verification algorithm - DFS\\
+The method \lstinline|traverseInPreOrder(p, inv, outv)| traverses the CFG in pre-order - it is standard but we detail it in \ref{fig_CFG_traversal} in order to prevent ambiguities when applying the method to DAGs.
+The method calls the callback inv(n) when first evaluating a CFG-node and outv(n) before back-tracking from the node.\\
+The \lstinline|entryVisitor| pushes the current EC-graph on the stack, 
+\lstinline|assumes| the axioms from the current CFG-node to the EC-graph, 
+and if the CFG-node is a leaf node, it checks whether any dis-equality does not hold - which implies that the assertion at that leaf node holds (as assertions are negated).
+}
+\label{fig_DPLL_style_verification}
+\end{figure}
+
+
+\begin{figure}
+\begin{lstlisting}
+method traverseInPreOrder(p, inv, outv)
+	ts := new Stack[(CFGNode,Int)]
+	n := p.root
+	k := 0
+	do
+		if (k==0) //first visit of the node
+			inv(n)
+		if (k<|n.successors|)
+			ts.push(n,k+1)
+			(n,k) := (n.successors[k],0)
+		else
+			outv(n)
+			if (!ts.isEmpty)
+				(n,k) := ts.pop
+	while (!ts.isEmpty)
+\end{lstlisting}
+\caption{Pre-order traversal of the CFG\\
+This method performs standard pre-order traversal of a CFG, calling a visitor \lstinline|inv| on entry to the node. In addition, the algorithm also calls a visitor \lstinline|outv| when back-tracking from the node.
+We detail it here to make be clear about the behaviour in DAG traversal - namely,
+that each DAG-node is traversed as many times as there are paths leading to it.
+}
+\label{fig_CFG_traversal}
+\end{figure}
+
+\noindent
+For simplicity, we assume dis-equalities occur only in leaf nodes.
+The algorithm is presented in figure \ref{fig_DPLL_style_verification}.
+The verification algorithm stems almost directly from the definition of the validity of a program - namely, that each assertion (leaf) node must be infeasible on all paths reaching it. The algorithm checks validity by enumerating the paths and, for each path, constructing an EC-graph with all the equalities on the path. It then checks if any of the dis-equalities is inconsistent with the EC-graph.\\
+The only optimization in the algorithm is that we keep a stack of EC-graphs so that paths that share a prefix (prefix path in the CFG from the root) do not duplicate the work of constructing the EC-graph for the axioms on the CFG-nodes of the prefix.\\
+This algorithm mimics the behaviour of DPLL with lazy CNF conversion for VC formulae of a specific form. 
+The form (used by Boogie) encodes nested \textbf{let} expressions that encode the control flow - for each non assertion CFG-node n,
+the let expression used is \\
+\m{\mathbf{let}~ n_{ok} = Ax_n \Rightarrow \land_{s \in \succs{n}} s_{ok}}. \\
+For assertion nodes the expression is\\
+\m{\mathbf{let}~ n_{ok} = Ax_n }. \\
+\m{Ax_n} is the formula that represents the conjunction of the axioms in \clauses{n}.\\
+the \textbf{let} expressions are nested in reverse topological order, and the main formula is \m{root_{ok}}.\\
+The formula is valid iff the program is correct.
+This encoding is efficient for lazy CNF conversion SMT solvers as it ensures that, at any point during the DPLL run,
+only the axioms from one path in the program are available to the prover.\\
+Note that SMT solvers often use a slightly different E-graph that supports removing equalities, and hence do not need to maintain a stack of graphs.
+
+\subsection{Complexity}
+The complexity of the above algorithm depends first on the complexity of operations on the EC-graph, so we discuss these first.
+For a set of equalities on ground terms, the complexity measure is the number of function symbol occurrences in the set.
+Different congruence closure algorithms are compared in ~\cite{BachmairTiwari00}. They all result in a data structure that can answer efficiently the question of whether two given terms are equivalent under the conjunction of equalities.
+The efficiency of the above operations depends on the specific algorithm. Some algorithms perform congruence and transitive closure eagerly, while others try to minimize the time it takes to add assumptions, and only perform closure on queries relying on caching (e.g. path compression) to reduce the amortized time for the whole algorithm.
+
+In all of the above algorithms the resulting data structure \emph{represents} the set of all terms that were added to it (using \lstinline|makeTerm|) and all of their equivalence class according to the congruence defined by all equalities for which we performed \lstinline|assumEqual| - as in our implementation.
+
+For most implementations, the way to check equality between two terms is to check whether they have the same representative.
+The time it takes to map a term t to its representative (our \lstinline|makeTerm(t)| method) depends on the laziness of the algorithm - eager algorithms such as ours answer it in \bigO{\size{t} log(n)} (n is the number of vertices in the graph) as the term needs to be mapped bottom up from constants, and each step up requires a lookup in the equivalent of our \lstinline|superTerms| index.
+
+All of the above algorithms compute the congruence closure only from positive equalities, and then it is possible to check for each dis-equality whether both sides of the dis-equality are in the same equivalence class, which signals a contradiction. 
+For a dis-equality \m{s \neq t} this check can be done by adding the terms \m{s,t} to the congruence closure data structure and then checking whether they map to the same equivalence class - so at most \bigO{(\size{s}+\size{t}) \lg(n)}.
+It is common to add dis-equalities to a congruence closure graph using edges between the nodes, and a graph is inconsistent if there is an edge between two nodes that are in the same EC. In our EC-graph inconsistency is represented by a dis-equality self edge.\\
+We use dis-equality edges in our implementation, but we do not discuss them here as lazy propagation for dis-equalities is is not complete if we just propagate all dis-equality edges - we use the non-unit clause mechanism described in chapter \ref{chapter:gfole} for dis-equalities and add the edges to the EC-graph for easier representation only - hence we do not discuss these edges in this chapter.
+
+\subsubsection*{Complexity for a single set of (dis)equalities}
+\textbf{Worst case time:} The best known time complexity for deciding a set (conjunction) of unit ground equalities and dis-equalities is \bigO{n\lg(n)} - several congruence closure decision procedures have been shown sound and complete - for example \cite{DowneySethiTarjan},\cite{NieuwenhuisOliveras03} and (the congruence closure part of) \cite{Shostak84} and \cite{NelsonOppen80}, a survey with comparisons is found in \cite{BachmairTiwari00}. These papers include also complexity analysis.\\
+All of the above-mentioned algorithms essentially build a graph with terms as vertices, and perform congruence and transitive closure with differing levels of laziness.
+Roughly, the reason for the \bigO{\lg(n)} complexity is that the graph need never have more nodes and edges than there are terms in the original problem, and each time a new equality is inserted into the graph and two nodes are merged, we can remap the super-terms of the term with \emph{less} super-terms, so each term is remapped at most \bigO{\lg_2(n))} times - this is proven in \cite{DowneySethiTarjan}. 
+The number of equivalence classes is reduced by at least one for each non-redundant equality (potentially more in the case of congruence closure), so in total at most \m{n} such reductions can happen. An index is used to find the direct super-terms of each term for congruence closure and to update the graph (equivalent to our \lstinline|superTerms| field).\\
+The \lstinline|superTerms| index can be implemented as an a-dimensional array for a complexity \bigO{a} for insert, lookup and remap (on merge) where \m{a} is the largest function arity, but space \bigO{n^a} - for a total time complexity of \bigO{n \lg(n)}.
+A more space efficient option is a self balancing binary search tree for \m{log(n)} for the above operations but space \bigO{n} - giving an overall complexity of \bigO{n \lg^2(n)}. \\
+Another practical solution is to use a hash table for average \bigO{1} operations and \bigO{n} space - giving the optimal average complexity but worst case \bigO{n^2} complexity - see ~\cite{DowneySethiTarjan} for a discussion. We compared the usage of search trees and hash tables in an earlier version of the implementation and hash tables performed consistently and significantly better.\\
+Our algorithm is presented in a slightly simplified form, in the actual implementation we use a map \lstinline|superTerms| that maps to super \GFAs{}, rather than super \GTs{}, hence saving the search for affected \GFAs{} (this is more in line with the other algorithms), and we maintain a map from a \GFA{} to its \GT{}. The update of the \lstinline|gfas| field can be postponed until all node merging is done (they are used for e.g. E-matching and superposition) and hence we can get a similar complexity to the common algorithms. 
+However, in our setting, the dominant complexity factor is related to the CFG size rather than just the number of terms, as we detail below, and so preventing repeated traversals of the CFG, and preventing several CFG-nodes from performing the same congruence closure operation, is more important to complexity than each individual congruence closure operation.
+
+\textbf{Worst case space:} Equality is described by either linking two vertices with an equality edge or merging the vertices. For transitive closure all the above algorithms do not produce all transitive edges but rather select one representative for each equivalence class and, lazily or eagerly, the path from each vertex to its representative is compressed to one edge, so at most one additional edge is added per vertex.
+Space complexity is, hence, \bigO{n}, as we have at most one vertex and one edge per input symbol occurrence - a vertex will have at most as many incoming edges as it has occurrences - if \m{f(a)} and \m{g(a)} occur in the input, the graph will have just one vertex to represent \m{a}, but an incoming edge into \m{a} each for \m{f(a),g(a)}.
+As detailed above, unless the array solution is used we get a space complexity of \m{O(n)}.
+This linear space property explains, to some degree, the appeal of DPLL based solvers - while the search space is large, 
+the size of any candidate model is proportional to the size of the problem (in SMT the CC graph is the representative model for uninterpreted functions).
+
+\subsubsection*{Complexity for a tree-shaped CFG}
+We look first at tree-shaped CFGs in order to highlight the effect of CFG shape on verification complexity.
+
+For a CFG we use two complexity measures - n measures the total number of function symbol occurrences in all clauses of all CFG-nodes and e measures the number of CFG edges - as we assume a CFG is of maximal out-degree two, e is proportional to the number of CFG-nodes.
+
+For a CFG with no branches or joins, we can collect all clauses from all CFG-nodes into one set and then the complexity for deciding the validity of the program is as above practically \bigO{n \lg^2(n)}. We assume here that there are no CFG-nodes that are neither a branch nor a join and that have an empty set of clauses.
+
+For a binary-tree-shaped CFG, the maximal number of paths is proportional to e.
+If we simply collect all clauses for each path and apply any of the above-mentioned congruence closure graph construction algorithms for a set of clauses, the complexity is \bigO{n^2\ log^2(n)} as we have n paths - this bound is exact as we can have all positive clauses at the root and the only other clauses at the leaves.\\
+Using our algorithm from figure \ref{fig_DPLL_style_verification}, the worst case time complexity is still
+\bigO{n^2\ log^2(n)} - consider the case where the root node includes the equations \m{c=f^k(a),f^k(b)=d} and each leaf node includes \m{a=b,c \neq d} where \m{k=e} - each leaf node has to perform \m{k} congruence closure operations and hence we get quadratic complexity. 
+However, practically, if equations are distributed more or less evenly between CFG-nodes, our algorithm, as it ensures no equation occurrence is evaluated more than once, can be expected to be more efficient.We are not aware of a better complexity bound for this problem. 
+
+In our context, we are interested in two improvements that can improve efficiency in practical cases.
+The intuition is that, in many cases, only a small proportion of the axioms are needed in order to prove each assertion.
+Instead of each CFG-node simply copying the EC-graph of a predecessor and adding its own axioms, each CFG-node starts with an EC-graph including only its own axioms, and adds axioms from predecessor on-demand - this is the main subject of section 
+\ref{section:ugfole:propagation}.\\
+The second improvement is that, as our CFGs are constructed from programs in dynamic single assignment (DSA) form, we should be able to prove an assertion even if the EC-graph of each CFG-node only contains terms representing at most three DSA versions of each Boogie program variable - the DSA versions for the node and for its direct predecessors - hence we expect smaller EC-graphs. 
+We explore this idea in the chapter \ref{chapter:scoping}. 
+
+\subsubsection*{Complexity for a DAG-shaped CFG}
+Even for a loop-free procedure with joins, the complexity of a DFS based algorithm rises to exponential because of join points which cannot be represented as conjunctions.
+
+Our algorithm from figure \ref{fig_DPLL_style_verification} works for a DAG shaped program as well, in fact being a variation of the DPLL procedure:  when backtracking from a node after having explored all its outgoing children, we practically forget that we have explored that node and the next time we reach it (on another path) we again explore all outgoing edges.
+The worst case complexity is dominated by the potentially exponential number of paths - for example, consider the program in figure \ref{linear_join_proof} - the program size is proportional to n, but the number of paths is exponential in n.\\
+Modern DPLL based solvers have several advantages over our naive procedure - notably:
+\begin{itemize}
+	\item Clause learning - DPLL(CDCL) can learn a clause that generalizes part of the proof of the infeasibility of one path of exploration, which can help it prune some other paths from being explored
+	\item Order of evaluation - DPLL can decide (depending on the encoding of the program VC as a formula and whether we use lazy CNF conversion) to explore the decision tree in a different order than our algorithm does - for example, it could \lstinline|decide| on a literal that occurs at a join node before \lstinline|deciding| the literals that determine which path leads to that join node - in that case the decision tree size might be less than exponential for some programs
+\end{itemize}
+We cannot expect better than exponential worst case complexity for DAGs as we can encode CNF-SAT to this problem in linear time - each clause with n literals is encoded into an n-branch with the nth literal on the nth direct successor and the branch is immediately joind, and each literal is encoded as described in section \ref{section:preliminaries:semantics}.
+The branch-join structures are organized in sequence and the CNF-SAT problem is satisfiable iff the last node (the only leaf node) is reachable - if we have not found a path leading to it in which we have found no contradiction.
+
+\begin{figure}
+\begin{lstlisting}
+$\m{b_0}$:
+	assume $\m{a_0=d}$
+	if (*)
+		assume $\m{b_1=a_0}$
+		assume $\m{a_1=b_1}$
+	else
+		assume $\m{c_1=a_0}$
+		assume $\m{a_1=c_1}$
+$\m{j_1}$:
+
+...
+$\m{j_{n-1}}$:
+	if (*)
+		assume $\m{b_n=a_{n-1}}$
+		assume $\m{a_n=b_n}$
+	else
+		assume $\m{c_n=a_{n-1}}$
+		assume $\m{a_n=c_n}$
+$\m{j_{n}}$:
+	assert $\m{a_n=d}$ //negated $\comm{a_n \neq d}$
+\end{lstlisting}
+\caption{linear join proof\\
+The program (from \cite{DPLLJoin}) can be proven in almost linear time using joins,
+but is exponential for DPLL and CDCL based provers}
+\label{linear_join_proof}
+\end{figure}
+
+However, we can easily construct a sequence of programs that each have a Hoare proof linear in the size of the program, but their encoding into SMT would take exponential time for current DPLL-CDCL solvers, the example at \ref{linear_join_proof} is taken from \cite{DPLLJoin}.
+This program takes exponential time for current CDCL solvers without provisions for join as the literals \m{a_{i}=a_{i+1}} and \m{a_{i+1}=d} do not exist in the original problem and hence cannot be learned by CDCL (we have tried both Z3 and CVC4 - both timed out after several hours for 50 diamonds, which were verified in less than a second using the algorithm presented later in this chapter). 
+
+\subsection{Joins}
+A \newdef{join} for a pair of congruences is the intersection of the congruences and is also a congruence. We use the symbol \newdef{\m{\sqcup}} for the join of two sets of clauses.\\
+A congruence can be represented by a finite EC-graph iff it is representable by a finite set of ground equations.
+Similarly, a join for two EC-graphs is an EC-graph for the intersection of the congruences represented by the EC-graphs.
+
+For the program in figure \ref{linear_join_proof}, the join at each node \m{j_k} includes the equality \m{a_k=a_{k-1}},
+as it is in the join (intersection) of the congruences defined by the sets of equalities in both direct predecessors - written as:\\
+\m{a_k=a_{k-1} \in \s{a_{k-1}=b_{k},a_{k}=b_{k}} \sqcup \s{a_{k-1}=c_{k},a_{k}=c_{k}}}.\\
+If we modify our verification algorithm to traverse the CFG in topological order (essentially breadth first) rather than in pre-order (essentially depth first), and if we had a way for calculating such joins efficiently, we could prove the above program efficiently as adding the joined equalities to the EC-graph at each join allows a very short proof - essentially, we only need to employ transitive closure for the set of clauses \m{a_0=d, a_1=a_0, ..., a_n=a_{n-1},a_n\neq d}. 
+In the rest of this section we show the challenges in the approach that traverses \emph{each CFG-node} in the CFG in topological order and calculates a join at each join node, and uses these joins for verifying the program rather than traversing each \emph{CFG-path} in the CFG. We show in this section that a single forward pass of the CFG cannot calculate all necessary joins, 
+and in the next section we show how we overcome this problem. We follow this idea in the rest of this chapter and extend it to richer fragments in later chapters.
+
+
+\subsubsection*{Properties of joins}
+When discussing joins we use the term \emph{joinees} for the two direct predecessor nodes of a join node, and refer to these nodes as \m{p_0} and \m{p_1}  (in the order in which they are introduced in the text unless otherwise noted), and \m{n} for the join node.
+
+We make an important distinction between calculating the actual join of two congruences at a join point in the program (which may not be finitely presentable as a set of equations), 
+and between calculating a subset of the equalities in the intersection of congruences (an approximation of the join), which is sufficient to prove all assertions in transitive successors of the join point.
+A sufficient join is related to an interpolant between the congruence defined by its transitive predecessors and the congruence and dis-equalities defined by its transitive successors - we discuss interpolants in detail in chapter \ref{chapter:scoping}.
+
+%We use the term \newdef{fragment interpolant} (for a given logical fragment) for an annotation of the CFG with formulae in the fragment, that satisfies the following conditions:\\
+%represents a proof (note that we do not limit the vocabulary of each formula) of  a  logical fragment to refer to a set of clauses in thinterpolants within our fragment - that is, a fragment interpolant for a CFG node n for the fragment of unit ground equalities is a conjunction of equalities C s.t. \m{n \models C} (remember that \m{n \models C} means that, for each path P from the root to n, the clauses on the path are sufficient to prove C) and that, on each path P from n to an assertion node \m{na}, \m{C \cup \clauses{P} \models \emptyClause} (remember that \clauses{P} are all the clauses in all nodes on the path P). This definition means that C is provable from the transitive predecessors of n, and is sufficient to prove the transitive successors of n.\\
+
+A \newdef{fragment interpolant} for the whole program for a logical fragment is an annotation $\phi_n$ for each node s.t. $\phi_n$ is in the fragment (in our fragment - a conjunction of unit equalities) and, for each CFG-node n, \m{\clauses{n}  \land \bigwedge\limits_{p \in \preds{n}} \phi_p \models \phi_n}, and, for each assertion node na, \m{\phi_{na}=\false}.  
+Note that we do not restrict the vocabulary of \m{\phi_n} - we discuss signature restrictions in chapter \ref{chapter:scoping}, in this chapter we are only interested in the shape of \m{\phi_n}.
+
+Only valid programs have a fragment interpolant, in fact, a fragment interpolant is a form of validity proof for the program.
+While the definition of a fragment interpolant is similar to the one for abstract domains in abstract interpretation, our definition is weaker as it does not require a join operator - as we show in the next examples, there are programs from which the join at a node cannot be calculated effectively as a function of the predecessors of the join.
+
+A join (disjunction or intersection) for two congruence relations (and similarly, two EC-graphs) cannot always be represented as the conjunction of a finite set of unit ground equalities (or, equivalently by an EC-graph), or even by an infinite set - for example, the disjunction of the congruences defined by \s{a=b} and \s{a=c} cannot be represented by a set of ground unit equalities. 
+
+\begin{figure}
+\begin{lstlisting}
+if (*)
+	$\m{p_0}:$ 
+	assume c=a
+else
+	$\m{p_1}:$ 
+	assume c=b
+$\m{n}:$
+if (*)
+$p_{t}:$
+	assume a=b
+	$p_{ta}:$
+		assert a=c //negated a $\textcolor{gray}\neq$ c
+else
+	...
+\end{lstlisting}
+\caption{Non-unit join\\
+No set of equations at \m{n} implied by all its predecessors is sufficient to prove the assertion.}
+\label{snippet3.5}
+\end{figure}
+
+Consider the example in figure \ref{snippet3.5}.
+Although each path from the root to the assertion in the program can be proven using only unit (dis)equalities, 
+there is no set of ground unit (dis)equalities that holds at \m{n} and is sufficient to prove the assertion.
+As shown in ~\cite{GulwaniTiwariNecula04}, even when the disjunction is representable as a set of unit equalities, this set is not necessarily finite. 
+In light of this limitation, our objective in calculating a join is only to find small joins, and fall-back to non-unit ground equality clauses in other cases.
+
+\noindent
+\textbf{Worst case space complexity:}\\
+As stated above, a join is not always finitely representable, and a join as a conjunction of equalities is not always sufficient for proving all assertions. Hence we are interested only in the size of fragment interpolants when they exist - approximations of the join that are sufficient for proving all assertions in transitive successors. We discuss in this section the worst-case minimal size for such a fragment interpolant, if it exists.
+
+~\cite{GulwaniNecula07} shows an exponential lower bound on the size of fragment interpolants - the authors show a program of size n (total function symbols) with only unit equalities (in fact only variable assignments - an even smaller class that does not create cyclic EC-graphs) that ends in a \m{\sqrt{n}} sided join node for which the minimal representation of the equivalence class of a certain variable as a set of equalities is of size \m{\theta(2^{\sqrt{n}})} (even in a representation where all shared sub-expression are represented only once - as in our EC-graph).\\
+A rough description of the example is that, at the join point, the equivalence class of a variable includes just one more element,
+which is essentially a full binary tree of depth \m{n} of applications of a single binary function \m{f}, 
+where at each leaf there is a full binary tree of depth \m{\lg n} of \m{f}. Each such \m{\lg n} depth tree has \m{n} leaves, each of which is either the term \m{0} or \m{1}, but each tree has a different sequence of \m{n} 0s and 1s - so in total there are exponentially many distinct AECs.\\
+This is achieved at the join by using only a \m{\sqrt{n}} sized term at each joinee.\\
+Designating this program of size n with the variable \m{x} and \s{a,b} standing for \s{0,1} as \m{P(n,x,a,b)}, 
+so that at the single leaf node of the program the variable \m{x} is equal to a term of size \m{2^n} with only the constants \m{a,b} and the binary function symbolf f, we can construct the program shown in figure \ref{snippet3.6}.
+\begin{figure}
+\begin{lstlisting}
+$\m{b}$:
+	P(n,x,a,b)
+$\m{j_0}$:
+	P(n,y,c,d)
+$\node{j_1}$:
+...
+$\node{n}$:
+	assume a=c
+	assume b=d
+	assert x=y
+\end{lstlisting}
+\caption{Exponential sized join proof}
+\label{snippet3.6}
+\end{figure}
+
+This program can be proven by annontating each CFG-node with a single EC-graph which is the join of the EC-graphs of its predecessors, but the EC-graph at \m{j_1} must include at least two terms of exponential size - once with \s{a,b} at the leaves and once with \s{c,d}, which are only equated at \m{n}.\\
+Hence this program can be proven using the hypothetical algorithm with joins, but the minimal size of the EC-graph at the join is \m{\theta(2^{n})}, while DPLL could simply explore each of the \m{\sqrt{n} \times \sqrt{n} = n} paths of the program and produce a proof of size \m{n} for each path - so in total an \bigO{n^2} sized proof.
+This means that even for programs within our class we can have exponential sized minimal interpolant.
+
+The complexity of verifying this class of programs (programs including only ground unit (dis)equalities as clauses) is NP-complete, as we have seen there are polynomial encodings to CNF.
+As the example above shows there are programs with worst case (single) exponential interpolated proof size as represented using EC-graphs (in our fragment), but we are not aware of a tighter lower or upper bound for the complexity of deciding whether such an interpolated proof exists. Our verification algorithm for general programs limits the size of interpolants, and hence, in programs as above, 
+will fall-back to non-unit clauses at joins and rely on resolution and superposition at \node{j_1} in order to derive a contradiction.
+
+\subsubsection*{Calculating a join}
+We now discuss how a fragment interpolant can be calculated at the join, Which mainly centers around determining which terms need to be represented at the join.
+
+In ~\cite{GulwaniTiwariNecula04}, an \bigO{n^2} algorithm is given for joining two sets of unit equalities, which guarantees that any term that is represented on both sides (that is, for which there is a node in the graph that represents its equivalence class), is also represented at the join, and the join contains the full equivalence class for that term.
+The basic reason for this complexity is that any equivalence class at the join must correspond to a pair of equivalence classes, one from each joinee, while not necessarily all such pairs are needed in order to represent all the common terms (that is - terms represented on both sides of the join) at the join.
+
+To illustrate: consider joining two identical congruence closure graphs - the join is exactly the size of each joinee, and the only pairs are two copies of the same equivalence class.
+On the other hand, consider joining  \s{a=f^m(a)} and \s{a=f^n(a)} where \m{m} and \m{n} are co-prime - here the join would be \s{a=f^{m n}(a)}, so of a quadratic size representation. 
+For both joinees and for the join point, the set of represented terms is \s{f^i(a) \mid i \in \mathbb{N}}.
+Here we are using all the pairs where each pair \m{([f^x(a)]_0,[f^y(a))]_1} represents the equivalence class \\
+\s{f^{((xn[n^{-1}]_m+ym[m^{-1}]_n) \mathbf{~mod~} mn) + imn}(a) \mid i \in \mathbb{N}}, 
+where \m{[n^{-1}]_m} is the multiplicative inverse of \m{n} in the ring \m{Z_m}, by the Chinese remainder theorem.
+
+For any equality \m{s=t}, we can determine whether it holds at a join by adding both s and t to both joinees, and performing a join as above. Adding a term \m{t} to a congruence closure graph is of complexity \m{\size{t}lg \size{t}} and can add at most \size{t} edges to the graph.
+For the equality \m{s=t} the time is then proportional to \m{(m+\size{t}+\size{s}) \times (n+\size{t}+\size{s}))} multiplied by some log factor (depending on the way the lookup maps are constructed).
+
+However, it is not immediately clear which terms should be added at which join - consider the example in figure \ref{snippet3.7}.
+Here it is easy to see that adding \s{f(a),f(b)} at \m{p_0} is sufficient to prove the assertion.
+
+\begin{figure}
+\begin{lstlisting}
+if (*)
+	$\m{p_0}:$
+	assume a=b
+else
+	$\m{p_1}:$
+	assume f(a)=f(b)
+$\m{n}:$
+if (*)
+	assert g(f(a))=g(f(b)) //negated g(f(a)) $\comm{\neq}$ g(f(b))
+else
+		...
+\end{lstlisting}
+\caption{Join indirect congruence closure\\
+Adding \m{f(a),f(b)} to the EC-graph of \m{p_0} allows us to prove the program with joins.
+}
+\label{snippet3.7}
+\end{figure}
+
+\begin{figure}
+\begin{lstlisting}
+if (*)
+	$\m{p_0}:$
+	assume a=b
+else
+	$\m{p_1}:$
+	assume f(a)=f(b)
+$\m{n}:$
+	assume $\m{a_1}$ = a
+	assume $\m{b_1}$ = b
+	if (*)
+		$p_t:$
+		assert $\m{g(f(a_1))=g(f(b_1))}$ //negated $\m{\color{gray}{g(f(a_1))\neq g(f(b_1))}}$
+	else
+		...
+\end{lstlisting}
+\caption{Join indirect congruence closure DSA\\
+This program includes the variables \m{a,b} in two DSA versions}
+\label{snippet3.8}
+\end{figure}
+
+On the other hand, consider figure \ref{snippet3.8}, which could be generated as the VC of a program using the DSA form.
+In this case, we need to translate the terms \m{g(f(a_1)),g(f(b_1))} through \m{a_1=a,b_1=b} in order to derive the set of terms which would have to be added to the joinees of \m{n} 
+(e.g. \s{f(a),f(b)} would suffice) in order to be able to prove the assertion.
+
+\begin{figure}
+\begin{lstlisting}
+$\node{p_b}:$
+if ($\m{c_1}$)
+	$\node{p_t}:$
+	assume $\m{a=b}$
+else
+	$\node{p_e}:$
+	assume $\m{f(a)=f(b)}$
+	assume $\m{g^k(a)=g^k(b)}$
+$\node{p_j}:$
+...
+$\node{p_1}:$
+	assume $\m{a_1 = a}$
+	assume $\m{b_1 = b}$
+$\node{p_2}:$
+	assume $\m{a_2 = a_1}$
+	assume $\m{b_2 = b_1}$
+	...
+$\node{p_n}:$
+	assume $\m{a_n = a_{n-1}}$
+	assume $\m{b_n = b_{n-1}}$
+	$\node{p_{na}}:$
+	assert $\m{f(a_n)=f(b_n)}$ //negated $\m{\textcolor{gray}{f(a_n) \neq f(b_n)}}$
+\end{lstlisting}
+\caption{Join congruence closure DSA chain\\
+The program variables \m{a,b} have several DSA versions,
+and each CFG-node only refers to up to two versions of each variable.
+In order to determine which terms need to occur at the join, we need knowledge of the assertion and the entire DSA chain.}
+\label{snippet3.23}
+\end{figure}
+
+The example in figure \ref{snippet3.23} shows how deeper DSA chains affect the calculation of the set of terms required at a join.
+Here we want to propagate \m{f(a_i)=f(b_i)} for each i, but not \m{g(a_i)=g(b_i)}.
+We need the information from all the nodes \m{p_1..p_n} in order to determine which terms are needed at \m{p_j}.
+If \m{k,n} are of the same order of magnitude, propagating only \s{f(a_i),f(b_i)} at each \m{p_i} would result in an interpolant of size \bigO{k + n}, while an eager interpolant (that tries to include in the join each term that occurs on \emph{either} side, as opposed to those that occur on both sides), that includes \s{g^k(a_i),g^k(b_i)} for each \m{p_i}, is of the size \bigO{k \times n} - practically quadratic vs. linear size interpolant.
+
+\begin{figure}
+\begin{lstlisting}
+if (*)
+	$\m{p_0}:$
+	assume $\m{a=b}$
+	assume $\m{c=d}$
+	assume $\m{f(a,a)=e}$
+	assume $\m{f(a,d)=e}$
+	assume $\m{f(d,a)=e}$
+	assume $\m{f(d,d)=e}$
+else
+	$\m{p_1}:$
+	assume $\m{a=c}$
+	assume $\m{b=d}$
+	assume $\m{f(c,c)=e}$
+	assume $\m{f(c,b)=e}$
+	assume $\m{f(b,c)=e}$
+	assume $\m{f(b,b)=e}$
+$\m{n}:$
+if (*)
+	$\m{p_t}:$
+	assume $\m{a=b=c=d=x}$
+	assert $\m{f(x,x)=e}$ //negated $\m{\textcolor{gray}{f(x,x) \neq e}}$
+else
+	...
+\end{lstlisting}
+\caption{congruence closure source quadratic}
+\label{snippet3.10}
+\end{figure}
+
+Even if we know the minimal size of a sufficient interpolant, such a minimal interpolant is not unique - consider, for example, the program in figure \ref{snippet3.10}.
+Here, any of the 16 options \\
+\s{f(x,y)=e \mid x,y \in \s{a,b,c,d}} would suffice as an interpolant, 
+and there is no specific reason to choose any of the interpolants - they are symmetric.
+
+In selecting an interpolant, there are also incremental considerations. 
+Our general verification algorithm interleaves the verification steps of different logical fragments.
+For the purpose of the discussion in this chapter, this is important because the algorithm might apply a step of the unit ground equality fragment (that is, try and verify the program with the current set of unit equalities), then apply some steps from another fragment which might produce new equalities at some CFG-nodes, and then again try to verify the program with unit equalities. In such a scenario, we want to ensure that all verification steps are performed incrementally, and specifically that join approximations (fragment interpolants) are not recalculated from scratch every time we apply the ground equalities fragment, but rather that the fragment is applied incrementally.
+
+Consider the example in figure \ref{snippet3.10}, where the \lstinline|else| branch has no ground equalities.
+Assume we have selected one interplant from the sixteen possible ones and proven our assertion in the \lstinline|then| branch.\\
+Now the verification algorithm applies one step of another fragment which produces some new unit clauses at the \lstinline|else| branch, as shown in figure \ref{snippet3.10a}. In the new program, there is exactly one specific minimal interpolant - \m{f(a,d)=e}.
+If we have chosen another interplant in the previous stage, we cannot reuse it and have to recalculate the join.
+
+\begin{figure}
+\begin{lstlisting}
+...
+$\m{n}:$
+if (*)
+	$\m{p_t}:$
+	assume $\m{a=b=c=d=x}$
+	assert $\m{f(x,x)=e}$ //negated $\m{\textcolor{gray}{f(x,x) \neq e}}$
+else
+	$\m{p_e}:$
+	assert $\m{f(a,d)=e}$ //negated $\m{\textcolor{gray}{f(a,d) \neq e}}$
+\end{lstlisting}
+\caption{Congruence closure - incremental interpolant\\
+This is a modification of the program in figure \ref{snippet3.10}.\\
+We assume the dis-equality on the \lstinline|else| branch is added after the join has been calculated.
+}
+\label{snippet3.10a}
+\end{figure}
+\noindent
+
+The example in figure \ref{snippet3.22}, adapted from \cite{GulwaniTiwariNecula04}, shows that, for some joins, any set of equalities that represents the congruence at the join is infinite (the congruence is not finitely presented) for finite sets of clauses at the joined nodes.
+However, there are several interpolants for the program at the join - including:\\
+\m{g(f^2(a))=g(f^2(b)) \land g(f^3(a))=g(f^3(b))} and\\
+\m{g(f^6(a))=g(f^6(b))}.
+
+
+\begin{figure}
+\begin{lstlisting}
+$\node{p_b}:$
+if ($\m{c_1}$)
+	$\node{p_0}:$
+	assume $\m{a=f(a)}$
+	assume $\m{b=f(b)}$
+	assume $\m{g(a)=g(b)}$
+else
+	$\node{p_1}:$
+	assume $\m{a=b}$
+$\node{n}:$
+// Here $\m{\textcolor{gray}{\forall i \cdot g(f^i(a))=g(f^i(b))}}$ holds
+if (*)
+	$\node{p_{j_t}}:$
+	assume $\m{a=f(a)}$
+	assume $\m{f^2(b)=c}$
+	assume $\m{f^2(c)=c}$
+	assert $\m{g(a)=g(c)}$
+else
+	$\node{p_{j_e}}:$
+	assume $\m{f^3(a)=c}$
+	assume $\m{f^3(c)=c}$
+	assume $\m{b=f(b)}$
+	assert $\m{g(c)=g(b)}$
+\end{lstlisting}
+\caption{Infinite join for two congruences\\
+For each i, \m{g(f^i(a))=g(f^i(b))} at the join \m{n} - this congruence is not finitely representable as a set of equalities.\\
+}
+\label{snippet3.22}
+\end{figure}
+\noindent
+
+\begin{figure}
+\begin{lstlisting}
+if (*)
+	$\m{p_0}:$
+	assume $\m{b=f^m(a)}$
+	assume $\m{b=f^m(b)}$
+	assume $\m{g(b)=d}$
+else
+	$\m{p_1}:$
+	assume $\m{c=f^n(a)}$
+	assume $\m{c=f^n(c)}$
+	assume $\m{g(c)=d}$
+$\m{n}:$
+	//Here $\m{\textcolor{gray}{f^{2mn}(a)=f^{mn}(a)}}$
+	//  and $\m{\textcolor{gray}{g(f^{mn}(a))=d}}$
+	if (*)
+		$p_t:$
+		assume $\m{a=f(a)}$
+		assert $\m{a = g(d)}$ //negated $\comm{\m{a\neq g(d)}}$
+	else
+		...
+\end{lstlisting}
+\caption{congruence closure source quadratic depth\\
+m,n are co-prime.\\
+The minimal interpolant is of quadratic size.}
+\label{snippet3.11}
+\end{figure}
+
+In the example in figure \ref{snippet3.11}, the minimal interpolant is of quadratic size (m,n co-prime).
+In this case our algorithm will fall back to non-unit guarded equalities (in the fragment of ground superposition), to get at \m{n} (p is the branch condition joined at n):\\
+$\m{\lnot p \lor a=f^m(a)}$\\
+$\m{\lnot p \lor f^{2m}(a)=f^m(a)}$\\
+$\m{\lnot p \lor g(f^{m}(a)) = d}$\\
+$\m{      p \lor a=f^n(a)}$\\
+$\m{      p \lor f^{2n}(a)=f^n(a)}$\\
+$\m{      p \lor g(f^{n}(a)) = d}$\\
+Which is an interpolant linear in the size of the input (\bigO{m+n}) - if represented using shared common sub-expressions (as we do in our EC-graph) we only use \bigO{max(\m{m,n})}.\\
+At $p_t$, the interpolant is reduced by congruence closure to:\\
+$\m{a=f(a)}$\\
+$\m{\lnot p \lor a=a}$\\
+$\m{\lnot p \lor a=a}$\\
+$\m{\lnot p \lor g(a) = d}$\\
+$\m{      p \lor a=a}$\\
+$\m{      p \lor a=a}$\\
+$\m{      p \lor g(a)=d}$\\
+Now tautology elimination (\m{taut_{=}}) would leave:\\
+$\m{a=f(a)}$\\
+$\m{\lnot p \lor g(a)=d}$\\
+$\m{      p \lor g(a)=d}$\\
+And then reducing resolution (\m{simp_{res}}):\\
+$\m{a=f(a)}$\\
+$\m{g(a)=d}$\\
+Which is sufficient to prove the assertion.
+
+\begin{figure}
+\begin{lstlisting}
+	if (c1)
+		$\m{p_0}:$ 
+		assume $\m{a=b}$
+	else
+		$\m{p_1}:$
+		assume $\m{f(a)=a}$
+		assume $\m{f(b)=b}$
+		assume $\m{g(a)=g(b)}$
+$\m{n}:$
+	...// Here, for any k, $\m{\textcolor{gray}{g(f^{k}(a))=g(f^{k}(b))}}$ holds
+$\m{n_i}:$
+	assume $\m{f(a)=a}$ //Here, for any k, $\m{\textcolor{gray}{g(a)=g(f^{k}(b))}}$	
+	assert $\m{g(a)=g(b)}$ //negated $\m{\textcolor{gray}{g(a) \neq g(b)}}$
+\end{lstlisting}
+\caption{Join infinite equivalence class (m,n co-prime)}
+\label{snippet3.30}
+\end{figure}
+
+The next example, in figure \ref{snippet3.30} (based on an example from \cite{GulwaniTiwariNecula04}), shows an infinite equivalence class \emph{after} the join - the set of provable equalities for \m{g(a)} at n is infinite - namely \s{g(a)=g(f^k(b)) \mid k \in \mathbb{N}}. If there is a fragment interpolant then only a finite subset of each such infinite equivalence class is needed to prove the program.
+
+\begin{figure}
+\begin{lstlisting}
+	if (c1)
+		$\m{p_0}:$ 
+		assume $\m{a=b}$
+	else
+		$\m{p_1}:$
+		assume $\m{f(a)=a}$
+		assume $\m{f^n(b)=b}$
+		assume $\m{g(a)=g(b)}$
+$\m{n}:$
+	...// Here holds, for any k>0, $\m{\textcolor{gray}{g(f^{nk}(a))=g(f^{nk}(b))}}$
+$\m{n_i}:$
+	assume $\m{f(a)=a}$ //Here, for any k, $\m{\textcolor{gray}{g(a)=g(f^{nk}(b))}}$	
+	//Smallest sufficient interpolant $\m{\textcolor{gray}{g(f^{mn}(a))=g(f^{mn}(b))}}$
+	...
+$\m{p}:$
+$\m{n_j}:$
+	assume $\m{f^{2m}(b)=f^m(b)}$ 
+	assert $\m{g(a)=g(f^{m}(b))}$ //negated $\m{\textcolor{gray}{g(a) \neq g(f^m(b))}}$
+\end{lstlisting}
+\caption{join infinite equivalence class}
+\label{snippet3.30a}
+\end{figure}
+
+The example in figure \ref{snippet3.30a} shows that, in a case as in figure \ref{snippet3.30} where an EC at the join is inifinite but an interpolant does exist, the minimal size of any interpolant depends on all equations in successor nodes - hence an algorithm as suggested before that traverses the CFG in topological order and calculates interpolants cannot decide the class of program where interpolants exist.
+In order to prove the assertion at \m{n_j}, the smallest equality we would have to include at \m{n} is \m{g(f^{mn}(a))=g(f^{mn}(b))}.
+The parameter \m{m} is not known when calculating the interpolant at the node \m{n} if we traverse the CFG in topological order,
+and similarly the paramenter \m{n} is not known when traversing the CFG in reverse topological order - this essentially means that abstract interpretation for the domain of finite conjunctions of ground unit equalities cannot define a join operator that decides all programs in this fragment that have an interpolant - the join cannot be determined in one pass of the program.
+
+\begin{figure}
+\begin{lstlisting}
+	if (c1)
+		$\m{p_0}:$ 
+		assume $\m{a=b}$
+	else
+		$\m{p_1}:$
+		assume $\m{f(a)=a}$
+		assume $\m{f^n(b)=b}$
+		assume $\m{g(a)=g(b)}$
+$\m{n}:$
+	...// Here holds, for any k>0, $\m{\textcolor{gray}{g(f^{nk}(a))=g(f^{nk}(b))}}$
+$\m{n_i}:$
+	assume $\m{f(a)=a}$ //Here, for any k, $\m{\textcolor{gray}{g(a)=g(f^{nk}(b))}}$	
+	...
+$\m{p}:$
+$\m{n_j}:$
+	assume $\m{f^{2m}(b)=f^m(b)}$ 
+	assert $\m{g(a)=g(f^{m+1}(b))}$ //negated $\comm{g(a) \neq g(f^{m+1}(b))}$
+\end{lstlisting}
+\caption{Join infinite equivalence class\\
+The assertion holds iff $\exists k,l \cdot k\m{n}=l\m{m}+1$}
+\label{snippet3.30b}
+\end{figure}
+
+A variant of the problem in \ref{snippet3.30a} is shown in figure \ref{snippet3.30b}.
+Here, if $\m{m=n}$ and $\m{n>1}$ then the assertion does not hold, but if m,n are co-prime then the assertion holds, with a minimal interpolant of size greater than mn.
+
+%The join algorithm described in \cite{GulwaniTiwariNecula04} ensures that each equality for which both terms are represented in the graph of both joinees is also represented in the graph of the join. Using this join algorithm we can modify our topological-order algorithm by first applying a pre-processing step that adds all terms that occur in all CFG-nodes to all other CFG-nodes (e.g. we can add the term \m{t} to the set of clauses as the clause \m{t=t}), and then running the algorithm - we are guaranteed that if there is a fragment interpolant it will be found. However, the worst-case complexity is at least exponential (as shown in the example from \cite{GulwaniNecula07}) and potentially up to double exponential as each join might be up to quadratic in the size of the joinees.
+
+\begin{figure}
+\begin{lstlisting}
+	if (c1)
+		$\m{p_0}:$ 
+		assume $\m{a_1=a_2}$
+		..
+		assume $\m{a_1=a_d}$
+	else
+		$\m{p_1}:$
+		assume $\m{f(a_1)=a_1}$
+		...
+		assume $\m{f(a_d)=a_d}$
+		assume $\m{g(a_1,a_1....,a_1)=g(a_1,a_2,...,a_d)}$
+$\m{n}:$
+//Here, for any k, $\m{\textcolor{gray}{g(f^{k}(a_1),f^{k}(a_1),....,f^{k}(a_1))=g(f^{k}(a_1),f^{k}(a_2),...f^{k}(a_d))}}$
+$\m{n_a}:$
+	assume $\m{f^{2{m_1}}(a_1)=f^{m_1}(a_1)}$ 
+	assume $\m{f^{2{m_2}}(a_2)=f^{m_2}(a_2)}$ 
+	....
+	assume $\m{f^{2{m_d}}(a_d)=f^{m_d}(a_d)}$ 
+	assert $\m{g(f^{m_1}(a_1),f^{m_1}(a_1),...f^{m_1}(a_1))=g(f^{m_1}(a_1),f^{m_2}(a_2),...,f^{m_d}(a_d))}$ 
+\end{lstlisting}
+\caption{One join super-quadratic interpolant}
+\label{snippet3.30c}
+\end{figure}
+
+The following example, shown in figure \ref{snippet3.30c}, suggests that, unlike the example in \cite{GulwaniNecula07}, the number of joins is not the only source for super quadratic complexity (remember that their example only allows clauses derived from the DSA form of assignments, and hence cannot create cycles in the EC-graph, which are created by \lstinline|assume| statements):
+for any given polynomial degree d, this example requires an interpolant of size at least a polynomial of degree d, as follows:\\
+We designate the ith prime number starting at two as \m{p_i}. Given a polynomial degree d, we show a sequence of programs where the nth program is of size linear in n but the minimal interpolant for the nth program is of size polynomial in n.\\
+For the nth program in the sequence, we select the integers \m{m_1..m_d} s.t. the program above is in size linear in \m{n} and the minimal interpolant is of minimal size polynomial of degree d in n:\\
+We use \m{m_i \triangleq p_i^{\lceil lg_{p_i}{n} \rceil}} - this means that \m{m_i} is the lowest power of \m{p_i} that is greater or equal to \m{n} - hence \m{n \leq m_i < p_in \leq p_dn}. The size of the program (unique sub-terms) is at most \m{4d+2dnp_d}, as each of \m{m_i} is smaller than \m{p_dn}.\\
+The only equalities that hold at the join are of the form \\
+\m{g(f^{k}(a_1),f^{k}(a_1),....,f^{k}(a_1))=g(f^{k}(a_1),f^{k}(a_2),...f^{k}(a_d))} for some k.\\
+Each such k has to satisfy the set of constraints \s{m_i|k \mid 0 < i \leq d}. 
+As \m{m_i} are pairwise co-prime, this entails that k is at least \m{\prod\limits_i m_i}, which satisfies \m{\prod\limits_i m_i \geq n^d}. \\
+We believe our example suggests that the worst case size complexity for unit interpolants in a CFG might be higher than double exponential, but the exact lower bound for the space complexity of a fragment interpolant for our class of programs remains an open question as far as we are aware. The decision problem of whether a fragment interpolant exists is at least semi-decidable, as we can enumerate all such interpolants and the entailment checks are decidable.
+
+\subsubsection*{Summary}
+We have seen that for some programs joins can reduce the verification runtime exponentially, while in other cases a join does not exist as a set of equalities. A fragment interpolant (a sufficient approximation for the join as a set of equalities) for a single binary join for a set of terms is up to quadratic in the number of terms, but the size of the terms needed at each join can be a polynomial of any degree in the input size. A minimal fragment interpolant can also be of quadratic depth and not only size.\\
+The minimal representation of the equivalence class of a term at a node after a single binary join can be of size 1 up to infinite, and the size of the representation of a member of the class after n consecutive joins can be exponential.\\
+Furthermore, there may not be a single minimal interpolant, and even when there is a minimal interpolant, 
+the minimal interpolant for an extension of the program is not necessarily an extension of the minimal interpolant.\\
+Most of the examples we have shown in this section are pathological examples that explore the complexity bounds of the fragment interpolant, and not practical examples. In actual VCs of programs, we have found that the choice of which equalities are propagated using fragment interpolants at joins, and which are propagated using non-unit clauses, has a significant effect on the performance of our algorithm. In the next sections we show how our algorithm selects which part of the join is calculated, and which is relegated to richer fragments.

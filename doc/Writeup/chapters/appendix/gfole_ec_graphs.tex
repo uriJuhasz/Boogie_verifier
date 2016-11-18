@@ -1,0 +1,212 @@
+\section{Combining EC-graphs and clauses}\label{section:appendix:gfole_ECGraph}
+In this section we show a combination of the verification algorithm for the non-unit ground fragment from section \ref{section:gfole_basic} with the EC-graph algorithm for the unit ground fragment presented in chapter \ref{chapter:ugfole}.
+The main motivation to combine these fragments comes from the need for joins, and as an attempt to keep the representation in each CFG-node small by keeping all elements (term, clauses etc.) in normal form.
+As we have seen in section \ref{section:ugfole:joins} regarding joins in the unit ground fragment, and in \ref{section:gfole:joins} regarding joins in the non-unit ground fragment, more equalities known at the join often translate to a better join.
+Using EC-graphs for the ground unit fragment, as described in chapter \ref{chapter:ugfole}, allows us to propagate more equalities for each term at each program point.
+EC-graphs also allow us to perform more aggressive simplifications as they encode fully reduced rewrite systems, while superposition produces left reduced rewrite systems.
+
+\textbf{Overview:}
+The main idea is as follows:
+
+\textbf{State:} At each CFG-node n we maintain an EC-graph (\m{g_n}) as in chapter \ref{chapter:ugfole}, and two sets of clauses (\lstinline|done$_{\m{n}}$| and \lstinline|todo$_{\m{n}}$|) as in the previous sub-sections.
+
+\textbf{Unit equalities:} Unit equalities are represented by the EC-graph and hence, instead of being added to \lstinline|done$_{\m{n}}$| or \lstinline|todo$_{\m{n}}$| they are 
+\lstinline|assumed| in \m{g_n}. We also maintain a queue \lstinline|todoeq$_{\m{n}}$| whose equations are not saturated w.r.t. \SPG{}.\\
+We propagate ground unit equalities as in chapter \ref{chapter:ugfole}, and additionally, as alluded to before, we fall-back to non-unit propagation at joins when unit propagation is incomplete or inefficient.
+
+\textbf{Clauses:} For each CFG-node n, we \lstinline|add| all terms in all clauses to \m{g_n}, and represent all clauses in 
+\lstinline|done$_{\m{n}}$| and \lstinline|todo$_{\m{n}}$| as \textcolor{blue}{clause-ECs} - clauses over term-Ecs (\GTs{}) rather than over ground terms. Each clause-EC represents an equivalence class of clauses. In the implementation we represent unit dis-equalities as edges in \m{g_n}, but we treat them as other non-unit clauses and hence we treat them here as if they are in the \lstinline|done$_{\m{n}}$| and \lstinline|todo$_{\m{n}}$| sets.
+
+\textbf{Requests:} In section \ref{section:ugfole:sources} we have introduced source edges, which connects an EC-node in a CFG-node with an EC-node in its direct predecessor if they share a term. Our EC-graph invariants ensure that two EC-nodes on a path that share a term on the path is connected by the transitive closure of this function (we say there is a source-chain between the two), as long as there are no joins on the path. Propagation requests are composed of \GFAs{} rather than terms (so a request is an over-approximation) and, in addition, a request is translated using the source edges.
+
+\bigskip
+
+The conceptual difference from the algorithm presented in section \ref{section:gfole_basic} is that representing clauses as clause-ECs means that all clauses are fully reduced using rewrite by unit equalities, and using EC-nodes for requests allows us to reduce the overall number of requests both because of the sources function and because several requests are collected into one.
+
+\subsection*{Representation}
+Each clause at a CFG-node is represented by a \textcolor{blue}{clause-EC} - this is essentially a clause where each top-term in a literal is represented by an EC-node - formally:\\
+An \textcolor{blue}{atom-EC} is \m{s=t} where s,t are EC-nodes.\\
+A \textcolor{blue}{literal-EC} is A or $\lnot$A where A is an atom-EC.\\
+A \textcolor{blue}{clause-EC} is a (potentially empty) set of literal-ECs.\\
+Conceptually, each EC-node t represents its minimal (by $\prec$) member	- \\
+\m{min_{\prec}(\terms{t})}, 
+along with a set of rewrite rules (positive unit equalities) that define the equivalence class - one rule per non-minimal gfa.
+
+In all of the above definitions, all EC-nodes come from the same EC-graph - we do not mix nodes from different EC-graphs.
+Different EC-graphs in different nodes are ECs for different congruences, and hence may overlap without being equal, making the check for intersection expensive, while two ECs of the same congruence are either identical or disjoint.
+
+\textbf{Representatives:}
+As described in chapter \ref{chapter:ugfole}, an EC-node is a non-empty set of \GFAs{}, where a \GFA{} \fa{f}{s} is a function symbol f and a tuple \tup{s} of EC-nodes of the same arity as f. We define representatives using $prec$ rather than depth.
+We denote the \textcolor{blue}{representative term of a node t} by \textcolor{blue}{\repS{t}} - formally:\\
+\m{\repS{t} \triangleq min_{\prec}(\s{\repS{\fa{f}{s}}} \mid \fa{f}{s} \in t)}\\
+\m{\repS{\fa{f}{s}} \triangleq f(\repS{\tup{s}})}\\
+\m{\repS{\tup{s}}_i \triangleq \repS{s_i}}\\
+The representatives of literal-, atom-, and clause-ECs are defined analogously.
+We compare EC-nodes using \m{\prec} where:\\
+\m{s \prec t \triangleq \repS{s} \prec \repS{t}}\\
+And similarly for \GFAs{}, atom-, literal- and clause-ECs.
+We only compare term-, literal- and clause-ECs composed of EC-nodes of the same EC-graph.
+The \textcolor{blue}{representative \GFA{} - \repgfaS{t}} of an EC-node t is the \GFA{} that includes the minimal term:\\
+\m{\repgfaS{t} \triangleq min_{\prec}(t)}\\
+The \textcolor{blue}{non-representative \GFAs{} -\nonrepgfasS{t}} are all the rest of the gfas:\\
+\m{\nonrepgfasS{t} \triangleq t \setminus \repgfaS{t}}\\
+Note that \repS{t} is different from \rep{t} as it may not be of minimal depth.
+
+Each atom-EC represents an equivalence class of atoms where the atoms represented are the atoms derived by replacing each top EC-node that appears in the atom with one of the terms it represents:\\
+\m{atoms(s=t) \triangleq \s{u=v \mid u \in \terms{s} \land v \in \terms{t}}}\\
+And similarly for literal- and clause-ECs.\\
+The set of equalities represented by an EC-node is defined formally as follows:\\
+\m{\eqsS{t} \triangleq \s{\repS{s}=\repS{t} \mid s \in \nonrepgfasS{t}}}\\
+The set of equalities represented by an EC-graph is the union of equalities for all EC-nodes:\\
+\m{\eqsS{g} \triangleq \cup_{t \in g} \eqsS{t}}\\
+Note that \eqsS{g} is always fully left and right reduced, and does not include equalities implied by \lstinline|done$_{\m{n}}$| and \lstinline|todo$_{\m{n}}$|.
+The representative of a clause-EC is the clause that would be derived from any member of its EC by exhaustive application of the simplification by unit-equality rule from all equalities in the EC-graph - a normal form under the EC-graph of the CFG-node.
+A derivation between clause-ECs represents the derivation between their representatives.
+
+Because clauses are simplified relative to the set of equalities of a certain CFG-node, if the clause is propagated over a join some of the equalities used to simplify it might not hold after the join.\\
+The standard unit rewrite rule is:
+
+\bigskip
+
+$
+\begin{array}[c]{llll}
+\m{simp_{=}} & \vcenter{\infer[]{\m{\termRepAt{C}{r}{p}}}{\m{l=r} & \cancel{\m{C}}}}   &
+\parbox[c][1.2cm]{3cm}{\m{l=\termAt{C}{p}}\\\m{l \succ r}\\\m{C \succ l=r}}\\
+\end{array}
+$
+
+\bigskip
+
+\noindent
+While we apply a slightly more general version:
+
+\bigskip
+
+$
+\begin{array}[c]{llll}
+\m{simp_{=}} & \vcenter{\infer[]{\m{\termRepAt{C}{r}{p}}}{\m{D \lor l=r} & \cancel{\m{D \lor C}}}}   &
+\parbox[c][1.2cm]{3cm}{\m{l=\termAt{C}{p}}\\\m{l \succ r}\\\m{C \succ l=r}}\\
+\end{array}
+$
+
+\bigskip
+
+\noindent
+Where D is in fact always a path-clause-prefix.\\
+The reason we can discard the right premise is that it satisfies the redundancy condition:\\
+\m{D \lor l=r,D \lor \termRepAt{C}{r}{p} \models D \lor C} (as \m{l=\termAt{C}{p}})\\
+And\\
+\m{\s{D \lor l=r,D \lor \termRepAt{C}{r}{p}} \prec D \lor C}\\
+%As \m{l\succ r, l \succ D,l \trianglelefteq C} and hence \m{C \succ D} and \m{D \lor C \succ D \lor \termRepAt{C}{r}{p}}.
+This allows us to propagate a simplified clause over a join with a clause-path-prefix as long as all branch literals are smaller than all other literals, and as long as the equality is also represented at the join.
+
+
+\subsection*{Notation}
+For a node n, we use \m{[t]_n} to represent the EC-node in \m{g_n} for the term t when \m{t \in \terms{g_n}}.
+In some cases we write \m{[s,t]_n} when we know that \\
+\m{s,t \in g_n \land [s]_n = [t]_n}.
+We extend the notation for atom-, literal- and clause-ECs - for example:
+\m{[s\neq t]_n} denotes the atom-EC \m{[s]_n \neq [t]_n} and 
+\m{[C \lor s=t]_n} can be written as \m{[C]_n \lor [s=t]_n} or \m{[C]_n \lor [s]_n=[t]_n}.
+
+
+The \newdef{blue}{sub-term-closure} of an EC-node is the downward closure of the EC-node w.r.t. \GFAs{} - formally (using the relation transitive closure TC):\\
+\m{\stc{t} \triangleq \s{ s \mid TC(\s{ (u,v) \mid u=v \lor \exists \fa{f}{w} \in u, i \cdot v = w_i})(t,s)}}
+And similarly for \GFAs{} and atom-, literal-, and clause-ECs.
+For two EC-nodes s,t of the same EC-graph, we use \m{s \trianglelefteq t} as follows:
+\m{s \trianglelefteq t \triangleq s \in \stc{t}}.
+%That is, s is in the downward closure of t w.r.t. \GFAs{} - meaning that each term in the EC of s is a sub-term of some term in the EC of t.
+%We use also a \textcolor{blue}{representative sub-term closure \repstc{t}}, which is the sub-term closure of only minimal gfas:
+%\m{\repstc{t} \trianglelefteq \s{ s \mid TC(\s{ (u,v) \mid u=v \lor \exists \fa{f}{w} = \repgfaS{u}, i \cdot v = w_i})(t,s)}}\\
+%This is basically the minimal set of EC-nodes needed that are part of the minimal representative for t. 
+%This is also exactly the set of EC-nodes needed to represent the sub-terms \repS{t}.
+
+\bigskip 
+
+\subsection*{CFG-Node state}
+The state we maintain at each CFG-node n is as follows:
+\begin{itemize}
+	\item An EC-graph \m{g_n} that includes all terms in all clauses in n, as described in chapter \ref{chapter:ugfole}, including the sources function that connects it to the EC-graphs of direct predecessors.
+	\item The sets \lstinline|done$_{\m{n}}$| and \lstinline|todo$_{\m{n}}$| of all non-unit and dis-equality clause-ECs derived at n (unit equalities are represented solely by \m{g_n}), as described in the current chapter, except that we use clause-ECs rather than clauses.
+	\item The set \lstinline|todoeq$_{\m{n}}$| of equalities derived at n to be \lstinline|assumed| in \m{g_n} - we try to collect as many equalities as possible before performing congruence closure, in order to reduce the number of congruence closure operations. 
+	Rather than perform \lstinline|assumeEqual| for each pair in the queue, we have one operation that uses \lstinline|enqueueMerge| from figure \ref{fig_basic_ECGraph_mergeOne} to enqueue all equalities from \lstinline|todoeq$_{\m{n}}$| and then we call \lstinline|mainLoop|.
+	When calling \lstinline|update| we also optionally enqueue all equalities from the queue.
+	\item A cache for clause requests as described in section \ref{section:gfole_basic}, except that requests are sets of term-EC-nodes rather than sets of terms and hence the cache is also sets of EC-nodes (for simplification requests also a set of atom-ECs)
+\end{itemize}
+
+\bigskip 
+
+\subsection*{Main changes from the basic algorithm}
+Our combined EC-graph with non-unit algorithm is based on the non-unit algorithm from section \ref{section:gfole_basic}, using clause-ECs and term-ECs rather than clauses and terms, with the following differences:
+\begin{itemize}
+	\item Unit equalities are represented using \GTs{} (term-ECs) and hence there is no need to perform unit superposition. 
+	We do perform superposition where the right premise is an equality encoded in a \GT{}.
+	\item The \lstinline|todoeq| queue is maintained seprately and all the equalities in the queue are added to the EC-graph together.
+	\item Clause-ECs are updated after each \lstinline|assumeEqual| and \lstinline|update| operations, so they are always in normal form w.r.t the rewrite system represented by the EC-graph.
+	\item Requests are represented using \GFAs{} rather than terms, are translated using source edges and hence they are an over-approximation.
+	\item At joins we complete missing equalities that the EC-graph cannot handle as described in section \ref{section:gfole:EC-graphs:non_unit_fallback}
+\end{itemize}
+
+\section{Non-unit fall-back at joins}\label{section:gfole:EC-graphs:non_unit_fallback}
+As we have seen in chapter \ref{chapter:ugfole}, some equality information is not representable using the unit-ground fragment and some information is representable in that fragment but the representation is inefficient. As our requests are composed of \GFAs{} and \GTs{} rather than terms, if a source chain is broken because of a join, a request might not reach its destination.
+
+Our solution to the problem is to user the ordering $\succ$ to orient the choice of which terms to add at a join, so that we allow adding a term to the join not only if it is represented in both predecessors, but also if it is the minimal representation of a term in one predecessor. For non-minimal terms we add a relativized equality with the minimal term.
+
+\begin{figure}
+\begin{lstlisting}
+if ($\m{P}$)
+	$\node{n_0}:$
+	assume $\m{C \lor \underline{f(f(c))}=a}$
+	$\node{n_1}:$
+	assume $\m{\underline{c}=b}$
+else
+	$\node{n_2}:$
+	assume $\m{\underline{g(c)}=a}$
+$\node{n_3}:$
+$\node{n_4}:$
+assume $\m{C \lor \underline{f(f(c))} \neq a}$
+assume $\m{C \lor \underline{f(g(c))} \neq a}$
+\end{lstlisting}
+\caption{Example for non-unit fall-back for equality propagation\\
+The ordering is \m{f(f(c)) \succ f(c) \succ f(b) \succ c \succ b \succ a}
+The terms f(c),g(c) each occur on only one side of the join \m{n_3}, 
+hence not added to the EC-graph of the join by our join algorithm.\\
+The terms \m{f(c),f(f(c))} are not represented at \m{n_3}.\\
+The request for \m{f([f(c)]_4)} is not propagated to \m{n_3}.
+}
+\label{snippet_A.3.1}
+\end{figure}
+
+Consider the example in figure \ref{snippet_A.3.1} - the source chain between \m{[f(f(c))]_4} and \m{[f(f(c))]_0} is broken.
+
+Our idea is as follows: the join CFG-node n selects a \newdef{join representative} - \jrep{i}{t} for each \GT{} t in its EC-graph and each joinee \m{p_i}, so that the join representative is a \GT{} in \m{g_n} which represents the minimum of the EC of t in the congruence \m{\eqs{n} \cup \eqs{p_i}}. In the above example, the join representative for \m{[c]_3} in \m{n_1} is \m{[b]_3} (written \m{\jrep{1}{[c]_3}=[b]_3}), while for \m{n_2}, \m{\jrep{2}{[c]_3}=[c]_3}.
+
+Remember that the invariant for the EC-graph for a join requires that if a term is represented at both joinees, it cannot be an \RGFA{} in the join - in the above example, c is represented in both joinees and hence, when requested by \m{n_4}, we must add it to \m{n_3}.
+However, when \m{n_4} requests \m{f([c]_3)}, \m{n_3} is allowed to reject it, as the term \m{f(c)} is not represented in \m{n_2}.
+Remeber that this ability to reject requested terms is crucial to ensure termination and also performance.
+
+We modify this invariant as follows - a join must add a requested term (as a \GT{}) if it is represented in both joinees \emph{or if it is a join representative for one of the joinees}. In our example, \m{[c]_3} is not a join representative for \m{n_1}, and hence we reject \m{f([c]_3)}. Instead, for each non-join-representative \GT{}, we add a (relativized) equality with the join representative - in our case, 
+we add the clause-EC \m{[\lnot P]_3 \lor [c]_3 = [b]_3}. For \m{g([c]_3)}, \m{[c]_3} is the join representative for \m{n_2} and \m{g(c)} is represented in \m{n_2} and hence the \GT{} \m{[g(c)]_2} is added to the join EC-graph \m{g_3}.
+
+Now, \m{n_4} requests the \GFA{} \m{f([c]_4)} and receives the propagated clause-EC  \m{[\lnot P]_4 \lor [c]_4 = [b]_4} to derive
+\m{[\lnot P]_4 \lor [C]_4 \lor [f(f(b))]_4 \neq [a]_4}. Now \m{n_3} must add \m{[f(b)]_3} as \m{[b]_3} is a join representative for \m{n_1} and as \m{f(b)} is represented at \m{n_1}. Similarly, \m{[f(f(b))]_3} is added to the join and now we have a source chain between \m{[f(f(b))]_4} and \m{[f(f(b))]_0}.
+
+Our solution ensures that we do not miss any inference from the superposition calculus because of broken source chains, at the price of generating more clauses in some cases as above - for \m{f(g(c))} we did not generate extra clauses while for \m{f(f(c))} we did.
+
+\textbf{The source chain invariant:}
+Using the above algorithm, we ensure an invariant for source chain in the presence of joins which is weaker than the sequential one, but sufficient for completeness - if a term is represented in two CFG-nodes that share a path, they are either connected by a source chain or one of their sub-term is connected by an extended source chain - a chain of source edges and oriented relativized equalities at joins.
+In the above example, for the pair \m{[f(f([c]))]_4} and \m{[f(f([b,c]))]_0}, the sub-term is \m{c} and the extended source chain is the source edge \m{[c]_4} to \m{[c]_3}, then the equation \m{\lnot P \lor [c]_3=[b]_3}, then the source edges \m{[b]_3} to \m{[b,c]_1} to \m{[c]_0}.
+
+\textbf{Finding join representatives:}
+We find join representatives in a bottom-up manner - we look at \stc{t} bottom up (from constants) and for each \GT{} find a minimal representative and add the relevant relativized equations to the join. 
+
+As opposed to ordering based on depth, we have to process \GTs{} according to the order $\prec$ and not simply bottom up by depth - 
+if \m{c \succ f(f(a)) \succ f(a) \succ a}, and at the joinee \m{c=f(f(a))} and we are looking for the join representative of \m{g(c)}, we must process \GTs{} in the order \m{[a], [f(a)], [f(f(a))], [c]} and then we can see that the join representative for \m{[c]} is in fact \m{[f(f(a))]} hence the join representative for \m{g(c)} is \m{[g(f(f(a)))]}.
+
+\textbf{Incrementality:}\\
+When the EC-graphs of the join and joinees are modified (e.g. nodes added or merged), the normal form of each join EC-node might change (only to a smaller normal form). We have not implemented our algorithm incrementally, so that if a \GT{} or one of its sub-terms is merged, or if one of its sources is modified, we recalculate the join representatives for the new terms. As we remember the join representatives for sub-terms, this recalculation is often not very expensive - the bottom up traversal only processes modified ECs, but does not re-use the previously calculated join representatives for modified ECs.
+
+On the other hand, adding terms or clauses, or merging super-terms anywhere in the CFG does not change the definition of a join representative, hence our choice is relatively stable during the execution of the algorithm.
+
+
+\newpage

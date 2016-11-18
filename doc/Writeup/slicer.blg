@@ -1,12 +1,11 @@
 This is BibTeX, Version 0.99dThe top-level auxiliary file: slicer.aux
-A level-1 auxiliary file: background.aux
-A level-1 auxiliary file: ugfole_cc_graphs.aux
-A level-1 auxiliary file: ugfole_cc_cfg.aux
-A level-1 auxiliary file: ugfole_information_propagation.aux
-A level-1 auxiliary file: ugfole_joins.aux
-A level-1 auxiliary file: ugfole_related_work.aux
-A level-1 auxiliary file: appendix_interpolation.aux
-A level-1 auxiliary file: appendix_scoping.aux
-A level-1 auxiliary file: gfole_ec_graphs.aux
+A level-1 auxiliary file: chapters/ugfole/ugfole_cc_graphs.aux
+A level-1 auxiliary file: chapters/ugfole/ugfole_cc_cfg.aux
+A level-1 auxiliary file: chapters/ugfole/ugfole_information_propagation.aux
+A level-1 auxiliary file: chapters/ugfole/ugfole_joins.aux
+A level-1 auxiliary file: chapters/ugfole/ugfole_related_work.aux
+A level-1 auxiliary file: chapters/appendix/appendix_interpolation.aux
+A level-1 auxiliary file: chapters/appendix/appendix_scoping.aux
+A level-1 auxiliary file: chapters/appendix/gfole_ec_graphs.aux
 The style file: alpha.bst
 Database file #1: slicer.bib

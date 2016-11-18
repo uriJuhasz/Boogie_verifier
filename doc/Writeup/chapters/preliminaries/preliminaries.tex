@@ -1,0 +1,918 @@
+\chapter{Preliminaries}\label{chapter:preliminaries}
+In this chapter we present the formalisms with which we work.\\
+Most of the chapter is a repetition of standard definitions, except for section \ref{section:preliminaries_programs} which discusses our assumptions about the input program, and transformations we perform on it before our algorithm begins.
+
+\section*{Sets, multisets and sequences}
+A \newdef{multiset} \m{m} over a set \m{S} is a function \m{m : S \rightarrow \mathbb{N}_0}.\\
+We use 0 for the empty multiset.\\
+Singleton multisets are defined as:\\
+ \m{[x \mapsto n](y) \triangleq \ite{x\equiv y}{n}{0}}.\\
+Multiset union is defined as:\\
+ \m{(m \cup n)(x) \triangleq \lambda x \cdot m(x)+n(x)}.\\
+Sub-multiset relation is defined as follows:\\
+ \m{m \subseteq n \equivdef \forall i \in \mathbb{N}_0 \cdot m(i) \leq n(i)}
+
+\noindent
+An \newdef{equivalence relation} \m{\approx} over a set $\m{S}$ is a subset of $\m{S^2}$ s.t.\\
+\m{\forall (x,y)\in\approx \cdot (y,x) \in \approx}\\
+\m{\forall (x,y),(y,z) \in \approx \cdot (x,z) \in \approx}\\
+\m{\forall x \in S \cdot (x,x) \in \approx}\\
+For an equivalence relation $\m{\approx}$ over $\m{S}$, and a term $\m{x \in S}$ we denote by 
+$\m{\ECOf{x}{\approx}}$ the equivalence class of $\m{x \in S}$ with respect to $\m{\approx}$:\\
+\m{\ECOf{x}{\approx} \triangleq \s{y \in S \mid x \approx y}}
+
+\noindent
+A \newdef{partition} of a set $\m{S}$ - $\m{P \subseteq \powset{S} }$ - satisfies:\\
+\m{\forall S_1,S_2 \in P \cdot S_1 \cap S_2 = \emptyset}\\
+\m{\cup P = S}
+
+\noindent
+The \newdef{quotient set} of a set $\m{S}$ for the equivalence relation $\m{\approx}$, $\m{S/\approx}$ is the set:\\
+\s{ \ECOf{x}{\approx} \mid x \in S}\\
+and is a partition of \m{S}, and similarly a partition defines an equivalence relation.
+
+A (finite) sequence of length n of elements of a set S is a function from \m{0..n-1} to S.
+For a sequence s we use \m{s_i} for the ith element of the sequence - \m{s(i)}. 
+\size{s} is the length of the sequence (\size{\dom{s}}). We sometimes use the notation \m{[i \mapsto e(i)]} to denote sequences, where \m{e(i)} is an expression that defines the ith element, and \m{<s>} for a singleton sequence. We use this notation where the domain is unambiguous.
+The concatenation of the sequences s,t is denoted by \m{s.t}.
+We use sequences to denote paths in the program CFG (as a sequence of CFG nodes) and we extend the notation for concatenation to include single CFG-nodes - so, for example, if n,p are nodes and P,Q are sequences of nodes, r.P.p.Q is the sequence \m{P.<p>.Q.<n>}.
+
+\section*{Logic}
+
+\subsection*{Syntax and notation}
+
+A \newdef{language} is defined formally as follows:\\
+A function or predicate symbol (denoted $\func{f},\func{g},\func{h}$) has a fixed arity ($\arity{f}\geq 0$).\\
+A \newdef{signature} $\m{\Sigma=\Fs{\Sigma} \cup \Ps{\Sigma} \cup \Vs{\Sigma}}$
+is a set of function symbols $\Fs{\sig}$, predicate symbols $\Ps{\sig}$ and variables $\Vs{\sig}$.\\
+%(We will mention non-ground definitions here to be consistent with later chapters, but assume for this chapter that \m{\Ps{\sig}=\Vs{\sig}=\emptyset}). 
+We only handle finite programs and sets of axioms, so that the sets $\Fs{\Sigma},\Ps{\Sigma}$ used in any VC are finite. 
+However, in order to be able to handle theories with countable signatures, such as integer arithmetic, we allow both these sets to be countable.
+The set of \newdef{constants} is $\m{\consts{}=\s{\func{f} \in \funcs{} \mid \arity{f}=0 }}$, we assume $\|\consts{}\|>0$ (otherwise the ground fragment is trivial).\\
+We denote a (possibly empty) tuple by an overline - detailed in the following.\\
+We use a standard definition for the language:
+\begin{figure}[H]
+$
+\begin{array}{llllll}
+	\mathbf{function}  & \mbox{f,g,h}   &     &                                       & \in \Fs{\sig} & \textrm{functions}\\
+	\mathbf{predicate} & \mbox{P,Q,R}   &     &                                       & \in \Ps{\sig} & \textrm{predicates}\\
+	\mathbf{variable}  & \mbox{x,y,z}   &     &                                       & \in \Vs{\sig} & \textrm{variables}\\
+	\mathbf{term}      & \mbox{t,s,u,v} & ::= & \m{\fa{f}{t} \mid x}                  & \in \Ts{\sig} & \textrm{free term algebra }\\
+	\mathbf{atom}      & \mbox{a}       & ::= & \m{s = t \mid \fa{P}{t}}              & \in \As{\sig} & \textrm{the atoms over } \Sigma\\
+	\mathbf{literal}   & \mbox{A,B}     & ::= & \mbox{a} \mid \lnot \mbox{a}          & \in \Ls{\sig} & \textrm{the literals over } \Sigma\\
+	\mathbf{clause}    & \mbox{C,D}     & ::= & \m{\emptyClause \mid A \mid A \lor C} & \in \Cs{\sig} & \textrm{the clauses over } \Sigma\\
+\end{array}
+$
+\caption{language}
+\end{figure}
+
+\noindent
+We use $\term{s,t,u,v}$ for terms, $\term{\tup{s},\tup{t},\tup{u},\tup{v}}$ for term tuples,
+we also construct tuples from terms using parenthesis - e.g. $\term{(t,s)}$.\\
+We occasionally treat an n-tuple as a sequence of n ground terms.\\
+$\tupAt{t}{i}$ is the i-th element of the tuple $\tup{t}$ and $\tupL{t}$ is the number of terms (size or length) in a tuple. \\
+We treat an equality atom as an unordered set and so $\term{(s=t)} \equiv \term{(t=s)}$.\\
+We use $\term{s \neq t}$ to denote \term{\lnot s = t}.\\
+As we do not manipulate negations syntactically, we consider $\m{\lnot \lnot a \equiv a}$.\\
+We treat clauses as sets of literals whose semantics is the disjunction of these literals.\\
+We denote the \newdef{empty clause} by \newdef{\emptyClause}.\\
+We use $\term{\bowtie}$ to denote either $\term{=}$ or $\term{\neq}$.
+
+\noindent
+We define the set of terms \newdef{\terms{S}} of a set of clauses as follows:\\
+$
+\begin{array}{llll}
+\terms{S}           & \triangleq & \bigcup\limits_{\m{C} \in \m{S}} \terms{C} \\ 
+\terms{C}           & \triangleq & \bigcup\limits_{\m{l} \in \m{C}} \terms{l} \\ 
+\terms{s \bowtie t} & \triangleq & \terms{s} \cup \terms{t} \\ 
+\terms{\fa{P}{s}}   & \triangleq & \terms{\tup{s}} \\ 
+\terms{\tup{s}}     & \triangleq & \m{\bigcup\limits_{i} \terms{\tupAt{s}{i}}} \\ 
+\terms{\fa{f}{s}}   & \triangleq & \s{\fa{f}{s}} \cup \terms{\tup{s}} \\
+\terms{x}           & \triangleq & \s{x} \\
+\end{array}
+$
+
+\noindent
+For a set $\mathrm{S}$ we denote by $\mathrm{F_n(S)} \triangleq \mathrm{S^n} \rightarrow \mathrm{S}$ the set of all functions of arity \m{n} over \m{S} and \m{F(S) \triangleq \bigcup\limits_{n \in  \mathbb{N}_0} F_n(S)} the set of all functions over \m{S}.\\
+Similarly, we define relations over S as \m{R_n(S) \triangleq P(S^n)} and \m{R(S) \triangleq \bigcup\limits_{n \in  \mathbb{N}_0} \mathrm{R_n(S)}}.
+
+\noindent
+For the semantics we use functions from terms to a domain $\term{D}$, $\function{f} : \Ts{\sig} \rightarrow \term{D}$.
+When applying such a function to a tuple $\tup{t}$ we mean the point-wise application of the function that returns a tuple in
+$\term{D}^{\tupL{t}}$ - so $\term{f}(\tup{t})_{\m{i}} = \term{f}(\tupAt{t}{i})$.
+
+
+\bigskip
+
+\noindent
+A \newdef{structure} $\m{\mathbf{S}=(D_S,F_S,P_S)}$ for a signature $\mathbf{\Sigma}$ includes:
+\begin{itemize}
+	\item A domain $\mathrm{D_S}$ which is a non-empty set
+	\item An interpretation for function symbols $\m{F_S}$ which maps each function of $\sig{}$ to a function of the corresponding arity over $\mathrm{D_S}$ -
+namely $\mathbf{F_S} \in \mathbf{F_{\sig{}}} \rightarrow \mathrm{F(D_S)}$ such that
+$\forall \m{f} \in \mathbf{\sig} \cdot \m{F_S}(\m{f}) \in \m{F_{\arity{f}}(S)}$. 
+	\item An interpretation $\m{\mathbf{P_S}}$ for predicate symbols that maps each predicate symbol of arity n to a relation of arity n over $\m{D_S}$ - namely $\mathbf{P_S} \in \mathbf{P_{\sig{}}} \rightarrow \mathrm{R(D_S)}$ such that
+$\forall \m{P} \in \mathbf{\sig} \cdot \m{P_S}(\m{P}) \in \m{R_{\arity{P}}(S)}$. 
+\end{itemize}
+
+\noindent
+An \newdef{interpretation} \m{\mathbf{I}=(S_I,\sigma_I)} is a structure \m{\mathbf{S_I}=(D_I,F_I,P_I)} and a variable assignment 
+\m{\sigma_I : \Vs{\sig} \rightarrow D_I}.
+
+\subsection*{Semantics}\label{section:preliminaries:semantics}
+For a term $\term{t}$ and an interpretation \m{\mathbf{I}=(S_I,\sigma_I)} we denote by \m{\den{t}{I} \in \mathrm{D_I}} the interpretation of \term{t} in \m{\mathbf{I}} in the standard way, as defined below:\\
+$
+\begin{array}{lll}
+	\den{\fa{f}{t}} {I} & \triangleq & \den{\term{f}}{I}(\den{\tup{t}}{I}) \\
+	\den{x}         {I} & \triangleq & \m{\sigma_I(x)} \\
+	\den{t=s}       {I} & \triangleq & \den{t}{I}=\den{s}{I}  \\
+	\den{\fa{P}{t}} {I} & \triangleq & \m{\den{\tup{t}}{I} \in \den{P}{I}} \\
+	\den{\lnot a}   {I} & \triangleq & \lnot \den{a}{I} \\
+	\den{C}         {I} & \triangleq & \m{ \bigvee\limits_{A \in C} \den{A}{I}} \\
+\end{array}
+$
+
+\noindent
+We extend  $\den{\cdot}{I}$ point-wise to tuples, and use $\den{f}{I}$ for $\m{\mathrm{F_I}(f)}$ and $\den{P}{I}$ for $\m{\mathrm{P_I}(P)}$.\\
+For the ground fragment, where $\Vs{\sig}=\emptyset$, an interpretation is essentially a structure.\\
+Satisfiability in the ground fragment of this language is decidable and NP-complete:\\
+We can reduce (in linear time and space) a propositional problem to our fragment by replacing each propositional atom $\term{A}$ with the GFOLE atom $\term{f_A()=T}$ where $\term{f_A}$ is a constant function and $\term{T}$ is a specially designated (fresh) true symbol.
+In the other direction we have a polynomial reduction using the Ackermann transformation - basically, encode every term $\fa{f}{t}$ by a fresh variable  $\m{v_{\fa{f}{t}}}$, for any pair of terms \fa{f}{t}, \fa{f}{s} with the same function symbol we add the clause
+$ \bigvee\limits_{\m{i}} \m{\m{v}_{t_i} \neq \m{v}_{s_i}} \lor \m{v}_{\fa{f}{t}=\fa{f}{s}}$ to encode congruence closure.\\
+We are left with a set of CNF clauses over the fresh variables, with no non-constant function symbols, of at most square size.
+We replace each atom $\m{v=u}$ by a propositional atom $\term{A_{v=u}}$, and for each triple of constants $\m{a,b,c}$ we add the clause 
+$\m{\lnot A_{a=b} \lor \lnot A_{b=c} \lor A_{a=c}}$ to encode transitivity - we end up with an equi-satisfiable propositional set of clauses.
+There are more efficient transformations that achieve the same, however we are interested mostly in the fact that the reduction is polynomial, as the best known algorithm for propositional CNF is exponential.
+
+
+\subsection*{Terms}
+\bigskip
+
+\noindent
+\textbf{Substitutions}\\
+A \newdef{substitution} on a signature $\m{\Sigma}$ is a total function $\m{\sigma : \m{X} \rightarrow \Ts{\sig}}$ extended to terms as follows:\\
+$
+\begin{array}{lll}
+\m{x\sigma}         & \triangleq & \m{\sigma(x)}\\
+\m{\fa{f}{t}\sigma} & \triangleq & \m{f(\tup{t}\sigma)}\\
+\m{\tup{t}\sigma_i} & \triangleq & \m{t_i\sigma}\\
+\end{array}
+$
+
+
+\smallskip
+
+\noindent
+The substitution $\newdef{\m{[x \mapsto t]}}$ is defined as \\
+\m{[x \mapsto t](y) \triangleq \ite{x\equiv y}{t}{y}}\\
+A \newdef{composition of substitutions}, denoted {$\newdef{\m{\sigma_1\sigma_2}}$}, is defined as:\\
+\m{(\sigma_1\sigma_2)(x) \triangleq \sigma_1(\sigma_2(x))}\\
+We denote the set of substitutions for a signature $\Sigma{}$ as $\newdef{\subs{\Sigma}}$.
+
+\bigskip
+
+\noindent
+\textbf{Term positions}\\
+We denote by $\emptySeq$ the empty (integer) sequence and by \lstinline{i.s} the sequence constructed by prepending the integer \lstinline{i} before the sequence \lstinline{s}.\\
+A \newdef{position} is a sequence of integers.\\
+We denote a \newdef{sub-term of the term $\term{u}$ at position p} by \newdef{\restrict{u}{p}} - which is (partially) defined recursively as follows:\\
+$
+\begin{array}{lll}
+	\termAt{u}{\emptySeq}    & \triangleq & \term{u} \\
+	\termAt{f(\tup{r})}{i.s} & \triangleq & \termAt{\tupAt{r}{i}}{s}
+\end{array}
+$
+
+\noindent
+For example, for  $\term{t=f(g(a),h(b,g(a)))}$, \\
+$\termAt{f(g(a),h(b,g(a)))}{\emptySeq}=\term{f(g(a),h(b,g(a)))}$, \\
+$\termAt{f(g(a),h(b,g(a)))}{0}        =\termAt{f(g(a),h(b,g(a)))}{1.1}=\term{g(a)}$, \\
+$\termAt{f(g(a),h(b,g(a)))}{0.0}      =\termAt{f(g(a),h(b,g(a)))}{1.1.0}=\term{a}$ \\
+etc.
+
+\noindent
+For a term $\m{t}$ the set $\newdef{\m{\poss{t}}}$ is the set of all positions of $\m{t}$ defined as follows:\\
+$
+\begin{array}{lll}
+	\poss{\fa{f}{s}} & \triangleq & \s{\emptySeq} \cup \s{i.p \mid p \in \poss{s_i}} \\
+\end{array}
+$\\
+We also use all positions of a term \m{s} in a term \m{t}:\\
+$
+\begin{array}{lll}
+	\posss{\fa{f}{s}}{t} & \triangleq & \s{\emptySeq \mid \fa{f}{s}\equiv t} \cup \s{i.p \mid p \in \posss{s_i}{t}} \\
+\end{array}
+$\\
+Two positions $\m{p,q}$ are $\newdef{\mbox{disjoint}}$, denoted $\newdef{\disj{p}{q}}$, iff they do not share any common sub-term - formally:\\
+\m{\disj{p}{q} \equivdef \exists i,j \cdot (p=i.p' \land q=j.q' \land (i\neq j \lor \disj{p'}{q'}))}\\
+The set $\posss{t}{s}$ is pairwise disjoint.\\
+By $\termRepAt{u}{t}{p}$ we denote a \newdef{replacement} of \termAt{u}{p} by $\term{t}$ at the position $\term{p}$ in term $\term{u}$ - formally:\\
+$
+\begin{array}{lll}
+	\termRepAt{s        }{t}{\emptySeq} & \triangleq & \term{t} \\
+	\termRepAt{\fa{f}{s}}{t}{i.p      } & \triangleq & \term{f}\left(\tupRepAt{s}{i}{\termRepAt{(\tupAt{s}{i})}{t}{p}}\right) \\
+\end{array}
+$\\
+We extend this notion to simultaneous replacement on a pairwise disjoint set of positions \m{P}:\\
+$
+\begin{array}{lll}
+	\termRepAt{s        }{t}{\emptyset}     & \triangleq & \term{s} \\
+	\termRepAt{s        }{t}{\s{\emptySeq}} & \triangleq & \term{t} \\
+	\termRepAt{\tup{s}  }{t}{P            } & \triangleq & \m{i \mapsto \termRepAt{s_i}{t}{\s{p \mid i.p \in P}}} \\
+	\termRepAt{\fa{f}{s}}{t}{P            } & \triangleq & \m{f(\termRepAt{\tup{s}  }{t}{P            })} \\
+\end{array}
+$
+
+\bigskip
+
+
+\noindent
+\textbf{Sub-terms}\\
+A term $\m{s}$ is a \newdef{proper sub-term} of a term \m{t}, denoted \newdef{\m{s \lhd t}}, if:\\
+\m{s \lhd t \equivdef \exists p \neq \emptySeq \cdot s = \termAt{t}{p} }\\
+And a non-proper sub-term if:\\
+\m{s \unlhd t \equivdef s=t \lor s \lhd t }\\
+We extend the sub-term relation to tuples, literals, clauses and sets of clauses:\\
+$
+\begin{array}{lll}
+\m{s \lhd \tup{t}}    & \equivdef & \m{\exists i \mid s \lhd t_i}\\
+\m{s \lhd u \bowtie v} & \equivdef & \m{s \lhd (u,v)}\\
+\m{s \lhd \fa{P}{t}}   & \equivdef & \m{s \lhd \tup{t}}\\
+\m{s \lhd C}           & \equivdef & \m{\exists l \in C \cdot s \lhd l}\\
+\end{array}
+$
+
+
+
+
+\subsubsection*{Orders}\label{section:preliminaties:ordering}
+For a set \m{S}, a \newdef{strict partial order} \m{\succ \in S^2} on \m{S} is a binary relation on \m{S} satisfying:
+\begin{itemize}
+	\item Irreflexive: \m{\forall x \in S \cdot x \not\succ x}
+	\item Transitivity: \m{\forall x,y,z \in S \cdot x \succ y \land y \succ z \Rightarrow x \succ z}
+	\item Asymmetric: \m{\forall x,y \in S \cdot x\succ y \Rightarrow y \not\succ x }
+\end{itemize}
+For any strict partial order \m{\succ}, the corresponding \newdef{reflexive closure} \m{\succeq} is defined as:\\
+\m{\forall x,y \in S \cdot x\succeq y \Leftrightarrow (x=y \lor x \succ y)}\\
+A \newdef{strict total order} is a strict partial order where \\
+\m{\forall x,y \in S  \cdot x=y \lor x \succ y \lor y \succ x} \\
+and correspondingly a \newdef{total reflexive closure} satisfies:\\
+\m{\forall x,y \in S  \cdot x \succeq y \lor y \succeq x}\\
+A \newdef{well founded} strict partial order $\m{\succ}$ on $\m{S}$ has no infinite descending chains - formally:\\
+\m{\lnot \exists f : \mathbb{N} \rightarrow S \cdot \forall i \in \mathbb{N} \cdot f(i) \succ f(i+1)} \\
+An equivalent definition is that each subset has a minimum:\\
+\m{\forall S' \subseteq S \cdot S' \neq \emptyset \Rightarrow \exists t \in S' \cdot \forall s \in S' \cdot s \succeq t}
+
+\subsubsection*{Term Orderings}
+A \newdef{simplification ordering} $\m{\succ}$ on a term algebra $\Ts{\sig}$ is a strict partial order on $\Ts{\sig}$ that satisfies:
+\begin{itemize}
+	\item Compatible with contexts (monotonic):\\
+		\m{\forall s,t,c \in \Ts{\sig},p \cdot s \succ t \Rightarrow \termRepAt{c}{s}{p} \succ \termRepAt{c}{t}{p}}
+	\item Stable under substitution: \\
+		\m{\forall s,t \in \Ts{\sig},\sigma \in \subs{\Sigma} \cdot s \succ t \Rightarrow s\sigma \succ t\sigma}
+	\item Sub-term compatible: \\
+		\m{\rhd \subseteq \succ}
+\end{itemize}
+A \newdef{reduction ordering} is a well founded simplification ordering.\\
+The lexicographic extension of an ordering on S to an ordering on $\m{S^n}$ for $\m{n>1}$ is defined as follows:\\
+\m{\tup{s} \succ \tup{t} \equivdef \exists i \geq 0 \cdot s_i \succ t_i \land (\forall j<i \cdot s_j=t_j)}\\
+For an ordering $\m{\succ}$ on S, we use the multiset extension of $\m{\succ}$, for a pair of finite multisets on $\m{S}, \m{m,n}$:\\
+\m{m \succ n \equivdef \forall x \in S \cdot m(x) > n(x) \lor \exists y \succ x \cdot m(y) \succ n(y) }.\\
+For a multiset \m{m} and an element \m{x \in S} we use:\\
+\m{x \succ m \equivdef \forall y \in S \mid m(y)=0 \lor x \succ y}
+%The multiset for an atom \m{s=t} is \m{s \mapsto 1,t \mapsto 1} and for \m{\fa{P}{t}} \s{
+
+\noindent
+We use a form of \emph{transfinite Knuth Bendix order} (\cite{WinklerZanklMiddeldorp12},\cite{KovacsMoserVoronkov11}).\\
+We use $\newdef{\ords}$ for the set of ordinal numbers and $\newdef{\bigoplus,\bigotimes}$ for natural addition and multiplication on ordinals, respectively.
+
+\noindent
+The \newdef{Transfinite Knuth Bendix term ordering}, \newdef{\m{\succ_{tkbo}}} has two parameters:\\
+A strict partial (potentially total) ordering \m{\succ} on the signature \m{F_\Sigma} (sometimes called a \emph{precedence}).\\
+A $\newdef{\mbox{weight function}}$, $\newdef{\m{w:F_\Sigma \cup X_\Sigma \rightarrow \ords}}$ that satisfies:\\
+\m{\forall f \in F_\Sigma \cdot w(f) > 0} and  \m{\forall x \in X_\Sigma \cdot w(x) = 1}.\\
+Unless otherwise noted we will use a $\m{w}$ that satisfied\\
+\m{\forall f \cdot \arity{f}>0  \Rightarrow \exists m \in \mathbb{N} \cdot w(f) = \omega\cdot m + 1}\\
+\m{\forall f \cdot \arity{f}=0  \Rightarrow w(f) = 1}\\
+that is, the function maps all constants to 1 and all non-constants only to direct successors of limit ordinals less than $\m{\omega^\omega}$. 
+Note that it is not required that the precedence on function symbols agrees with the ordinal order on their weights.
+
+\noindent
+The $\newdef{\mbox{weight of a term}}$, $\newdef{\m{w(t)}}$, is defined recursively as:\\
+\m{w(\fa{f}{s}) \triangleq w(f) + \bigoplus\limits_i w(s_i)}\\
+For literals:\\
+\m{w(s=t) \triangleq  w(s) \oplus w(t)}\\
+\m{w(\fa{P}{t}) \triangleq  w(P) \oplus w(\tup{t})}
+
+\noindent
+We define the \newdef{multiset of variables of a term} \m{t}, \newdef{\m{\Vars{t}}}, recursively as follows:\\
+$ 
+\begin{array}{lll}
+	\Vars{x}         & \triangleq & [x \mapsto 1]\\
+	\Vars{\fa{f}{s}} & \triangleq & \bigcup\limits_\m{i} \Vars{s_i}\\
+\end{array} 
+$
+
+\bigskip
+
+\noindent
+The transfinite Knuth Bendix ordering (tkbo) for terms we use is defined as follows:\\
+\m{s \succ t} iff \m{\Vars{s} \supseteq \Vars{t}} and
+\begin{itemize}
+	\item \m{w(s) > w(t)} or
+	\item \m{w(s) = w(t), s\equiv\fa{f}{s}, t\equiv\fa{g}{t}} and
+		\subitem \m{f \succ g} or
+		\subitem \m{f \equiv g} and \m{\tup{s} \succ \tup{t}}
+\end{itemize}
+
+\noindent
+In order to extend the definition to literals and clauses, we extend the weight function to predicate symbols, and assume we have a precedence (total order) $\m{\succ}$ also on $\m{P_{\sigma} \cup \s{=}}$ - predicate symbols including the equality symbol.\\
+This extension is total if $\succ$ is.\\
+tkbo for literals is:\\
+\m{l \succ l'} iff \m{\Vars{l} \supseteq \Vars{l'}} and
+\begin{itemize}
+	\item \m{w(l) > w(l')} or
+	\item \m{w(l) = w(l')} where \m{l\equiv[\lnot]\fa{P}{s}, l'\equiv[\lnot]\fa{Q}{t}} and
+	\begin{itemize}
+		\item l is negative and \m{l\equiv \lnot l'} or
+		\item \m{P \succ Q} or
+		\item \m{P \equiv Q} and \m{\tup{s} \succ \tup{t}}
+	\end{itemize}
+\end{itemize}
+In the above we used $\fa{P}{t}$ to denote also $\m{s=t}$ as $\m{=(s,t)}$.\\
+We treat each clause as a multiset of literals and then use the multiset extension of $\succ$.\\
+tkbo is total on ground terms.\\
+tkbo also has the desirable property that it is \newdef{separating} for constants - 
+that is, given a constant indexing function \m{ci(c):\consts{\Sigma} \rightarrow \mathbb{N}} we can assign \\
+\m{\forall c \in \mathbf{const} \cdot w(c) = \omega\cdot \mathbf{ci}(c)+1}\\
+Where, for any two term \m{s,t}, if the maximal constant index of \m{s} is greater than that of \m{t} then \m{s \succ t} regardless of size.
+This property is important for completeness under scoping (for the ground fragment) as in ~\cite{KovacsVoronkov09},~\cite{McMillan08}.
+
+\subsection*{Superposition}\label{section:preliminaries:superposition}
+We have chosen to use superposition (\cite{BachmairGanzingerSuperposition}) as the underlying logical calculus.
+The motivation for this choice is that superposition is a complete semi-decision procedure for FOLE (as opposed to many of the quantifier instantiation schemes used in SMT solvers), and it is known to be efficient in handling equalities in the presence of quantifiers.
+An additional motivation is that it is possible to define fragments of superposition that, while not complete, 
+have polynomial complexity. Most of our technique is also relevant for some other calculi, as we discuss in the relevant sections.
+We present here only the ground fragment of superposition, and present the full superposition calculus when we discuss quantification.
+
+\noindent
+The main ideas of superposition can be described as follows:
+The propositional part of superposition is based on ordered resolution for propositional logic.
+Roughly, the main idea is to order the literals in each clause (and hence clauses by the multiset extension of the ordering) and for each pair of clauses with opposing maximal literals derive a smaller clause that encodes a case-split on the maximal literal.\\
+Clauses implied by smaller clauses in the set are called redundant. When all case-split clauses have been derived and the empty clause has not been derived, a model of the set of clauses is the set of positive maximal literals of non-redundant clauses.
+
+\noindent
+For example, consider the following clause set (maximal literals are underlined):\\
+$\s{C \lor \underline{A}, \underline{\lnot A} \lor D}$ \\
+where $\m{A,\lnot A}$ are maximal in their respective clauses and do not occur in either of $\m{C,D}$.\\
+We assume $\m{D \succ C}$ and hence $\m{\lnot A \lor D \succ C \lor A}$.\\
+The clause $\m{C\lor D}$ derived by resolution on the maximal literal encodes the case split on $\m{A}$.\\
+The new clause is smaller than both premises by the definition of multiset orderings.\\
+The maximal literal $\m{l}$ of the new clause satisfies $\m{A \succ l}$ and $\m{l \in D}$ by the ordering.\\
+Hence the model for the set of clauses is $\s{l,A}$.\\
+The reason that we say the clause $\m{C \lor D}$ encodes the case-split is that if we had another singleton clause $\m{l'}$ in the set where $\m{l' \in C}$ then $\m{C \lor D,C \lor A}$ are redundant and hence the set of positive maximal literals of non-redundant clauses, $\s{l'}$, is a model.
+
+\noindent
+The complication added by equality is that an equality literal can conflict with a larger literal - for example, $\m{a=b}$ conflicts with the larger $\m{f(a)\neq f(b)}$, and the set $\m{a=b,b=c}$ conflicts with the larger $\m{f(a)\neq f(c)}$.\\
+Superposition uses unfailing Knuth Bendix completion to ensure that in a clause set saturated for superposition the set of maximal positive literals of non-redundant clauses forms a convergent term rewrite system, and that all maximal terms of maximal literals of non-redundant clauses are reduced to their normal form by the  convergent term rewrite system defined by the maximal positive literals of all smaller clauses.\\
+Resolution is replaced with term rewriting by maximal positive literals in order to ensure that the set of maximal literals of non-redundant clauses is a model.\\
+The ground superposition calculus is shown in figure \ref{fig_ground_superposition}, we discuss the full calculus when we discuss quantification. The full calculus was shown sound and complete in \cite{BachmairGanzinger94}.
+
+\bigskip
+
+\noindent
+A simple example of ground superposition (maximal terms are underlined):\\
+For the set $\s{a=\underline{b},b=\underline{c},f(a)\neq \underline{f(c)}}$ with the ordering\\
+$\m{f(c)\succ f(b) \succ f(a) \succ c \succ b \succ a}$ \\
+superposition allows us to rewrite the term $\m{f(c)}$ to a smaller term using the equation $\m{c=b}$ - to get:\\
+$\m{f(a) \neq \underline{f(b)}}$\\
+And then, rewriting with the first clause:\\
+$\m{f(a) \neq f(a)}$\\
+And then\\
+\emptyClause
+
+\bigskip
+
+\begin{figure}
+$
+\begin{array}[c]{llll}
+%\vspace{10pt}
+\mathrm{res_{=}} &\vcenter{\infer[]{\m{C       }                               }{\m{C \lor \underline{s\neq s}}                   }} & 
+\parbox[c][1.8cm]{5cm}{}
+\\
+%\vspace{10pt}
+\mathrm{sup_{=}} &\vcenter{\infer[]{\m{C \lor \termRepAt{s}{r}{p} =    t \lor D}}{\m{C \lor \underline{l}=r} & \m{\underline{s} =    t \lor D}}} & 
+\parbox[c][1.8cm]{5cm}{
+	\m{\sci{1}l = \termAt{s}{p}}\\
+	\m{\sci{2}l \succ r,\sci{3}l=r \succ C}\\
+	\m{\sci{4}s \succ t,\sci{5}s=t \succ D}\\
+	\m{\sci{6}s=t \succ l=r}}\\
+%\parbox[c][2cm]{4cm}{\sci{1}\m{l \succ r\sci{2}l=r \succ C}\\\sci{3}\m{s \succ t}\sci{4}\m{s=t \succ D}\\\sci{5}\m{s=t \succ l=r}}\\
+%\vspace{10pt}
+\mathrm{sup_{\neq}} &\vcenter{\infer[]{\m{C \lor \termRepAt{s}{r}{p} \neq t \lor D}}{\m{C \lor \underline{l}=r} & \m{\underline{s} \neq t \lor D}}} & 
+\parbox[c][1.8cm]{5cm}{
+	\m{\sci{1}l = \termAt{s}{p}}\\
+	\m{\sci{2}l \succ r,\sci{3}l=r \succ C}\\
+	\m{\sci{4}s \succ t,\sci{5}s=t \succ D}}\\
+%\parbox[c][2cm]{4cm}{\m{l \succ r,l=r \succ C}\\\m{s \succ t,s \neq t \succ D}}\\
+%\vspace{10pt}
+\mathrm{fact} & \vcenter{\infer[]{\m{C \lor t \neq r \lor l=r }                }{\m{C \lor l = t \lor \underline{l} = r}}} & 
+\parbox[c][1.8cm]{5cm}{
+	\m{\sci{1}l \succ r,\sci{2}r \succ t}\\
+	\m{\sci{3}l=r \succ C}}\\
+%\parbox[c][2cm]{4cm}{\m{s \succ t,t \succ r}\\\m{s=t \succ C}}
+%\vspace{10pt}
+\end{array}
+$
+\caption{The ground superposition calculus \SPG\\
+$\succ$ is a reduction ordering.\\
+The numbered conditions on the right are the side conditions of each inference rule.\\
+The calculus combines ordered resolution with unfailing Knuth Bendix completion.\\
+Equality resolution ($\m{res_{=}}$) allows the elimination of maximal false literals.\\
+Positive superposition ($\m{sup_{=}}$) ensures that the set of maximal positive literals of non-redundant clauses is a convergent rewrite system.\\
+Negative superposition ($\m{sup_{\neq}}$) allows rewriting maximal dis-equalities by the term-rewrite system defined by maximal positive literals, and together with equality resolution is a generalization of ordered resolution for equality.\\
+Equality factoring ($\m{fact}$) is a version of ordered factorting.
+}
+\label{fig_ground_superposition}
+\end{figure}
+
+
+\noindent
+We use the notation $\newdef{\m{S \vdash_{X} C}}$ to denote that the clause $\m{C}$ is derivable in the calculus $\m{X}$ from the set of clauses $\m{S}$. When the calculus is clear from the context we use $\m{S \vdash C}$. In this section we only refer to the ground superposition calculus and hence we shorten $\m{\vdash_{\SPG}}$ to $\m{\vdash}$.
+
+\subsubsection*{Redundancy elimination}
+The superposition calculus is complete even when redundant clauses are eliminated according to a certain redundancy criterion.\\
+The full superposition calculus was shown complete under the following redundancy criterion (here only a variant for ground clauses):\\
+For a finite set of clauses $\m{S}$ and clause $\m{D}$, 
+if $\m{S,D \vdash \emptyClause}$ and for some $\m{S' \subseteq S}$, $\m{S' \models D}$ and $\m{D \succ S'}$ (D is greater than all members of $\m{S'}$) then $\m{S \vdash \emptyClause}$ - that is, $\m{D}$ is redundant.
+
+For the ground superposition calculus we use the simplifying inference rules shown in figure \ref{fig_superposition_simp}, all of which satisfy the above criterion. 
+Most of the simplification rules are standard, and $\m{simp_{res},simp_{res2}}$ are chosen in order to handle the clauses that occur at join points in the program - we discuss these later.
+
+\begin{figure}
+$
+\begin{array}[c]{llll}
+%\vspace{10pt}
+\m{unit} & \vcenter{\infer[]{\m{C}                            }{\m{\lnot A}  & \cancel{\m{C \lor A}}}} & \parbox[c][1.0cm]{3cm}{}\\
+%\vspace{10pt}
+\m{taut} & \vcenter{\infer[]{\m{}                             }{\cancel{\m{C \lor A \lor \lnot A}}}} & \parbox[c][1.0cm]{3cm}{}\\
+%\vspace{10pt}
+\m{taut_{=}} & \vcenter{\infer[]{\m{}                             }{\cancel{\m{C \lor s=s}}}} & \parbox[c][1.0cm]{3cm}{}\\
+%\vspace{10pt}
+\m{sub} & \vcenter{\infer[]  {\m{}                             }{\m{C} & \cancel{\m{C \lor D}}}} & \parbox[c][1.0cm]{3cm}{}\\
+%\vspace{10pt}
+\m{simp_{res}} & \vcenter{\infer[]{\m{C}                      }{\cancel{\m{C \lor A }} & \cancel{\m{C \lor \lnot A}}}} & \parbox[c][1.2cm]{3cm}{}\\
+%\vspace{10pt}
+\m{simp_{res2}} & \vcenter{\infer[]{\m{C \lor D}              }{\m{C \lor A } & \cancel{\m{C \lor D \lor \lnot A}}}} & \parbox[c][1.2cm]{3cm}{}\\
+\m{simp_{=}} & \vcenter{\infer[]{\m{\termRepAt{C}{r}{p}}}{\m{l=r} & \cancel{\m{C}}}}   &
+\parbox[c][1.2cm]{3cm}{\m{l=\termAt{C}{p}}\\\m{l \succ r}\\\m{C \succ l=r}}\\
+\end{array}
+$
+\caption{simplification rules\\
+$\cancel{\m{C}}$ denotes that the premise $\m{C}$ is redundant after the addition of the conclusion to the clause-set and hence can be removed.
+}
+\label{fig_superposition_simp}
+\end{figure}
+
+\subsection*{Congruence closure}
+While superposition can decide the ground equality fragment, some techniques based on congruence closure are more efficient, 
+and specifically efficient join algorithms have been developed for congruence closure.\\
+We use two variants of the transitive reflexive congruence closure calculus \m{\mathbf{CC}} for unit ground\\ (dis)equalities.\\
+The reason we mention two variants is that the first describes the operation of the graph structure we use and the second follows directly from the definition of congruence closure, and hence is used for completeness proofs.
+
+\bigskip
+
+\noindent
+The first version $\m{\mathbf{CC}}$ is described in figure \ref{calculus_CC}. 
+This calculus has a standard transitivity axiom and a version of equality resolution, 
+but the less standard part is the congruence closure rule. 
+This rule only allows instances of the general congruence closure rule if one of the terms in the conclusion already occurs in some clause.
+The reason we use this version is that it describes the operation of a congruence closure (CC) graph (in the sense that the graph represents a set of clauses saturated w.r.t. the calculus) - performing congruence closure in a CC graph does not introduce new equivalence classes, although it may introduce new terms.
+
+\begin{figure}
+$
+\begin{array}{lll}
+%	\vspace{10pt}
+	\m{tra_{\bowtie}} & \vcenter{\infer[]{\m{s \bowtie t}}{\m{s=u,u \bowtie t}}} & \parbox[c][1.5cm]{2cm}{}\\
+%	\vspace{10pt}
+	\m{res}           & \vcenter{\infer[]{\emptyClause }{\m{s=t, s \neq t}}} & \parbox[c][1.5cm]{2cm}{}\\
+	\m{con}           & \vcenter{\infer[]{\fa{f}{s}=\fa{f}{t} }{\m{C} & \tup{s=t} }} &
+\parbox[c][1.5cm]{2cm}{\m{\fa{f}{s} \lhd C}}\\
+%	\vspace{10pt}
+\end{array}
+$
+\caption{The $\m{\mathbf{CC}}$ calculus\\
+We denote by $\m{\tup{s=t}}$ for two tuples $\m{\tup{s},\tup{t}}$ of the same arity the set of non-trivial equalities between corresponding elements of the tuples - formally:\\
+$\m{\tup{s=t}}$ is the set $\s{s_i = t_i \mid i \in 0..\size{s}-1 \land s_i \not\equiv t_i}$.\\
+The rule $\m{tra_{\bowtie}}$ is the transitivity rule.\\
+The rule $\m{res}$ is similar to equality resolution.\\
+The rule $\m{con}$ encodes standard congruence closure, 
+except that the side condition $\m{\fa{f}{s} \lhd C}$, where C is any (dis)equality, ensures that no new equivalence classes are introduced in any derivation.
+}
+\label{calculus_CC}
+\end{figure}
+
+\noindent
+For a set of unit ground equality clauses $\m{S}$, $\CC{S}$ is the closure of $\m{S}$ w.r.t. $\m{\mathbf{CC}}$ - we use a dedicated data structure to represent $\CC{S}$, described later. 
+
+%\noindent
+%The second version $\mathbf{CC_R}$ differs in that it does not introduce any new \emph{terms} (as opposed to no new equivalence cla, it differs from $\m{\mathbf{CC}}$ only in the congruence closure rule, whose version is described in figure \ref{calculus_CC_R}.
+%
+%\begin{figure}
+%$
+%\begin{array}{lllll}
+%%	\vspace{10pt}
+	%\m{con_R} & \vcenter{\infer[]{\fa{f}{s}=\fa{f}{t} }{\m{C} & \m{D} & \tup{s=t} }} & 
+	%\parbox[c][1.5cm]{2cm}{\m{\fa{f}{s} \lhd C}\\\m{\fa{f}{t} \lhd D}}
+%\end{array}
+%$
+%\caption{The \m{\mathbf{CC_R}} calculus\\
+%The side condition ensures that no new terms are introduced in any derivation.
+%}
+%\label{calculus_CC_R}
+%\end{figure}
+
+\noindent
+The second version, $\mathbf{CC_I}$, follows directly the definition of congruence closure. It differs only in the congruence closure rule , as described in figure \ref{calculus_CC_I}. We use this version in completeness proofs - a set of (dis)equalities is inconsistent iff it has a refutation in this calculus.
+%We will discuss later how to determine the side condition for generating implied dis-equalities effectively, we only note here that for each \m{u \neq v} both \m{u,v} are sub-terms of \m{s,t} (at least one is proper) and for each of \m{s,t} at least one of \m{u,v} is a sub-term.
+
+
+\begin{figure}
+$
+\begin{array}{llll}
+	\vspace{10pt}
+	\m{con_I} &
+	\vcenter{\infer[]{\fa{f}{s}=\fa{f}{t} }{\tup{s}=\tup{t} }} & 
+	\parbox[c][1.1cm]{4cm}{} \\
+%	\vspace{10pt}
+	%\m{das_I} &
+	%\vcenter{\infer[]{\m{u \neq v}}{\m{s \neq t}}} & 
+	%\parbox[c][1.1cm]{4cm}{\m{s \not\equiv t}\\\m{u \neq v \in das_u^{max}(s,t)}}\\
+\end{array}
+$
+\caption{The \m{\mathbf{CC_I}} calculus\\
+The rule \m{con_I} follows the definition of congruence closure.
+%This calculus is complete for non-tautological consequences.\\
+%$\m{das_u^{max}(s,t)}$ is the set containing the maximal (by entailment) dis-equalities implied by $\m{s\neq t}$.\\
+%This set is the set of maximal unit disagreement sets of $\m{s \not\equiv t}$ - formally:\\
+%$\m{das_u^{max}(s,t) \triangleq \s{ u \neq v \in das_u(s,t) \mid \forall u' \neq v' \in das_u(s,t) \cdot u' \neq v' \not\models u \neq v}}$\\
+%And the unit disagreement sets are defined as:\\
+%$\m{das_u(s,t) \triangleq \s{ u \neq v \mid u \not\equiv v \land s \neq t \models u \neq v }}$
+}
+\label{calculus_CC_I}
+\end{figure}
+
+\bigskip
+
+\section*{Programs}\label{section:preliminaries_programs}
+We assume as input a program in the Boogie (\cite{BarnettCDJL05}) intermediate verification language (or a similar IVL) that has been generated as a verification condition (VC) for some \newdef{source program} (and potentially some annotation).
+We assume a low level Boogie representation that includes a DAG-shaped CFG (loops and method calls are removed using annotations) and the only statements are \lstinline|assume| and \lstinline|assert| (a passified program as described in \cite{Leino:2005:EWP:1066417.1710882}). CFG-nodes in the input represent basic blocks of the Boogie program, and often correspond to basic blocks of the source program.\\
+We modify this input slightly by splitting each CFG-node at each assertion statement \lstinline|assert e| that occurs in it and replacing the assertion with an outgoing edge to a new leaf node with the statement \lstinline|assume $\lnot$e|. 
+Now each CFG-node has only \lstinline|assume| statements and the order of statements within each CFG-node is unimportant - hence each CFG-node can be treated as a set of FOLE formulae. 
+We convert this set of formulae per CFG-node (including the negated assertion nodes) to CNF form and now each CFG node is associated with a set of clauses. \\
+For example, the source program in figure \ref{CFG_source_program} may be converted to the Boogie-style program \ref{CFG_Boogie} and is further converted to our representation \ref{CFG_ours}.
+\begin{figure}
+\begin{lstlisting}
+$\m{n_0}$:
+x:=0
+y:=10
+while (x<10)
+	invariant x>=0 && x<=10 && x+y==10
+	$\m{n_1}$:
+	x:=x+1
+	y:=y-1
+$\m{n_2}$:
+assert x+y<20
+\end{lstlisting}
+\caption{Example for VC encoding - source program}
+\label{CFG_source_program}
+\end{figure}
+
+\begin{figure}
+\begin{lstlisting}
+$\m{n_0}$:
+assume x$_0$=0
+assume y$_0$=10
+if (*)
+	$\m{n_1}$:
+	//loop head - assume loop condition
+	assume x$_1$<10
+	//assume loop invariant
+	assume x$_1$>=0 && x$_1$<=10 && x$_1$+y$_1$==10
+	//loop body
+	assume x$_2$=x$_1$+1
+	assume y$_2$=y$_1$-1
+	//assert loop invariant (on current DSA versions)
+	assert x$_2$>=0 && x$_2$<=10 && x$_2$+y$_2$==10
+	//back edge is removed
+	assume false
+$\m{n_2}$:
+//new DSA versions
+//assume negated loop condition
+assume !x$_3$<10
+//assume loop invariant
+assume x$_3$>=0 && x$_3$<=10 && x$_3$+y$_3$==10
+assert x$_3$+y$_3$<20
+\end{lstlisting}
+\caption{Example for VC encoding - Boogie program\\
+All variables have been split to DSA versions.\\
+All assignments are converted to \lstinline|assume| statementes.\\
+The loop return edge has been cut and the body begins with a fresh version for each variable,
+an \lstinline|assume| of the invariant and negation of the loop condition, 
+and ends with an \lstinline|assert| of the loop invariant on the latest DSA versions.\\
+The code after the loop also uses a fresh DSA version of all variables and \lstinline|assume|s the invariant.
+(we did not detail a modifies clause for the loop)
+}
+\label{CFG_Boogie}
+\end{figure}
+
+\begin{figure}
+\begin{lstlisting}
+assume x$_0$=0
+assume y$_0$=10
+if (*)
+	$\m{n_1}$:
+	assume x$_1$<10
+	assume x$_1$>=0 
+	assume x$_1$<=10
+	assume x$_1$+y$_1$==10
+	assume x$_2$=x$_1$+1
+	assume y$_2$=y$_1$-1
+	if (*)
+		$\m{n_{1a}}$: //introduced assertion node
+		assume $\lnot$x$_2$>=0 $\lor$ $\lnot$x$_2$<=10 $\lor$ $\lnot$x$_2$+y$_2$==10
+		assert false
+	assume false
+else
+	$\m{n_2}$: 
+	assume !x$_3$<10
+	assume x$_3$>=0 && x$_3$<=10 && x$_3$+y$_3$==10
+	if (*)
+		$\m{n_{2a}}$: //introduced assertion node
+		assume $\lnot$x$_3$+y$_3$<20
+		assert false
+\end{lstlisting}
+\caption{Example for VC encoding - our encoding\\
+Showing that the post-states of both $\m{n_{1a},n_{2a}}$ is infeasible proves the Boogie program and hence the source program.
+}
+\label{CFG_ours}
+\end{figure}
+
+%The idea is that, for each CFG node $\m{n}$, for each path from the CFG-root to n, the set of all clauses on all CFG-nodes on the path is unsatisfiable iff the post-state of the statement represented at $\m{n}$ is unreachable in the Boogie program.
+
+\noindent
+We refer to the IVL program after our transformations as the \newdef{program} and the source language program as the source program. 
+
+\subsection*{Structure}
+The structure of our program is as follows:\\
+A control flow graph - \newdef{CFG} - which is a directed acyclic graph with one root (the program entry point).\\
+The leaf nodes of the CFG are the \newdef{goal nodes} - introduced per assertion. The goal of verification is to show them infeasible.\\
+Each CFG-node $\m{n}$ is associated with a set of clauses - \newdef{\clauses{n}}.\\ 
+The clauses at each non-leaf CFG-node represent an encoding of the transition relation of the original program, or some instrumentation used by the verification condition generator to generate the IVL program.\\
+The clauses at each leaf node represent the negation of an assertion generated for the VC, as described above.
+
+\noindent
+We use the following functions to refer to the CFG structure - for a given CFG-node $\m{n}$:\\
+\newdef{\succs{n},\succsto{n},\succst{n}} are the direct, transitive and reflexive-transitive successors of $\m{n}$, respectively.\\
+Similarly, \newdef{\preds{n},\predsto{n},\predst{n}} are the corresponding sets for predecessors.
+
+\subsubsection*{CFG paths}
+For a program CFG $\m{G}$, a directed $\newdef{\m{path}}$ $\m{P}$ in the $\m{G}$ is a (possibly empty) sequence of nodes s.t. \\
+$\m{\forall 0 \leq i < \size{P} \cdot P_{i+1} \in \succs{P_i}}$.\\
+$\size{P}$ is the length of the path.\\
+We use $\newdef{\paths{G}{}}$ for the set of all directed paths in $\m{G}$, starting at any node and ending at any transitive successor of the node, including one and zero length paths.\\
+For a node n and transitive predecessor $\m{p \in \predst{n}}$,
+$\newdef{\paths{p}{n}}$ are all the paths in $\m{G}$ that start at $\m{p}$ and end at $\m{n}$, including the case $\m{n=p}$.\\
+$\newdef{\paths{n}{}}$ is short for $\paths{root}{n}$.
+
+\noindent
+For a path $\m{P}$, the set of all clauses in all nodes on the paths is denoted by $\newdef{\clauses{P}}$ - formally:\\
+$\m{ \clauses{P} \triangleq \bigcup\limits_{n \in P} \clauses{n}}$.
+%Note that the program point after the last statement in a CFG-node is reachable on the path $\m{P}$ iff $\clauses{P}$ is consistent.
+
+\noindent
+For a set of clauses $\m{S}$ we use $\newdef{\Eqs{S}}$ for the subset $\m{S}$ that is unit equalities, dis-equalities and the empty clause - formally:\\
+$\m{\Eqs{S} \triangleq (S \cap \s{\emptyClause}) \cup \s{u \bowtie v \mid u \bowtie v \in S}}$
+
+
+\subsection*{Semantics}
+\subsubsection*{Traces}
+A \newdef{trace} is a pair $\m{(P,M)}$ where $\m{P}$ is a path from the root-node to some node $\m{P_{end}}$ and $\m{M}$ is a model for the signature of the clauses of the program, s.t. for each node on the path, the clauses at the node are satisfied - formally:\\
+$\m{\forall n \in P \cdot M \models \clauses{n}}$. $\m{M}$ encodes the values of program variables.
+
+\subsubsection*{Validity}
+For a given path $\m{P}$ from the CFG-root to a node $\m{n}$ and a clause $\m{C}$, 
+we say that $\m{C}$ holds at $\m{n}$ on $\m{P}$ - $\newdef{\m{n \models_P C}}$ - if $\m{C}$ is entailed by $\clauses{P}$ - 
+this means that $\m{C}$ holds at the post-state of $\m{n}$ for any trace that passes through $\m{P}$ - formally:\\
+$\m{n \models_P C \equivdef n = P_{end} \land \clauses{P} \models C}$.
+
+\noindent
+A clause $\m{C}$ holds at a node $\m{n}$ - $\newdef{\m{n \models C}}$ - if $\m{C}$ holds holds on every trace reaching $\m{n}$ - formally:\\
+\m{n \models C \triangleq \forall P \in \paths{root}{n} \cdot \clauses{P} \models C}\\
+A node n is $\newdef{\m{infeasible}}$ iff $\m{n \models \emptyClause}$\\
+A program is $\newdef{\m{valid}}$ iff all its assertion nodes are infeasible - denoted $\newdef{\m{\models P}}$ for a program $\m{P}$.
+
+\subsubsection*{Program transformations}
+Our verification algorithm works by manipulating the set of clauses at each CFG-node, and sometimes the CFG-structure itself, until there are no assertion nodes left. 
+We describe a set of program transformations that include both the manipulation of the set of clauses at nodes and the CFG-structure.\\
+In order for the verification algorithm to be sound, it must only apply invalidity-preserving transformations to the program, we call these \newdef{sound transformations} - formally:\\
+A transformation T of a program $\m{P}$ is sound iff $\m{~\models P ~ \Leftarrow ~\models T(P)}$.\\
+Conversely, a \newdef{complete transformations} preserve validity - intuitively not losing information - formally:\\
+A transformation of a program $\m{P}$ to a program $\m{P'}$ is complete iff\\ $\m{~\models P ~ \Rightarrow ~\models T(P)}$.
+For example, removing any CFG-node whose clause-set contains the empty clause is a sound and complete transformation, as is adding a clause to a node's set of clauses that is entailed by this set of clauses.
+
+\noindent
+All of our transformations satisfy a stronger property than soundness and completeness:\\
+A transformation of $\m{P}$ to $\m{P'}$ is \newdef{conservative} if it is sound and complete and, for each CFG-node $\m{n}$ that occurs in both $\m{P}$ and $\m{P'}$ and each clause $\m{C}$ in the vocabulary of P (containing only symbols that occur in P), $\m{C}$ holds at $\m{n}$ in $\m{P}$ iff it holds at $\m{n}$ in $\m{P'}$.\\
+The reason this property is interesting is that it allows incremental verification for some program and vocabulary extensions.
+For example, if a node $\m{n}$ has exactly two successors $\m{p_1,p_2}$ and $\m{C \in \clauses{p_1} \cap \clauses{p_2}}$, 
+we can modify $\clauses{n}$ by adding $\m{C}$ to it, which is both sound and complete, but not conservative, as $\m{n \models C}$ in $\m{P'}$ but not necessarily in $\m{P}$.
+
+We use mostly two kinds of transformations:\\
+\newdef{Inference} - this transformation, for a given node n, replaces the set $\m{S \triangleq \clauses{n}}$ with a new clause-set $\m{S'}$ s.t. $\m{S \vDash S'}$ and $\m{S' \vDash S}$. The inference transformation is conservative by definition. 
+In all the cases we consider, $\m{S'}$ is the result of applying some inference rules from some logical calculus to $\m{S}$ (including simplification rules that remove redundant clauses).\\
+\newdef{Propagation} - this transformation propagates clauses from the direct predecessors of a node to the node. 
+For example, a CFG-node with one predecessor can add any clause in its predecessor's clause set to its own clause set while being conservative. For nodes with more than one predecessors, propagation can only add a clause to the node's clause-set if it is entailed by the clause-sets of \emph{all} its direct predecessors - we discuss such joins for each logical fragment we consider.
+
+\subsection*{Joins}
+A CFG-node with more than one direct predecessor is called a join node.
+In general, it is not sound to add a clause to a join node that does not occur in all predecessors, hence we need some mechanism to propagate information at joins.
+In order to be able to perform propagation in a sound and complete way for join nodes, we modify the Boogie program as follows:\\
+We ensure that each branch and join in the program is binary - any n-ary branch or join is cascaded to a binary tree of binary branches or joins. This cascading of branches and joins is a conservatives program transformation.
+
+\subsubsection*{Branch conditions}
+For each binary branch b, we add a \newdef{branch condition atom} \m{P_b} which is a fresh nullary predicate symbol.\\
+For a binary branch node $\m{b}$ with successors $\m{s_1,s_2}$ s.t. \m{s_1,s_2} have a common transitive successors, we add the clause $\m{P_b}$ to $\m{s_1}$ and $\m{\lnot P_b}$ to $\m{s_2}$.\\
+Note that the transformation that adds branch conditions is conservative as it only \lstinline|assume|s new fresh literals.
+
+For a binary join node $\m{j}$ with two predecessors $\m{p_1,p_2}$, if, for some path condition atom $\m{P_b}$, $\m{P_b \in \clauses{p_1}}$ and $\m{\lnot P_b \in \clauses{p_2}}$, and also for some clause $\m{C}$, $\m{C \in \clauses{p_1}}$, it is sound to add the clause $\m{\lnot P_b \lor C}$ to $\clauses{j}$. We call the clause $\m{\lnot P_b \lor C}$ a $\m{\newdef{relativized}}$ version of $\m{C}$.\\
+As we show later, inference and propagation can form a complete verification procedure if the above condition holds for all join nodes - that is, for each join node some $\m{P_b}$ holds at the first predecessor and $\m{\lnot P_b}$ at the other.
+
+
+\subsubsection*{Well-branching programs}
+We define a class of programs for which completeness by propagation and inference can be shown - the class of well-branching programs.\\
+Intuitively, a program is well-branching if each join joins exactly one branch.\\
+Formally, a \newdef{good-join} is a binary join node $\m{j}$ with direct predecessors $\m{p_1,p_2}$ s.t. the set $\predsto{p_1} \cap \predsto{p_2}$ has a single maximum $\m{m}$ w.r.t. the topological order on the CFG, and each path from the root to $\m{j}$ passes through $\m{m}$. We call this maximum the \newdef{corresponding branch} of the join.\\
+A \newdef{well branching program} is a program where all joins are good joins.\\
+It is easy to see that a well branching program always satisfies the above condition for joins - namely, the branch condition of the corresponding branch is always at opposite polarities at the predecessors of a join.\\
+When cascading branches and joins, we try to ensure that the resulting program is well-branching if possible.\\
+In our experience, the VC of programs without exceptional control flow is often well-branching.\\
+If a program is not well-branching, the addition of branch conditions still allows completeness of propagation, 
+but the relativization of clauses is less efficient.
+
+
+\subsubsection*{Path conditions}\label{section_path_condition}
+For a well branching program, we define the \newdef{path condition} of a CFG-node, \newdef{\pc{n}}, as the set (conjunction) of the branch conditions that hold at the node - formally:\\
+$\m{\pc{n} \triangleq \textbf{ if } n=\m{root} \textbf{ then } \emptyset \textbf{ else } \lpc{n} \cup \bigcap\limits_{p \in \preds{n}} \pc{p}}$\\
+where \newdef{\lpc{n}} is the local path condition of \m{n}, which is $\m{P_b}$ for one successor of a branch b, ${\m{\lnot P_b}}$ for the other successor, and $\emptyset$ for all other nodes.
+
+When a clause is propagated through several nodes, in some of which it is relativized, it can collect several branch literals on the way - the \textcolor{blue}{relative path condition} - $\newdef{\rpc{p}{n}}$ - is intuitively the set of branch literals added to the clause when it is relativized on the path from p to n - formally:\\
+$\rpc{p}{n} \triangleq \pc{p} \setminus \pc{n}$
+
+The path condition and relative path conditions can be defined also for non well-branching programs, but the definition is more complicated.
+
+
+
+
+%\section*{Fragments}
+%A \emph{program logic fragment} \m{F=(C_F,\vdash_F,\sqcup_F)} is:
+%\begin{itemize}
+	%\item A subset \m{C_F} of \Cs{\sig} for the \sig{}
+	%\item A derivation relation \m{\vdash_F} on sets of \m{C_F}
+	%\item A maximal join \m{\sqcup_F : P(C_F) \times \bigcup\limits_n (P(C_F))^n \rightarrow P(C_F)} \\
+	%where n ranges between 0 and the maximal degree of a join (in our case always 2), that satisfies \m{\forall c \in \sqcup_F(C,P) \cdot \forall i \cdot ( \emptyClause \in P_i \lor C \cup P_i \vdash_F c)} - \\
+	%basically this set includes any clause that is derivable by the fragment on all paths, but might include less
+%\end{itemize}
+%
+%\noindent
+%The fragment of ground unit equalities with strong join, \m{u}, is:
+%\begin{itemize}
+	%\item \m{C_{u} = \s{C \in \Cs{\sig} \mid C=\emptyClause \lor \exists s,t \cdot C=s \bowtie t }}
+	%\item \m{\vdash_{u}} is \m{\vdash_{\mathbf{CC_I}}}
+	%\item \m{\sqcup_{u}(C,P) = \s{c \in C_{u} \mid \forall i \cdot C \cup P_i \vdash_{u} \emptyClause \lor C \cup P_i \vdash_{u} c }} - 
+	%that is, a full join
+%\end{itemize}
+%We will use also a weaker fragment, \m{w} as follows:
+%\begin{itemize}
+	%\item \m{C_{w} = \s{C \in \Cs{\sig} \mid C=\emptyClause \lor \exists s,t \cdot C=s \bowtie t }}
+	%\item \m{\vdash_{w}} is \m{\vdash_{\mathbf{CC}}}
+	%\item \m{\sqcup_{w}(C,P) = \s{c \in C_{w} \mid \forall i \cdot C \cup P_i \vdash_{CC} \emptyClause \lor C \cup P_i \vdash_{CC} c }} - 
+	%roughly, \\this join can only infer equalities at the join for terms that appear in either the clauses at the join node or in all predecessors
+%\end{itemize}
+%
+%\noindent
+%We define a \emph{fragment DAG interpolant} for verifying a subset of the leaf nodes \m{A}:\\
+%A fragment DAG interpolant I for a logical fragment F is a mapping from nodes to finite sets (conjunctions) of clauses, where \m{I_n} is the set of these clauses at node n (distinct from \clauses{n}), that satisfies, for each node n:\\
+%$
+%\m{I_n \in C_F(\sig{n})}\\
+%\m{\sqcup_F(\clauses{n},\m{i \mapsto I_{\preds{n}_i}}) \vdash_F I_n}\\
+%\m{\forall n \in A \cdot \emptyClause \in I_n}
+%$\\
+%Where \m{i \mapsto I_{\preds{n}_i}} is the sequence of interpolants of direct predecessors of the node n, for some arbitrary (but fixed) order on \preds{n}.\\
+%\sig{\m{n}} is the signature at node \node{n}, until discussing scoping we assume all the nodes have the same signature 
+%(the clauses \clauses{n} are always of the signature \sig{\m{n}}).
+%For a given cfg and fragment F, the set of all interpolants in the fragment \m{F} is \m{I_F}.
+%
+%%\noindent
+%%To see why we need a separate join operation, consider the following alternative fragment \m{w}:
+%%\begin{itemize}
+	%%\item \m{C_{w} = \s{C \in \Cs{\sig} \mid C=\emptyClause \lor \exists s,t \cdot C=s \bowtie t }}
+	%%\item \m{\vdash_{w}} is \m{\vdash_{\mathbf{CC_R}}}
+	%%\item \m{\sqcup_{=}(C,S) = \s{c \in C_{=} \mid \forall P \in S \cdot P \vdash_{w} c}} - 
+	%%that is, a join only for common terms
+%%\end{itemize}
+%%This would be a simpler join that just takes the intersection of the closure of clauses on both sides, with respect to the calculus \m{\mathbf{CC_R}} - importantly it can only infer an equality at the join for terms that appear onb both sides, but is strictly weaker as we will show later.\\
+%%In our experience, we have not found many cases where the stronger join produced additional information that actually helped proving programs, and the simple join is easier to implement - we will discuss this later.
+%
+%\subsubsection*{Provability in a fragment}
+%For a given program logic fragment \m{F}:\\
+%\m{n \models_F C \triangleq \exists I \in I_F \mid C \in I_n}\\
+%And the program is \emph{within the fragment} if there is a fragment interpolant \m{I \in I_F} s.t. for each assertion node \m{n}, \m{\emptyClause \in I_n}.
+
+
+\section*{Equivalence classes}
+For a given set of clauses S, we overload the meaning of \Eqs{S} to denote also the congruence relation defined by the reflexive transitive congruence closure of the unit ground equalities in \Eqs{S}.\\
+The set of equivalence classes of terms of a set of clauses is defined as:\\
+\m{\ECs{S} \triangleq \terms{S}/\Eqs{S}}.\\
+For a CFG-node $\node{n}$ we use $\ECs{n}$ for $\ECs{\clauses{n}}$ - the set of equivalence classes of terms that occur in clauses at n according to the congruence relation defined by unit clauses at n.
+
+For a congruence relation R we use the notation \m{[t]_R} to denote the equivalence class of t in R. We drop the subscript when it is clear from the context.
+
+\noindent
+A desirable property of the calculus $\m{\mathbf{CC}}$ is that
+$\size{\ECs{S}} \geq \size{\ECs{CC(S)}}$.
+In fact, if $\m{C}$ is the result of a derivation with premises in $\m{S}$, and $\m{S'=S \cup \s{C}}$, then $\size{\ECs{S}} \geq \size{\ECs{S'}}$, so the set of equivalence classes does not grow from applying derivations in the calculus.
+This property is immediate from the definition of the calculus, as for each rule, for each sub-term of the conclusion, either the sub-term occurs in the premises, or the conclusion equates it to a term that occurs in the premises.
+
+\noindent
+\subsubsection*{Atomic ECs}
+%Our algorithm maintains a\newdef{partial equivalence relation}at each CFG-node. 
+%A partial equivalence is defined by a set of ground equations E and a set ground terms T (that includes at least all terms that occur in the equations). R is a partial relation on $\Ts{\Sigma}$ that is only defined on $\m{T^2}$. 
+%For a pair of terms either of which is not in T, the relation 
+
+Our algorithm annotates each CFG-node with an approximation of an congruence relation, and the approximations at adjacent CFG-nodes are often similar (agree on many pairs of terms). We use the following concepts to describe the approximation and the relation between similar congruence relations
+
+For a given congruence relation on ground terms we define the set of \newdef{atomic ECs} - \newdef{\AEC} - which are the smallest sets of terms out of which equivalence classes can be constructed, and the smallest unit that is potentially common with stronger congruence relation.\\
+Given a congruence relation R and a set of terms T, an EC-tuple $\tup{s}$ is a tuple of equivalence classes of T in R - $\m{\tup{s} \in (T/R)^{\arity{f}}}$.\\
+The atomic EC $\fa{f}{s}$ for an EC-tuple $\tup{s}$ is a set of terms defined as:\\
+\m{\terms{\fa{f}{s}} \triangleq \s{\fa{f}{t} \mid \bigwedge\limits_i t_i \in s_i}} \\
+The set of such atomic ECs for a congruence $\m{R}$ is \newdef{\AECs{R}}.\\
+By the definition of congruence closure, all terms of an AEC are in the same EC of R - formally:\\
+$\m{\forall \fa{f}{s} \in \AECs{R},\m{t} \in \terms{\fa{f}{s}} \cdot \fa{f}{s} \subseteq [t]_{R}}$.\\
+However, an EC of R may include more than one AEC.\\
+For example, in the congruence defined by $\m{S = \s{a=b,f(a)=g(c)}}$, the set of ECs of terms of S\\ ($\m{\terms{S}/R}$) are:\\
+$\s{ \s{a,b}, \s{c}, \s{f(a),f(b),g(c)}}$ while the set of AECs of terms of S is \\
+$\s{a(),b(),c(),f(\s{a,b}),g(\s{c})}$.\\
+This hints also at another property of AECs - they allow us to share some of the representation of two similar congruence relations (that is, relations that agree on some subset of equalities). 
+In our setting this is most often the case of the sets of possible AECs for the congruence relations that hold at two consecutive CFG-nodes - for example: \\
+For the set S above and the set $\m{S' = S \cup \s{c=d}}$,
+the set of AECs of $\m{S'}$ is\\ $\s{a(),b(),c(),d(),f(\s{a,b}),g(\s{c,d})}$.\\
+If $\m{S}$ is the set of clauses of a node and $\m{S'}$ is the set of clauses of a direct successor (in the CFG) of that node, they can share the common AECs\\ $\m{a(),b(),c(),f(\s{a,b})}$ while they can only share the equivalence class $\m{\s{a,b}}$.\\
+For a given congruence $\m{R}$, the sets of terms of AECs are disjoint and each equivalence class is a disjoint union of sets of terms of AECs.
+Our congruence closure calculus $\m{\mathbf{CC}}$ does not generate any new AECs - the only rule that may introduce a new term (con) does not introduce a new AEC.\\
+We will use the number of AECs as the main space complexity measure as our data structure is based on AECs and, for all the other congruence closure algorithms that we are aware of, the space complexity is at least the number of AECs, possibly more (this is similar to measuring the size of a fully reduced set of equations as in ~\cite{GulwaniTiwariNecula04}).
+%In most cases we do not consider the (largest) function arity as a complexity factor as it does not change asymptotic behaviour, 
+%but in the few cases where it does we mention it. 
+%However, in our experience, function arity can strongly affect actual performance, and we will discuss it in the relevant section.\\
+%For a set of functions \m{F} and a set of equivalence classes \m{E}, the maximal number of AECs is:\\
+%\m{\sum\limits_{f \in F} \size{E}^{\arity{f}}} so if $n=max\s{\arity{f} \mid f \in F}$ then the upper bound is \\
+%\bigO{\size{F}\size{E}^n},
+%hence the size of the representation of each such AEC \fa{f}{s} is \arity{f} (references to term equivalence classes), so the total complexity is at most \\ \m{\sum\limits_{f \in F} \arity{f}\size{E}^{\arity{f}}}, which, by sharing such tuple ECs can be reduced to 
+%\m{\sum\limits_{f \in F} \size{E}^{\arity{f}}}.\\
+%However, new AECs are only introduced by introducing new clauses, not by congruence closure derivations, and is at most linear in the sum of sizes of clauses in \m{S}.\\
+%For an arity \m{n} we expect many equivalence class tuples to participate in more than one AEC - for example:\\
+%In \m{f(a,b)=g(a,b),a=c} the EC tuple \m{(\s{a,c},\s{b})} is used twice,
+%we can also share EC tuples to reduce overall complexity, but the dominant part of the complexity measure is still \bigO{\size{E}^n}.\\
+%Another important property of this complexity measure is that it is agnostic to the order of derivations - it only depends on the current set of clauses - for example, compare:\\
+%First assuming \m{f(a)=c,f(b)=d} and then \m{a=b} - the final result will have only one AEC with the function symbol \m{f}, while some union find data structures will have two\\
+%with - first assuming \m{a=b} and then \m{f(a)=c,f(b)=d} - many union data structures will only have one such function edge.
+
+\subsection*{Proofs and models}
+A \newdef{proof tree} for a logical calculus and a set of axioms is a tree with an instance of an inference rule from the calculus at each nodeץ, where the conclusions of the children of each node are the premises of the inference rule instance at the node. The leaves of the tree are axiom nodes.
+A refutation tree is a proof tree where the conclusion of the root is a contradiction - in CNF form this is usually the empty clause.
+A \newdef{proof DAG} is similar to a proof tree where the difference is that the conclusion of a node can be used as the premise of more than one parent. A non-redundant proof DAG is a proof DAG where no two nodes share the same conclusion.
+
+For a given logical calculus, set of axioms and theorem, the minimal proof depth is the minimum of depth for all proof-trees (and, equivalently, proof-DAGs) of the theorem from the axioms in the calculus. The depth of a tree or DAG is the length of the longest path from the root to a leaf. The size of a proof-DAG is the number of nodes it contains. 
+The minimal proof size for a given theorem, calculus and set of axioms is the minimal size of proof-DAG for the theorem from the axioms, and similarly for depth.
+
+For each of the automated theorem proving techniques, when a refutation is obtained, a proof-DAG (possibly redundant, depending on the ATP technology) for the refutation can be extracted in the calculus used by the ATP. For example, the original DPLL algorithm produces proofs in tree from, where the minimal proof size can be exponentially larger than an equivalent non-redundant DAG-proof. CDCL produces DAG proofs (\cite{DBLP:conf/aaai/HertelBPG08}). The lower bound on time complexity of an ATP run on a problem is related to the minimal proof size in the ATP's calculus, but also to the size of the proof search space - preventing the prover from considering proofs with a highly redundant proof-DAG often accelerates proof search.
+
+%
+%\subsection*{Theories}
+%Many computer programs and most program VCs make use of some form of linear integer arithmetic.
+%Some programs that use floating point numbers are modeled using rational arithmetic, for which linear arithmetic has the most developed decision procedures.
+%Arrays can be modeled using read-over-write axioms (\cite{Mccarthy62towardsa}), which suffice for a large class of programs.
+%When array extensionality is required the situation is more complicated, and with integer indices decidability and complexity depends on the fragment of integer arithmetic used.
+%Floating point arithmetic is sometimes modeled as rational arithmetic, for which the linear fragment has efficient decision procedures.
+%Linear rational arithmetic finds also other uses, such as modeling permissions (\cite{Boyland:2014:CSA:2635631.2635847}).
+%
+%\subsubsection*{Complexity and decidability}
+%The problem of deciding the validity of a formula in FOLE is semi-decidable while the problem for the ground fragment GFOLE is NP complete - the satisfiability of a conjunction of unit ground positive and negative equations (the unit ground theory of equality with uninterpreted functions) can be decided in \bigO{nlgn}time, while the unit quantified theory of equality with uninterpreted functions is undecidable even for unit clauses, but is semi-decidable.
+%The theory of quantified linear integer arithmetic (LIA) is decidable but a lower bound for the decision problem is double exponential(complexity and decidability results are summarized in \cite{Bradley:2007:CCD:1324777} section 3.7). The unit ground (also called quantifier free conjunctive) theory of linear integer arithmetic (QF\_LIA) is NP complete - this theory is important for the verification of many computer programs and hence most SMT solvers include a decision procedure for it.
+%The theory of quantified linear rational arithmetic (LRA) is decidable and an exponential lower bound has been shown.
+%The unit ground version (QF\_LRA) has polynomial complexity and, while not directly useful in programs that do not manipulate rational (or, as an approximation, fixed point) numbers, it can be useful for modeling parts of the VC of programs such as permissions.
+%The quantified theory of arrays without extensionality is undecidable and the unit ground theory is NP-complete - arrays are import as they are a common data structure in computer programs and they can sometimes be used to model memory. Extensionality for arrays is important in some verification contexts and the unit ground theory of arrays with extensionality is NP-complete (\cite{932480}).
+%
+
+
+\input{chapters/preliminaries/background}

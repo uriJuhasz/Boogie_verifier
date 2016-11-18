@@ -1,0 +1,521 @@
+\section{Joins}\label{section:gfole:joins}
+
+In this section we show how our algorithm takes advantage of opportunities to simplify clauses at a join point.
+When our request mechanism propagates clauses to a join node, the algorithm described above simply adds a relativized version of each clause from each side of the join. If a clause is propagated from before the branch corresponding to the join, this effectively duplicates the clause and after several such joins in sequence we can get an exponential explosion in the number of relativized clauses.
+While the ordering we use for superposition (in section \ref{section:gfole:ordering}) avoids some of this problem, the problem does occur with simplifications, when we propagate clauses for instantiation, and when we use superposition in combination with EC-graphs, as described in section \ref{section:appendix:gfole_ECGraph}. In addition, joins can shorten proofs by reducing the number of clauses even if the clauses do not originate from before the corresponding branch.
+For the branch-join problem, a simple solution is to propagate clauses directly between a branch and a join, but this is not compatible with scoping - a clause before the branch can use earlier DSA versions of terms not present at the join. 
+
+The main idea is that, if we have a set of clauses at each joinee that need to be propagated to the join, we try to match a clause from one side with a clause from the other side, to find a clause that is equivalent to both clauses at the join, using the known equalities and unit clauses at both joinees and the join.
+
+A very simple join example is given in figure \ref{snippet4.1.3.0}. The clause \m{c \neq b} was simplified to \m{c \neq a} at \m{n_1} 
+which, without clause join, causes \m{n_3} to propagate three clauses, while clause join allows us to propagate only two. 
+
+\begin{figure}
+\begin{lstlisting}
+$\node{n_0}:$
+assume c$\neq$b
+if (c1)
+	$\node{n_1}:$	
+	assume b=a
+	//propagated: c$\textcolor{gray}{\neq}$b
+	//simplified: c$\textcolor{gray}{\neq}$a
+else	
+	$\node{n_2}:$
+	//propagated: c$\textcolor{gray}{\neq}$b
+$\node{n_3}:$
+//Without join:
+	//propagated: 
+	// $\textcolor{gray}{\lnot}$c1 $\textcolor{gray}{\lor}$ c$\textcolor{gray}{\neq}$a
+	// $\textcolor{gray}{\lnot}$c1 $\textcolor{gray}{\lor}$ b$\textcolor{gray}{=}$a
+	//  c1 $\textcolor{gray}{\lor}$ c$\textcolor{gray}{\neq}$b
+//With join:
+	//propagated: 
+	// $\textcolor{gray}{\lnot}$c1 $\textcolor{gray}{\lor}$ b$\textcolor{gray}{=}$a
+	// c$\textcolor{gray}{\neq}$b
+$\node{n_4}:$
+assume b=a
+assert c=a //negated c$\textcolor{gray}{\neq}$b
+\end{lstlisting}
+\caption{Example for simple clause join\\
+}
+\label{snippet4.1.3.0}
+\end{figure}
+
+
+
+\begin{figure}
+\begin{lstlisting}
+$\node{n_0}:$
+assume f(a)=a$\lor$g(e)$=$g(d)
+if (c1)
+	$\node{n_1}:$	
+	assume g(d)$=$g(b)
+	assume c$=$b
+else	
+	$\node{n_2}:$
+	assume d$=$c
+$\node{n_3}:$
+if (c2)
+	$\node{n_4}:$
+	assume f(a)$\neq$a
+	assert g(e)=g(c)
+else
+	$\node{n_5}:$
+	assert true
+\end{lstlisting}
+\caption{Example for clause join\\
+}
+\label{snippet4.1.3.1}
+\end{figure}
+
+\begin{figure}
+\begin{tabular}{l|l|l|l|l|l}
+idx  & clause  & premises  & simplified & subsumes\\
+     &         & [request] & by         & \\
+\hline
+\m{\mathbf{n_0}}\\
+(1)&\m{f(a)=a\lor \underline{g(e)}=g(d)}           \\
+\hline
+\m{\mathbf{n_1}}\\
+(1)&\m{c_1}\\
+(2)&\m{g(d)=g(b)}\\
+(3)&\m{c=b}\\
+(4)&\m{f(a)=a \lor \underline{g(e)}=g(d)} & \textcolor{cyan}{[g(e)]} & &\\
+(5)&\m{f(a)=a \lor \underline{g(e)}=g(b)} & (4) & (2) & (4)\\
+\hline
+\m{\mathbf{n_2}}\\
+(1)&\m{\lnot c_1}\\
+(2)&\m{d=c}\\
+(3)&\m{f(a)=a \lor \underline{g(e)}=g(d)} & \textcolor{cyan}{[g(e)]} & &\\
+(4)&\m{f(a)=a \lor \underline{g(e)}=g(c)} & (3) & (2) & (3)\\
+\hline
+\m{\mathbf{n_3}}\\
+(1)&\m{\lnot c_1 \lor f(a)=a \lor \underline{g(e)}=g(b)} & \textcolor{cyan}{[g(e)]} & &\\
+(2)&\m{      c_1 \lor f(a)=a \lor \underline{g(e)}=g(c)} & \textcolor{cyan}{[g(e)]} & &\\
+(3)&\m{\lnot c_1 \lor \underline{c}=b}                   & \textcolor{cyan}{[c]} & &\\
+\hline
+\m{\mathbf{n_4}}\\
+(1)&\m{c_2}\\
+(2)&\m{\underline{f(a)}\neq a}\\
+(3)&\m{\underline{g(e)}\neq g(c)}\\
+(4)&\m{\lnot c_1 \lor f(a)=a \lor \underline{g(e)}=g(b)}     & \textcolor{blue}{[g(e)]} & &\\
+(5)&\m{~~    c_1 \lor f(a)=a \lor \underline{g(e)}=g(c)}     & \textcolor{blue}{[g(e)]} & &\\
+(6)&\m{\lnot c_1 \lor f(a)=a \lor \underline{g(c)}\neq g(b)} & (3)(4) & &\\
+(7)&\m{\lnot c_1 \lor \underline{c}=b}                       & \textcolor{blue}{[c]} & &\\
+(8)&\m{~~    c_1 \lor \underline{f(a)}=a }                   & (3)(5)   & &\\
+(9)&\m{\lnot c_1 \lor \underline{f(a)}=a }                   & (6)(7)   & &\\
+(10)&\m{~~    c_1 }                                          & (2)(8)   & &\\
+(11)&\m{\lnot c_1 }                                          & (2)(9)   & &\\
+(12)&\m{\bot}                                                & (10)(11) & &\\
+\hline
+\m{\mathbf{n_5}}\\
+(1)&\m{\bot}                               &  & &\\
+\end{tabular}
+\caption{Modular VC for figure ~\ref{snippet4.1.3.1}\\
+maximal terms are underlined \\
+The literal ordering is \m{e \succ d \succ c \succ b \succ a \succ u}\\
+Eager simplification is not applied except for \m{simp_=}
+}
+\label{snippet4.1.3.1_modular.1}
+\end{figure}
+
+A slightly more elaborate example is given in figure \ref{snippet4.1.3.1} and the modular proof is given in figure \ref{snippet4.1.3.1_modular.1} - we can see that a part of the proof is essentially duplicated at \m{n_4}. 
+At \m{n_3}, the two clauses \m{\lnot c_1 \lor f(a)=a \lor \underline{g(e)}=g(b)} and 
+\m{c_1 \lor f(a)=a \lor \underline{g(e)}=g(c)} cannot be joined to
+\m{f(a)=a \lor \underline{g(e)}=g(c)} \\
+or \m{f(a)=a \lor \underline{g(e)}=g(d)}, but, combined with 
+\m{\lnot c_1 \lor c=b} they can be both replaced with \\
+\m{f(a)=a \lor \underline{g(e)}=g(c)} without affecting soundness or completeness.
+
+
+\begin{figure}
+\begin{tabular}{l|l|l|l|l|l}
+idx  & clause  & premises  & simplified & subsumes\\
+     &         & [request] & by         & \\
+\hline
+\m{\mathbf{n_0}}\\
+(1)&\m{f(a)=a\lor \underline{g(e)}=g(d)}           \\
+\hline
+\m{\mathbf{n_1}}\\
+(1)&\m{c_1}\\
+(2)&\m{g(d)=g(b)}\\
+(3)&\m{c=b}\\
+(4)&\m{f(a)=a \lor \underline{g(e)}=g(d)} & \textcolor{blue}{[g(e)]}&&\\
+(5)&\m{f(a)=a \lor \underline{g(e)}=g(b)} & (4)& (2) & (4)\\
+\hline
+\m{\mathbf{n_2}}\\
+(1)&\m{\lnot c_1}\\
+(2)&\m{d=c}\\
+(3)&\m{f(a)=a \lor \underline{g(e)}=g(d)} & \textcolor{blue}{[g(e)]}\\
+(4)&\m{f(a)=a \lor \underline{g(e)}=g(c)} & (3) & (2) & (3)\\
+\hline
+\m{\mathbf{n_3}}\\
+(1)&\m{f(a)=a \lor \underline{g(e)}=g(c)}              & \textcolor{cyan}{[g(e)]} join&&\\
+\hline
+\m{\mathbf{n_4}}\\
+(1)&\m{c_2}\\
+(2)&\m{\underline{f(a)}\neq a}\\
+(3)&\m{\underline{g(e)}\neq g(c)}\\
+(4)&\m{f(a)=a \lor \underline{g(e)}=g(c)}                & \textcolor{blue}{[g(e)]}&& \\
+(5)&\m{f(a)=a}                                           & (3)(4)&&\\
+(6)&\m{\bot}                                             & (2)(5)&&\\
+\hline
+\m{\mathbf{n_5}}\\
+(1)&\m{\bot}                               & &&\\
+\end{tabular}
+\caption{Modular VC for figure ~\ref{snippet4.1.3.1} with clause join\\
+The main difference is at node \m{n_3}
+}
+\label{snippet4.1.3.1_modular.2}
+\end{figure}
+
+The proof with joins is shown in figure \ref{snippet4.1.3.1_modular.2}.
+As we can see, at node \m{n_3} the join shortens the proof, and perhaps more importantly, 
+all nodes between the join node and the assertion node have less clauses to handle (propagate, index, simplify, etc.) and the clauses are simpler.
+
+
+
+%
+%One of the main incentives for joining clauses comes from the equality simplification (also called demodulation and rewrite by unit equality) rule:
+%
+%\smallskip
+%
+%\[
+%\begin{array}{llll}
+%\m{simp_{=}} & \vcenter{\infer[]{\m{\termRepAt{C}{r}{p}}}{\m{l=r} & \cancel{\m{C}}}}   &
+%\parbox[c][1.2cm]{3cm}{\m{l=\termAt{C}{p}}\\\m{l \succ r}\\\m{C \succ l=r}}\\
+%\end{array}
+%\]
+%
+%\smallskip
+%
+%This rule, especially in combination with the other simplification rules, is very powerful in reducing and simplifying a set of clauses.
+%We show in section \ref{section:appendix:gfole_ECGraph} how to implement simplifications using our EC-graphs, and in most SMT implementations it is implemented using a Union-Find data structure.
+%As we perform CFG-node-local proofs, we have more opportunities to apply this rule than in a flat VC proof, as each clause is relativised only locally, and so we have more unit equalities (e.g. in figure ~\ref{snippet4.1.3.0}, at \m{n_2}, the modular proof has \m{b=a} while the flat VC has \m{\lnot c_1 \lor b=a}) and the simplification rule applies only to unit equalities.
+%For a given node, in the worst case, we propagate all clauses in all transitive predecessors (relativised) to the node. The role of clause join is to ensure that each node has at most one relativised version of each transitive-predecessor clause.
+
+\subsubsection*{The join problem}
+The join algorithm for ground clauses receives as input the set of unit equalities at the join, and, per joinee, a set of clauses and a set of unit equalities at the joinee. In our example these are:\\
+Set of unit equalities at \m{n_3} : \m{\emptyset}\\
+\m{n_1}: \m{\s{f(a)=a \lor \underline{g(e)}=g(b)},\s{g(d)=g(b),c=b}}\\
+\m{n_2}: \m{\s{f(a)=a \lor \underline{g(e)}=g(c)},\s{d=c}}\\
+\bigskip
+
+Each joinee term has several \emph{potential join representatives} at the join, determined by the equalities at that joinee and at the join - in our example, the term b at \m{n_1} has two potential representatives at \m{n_3} - \s{b,c}, implied by \m{c=b \in \eqs{n_1}}.
+Formally, the potential \textcolor{blue}{representatives} of a term s of joinee p for join n are the set \s{t \mid \eqs{p} \cup \eqs{n} \models s=t}.
+Each joinee term has at least one potential join representative (this changes under scoping and bounded fragments - described in chapters \ref{chapter:scoping} and \ref{chapter:bounds} respectively), and could have infinitely many potential join representatives - for example, for the term a where \m{\eqs{n} = \s{f(a)=a}}).
+Having defined potential term join representatives, we can define potential literal representatives analogously.
+For clauses, we also take into account unit clauses that hold at the joinee and the join, as we want to account for unit propagation (the rule \m{unit}) - we discuss this later and for now only account for equalities.
+
+In our example,\\
+\m{f(a)=a \lor \underline{g(e)}=g(b)} at \m{n_1} has three potential join representatives at \m{n_3}:\\
+\s{f(a)=a \lor \underline{g(e)}=g(b),f(a)=a \lor \underline{g(e)}=g(c),f(a)=a \lor \underline{g(e)}=g(d)}
+
+\bigskip
+
+Given a binary join and the input to the clause join algorithm, 
+the \textcolor{blue}{clause join problem} is that of selecting a subset S of the potential join representatives of clauses from all joinees such that each joinee clause has at least one join representative in S.\\
+The general problem is trivial - we can simply add the relativized clauses from each side.
+However, the number of clauses can grow quadratically at each join, and makes the proof search-space much larger.
+Our objective is such an S that minimizes some measure composed of:
+\begin{itemize}
+	\item The number of clauses in S
+	\item The total number of distinct terms (and/or literals) in S (size of representing S)
+	\item The position of S in (the multiset extension of) $\prec$ (in order to minimize the number of available inferences)
+	\item The total number of distinct terms and literals that need to be added at the join - the total size of \lstinline|todo, done| after the join
+\end{itemize}
+The first two conditions are intuitive - larger clauses are more expensive to handle.
+The third condition is specific to superposition (and e.g. ordered resolution) and tries to get the clauses as close as possible to the normal form at the join by the term rewrite system defined at the join. The fourth condition is an incremental measure, that tries to minimize the cost of an incremental update. Note that the conditions above may not agree with each other - e.g. larger terms are not necessarily higher in the ordering.
+
+
+
+We have already seen examples for the first measure.
+For the second measure (total number of distinct terms in S) consider the following join problem (assuming \m{d \succ c \succsep a \succ f}):
+(rememeber that we use $\succsep$ for constant ordering to denote that the left hand side is larger and of a higher maximal ordinal than the right hand side - as non-constant function symbols are less significant in our ordering definition, this means, in our case, that any term in which either of \m{c,d} occurs is larger than any term in which they do not occur).\\
+Set of unit equalities at join : \m{\emptyset}\\
+Joinee 1: \m{\s{g(f^{5}(a))=a \lor \underline{d}=c},\s{f^{10}(a)=f^{5}(a)}}\\
+Joinee 2: \m{\s{g(f^{7}(a))=a \lor \underline{d}=c},\s{f^{14}(a)=f^{7}(a)}}\\
+(The powers represent the number of times the function is applied)\\
+Here the set of representatives for \m{f^5(a)} from joinee 1 is \s{f^{5k}(a) \mid k \in \mathbb{N}}\\
+and similarly the set of representatives for \m{f^{7}(a)} from joinee 2 is \\
+\s{f^{7k}(a) \mid k \in \mathbb{N}}\\
+Two possible solutions to the join problem are:\\
+(1) \s{g(f^{35}(a))=a \lor \underline{d}=c} and\\
+(2) \s{\lnot c_1 \lor g(f^5(a))=a \lor \underline{d}=c,c_1 \lor g(f^7(a))=a \lor \underline{d}=c}\\
+The first solution minimizes the number of clauses and the number of literals per clause (width), while the second solution minimizes the number of distinct terms.
+When we use a bounded fragment, for example, if we bounded the depth of terms, it might be the case that \m{f^{35}(a)} is too deep and then we are left with only the option (2). The opposite would be true if we restricted clause width, which might force us to choose (1).
+
+For the third point above, consider the join problem (\m{d \succ c \succsep b \succ a \succ u}):\\
+Set of unit equalities at join : \m{\emptyset}\\
+Joinee 1: \m{\s{f(a) \neq a \lor \underline{f(d)}=a},\s{c=a}}\\
+Joinee 2: \m{\s{f(a) \neq a \lor \underline{f(d)}=b},\s{c=b}}\\
+Here we have two possible solutions for the join:\\
+(1) \s{f(a) \neq a \lor \underline{f(d)}=c} and \\
+(2) \s{\lnot c_1 \lor f(a) \neq a \lor \underline{f(d)}=a, c_1 \lor f(a) \neq a \lor \underline{f(d)}=b}\\
+Here, (1) has less clauses and distinct terms, but is higher in the ordering $\succ$, 
+and so might require the propagation of \m{\lnot c_1 \lor c=a,c_1 \lor c=b} if e.g. \m{f(d)=u} were to hold at some later node, 
+while selecting (2) as the solution does not require the propagation of these clauses.
+
+\noindent
+\textbf{Algorithm sketch:} \\
+Our algorithm \textbf{first} selects a non-empty set of join representatives for each term appearing in each joinee clause,
+ensuring that at least one minimal term is chosen (w.r.t. $\succ$) and that each representative that is common to another term from the other joinee is also selected. 
+For bounded fragments such as bounded term depth, it might be that the only potential representative within the depth bound is not minimal w.r.t. $\prec$ or is not common with a term of another joinee, the algorithm ensures that in this case we always have at least one representative. Besides terms common with the other joinee, the algorithm selects a term with minimal depth.\\
+For example, for the join \m{\s{f(c)=f(b)=a,C \lor P(a)} \sqcup \s{f(d)=f(b),C \lor P(f(b))}} 
+we select the sets\\ \m{\s{f(b),a}, \s{f(b)}} respectively - \m{a} is added although it has no parallel in the other joinee because if no match is found for the entire clause, we use it as the representative as it is minimal w.r.t. depth.
+
+The first stage of the algorithm is implemented using EC-graphs, it works by first finding the set of EC-nodes in each joinee EC-graph that represent all terms in all clauses in that joinee (sub-term closure of the ECs of all terms occurring in each clause - simply following \GFA{} edges). It then selects all constants in the sub-term closure that occur on both sides and builds, bottom up, the set of terms common to both sides, ensuring that a minimal depth representative is always selected.
+
+
+The \textbf{second stage} selects representatives for literals, based on the term representatives (that is, literal representatives include only terms selected in the first stage). At this stage we recognize literals that hold at the join or the other joinee. 
+The algorithm assigns representative literals eagerly, and ensures that each literal has at least one representative, 
+and furthermore, it ensures that each pair of joinee literals, one from each joinee, that have a common potential representative,
+will have at least one common representative literal.
+
+For example, for the join of \\
+\s{a=b=d,P(a,a)} and \\
+\s{d=c,P(a,c),P(b,b)},\\
+our algorithm selects \m{P(a,d),P(b,b)} as the representatives for \m{P(a,a)} on the left, as both have a matching literal on the other side.
+
+At the \textbf{third stage} we select representatives for joinee clauses. 
+We begin by assigning for each joinee clauses a set of sets of literals, which includes a set of representatives for each literal in the clause. For each joinee clause we then look for a matching joinee clause in the other joinee. 
+A matching clause is a clause where each set of representatives of a literal of our clause also represents some literal of the other clause, and vice versa. We add all common representatives with opposite joinee clauses to the result and remove all such represented clauses from the set of pending clauses. If a clause has no matching opposite joinee clause, we select simply the clause representative that includes the minimal representative for each literal (in our case, minimal w.r.t. number of distinct terms, but this can be easily adjusted). We continue this process until there are no more pending joinee clauses.
+
+For example, for the join of \\
+\s{a=b=d,P(a,a) \lor R()} and \\
+\s{d=c,P(a,c) \lor P(b,b) \lor Q()},\\
+Where \m{\lnot Q(),\lnot R()} holds at the join,
+our algorithm selects the representative clause \m{P(a,d) \lor P(b,b)} as the representatives for all joined clauses, 
+as it includes a representative for each literal of the joined clauses, except for \m{Q(),R()} which are eliminated at the join.
+Note that \m{P(a,a)} has two representatives at the joined clause.
+
+\bigskip
+\textbf{Properties:}\\
+The algorithm is not optimal in that it does not select the minimal set of representatives (by any combination of the above-mentioned measures).
+The result of the algorithm depends, to some degree, on the order in which we evaluate the pending joinee clauses. 
+However, we give a weaker guarantee that is sufficient to ensure that a clause before a branch is joined as one clause after the branch,
+which is important to ensure that clause propagation does not increase the number of distinct clauses in the entire program.
+With the unit propagation simplification, however, we cannot guarantee that there is no duplication of clauses at joins, as detailed below.
+
+%The reason this property is important is that in the fragment of bounded derivation depth, (by superposition) of clauses (described in section \ref{section:derivation_depth}), which is mostly effective if simplifications do not count towards the derivation depth.
+%Under this bounded fragment, raising the bound by 1 can increase the number of clauses by a square factor, as in the worst case each pair of clauses has a valid superposition inference. As our join algorithm ensures that each node will have at most as many clauses as there are clauses in its transitive predecessors, and as our verification algorithm guarantees that each pair of clauses can only participate in an inference in one node, we are able to guarantee that the total number of clauses in the CFG will not grow by more than a cubic factor for each increase of 1 in the allowed derivation depth. 
+%The reason is that, given a CFG saturated up to some derivation depth k, with n distinct clauses in all nodes (a distinct clause is a clause that is not a representative for a propagated clause) we can have at most \m{n^2} derivations of depth k+1 and hence at most \m{n^2} distinct clauses of depth k+1, which our join algorithm guarantees will have at most \m{n^2} representatives at each node.
+
+
+\textbf{Maximal terms:}\\
+Note that in all of our examples, the representative of the maximal term in each clause was always chosen as the term itself in the representative of the clause 
+(a request for several terms might return two clauses, where a non-maximal term in one clause is maximal in the other clause, in which case a different representative might be chosen for the term where it is non-maximal, but not where it is maximal).
+The first, practical reason is that if we were to choose a different representative it would be larger (by $\succ$) than the term, 
+and hence will not be actually a valid response for the original request. \\
+For the second reason, consider the following join problem\\
+(\m{d \succ c \succsep b \succ a \succ u}):\\
+Set of unit equalities at join : \m{\emptyset}\\
+Joinee 1: \m{\s{f(a) \neq a \lor \underline{c}=a},\s{\underline{d}=a}}\\
+Joinee 2: \m{\s{f(a) \neq a \lor \underline{c}=b},\s{\underline{d}=b}}\\
+Here the requested term was c and the join could be either \\
+(1) \s{f(a) \neq a \lor \underline{d}=c, \lnot c_1 \lor \underline{d}=a, c_1 \lor \underline{d}=b} or\\
+(2) \s{\lnot c_1 \lor f(a) \neq a \lor \underline{c}=a, c_1 \lor f(a) \neq a \lor \underline{c}=b}\\
+While the solution (1) is complete in the sense that \m{(1) \models (2)},
+our verification algorithm does not perform derivations between propagated clauses (they are added directly to the \lstinline|done| set),
+and hence using (1) as the result of the join is not be complete unless we add some joined clauses to the \lstinline|todo| set.
+As we use the join algorithm also for propagation for instantiation, we allow a representative of a clause to have a different maximal term, and we allow the relativized unit equalities from a joinee (e.g. \m{\lnot c_1 \lor \underline{d}=a}) to be added to the \lstinline|todo| set.
+
+%Considering maximal-term-simplifications as normal derivations interacts well with the bounded-derivation-depth fragment, as each derivation that \\
+%changes the maximal term of a clause is not considered a simplification but instead counts towards the derivation depth of the conclusion - for example:
+%\begin{figure}[H]
+%\begin{lstlisting}
+%$\node{n_0}:$
+%assume f(u)=u$\lor$g(d$_{\m{0}}$,d$_{\m{1}}$,......d$_{\m{n}}$)$=$u
+%if (c0)
+	%$\node{n_{0.0}}:$	
+	%assume d$_0=$b$_0$
+%else	
+	%$\node{n_{0.1}}:$
+	%assume d$_0=$c$_0$
+%$\node{n_1}:$
+%if (c1)
+	%$\node{n_{1.0}}:$	
+	%assume d$_1=$b$_1$
+%else	
+	%$\node{n_{1.1}}:$
+	%assume d$_1=$c$_1$
+%$\node{n_2}:$
+%.....
+%$\node{n_n}:$
+%
+%assume a$_{\m{0}}$=b$_{\m{0}}$$\lor$a$_{\m{0}}$=c$_{\m{0}}$
+%....
+%assume a$_{\m{n}}$=b$_{\m{n}}$$\lor$a$_{\m{n}}$=c$_{\m{n}}$
+%assume u$\neq$f(u)
+%assert g(a$_0$,....a$_{\m{n}}$)$=$u
+%\end{lstlisting}
+%\caption{Example for exponential clause join if maximal terms are not joined\\
+ %(\m{d_0 \succ d_1 \succ d_2 ... \succ d_n \succ c_0 \succ .... c_n \succ b_0 \succ ... b_n \succ a_0 \succ ... a_n \succsep u})
+%}
+%\label{snippet4.1.3.5}
+%\end{figure}
+%Here, if we were to remove the requirement that propagation preserves the maximal term, the join \m{n_n} could be:\\
+%\m{\s{f(a)=a \lor g(d_0,d_1,......d_n) = a} \cup \bigcup\limits_{i} \s{\lnot c_i \lor d_i = b_i, c_i \lor d_i = c_i }}\\
+%Which is linear in the size of clauses in the original program, while with the requirement we would get:\\
+%\m{\s{f(a)=a \lor g(x_0,x_1,......x_n) = a \mid \forall_{i<n} \cdot x_i = b_i \lor x_i = c_i }}\\
+%Which is exponential in the number of clauses in the original program.\\
+%However, with a derivation depth bound of k, we would get only \m{2^k} clauses at \m{n_k} as follows:\\
+%\m{\s{f(a)=a \lor g(x_0,x_1,....,d_k,...d_n) = a \mid \forall_{i<k} \cdot x_i = b_i \lor x_i = c_i }}\\
+%And these clauses won't propagate further.\\
+%While this does not allow us to prove the program, one might argue that the program is inherently exponential 
+%for resolution proofs - an SMT solver will also require exponential time to prove it.
+
+
+\textbf{Unit propagation and subsumption:}
+One of the more powerful simplification derivations is unit propagation, which is used both in saturation provers and SMT provers.
+In order to prevent exponential explosion in the number of clauses due to unit propagation, we need to refine our join algorithm.
+
+\begin{figure}
+\begin{lstlisting}
+$\node{n_0}:$
+assume A$_0$$\lor$A$_1$$\lor$B$_0$$\lor$B$_1$$\lor$D
+if (c0)
+	$\node{n_{0.0}}:$	
+	assume $\lnot$A$_0$
+else	
+	$\node{n_{0.1}}:$
+	assume $\lnot$A$_1$
+$\node{n_1}:$
+if (c1)
+	$\node{n_{1.0}}:$	
+	assume $\lnot$B$_0$
+else	
+	$\node{n_{1.1}}:$
+	assume $\lnot$B$_1$
+$\node{n_2}:$
+....
+\end{lstlisting}
+\caption{Example for exponential clause join for unit propagation with sequential joins\\
+ }
+\label{snippet4.1.3.6}
+\end{figure}
+
+
+In figure \ref{snippet4.1.3.6}, if the join does not account for unit propagation, and if D is a strictly maximal literal that matches a request from the end of the program, we get the following set of clauses at \m{n_2}:\\
+\s{A_0 \lor B_0 \lor D, A_0 \lor B_1 \lor D, A_1 \lor B_0 \lor D, A_1 \lor B_1 \lor D}\\
+While a join that takes into account unit propagation gives us:\\
+\s{A_0 \lor B_0 \lor A_1 \lor B_1 \lor D}.\\
+The relativised clauses \s{\lnot c_0 \lor \lnot A_0, c_0 \lor \lnot A_1, ....} are only propagated on a per-need basis, as D is the maximal literal.\\
+As far as soundness and completeness are concerned, for each join of the branch condition c where the clause \m{C \lor B \lor \underline{A}} holds on one joinee and the clause \m{D \lor B \lor \underline{A}} holds on the other (as \m{A \succ B,C,D} and B, C and D are pair-wise disjoint), we could propagate to the join either\\
+(1) \s{\lnot c \lor C \lor B \lor A, c \lor D \lor B \lor A} or\\
+(2) \s{C \lor D \lor B \lor A}.\\
+The advantage of (1) is that we have to propagate at most one clause per joinee clause, while for (2) we might need up to the product of the number of clauses in the joinees - quadratic.
+The advantage of (2) is that, in cases such as the one in figure \ref{snippet4.1.3.6}, 
+where a clause is propagated through several sequential branch-join pairs, we get only one relativised version of the clause at each join. However, with (2) we can get a quadratic number of clauses at each join for clauses that originated at the joinees and not before the corresponding branch, and this causes an exponential blow-up when we have a tree of joins from nested branches - for example, consider the program in figure \ref{snippet4.1.3.7}.
+
+\begin{figure}
+\begin{lstlisting}
+$\node{n_0}:$
+if (c0)
+	$\node{n_{0.0}}:$	
+	if (c$_0.1$)
+		$\node{n_{0.0.0}}:$	
+		assume A$_0$$\lor$E
+		assume A$_1$$\lor$E
+	else	
+		$\node{n_{0.0.1}}:$	
+		assume B$_0$$\lor$E
+		assume B$_1$$\lor$E
+else
+	$\node{n_{0.1}}:$	
+	if (c$_1.1$)
+		$\node{n_{0.1.0}}:$	
+		assume C$_0$$\lor$E
+		assume C$_1$$\lor$E
+	else	
+		$\node{n_{0.1.1}}:$	
+		assume D$_0$$\lor$E
+		assume D$_1$$\lor$E
+$\node{n_1}:$
+assume .....$\lor$E
+....
+\end{lstlisting}
+\caption{Example for exponential clause join for unit propagation with nested branches\\
+ }
+\label{snippet4.1.3.7}
+\end{figure}
+
+\noindent
+In figure ~\ref{snippet4.1.3.7}, for option (2) we get at \m{n_1}:\\
+\m{A_0 \lor B_0 \lor C_0 \lor D_0 \lor E}\\
+\m{A_0 \lor B_0 \lor C_0 \lor D_1 \lor E}\\
+.....\\
+\m{A_1 \lor B_1 \lor C_1 \lor D_1 \lor E}\\
+A total of 16 clauses of width 5, while with option (1) we get only one relativised version of each original clause (8 clauses of width 3) - so linear in the size of the input.
+
+Our solution is a pragmatic compromise between (1) and (2) - we have found that the case of figure \ref{snippet4.1.3.6} is much more common than the one of figure \ref{snippet4.1.3.7}, and more specifically often unit propagation happens on only one side of a branch. Hence our solution is to join two joinee clauses if one has a representative that is a superset of the literals of the other.
+
+\begin{figure}
+\begin{lstlisting}
+$\node{n_0}:$
+assume $\lnot$y>0$\lor$x$\neq$null
+assume x=null$\lor$x.f=0
+if (c0) //if y>0
+	$\node{n_1}:$	
+	assume y>0
+	//we derive:
+	x$\neq$null
+	x.f=0
+else
+	$\node{n_2}:$	
+	assume $\lnot$y>0
+	we propagate:
+	 x=null$\lor$x.f=0
+$\node{n_3}:$
+assume C$\lor$x.f=0
+	//Here our join is
+	x=null$\lor$x.f=0
+\end{lstlisting}
+\caption{Example for join after unit propagation\\
+ }
+\label{snippet4.1.3.8}
+\end{figure}
+
+
+In figure \ref{snippet4.1.3.8}, at the join at \m{n_3}, a representative for the clause \m{x.f=0} at \m{n_1} is a subset of the literals 
+of the representative \m{x=null \lor x.f=0} at \m{n_2}, hence we join these clauses.
+Both exponential factors in figures \ref{snippet4.1.3.6} and \ref{snippet4.1.3.7} are limited by the width (number of literals) 
+of clauses, so that limiting the maximal width of clauses (relative to clauses that occur in the original program) is our strategy for ensuring overall complexity bounds (at the price of completeness).
+
+The change needed in the algorithm is that, when matching clauses, rather than have each joinee clause cover (by representative literals) 
+each literal of the other joinee clause, it is sufficient to require that the coverage holds in one direction. Hence with unit propagation we do not guarantee that a clause is not duplicated at a join.
+
+A more complete solution might try to mark clauses propagated and simplified over a branch, 
+so that the join has enough information to prevent the exponential blow-up in the number of clauses without relying on bounded fragments, and we leave that as future work.
+
+\noindent
+\textbf{Incremental considerations:}\\
+We have described joining two sets of clauses that are a response to the same request - hence have the same strictly maximal term (or maximal literal for resolution).
+Our algorithm is incremental, so that new clauses can be added to any CFG-node (e.g. by the heap fragment of section \ref{section:heaps}) after some requests were sent, and if that new clause matches a request, it is eventually propagated. 
+When such a new clause is propagated to an already calculated join, there are several cases we need to consider:
+
+\begin{itemize}
+	\item A new unit equality is added to a joinee, simplifying a non-maximal term in a previously joined clause
+	\item A new unit equality simplifies the maximal term of a previously joined clause
+	\item A new clause is added to one joinee, which would change the result of the join - that is, it has a common representative with a clause already propagated (relativised) from the other joinee
+	\item A new unit equality is added to the join node, or to a joinee, which makes two previously propagated, non-matching joinee clauses match.
+\end{itemize}
+In all of the above cases, a non-incremental join calculated after the new clauses were added, could have a result that is not a superset of the result of the join before the added clauses (e.g. if the join was \s{\lnot c_1 \lor C \lor \underline{c}=b,c_1 \lor C \lor \underline{c}=a}
+and after adding \m{b=a} to joinee 1 we get \s{C \lor \underline{c}=a} instead).
+This is problematic because it means that the result of any incremental join depends on the order of applying different fragments, and so less predictable and dependable and also harder to give complexity bounds for.
+We can keep enough information in order to \emph{fix} the join by removing joined clauses that were superseded by the new information 
+(e.g. removing \s{\lnot c_1 \lor C \lor \underline{c}=b,c_1 \lor C \lor \underline{c}=a} above), but we would then have to duplicate any derivations that have been performed on the joined clause, which we have found to be very inefficient, both because of duplicated effort and because a clause could have been propagated through a long path in the CFG, and has to be fixed in all nodes.
+
+Instead, each node keeps track of the clauses that it has propagated from its direct predecessors (updated when a predecessor clause gets simplified), and filters the list of clauses to join accordingly, so that we only add representatives for clauses that have not yet been propagated in any form. 
+As before, each node also keeps track of the requests it has responded to, and propagates any clauses added to direct predecessors that matches a previous request.
+Our implementation is, hence, asymmetric in terms of the order of evaluation, but the only duplication of work is in simplifying deductions - a clause that is propagated to a node from a predecessor and later simplified in that predecessor by e.g. unit propagation will cause the unit clause to be propagated to the node and the simplification applied there on the propagated version of the clause.
+For example, if we had initially propagated \m{A \lor B \lor C \lor \underline{D}} from a predecessor to a join node n, which already had \m{\lnot A} and hence the propagated clause is simplified to \m{\lnot c_1 \lor B \lor C \lor \underline{D}}, if we have later derived \m{\lnot B} at the predecessor, the predecessor would simplify its clause to \m{A \lor C \lor \underline{D}}, but n would not re-propagate the simplified version, but just propagate the new unit clause \m{\lnot B} and apply the simplification as well to get \m{\lnot c_1 \lor C \lor \underline{D}} - this is a duplication of effort, but it is still less effort than recalculating the join from scratch or fixing the join to be optimal.\\
+In all cases, the conclusion of a simplification that changes the maximal term of its premise is always considered a new clause, 
+and is propagated and joined accordingly, as it is a response to a different request than the original clause.
+
+\textbf{Join summary:} We have found that joining clauses is crucial for performance when propagating clauses in a DAG shaped CFG.
+simplifying derivations do not interact well with joins, and we have not found a perfect solution for joining simplified clauses.
+However, in practice, we did not encounter many cases where our join algorithm failed to prevent duplication of clauses.
+
+
+

@@ -1,0 +1,17 @@
+\chapter{Ground first order logic with equality}\label{chapter:gfole}
+
+In this chapter we present our algorithm for verifying program VCs that include only ground clauses.
+For many programs, a significant part of the proof is done at the ground level, hence a verifier must be able to discharge ground proofs efficiently. There ground fragment is decidable. An important property of proofs of program VCs, as opposed to general logic proofs, is that the same properties (assertions) have to be proven for many traces (propositional assignments) that differ only slightly. We extend the algorithm proposed for unit clauses to take advantage of this propositional structure during the entire proof search, and not only during VC generation.
+
+We start by presenting the ground fragment and our basic verification algorithm for the fragment.
+We then compare our algorithm to VC generation and SMT and superposition based verification and show the reasoning that lead us to this algorithm. Next we sketch the completeness argument for the algorithm.\\
+The next section discusses joining non-unit clauses and the role of redundancy elimination.
+We then consider the issue of selecting a term ordering for the superposition calculus based on the structure of the VC.
+In section \ref{section:appendix:gfole_ECGraph} of the appendix we show how we combine our EC-graph algorithm from chapter \ref{chapter:ugfole} and the algorithms in this chapter.
+
+\input{chapters/gfole/gfole_fragment_basic}
+\input{chapters/gfole/gfole_completeness}
+\input{chapters/gfole/gfole_joins}
+%\input{gfole_ec_graphs}
+\input{chapters/gfole/gfole_orderings}
+\input{chapters/gfole/gfole_related_work}

@@ -11,14 +11,14 @@ MaxPos.x=-1
 MaxPos.y=-1
 NormalPos.left=4
 NormalPos.top=32
-NormalPos.right=1583
-NormalPos.bottom=581
+NormalPos.right=1603
+NormalPos.bottom=601
 Class=LaTeXView
 Document=slicer.tex
 
 [Frame0_View0,0]
-TopLine=186
-Cursor=5098
+TopLine=0
+Cursor=84
 
 [Frame1]
 Flags=0
@@ -29,14 +29,14 @@ MaxPos.x=-1
 MaxPos.y=-1
 NormalPos.left=4
 NormalPos.top=32
-NormalPos.right=1583
-NormalPos.bottom=581
+NormalPos.right=1603
+NormalPos.bottom=601
 Class=LaTeXView
-Document=abstract.tex
+Document=setup.tex
 
 [Frame1_View0,0]
-TopLine=55
-Cursor=4761
+TopLine=27
+Cursor=880
 
 [Frame2]
 Flags=0
@@ -47,14 +47,14 @@ MaxPos.x=-1
 MaxPos.y=-1
 NormalPos.left=4
 NormalPos.top=32
-NormalPos.right=1583
-NormalPos.bottom=581
+NormalPos.right=1603
+NormalPos.bottom=601
 Class=LaTeXView
-Document=introduction.tex
+Document=chapters\gfole\gfole.tex
 
 [Frame2_View0,0]
-TopLine=15
-Cursor=1093
+TopLine=5
+Cursor=1664
 
 [Frame3]
 Flags=0
@@ -65,14 +65,14 @@ MaxPos.x=-1
 MaxPos.y=-1
 NormalPos.left=4
 NormalPos.top=32
-NormalPos.right=1583
-NormalPos.bottom=581
+NormalPos.right=1603
+NormalPos.bottom=601
 Class=LaTeXView
-Document=acknowledgments.tex
+Document=introduction.tex
 
 [Frame3_View0,0]
-TopLine=0
-Cursor=0
+TopLine=10
+Cursor=1082
 
 [Frame4]
 Flags=0
@@ -83,16 +83,34 @@ MaxPos.x=-1
 MaxPos.y=-1
 NormalPos.left=4
 NormalPos.top=32
-NormalPos.right=1583
-NormalPos.bottom=581
+NormalPos.right=1603
+NormalPos.bottom=601
 Class=LaTeXView
-Document=CV.tex
+Document=chapters\appendix\appendix.tex
 
 [Frame4_View0,0]
 TopLine=0
-Cursor=393
+Cursor=185
+
+[Frame5]
+Flags=0
+ShowCmd=1
+MinPos.x=-1
+MinPos.y=-1
+MaxPos.x=-1
+MaxPos.y=-1
+NormalPos.left=4
+NormalPos.top=32
+NormalPos.right=1603
+NormalPos.bottom=601
+Class=LaTeXView
+Document=mi_control_flow.tex
+
+[Frame5_View0,0]
+TopLine=71
+Cursor=5104
 
 [SessionInfo]
-FrameCount=5
-ActiveFrame=0
+FrameCount=6
+ActiveFrame=5
 

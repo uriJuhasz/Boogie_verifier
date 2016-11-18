@@ -1,0 +1,483 @@
+\chapter{Quantification}\label{chapter:quantification}
+Many programs require reasoning that goes beyond ground reasoning with uninterpreted functions (GFOLE) for verifications.
+Domains used in programs include integer arithmetic, arrays, and heaps. 
+In addition, many specification languages and verification techniques require reasoning with additional theories such as sets, sequences and maps.
+While dedicated decision procedures have been developed for some of the required domains, support for quantification in a prover allows users to model arbitrary concepts and domains that may not have a dedicated decision procedure.
+
+In this section we describe the extensions needed for the previously described ground fragments in order to support universally quantified clauses.
+We discuss first the underlying superposition calculus we use and then the needed extensions to the propagation mechanism and for interpolation.
+
+The main difference with the addition of universal quantification is that the fragment is no longer decidable, while most of the fragments we have seen until now have been at most of exponential complexity. 
+In practice, even with the best systems for handling quantifiers, derivations tend to be very prolific, 
+and particularly tend to create many new terms.
+Our main objective is to reduce the depth of non-ground inferences required to prove assertions by prioritizing ground inferences and certain instances of non-ground derivations that can be shown not to increase the problem size, such as simplifications.
+
+\section{Preliminaries}
+In this section we are dealing with unrestricted terms, literals and clauses over the entire signature, including free variables.
+In each clause, all free variables are implicitly universally quantified. Any set of assumptions and assertions in general FOL-E formulae can be brought to an equi-satisfiable universal clausal from (see e.g. \cite{Baaz2001273}). This transformation might introduce new function symbols through Skolemization. 
+We use a standard superposition calculus based on \cite{BachmairGanzingerSuperposition}, with a transfinite Knuth-Bendix ordering based on \cite{KovacsMoserVoronkov11}. We fix the terminology in this section.
+
+We assume the set of free variables in each clause is distinct and rename variables otherwise (we discuss renaming later). 
+We use \textcolor{blue}{V} for the set of variables and \textcolor{blue}{T} for the set of (ground and non-ground) terms.
+The multi-set of free-variables (needed for ordering) of a term t, \m{\Vars{t}}, is:\\
+$ 
+\begin{array}{lll}
+	\Vars{x}         & \triangleq & \s{x}\\
+	\Vars{\fa{f}{s}} & \triangleq & \bigcup\limits_\m{i} \Vars{s_i}\\
+\end{array} 
+$
+
+\bigskip
+\noindent
+A \textcolor{blue}{substitution} \m{\sigma \in V \rightarrow T} is a function from variables to terms. 
+We are only interested in finite substitutions, where $\sigma$ is finite iff it differs from the identity function for only a finite number of inputs - \m{\size{\s{v \in V \mid \sigma(v) \neq v}} \in \mathbb{N} }.\\
+For a term t and a substitution $\sigma$ \textcolor{blue}{applying the substitution} $\sigma$ to t, denoted by \m{t\sigma}, is defined as follows:\\
+\m{x\sigma = \sigma(x)}\\
+\m{\fa{f}{t}\sigma = f(\tup{t}\sigma)}\\
+\m{(\tup{t}\sigma)_i = t_i\sigma}
+
+\bigskip
+\noindent
+The \textcolor{blue}{domain of a substitution} $\sigma$ is the set \m{\textcolor{blue}{dom(\sigma)} = \s{v \in V \mid \sigma(v) \neq v}}  and the \textcolor{blue}{range of a substitution} is the set \m{\textcolor{blue}{ran(\sigma)} = \s{x\sigma \mid x \in dom(\sigma)}}.
+
+
+\bigskip
+\noindent
+A \textcolor{blue}{renaming} is a substitution $\sigma$ s.t. \m{ran(\sigma) \subseteq V} and \m{\size{ran(\sigma)}=\size{dom(\sigma)}} - that is, variables are mapped only to variables and no two variables are mapped to the same variable.
+
+\bigskip
+\noindent
+A \textcolor{blue}{composition of substitutions $\sigma\tau$} is simply functional composition -\\
+ \m{x(\sigma\tau) = (x\sigma)\tau}.
+
+\bigskip
+\noindent
+We say that a substitution is \textcolor{blue}{fully reduced} if it is idempotent - essentially, no element of the range has any free variable that is in the domain - formally:\\
+\m{\forall x \cdot \Vars{x\sigma} \cap dom(\sigma) = \emptyset}
+
+\bigskip
+\noindent
+We use a partial order on substitutions denoted by $\leqdot$. We say that $\sigma$ is \textcolor{blue}{more general} than $\tau$ if $\textcolor{blue}{\sigma \leqdot \tau.}$ The definition of the order is as follows:\\
+$\sigma \leqdot \tau \equivdef \exists \tau' \cdot \tau = \sigma\tau'$
+
+\bigskip
+\noindent
+A \textcolor{blue}{unifier} of two terms \m{s,t \in T} is a substitution $\sigma$ s.t. \m{s\sigma = t\sigma}.\\
+A \textcolor{blue}{most general unifier - mgu(s,t)} of two terms \m{s,t \in T} is a unifier $\sigma$ for s,t that is more general than all other unifiers for s,t - formally:\\
+\m{\sigma=mgu(s,t) \equivdef (\forall \tau \cdot (s\tau=t\tau \Rightarrow \sigma \leqdot  \tau))}.\\
+For first order logic each unifiable pair of terms has an mgu (shown in e.g. ~\cite{Baader2001445}) that is further unique up to renaming. 
+
+\bigskip
+\noindent
+We use some quantifier instantiation in addition to superposition, as it allows some shorter proofs as we discuss below. Quantifier instantiation with EC-graphs requires E-unification.
+An \textcolor{blue}{E-unifier} for an equational theory E (a congruence relation \m{=_E}) for two terms s,t is a substitution $\sigma$ s.t. \m{s\sigma =_E t\sigma}. Depending on E, an E-unifiable pair s,t may have one mgu (up to renaming and E-equivalence) or the minimal size of a minimal set of minimal E-unifiers 
+(that is, a set of E-unifiers where none is more general than another in the set and that every E-unifier is less general than one in the set) could be infinite or not exist at all (see  \cite{Baader2001445}).\\
+The direct extension of our ground algorithm with clause-ECs to quantified formulae does not require E-unification for completeness, 
+as each clause-EC represents the minimal member of its EC and hence we only need standard unification between maximal terms of minimal representative clauses.\\
+However, in some cases, using E-unification can help reduce the derivation depth of some assertions. We discuss this in section \ref{section:fole:ECgraphs}.
+
+An equality theory E is called \textcolor{blue}{finitely presented} if there is a finite set of ground equations for which \m{=_E} is the smallest containing congruence.
+
+
+
+\subsection*{Calculus}
+We use the standard superposition calculus with a transfinite Knuth-Bendix order.
+The order we use is, as before, tkbo, with the definition repeated in figure \ref{fig_tkbo}.
+
+\begin{figure}
+The order has two parameters:\\
+A strict total order \m{\succ} on the set of function symbols F.\\
+A weight function \m{w:F \cup V \rightarrow \ords} that satisfies \\
+\m{\forall f \in F \cdot w(f) > 0} and\\
+\m{\forall x \in V \cdot w(x) = 1}.
+
+\bigskip
+
+\noindent
+The weight of a term is defined recursively as:\\
+\m{w(\fa{f}{s}) \triangleq w(f) + \bigoplus\limits_i w(s_i)}\\
+Where, for free variables, \m{w(x)} is defined by w.
+
+\bigskip
+
+\noindent
+The transfinite Knuth Bendix ordering (tkbo) for terms:\\
+\m{s \succ t} iff \m{\Vars{s} \supseteq \Vars{t}} and
+\begin{itemize}
+	\item \m{w(s) > w(t)} or
+	\item \m{w(s) = w(t), s\equiv\fa{f}{s}, t\equiv\fa{g}{t}} and
+		\subitem \m{f \succ g} or
+		\subitem \m{f \equiv g} and \m{\tup{s} \succ \tup{t}}
+\end{itemize}
+The order on tuples is lexicographic:\\
+\m{\tup{s} \succ \tup{t} \equivdef \exists i \cdot ((\forall j<i \cdot s_j=t_j) \land s_i \succ t_i)} 
+
+\bigskip
+
+\noindent
+For an order $\succ$ on a set D, the multi-set extension of $\succ$, $\succ_{mult}$ on the set of multi-sets of D (\m{D \rightarrow \mathbb{N}}) is defined as follows:\\
+\m{S \succ_{mult} T \equivdef \forall t \in T \cdot \exists s \in S \cdot (s \succ t \lor (s=t \land S(s)>S(t)))}\\
+This extension is total if $\succ$ is, and orders multi-sets by the number of occurrences of maximal terms.\\
+Literals are ordered with the multi-set extensions of the term ordering where the literal \m{s=t} is represented by the multi-set \s{s,t} and the literal \s{s\neq t} by \s{s,s,t,t}.\\
+Clauses are ordered with the multi-set extension of the literal ordering where each clause is the multi-set of its literals.\\
+We overload the meaning of $\succ$ for the literal and clause orderings where there is no ambiguity.\\
+A literal A is strictly maximal in a clause C (A not in C) when:\\
+\m{A \succ C \equivdef \forall B \in C \cdot A \succ B}\\
+For the negation (which we use as an approximation with partial orders) we use a dual definition:\\
+\m{A \not\preceq C \equivdef \forall B \in C \cdot A \not\preceq B}\\
+And similarly for non-strict maximality with \m{A \succeq C,A \not\prec C}.\\
+The ordering and its multi-set extensions are stable under substitution and compatible with contexts:\\
+\m{\forall C,s,t \in T,\sigma,p \cdot s \succ t \Rightarrow \termRepAt{C}{s\sigma}{p} \succ \termRepAt{C}{t\sigma}{p}}\\
+And additionally are total on ground terms.
+
+\caption{Transfinite Knuth Bendix Ordering (tkbo)}
+\label{fig_tkbo}
+\end{figure}
+
+
+The underlying superposition calculus is taken from \cite{BachmairGanzingerSuperposition}, where it is shown complete even with redundancy elimination, and presented in figure \ref{fig_superposition_calculus}.
+
+\begin{figure}[H]
+$
+\begin{array}[c]{lll}
+%\vspace{10pt}
+%\mbox{res} & \vcenter{\infer[]{\m{C \lor D}                               }{\m{C \lor s=t } & \m{s \neq t \lor D}}} & 
+%\parbox[c][2cm]{2cm}{\m{s=t \succ C}\\\m{s \neq t \succ D}}\\
+\vspace{10pt}
+\mathrm{res_{=}} &\vcenter{\infer[]{\m{C\sigma}}{\m{C \lor l\neq l'}}} & 
+\parbox[c][2cm]{3cm}{
+	\m{\sci{1}\sigma = mgu(l,l')}\\
+	\m{\sci{2}l \neq l' \not\prec C}}
+\\
+\vspace{10pt}
+\mathrm{sup_{=}} &\vcenter{\infer[]{\m{(C \lor \termRepAt{s}{r}{p} =    t \lor D)\sigma}}{\m{C \lor l=r} & \m{s =    t \lor D}}} & 
+\parbox[c][2cm]{5cm}{
+	\m{\sci{1}\sigma = mgu(l,\termAt{s}{p})}\\
+	\m{\sci{2}l\sigma \not\preceq r\sigma,\sci{3}(l=r)\sigma \not\preceq C\sigma}\\
+	\m{\sci{4}s\sigma \not\prec t\sigma,  \sci{5}(s=t)\sigma \not\preceq D\sigma}\\
+	\m{\sci{6}\termAt{s}{p} \notin V }\\
+	\m{\sci{7}(s=t)\sigma \not\preceq (l=r)\sigma}}\\
+\vspace{10pt}
+\mathrm{sup_{\neq}} &\vcenter{\infer[]{\m{(C \lor \termRepAt{s}{r}{p} \neq t \lor D)\sigma}}{\m{C \lor l=r} & \m{s \neq t \lor D}}} & 
+\parbox[c][2cm]{5cm}{
+	\m{\sci{1}\sigma = mgu(l,\termAt{s}{p})}\\
+	\m{\sci{2}l\sigma \not\preceq r\sigma,\sci{3}(l=r)\sigma \not\preceq C\sigma}\\
+	\m{\sci{4}s\sigma \not\prec t\sigma,  \sci{5}(s=t)\sigma \not\prec D\sigma}\\
+	\m{\sci{6}\termAt{s}{p} \notin V}}\\
+\vspace{10pt}
+\mathrm{fact} & \vcenter{\infer[]{\m{(C  \lor t \neq r \lor l=r)\sigma}}{\m{C \lor l' = t \lor l = r}}} & 
+\parbox[c][2cm]{5cm}{
+	\m{\sci{1}\sigma = mgu(l,l')}\\
+	\m{\sci{2}l\sigma \not\preceq r\sigma}\\
+	\m{\sci{3}(l=r)\sigma \not\prec (C \lor l'=t)\sigma}\\
+	\m{\sci{4}l'\sigma \not\prec t\sigma}}\\
+\vspace{10pt}
+\end{array}
+$
+\caption{Superposition\\
+The main differences from the ground case are:\\
+The ordering \m{\succeq} is partial (although potentially total on ground terms,literals and clauses).\\
+Side condition \sci{6} for both superposition rules means that we do not need to consider superposition into a variable, which is undesirable as variables unify with all terms, it can be shown that the calculus is complete even with this condition.\\
+In all ordering side conditions above (both for terms and literals), \m{u\sigma \not\preceq v\sigma} is an over-approximation of
+\m{\exists \tau \cdot FV(u\sigma\tau,v\sigma\tau)=\emptyset \land u\sigma\tau \succ v\sigma\tau}\\
+which we use as it is easier to compute.\\
+In fact, for requests, we employ a coarser approximation \m{u \not\preceq v} rather than \m{u\sigma \not\preceq v\sigma},
+as it is much easier to cache and propagate, and check the stricter side-conditions only when performing actual inferences.
+This also includes condition \m{\sci{7}} of \m{sup_=} which requires both premises.
+}
+\label{fig_superposition_calculus}
+\end{figure}
+
+%Note that, assuming that the ordering is complete on ground terms (which it is in our case), the superposition calculus is complete even with some stronger side conditions - e.g. for \m{sup_{=}} we could have the following side conditions:
+%There exists a ground substitution \m{\tau} s.t. \m{(C \lor l=r)\tau,(s=t \lor D)\tau} are ground and:
+%\[
+%\begin{array}{ll}
+	%\m{\sci{1}\sigma = mgu(l,l')}\\
+	%\m{\sci{2}l\tau \succ r\tau,\sci{3}(l=r)\tau \succ C\tau}\\
+	%\m{\sci{4}s\tau \succ t\tau,\sci{5}(s=t)\tau \succ D\tau}\\
+%\end{array}
+%\]
+%
+%However, in our case, this strengthening is not compatible with the mechanism for requests, 
+%as it requires us to have such a $\tau$ that needs to be communicated with the requested term.
+
+\subsection*{Unification and indexing in the CFG}
+In automated theorem proving, unification is often closely tied with indexing - given a set of clauses, indexing algorithms calculate an index that summarizes the maximal terms of all clauses in a search data structure, and the maximal terms of any newly derived clause has to be matched with this index, so that in one operation we can find all potential clauses for superposition with the new clause (a similar index is used also for e.g. subsumption). 
+The basics of indexing are described in ~\cite{Sekar20011853}.\\
+In our case, the number of clauses per CFG-node is relatively small, and so we have not experimented with advanced per-CFG-node indexing. 
+However, we have a slightly different indexing scenario if we look at the whole CFG - essentially, 
+our request caches combined with the local CFG-node index are a form of a lazy global index. 
+We ensure that each term covered by the local CFG-node index is also requested from all predecessors, so that the relevant clauses are propagated from all predecessors and the local index covers all relevant clauses in all transitive predecessors.
+
+As discussed below, an overall goal for quantifier instantiation in our setting is to have an index at each CFG-node that can E-match (decide E-unifiablity) a term with a term in a transitive predecessor node using the disjunction of equality theories of each path between the CFG nodes, however, our data structures only roughly approximate this goal and it remains as future work.
+
+\subsection*{Unification complexity}
+We repeat here some known results about unification complexity, and then describe the issue of unification complexity for bounded fragments.
+The minimal size for a fully reduced mgu for first order unification may be exponential, for example (from \cite{Baader2001445} example 2.8) - the mgu of:\\
+\m{h(f(x_0,x_0),....f(x_{n-1},x_{n-1}),f(y_0,y_0),....f(y_{n-1},y_{n-1}),x_n)} and \\
+\m{h(x_1,...x_n,y_1,....y_n,y_n)}\\
+A fully reduced mgu $\sigma$ will have both \m{x_n\sigma} and \m{y_n\sigma} exponential sized terms containing \m{2^n} instances of \m{x_1} or \m{y_1.} Importantly, the weight of the term is exponential but the depth is linear.
+This exponential explosion can be mitigated by sharing sub-expressions (term-DAG rather than term-tree), which, combined with some more techniques, gives a linear time unification algorithm (see \cite{Paterson1978158}).
+
+\textbf{E-unification:}\\
+For E-unification, the situation is slightly more complicated - for a finitely presented equality theory E the E-unification problem is NP-complete (\cite{DBLP:conf/stoc/Kozen77}). 
+%NP-hardness can be shown easily by encoding 3CNFSAT to a unifiability problem as follows:\\
+%We assume a 3CNF formula \\
+%\m{\bigwedge\limits_i s_{i,0}X_{v_{i,0}} \lor s_{i,1}X_{v_{i,1}} \lor s_{i,2}X_{v_{i,2}}} \\
+%where \m{s_{i,0},s_{i,1},s_{i,2}} are the sign (either empty or $\lnot$) and each of \m{v_{i,j}} is an index of some variable \m{X_{v_{i,j}}}.\\ We encode this as the following finitely presented E-unification problem as follows:\\
+%For each i we assign a number \m{k_i} from 0 to 7 which is the number we get by treating \m{s_{i,0}s_{i,1}s_{i,2}} as a binary number (empty represents 0 and $\lnot$ represents 1).\\
+%The signature we would use has the constants \m{0,1,c_0,...,c_7}, the 8 ternary functions \m{f_0..f_7} and the n-ary function h.\\
+%The set of equations we use encodes the satisfaction condition of each combination of negation symbols - for example,
+%\m{c_0} represents no negations, so at least one disjunct has to hold - we encode this as \\
+%\m{c_0 = f_0(0,0,1) = f_0(0,1,0) = f_0(0,1,1) = }\\
+%\m{f_0(1,0,0) = f_0(1,0,1) = f_0(1,1,0) = f_0(1,1,1)}\\
+%and similarly for \m{c_1..c_7}.\\
+%Our unification problem is finding an E-unifier for:\\
+%\m{h(f_{k_0}(X_{v_{0,0}},X_{v_{0,1}},X_{v_{0,2}}),....f_{k_{n-1}}(X_{v_{n-1,0}},X_{v_{n-1,1}},X_{v_{n-1,2}})))} and\\
+%\m{h(c_{k_0},....,c_{k_{n-1}})}\\
+%Each E-unifier encodes directly a satisfying assignment of the original 3CNFSAT problem and vice versa.\\
+%The size of the unification problem is linear in the size of the original problem and the size of E is constant, 
+%the reduced problem can be generated in linear time from the original problem.\\
+By extending the simple unification algorithm to E-unification, we can see that the potential number of unifiers we have to consider might be at most exponential (up to renaming and E-equivalence in the range).
+
+\subsubsection*{(E-)unification for bounded fragments}
+In chapter \ref{chapter:bounds} we introduce a fragment of FOLE that only allows clauses with terms less than a certain depth.
+In a bounded fragment, we are only interested in derivations where the conclusion respects some size bounds (depth and/or width).\\
+In most cases, this would mean that we do not want to consider (E-)unifiers whose domain in the fully reduced form contains terms that are not within the bound - for example:
+If we have a depth bound of 4 and the following inference:
+
+\bigskip
+
+\noindent
+\infer[]
+{\m{P(g(g(g(g(c))))) \lor Q(g(g(c))) \lor c \neq c}}
+{
+	\m{P(x) \lor \underline{f(x,g(g(c)))}=c}&
+	\m{Q(z) \lor \underline{f(g(g(z)),z)}\neq c}
+}
+
+\bigskip
+
+\noindent
+The fully reduced unifier is \s{x \mapsto g(g(g(g(c)))),z \mapsto g(g(c))} 
+and hence superposition or resolution is not applicable in the bounded fragment as the literal \m{P(g(g(g(g(c)))))} is not within the bound.
+Compare this to the inference (difference highlighted):\\
+\bigskip
+
+\noindent
+\infer[]
+{\m{P(\mathbf{c}) \lor Q(g(g(c))) \lor c \neq c}}
+{
+	\m{P(\mathbf{c}) \lor \underline{f(x,g(g(c)))}=c}&
+	\m{Q(z) \lor \underline{f(g(g(z)),z)}\neq c}
+}
+
+\bigskip
+
+\noindent
+which uses the same unifier but the conclusion of the derivation is within the bound even though the unifier is not. 
+Our implementation rejects the inference in this case as we abort unification when any term in the range of the unifier is not within the bound. A possible improvement would only reject unifiers where a variable in the domain that occurs in another term in one of the premises is too large. 
+We have used the simplest unification algorithm based on Robinson's algorithm (described e.g. in \cite{Baader2001445}) which maintains a partial unifier that is fully reduced throughout the algorithm, and so we abort unification once an element in the range is too large. 
+
+\section{Propagation and requests}
+In this section we describe how we extend our clause propagation mechanism for quantified clauses.
+\subsection*{Term requests}
+For clause propagation (without EC-graphs) the request mechanism is not \\
+changed significantly from the ground case - the main differences are:
+\begin{itemize}
+	\item Each clause may have more than one maximal literal and each literal may have more than one maximal term
+	\item Requests are sets of non-ground terms rather than sets of ground terms as before (see discussion below)
+	\item Requested terms are equivalent up to variable renaming, and might subsume each other
+	\item Simplification by unit rewriting does not always subsume the larger \\premise, and similarly for unit propagation. 
+	An easy to detect case in which it does is when the unifier is a renaming
+\end{itemize}
+
+For the third point, consider the request \s{f(y)} followed by the request \s{f(g(x)),f(h(c)),f(z)} (x,y,z free variables) - the second request is subsumed by the first one. While it is not mandatory for completeness to detect this, it might improve performance. For the fourth point, the simplification rule is as follows:
+
+\medskip
+
+\noindent
+$
+\begin{array}{lll}
+\vspace{10pt}
+\mathrm{simp_{=}} &\vcenter{\infer[]{\m{\termRepAt{C}{r\sigma}{p}}}{\m{l=r} & \cancel{\m{C}}}} & 
+\parbox[c][2cm]{5cm}{
+	\m{\sci{1}l\sigma=\termAt{C}{p}}\\
+	\m{\sci{2}l\sigma \succ r\sigma}}\\
+%\vspace{10pt}
+\end{array}
+$
+
+The main difference is that the unifier must be the identity for the right premise, otherwise the result does not subsume the right premise. For unit propagation the condition is similar:
+
+\medskip
+
+\noindent
+$
+\begin{array}{lll}
+\vspace{10pt}
+\mathrm{unit} &\vcenter{\infer[]{\m{C}}{\m{A} & \cancel{\m{\lnot B \lor C}}}} & 
+\parbox[c][2cm]{5cm}{
+	\m{\sci{1}A\sigma=B}}
+%\vspace{10pt}
+\end{array}
+$
+
+%consider the clause \m{P(x) \lor \underline{f(x)}=c} and the clause \m{\underline{f(g(y))}=y} - 
+%superposition can give us the clause \m{P(g(y)) \lor y=c} which does not subsume \m{P(x) \lor f(x)=c} because the unifier \m{\sigma = \s{x \mapsto g(y)}} is not a renaming - the redundancy condition is not met:\\
+%\m{\forall y \cdot P(g(y)) \lor y=c, \forall y \cdot f(g(y))=y \not\models \forall x \cdot P(x) \lor f(x)=c}\\
+%For example, the ground instance \m{P(f(c)) \lor f(f(c))=c} is implied by the original clause but not by the conclusion and the left premise.\\
+%If we were to replace the clause \m{\underline{f(g(y))}=y}  with \m{\underline{f(y)}=y} the conclusion will be \m{P(y) \lor y=c} with the renaming mgu \m{\sigma = \s{x \mapsto y}} and now the redundancy criterion is satisfied, as\\
+%\m{\forall y \cdot P(y) \lor y=c, \forall y \cdot f(y)=y \models \forall x \cdot P(x) \lor f(x)=c}\\
+%Evidently it is sufficient for the mgu to be a renaming only for free variables of the simplified clause (minus the unified term).
+
+\subsection*{Combination with EC-graphs}\label{section:fole:ECgraphs}
+The combination of non-ground clauses with EC-graphs is also straightforward.\\
+Non-ground terms are represented as non-ground term-ECs which are similar to term-ECs except that, in addition to \GFAs{}, nodes can contain also variables and \textcolor{blue}{non-ground function applications}. We limit our representation so that a term-EC-node for a non-ground term contains only one member - a function application or a variable (that is, we do not include non-ground equalities in the graph). This implies that the non-ground part of the EC-graph is a DAG while the ground part can have cycles.
+
+As mentioned earlier, we do not need to perform E-unification in order to ensure completeness for superposition, so that we use the standard unification algorithm for superposition on the representative of each term-EC (the least (by $\prec$) member of the EC).
+
+\subsection*{Requests}
+For term requests for non-ground terms we use a rough over-approximation of the set of requested terms, both for the requests and the request cache at each CFG node.
+The reason is that it allows us an easy bound on the total size of the request cache (most requests have a negative response in our examples).
+This over-approximation is used also in the ground case in some cases where a source-chain is not complete, as described below.
+
+Our requests for non-ground terms are an approximation for a term - basically we look at the top function symbol and one level deeper.
+For example, the term \m{f(g(x),a)} is abstracted as \m{f(g(?),a)}, the term \m{f(x,x)} is abstracted as \m{f(?,?)} and the term \m{f(g(c),g(b))} is abstracted as \m{f(g(?),g(?))}. We use the abstracted request in addition to ground requests. We have found this abstraction mostly sufficient, as in most programs the majority of quantified clauses are axioms, and we do not use abstracted requests for axioms.
+The advantage of abstracted requests is that we need less CFG-traversal, while the disadvantage is that we may propagate clauses needlessly.
+
+We store axioms at the root CFG-node so that they can benefit from simplifications, 
+but we propagate axioms directly to each requesting CFG-node (propagation means encoding the axiom as a clause-EC at the CFG-node).
+An axiom is represented as a clause-EC in the root EC-graph, so we use normal unification on representatives to check if an axiom is relevant for a given CFG-node. Hence each CFG-node must remember (cache) which term-ECs it has imported axioms for.
+
+The complexity of the request cache is, in theory, \m{f^{d+1}}, where f is the number of function symbols and d is the maximal arity of function symbols, as, for each leading function symbols, we use a set of tuples of arity d. Instead, we use a tuple of sets of function symbols (for each leading function symbol) for the requests and the cache, for a complexity of \m{f^2d}. This representation implies a further abstraction - for example, if we request \m{f(a,a)} and \m{f(b,b)} the request cache is \m{[f \mapsto \s{a,b} \times \s{a,b}]} - so covers also \m{f(a,b),f(b,a)}. In practice, we have not found this request cache or the imprecision of requests to be a problem.
+
+\subsubsection*{Literal requests}
+Literal requests behave much like term requests.
+For literal requests we have used an over-approximation which includes the predicate symbol and the leading function symbols of all arguments of the predicate symbol. We cache requests as for terms, with a predicate symbol instead of the leading function symbol.
+
+%\subsection{Incrementallity}
+%We consider incrementallity of three different forms in our setting:\\
+%The first form is incrementallity between successor nodes, so that any unification effort performed at some CFG-node is not repeated in successors.\\
+%The second form is incrementallity w.r.t. the ground equality theory at a CFG-node and more generally a set of CFG-paths - 
+%when a new ground equality is established at some CFG-node, we want to only consider potential E-unifiers that use this equality.\\
+%The third form is when a new maximal term (from a newly derived clause) is added to the set of terms for which we search for unifiers - we do not want to repeat work done on any sub-term.\\
+
+\section{Quantifiers in bounded fragments}
+In this section we discuss the specifics of enforcing bounds on the sizes of terms and clauses for the non-ground fragment. We have already discussed bounded unification and hence focus on bounding the total size of the representation of each CFG-node.
+
+For ground fragments, it is easy to enumerate the set of terms, literals and clauses that can be generated from a given set of constants and functions with a bound on depth. For non-ground fragments, this is slightly more involved,
+as clauses are isomorphic up to variable renaming, but this only holds for literals and terms if it holds for the clause in which they occur - for example, consider the transitivity clause \\
+\m{\forall x,y,z \cdot \lnot P(x,y) \lor \lnot P(y,z) \lor P(x,z)}\\
+The two literals \m{\lnot P(x,y),\lnot P(y,z)} are isomorphic modulo variable renaming, but cannot directly share a representation as they need to be distinct in the clause. 
+Another clause \\
+\m{\forall u,v,w \cdot \lnot P(u,v) \lor \lnot P(v,w) \lor P(u,w)} \\
+is isomorphic to the first, and the isomorphism \s{x \mapsto u,y \mapsto v, z \mapsto w} carries to literals and terms.
+
+If we do not rename variables (to fresh versions) in the conclusions of inferences, then we need some more work in unification and indexing (as the sets of variables of premises may be non-disjoint), but we can share terms and literals between a clause and clauses derived from it, and no new variables are introduced in any derivation. This sharing is somewhat arbitrary as it depends on the orientation of the mgu selected for previous derivations (e.g.\s{x \mapsto y}vs.\s{y \mapsto x}). 
+Avoiding the renaming of variables can also help with joins, as non-ground clauses that both originated from the same pre-branch clause can be more easily recognized.
+In light of the above, depth restrictions on terms and literals can only help us with establishing a complexity upper bound if we do not rename variables and ignore isomorphism up to renaming. With renaming we can only rely on the (non-ground) derivation depth to give an overall space complexity bound.
+
+In order to define a useful bounded non-ground fragment we use a depth bound on clauses, terms and literals, and, in addition, a bound on the number of free variables in a clause. For a free-variable-count bound of n we can use the same n variables in all clauses and hence use the ground complexity bounds replacing the constant count c with c+n. 
+When the set of free-variables of the premises is not disjoint the unification may need to rename some variables temporarily (e.g. add an index 0,1 to each variable from the left,right premise) and hence has to detect when too many variables are required in the conclusion of the rule - it is not necessary to do that at the unification level (as the maximal number of free-variables is, at most, double the bound, so the penalty is at most linear) although it could be more efficient. Bounding the total number of free variables that can participate in unification also helps us bound the time spent in calculating unifiers (along with the bound on the sizes of terms).
+
+\section{Instantiation}
+In addition to superposition, several theorem proving techniques use various forms of quantifier instantiation. We do not require instantiation for completeness, but it can help us reduce the derivation depth of some assertions.\\
+We define instantiation as follows - for the set of clauses S and a clause \m{C \in S}, an instantiation is \m{C\sigma} for some substitution $\sigma$. Usually $\sigma$ is a function of S and C. A short survey of instantiation based methods is given in \cite{DBLP:journals/corr/abs-1202-6148}.
+We say that an instantiation is ground when \m{C\sigma} is ground.
+We usually derive the candidate substitution $\sigma$ for an instantiation by unifying one or more terms (and possibly literals).
+
+We call an instantiation of C with $\sigma$ \textcolor{blue}{safe} if the instance is unit and ground (after simplification) and all new terms in the instance are smaller than the terms used in the unification that defined $\sigma$. When an instantiation can be guaranteed to be safe we apply it eagerly.
+
+SMT solvers often employ some form of ground instantiation to handle quantifiers (e.g. \cite{Reynolds:2014:FCI:2682923.2682957}), although this method is usually not complete. Often, instantiation in SMT is based on the set of existing ground terms - all the ground terms of all derived clauses (see e.g. \cite{DBLP:conf/cade/DrossCKP12}).
+
+While our superposition calculus does not require any additional instantiation, we have found that in some cases, especially those involving scoping, some  instantiations are beneficial.\\
+For example, consider the axiom \m{\forall x \cdot f(x)=g(x)}:\\
+If the terms f(c) and g(c) appear in already derived clauses, and assuming we are working with EC-graphs, instantiating the axiom for \s{x \mapsto c} can only reduce the size of the problem by merging (at least) two existing nodes in the EC-graph and potentially simplifying some clauses.
+We have also experimented with instantiating non-unit clauses such as \m{\forall x \cdot \lnot P(x) \lor f(x)=g(x)} when P(c) has been already derived and f(c),g(c) already occur in some clause - hence the result of instantiation adds only a new equality on existing terms.
+
+
+\textbf{Heaps:}
+A specific case where instantiation is useful is with heap axioms - for example, assuming rd and wr are the read and write functions, respectively:\\
+\m{\forall h',x',f',y',g',v' \cdot f'=g' \lor \underline{rd(wr(h',y',g',v'),x',f')}=rd(h',x',f')}\\
+Here, for any substitution, the term \m{rd(wr(h',y',g',v'),x',f')} is always greater (w.r.t. tkbo or number of symbols) than \m{rd(h',x',f')} regardless of the instantiation, so it is safe (in the sense that instantiation only produces smaller terms). In addition, the term includes all the free variables of the clause and hence any substitution that grounds it grounds the clause. \\
+If we know that \m{f\neq g} and we have unified \m{rd(wr(h',y',g',v'),x',f')} with some ground term\\ \m{s=rd(wr(h_0,y,g,v_0),x,f)} and got the unifier $\sigma$, the simplified instance is \m{s=rd(h_0,x,f)} and so the only new term in the instance is \m{rd(h_0,x,f)} which is smaller than s (by both tkbo, weight and depth).
+
+
+Inspired by heap axioms, we identified some patterns for axioms that we can instantiate without enlarging the problem significantly, and without risking a matching loop - an unbounded sequence of instantiation. We instantiate the clauses where we can match a term or literal that includes all non-ground terms (essentially a single pattern), and where the depth of any term in the instance is smaller than the term matching the pattern. 
+We also instantiate using leading predicate symbols, where we can use the polarity to detect a predicate symbol that only occurs non-ground in one polarity, and hence cannot, in itself, create a matching loop. We have found that even simple instantiation can allow us to discharge several assertions, hence leaving a simpler problem for stronger and costlier fragments.
+
+\section{Scoping for quantified clauses}\label{section:fole:scoping}
+In this section we discuss the way scoping works for non-ground clauses.
+Neither our system, nor any of the other systems discussed for ground interpolation, has an obvious extension that is complete in the non-ground case. In fact, there is not always an interpolant in the form of universally quantified clauses. 
+We discuss some limited cases where completeness can be achieved and highlight the problem in extending the completeness proof of the ground case.
+We end the discussion by mentioning some related work and potential future directions for a complete system.
+
+\subsection{Incompleteness}
+With scoping, our system is not complete anymore, as first order logic is not complete for universal clausal interpolation (proof in e.g. \cite{KovacsVoronkov09}) - for example:\\
+Consider the following two sets of clauses whose union is unsatisfiable:\\
+\m{N^t = \s{\forall y \cdot f(\textcolor{red}{a},y)=c}}\\
+\m{N^b = \s{\forall x \cdot f(x,\textcolor{blue}{b}) \neq c}}\\
+The problem here is that the unifier has mixed colours:\\
+\m{mgu(f(\textcolor{red}{a},y),f(x,\textcolor{blue}{b})) = \s{x \mapsto \textcolor{red}{a},y \mapsto \textcolor{blue}{b}}}\\
+None of the interpolation systems we have discussed can handle this case.\\
+First order logic does have the interpolation property and a possible interpolant in this case is\\ \m{\exists u \cdot \forall y \cdot f(u,y)=c}. It is easy to see that there is no universal interpolant for this example, and hence any interpolation system complete for FOL-E will have to go beyond universal CNF clauses.
+
+Our completeness proof for the ground interpolation system is based on the completeness proof for superposition, which does extend to the non-ground case.
+The superposition completeness proof uses a lifting argument as follows:\\
+Instead of looking at the sequence of clauses in a saturated set organized by $\prec$ as in the ground case, we look at the sequence of \emph{all ground instances of clauses} from a saturated set organized by $\prec$. The lifting argument is that any ground inference between the ground instances \m{C\sigma} and \m{D\sigma} whose existence the proof requires has to be a ground instance of an inference between C and D (the side condition that prevents superposition into a variable requires some care in the proof).
+This property fails for a colored proof when the required non-ground inference has a mixed color mgu and conclusion as above.
+
+\subsection{Completeness for some restricted cases}
+A simple condition to ensure completeness in this setting is to require that for each ground term \m{t\in \langt} there is a ground term \m{s \in \langb} s.t. \m{N \models s=t} - this is (roughly) a variation of sufficient completeness w.r.t. simple instances from (\cite{BaumgartnerWaldmann13}). As we have seen, this condition is too strong in our case for minimal scoping as e.g. in example \ref{snippet4.2.4.1b} that we have already seen, we cannot refute an existential property of memory if a memory location becomes unreachable during the program execution.
+As mentioned before, we can remedy this by relaxing the scoping criteria as we have described in section \ref{section:scoping:node_scope} and keeping some more symbols in scope, but this is essentially a work-around.
+A solution to the problem will have to go beyond traditional superposition as there is not always a clausal universal interpolant.
+
+\begin{figure}
+\begin{lstlisting}
+$\m{s:}$
+	... //Heap axioms
+	//precondition
+	assume x.f.g=y
+	assume f$\neq$g
+	assume x.f$\in$P //set of locations
+$\m{n_1:}$
+	x.f := null //$\m{\textcolor{gray}{h_1=wr(h_0,x,f,null)}}$
+$\m{n_2:}$
+	assert $\exists$p$\in$P$\cdot$p.g=y
+	//negated as
+	//$\m{\forall p \in P\cdot rd(h_1,p,g)\neq y}$ 
+	// the object pointed to by y is reachable from P
+\end{lstlisting}
+\caption{Scoping and heap reachability\\
+\lstinline|x.f| at the initial state is unreachable at the assertion,\\
+which is equivalent to \m{rd(h_0,x,f)} having no equivalent ground term at \m{n_2}.\\
+Without scoping we use the mixed term \m{rd(h_1,rd(h_0,x,f),g} to instantiate the quantifier.
+}
+\label{snippet4.2.4.1b}
+\end{figure}
+
+We use the natural extension of our ground interpolation system for supporting scoping, and extend the scope as described above in order to maintain completeness. In practice, we have not found many cases that required inferences as above.
+%We tried to show unstisfiability of the formula \m{\forall x \cdot ( P(x) \land \lnt P(f(x)))} with the leading SMT solvers CVC4 and Z3.
+%We tried pattern based instantiation and the tactics of MBQI and CBQI (for CVC4) - none could show the formula unsatisfiable if we did not add a ground term of the form \m{P(c)} or \m{P(f(c))}, even if the constant c was 
+
+%
+%
+%\section{Related work}
+%\cite{DBLP:journals/jar/BonacinaJ15} gives a survey of interpolation systems for first order logic and \\presents an interpolation system that generates an interpolant from a proof in a variant of superposition, they also characterize interpolation systems as described below.
+%
+%Most binary interpolation-from-proof systems can be described in terms of \emph{partial interpolants}. 
+%Partial interpolants are based on a notion of labeling each literal in each clause that appears in a proof with the set (A or B - the initial sets of clauses) from which it has originated. In the superposition calculus it is evident in each inference rule which literal in the conclusion comes from which literal in the premises, except for superposition and equality factoring - in the first the label would come from the right premise and in the second case if both active literals have the same label also both new conclusion literals will have it, otherwise either label will work (generating different interpolants).
+%
+%A partial interpolant for a labeled clause C is an interpolant between \m{A \cup C\mid_A} and \m{B \cup C\mid_B} where \m{C\mid_X} is the clause that contains the X-labeled literals of C. A partial interpolant for the empty clause is an interpolant.
+%Most interpolation systems (for PL, GFOL-E and FOL-E) can be described as a function that constructs the partial interpolant for each node in the derivation tree as a function of the partial interpolants of its parents, the literals involved in the inference and the mgu.
+%For FOL-E, it is not always possible to find a a partial interpolants for each proof, because the partial interpolants would not respect the language condition (they are not guaranteed to be in \langI).
+%Their solution to the problem is to generate first a \textcolor{blue}{partial provisional interpolant} that does not respect the language condition (as the proof is not coloured) and later transform the final provisional interpolant (for the empty clause) by existentially quantifying away any constants that are not in the interpolant language.
+%
+%If we wanted to adapt this method to produce some kind of modular proofs in some extension of the binary interpolation system, one way would be to perform existential quantification at each point where the conclusion is of mixed color rather than only at the end. 
+%However, this would require existentially quantifying away all symbols of one color, even those in non-maximal literals that were not introduced by unification, and hence we suspect that communicating only maximal literals between the two clause sets is more promising. The provisional partial interpolant constructed by their algorithm does not depend on non-maximal literals in the premises.
+%The authors note a distinction between a coloured and a colourable proof, where a coloured proof includes no clause or inference with mixed colors, while a colourable proof does not include mixed colour literals, but can mix literals of different colors in one clause. One can look at \cite{BaumgartnerWaldmann13}, \cite{McMillan08} and our ground interpolation system as an approximation of a colourable system where only maximal literals are communicated and each side only maintains his side of the clause.
+%
+%In the context of \cite{BaumgartnerWaldmann13}, the interpolation problem is slightly different.\\
+%In our terminology, they have \langb{}=\langI{} but they have also non-constant functions in \langtp{} and \m{N^b} may be infinite, have a countable signature and be not compact (e.g. linear integer arithmetic). They also use multi-sorted logic with a dedicated sort for \langb (called the background language) - hence the main problem in their terminology are \emph{background sorted foreground functions} - which in our case are only constants, and non-compact \m{N^b}, which is not a problem in our case.
+%The authors suggest a simple condition for completeness, mentioned above, which requires that each background sorted foreground term is provably (by N) equal to some background term. We have already seen that this does not work well for constants for unreachable heap locations. Another example is if we have e.g. \m{N^b} as the theory of linear integer arithmetic (LIA), and the \langtp describes sequences. If the function \m{seqLength(s) : Seq \rightarrow \mathbb{N}} returns the length of a sequence, their condition requires that, for each ground sequence sorted term t, there is some integer n (or n is a constant if constants are allowed in the background theory) s.t. \m{N \cup LIA \models seqLength(t)=n}, which does not usually hold. In \cite{DBLP:conf/cade/BaumgartnerBW14} the authors suggest another condition that requires quantifying only over finite subsets of the background domain, which is also usually not sufficient for our purposes.
