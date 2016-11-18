@@ -1,1 +1,7 @@
 .svn
+*.aux
+*.log
+*.pdf
+*.synctex
+*.toc
+/doc/Writeup/*.bbl
