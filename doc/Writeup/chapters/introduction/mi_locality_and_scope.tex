@@ -96,7 +96,7 @@ n$_1$:
 The \lstinline|random| function is specified as \lstinline|a$\leq$random(a,b)<b|\\
 A possible scoped annotation at \lstinline|n$_1$| that is sufficient to prove the assertion is \\
 \lstinline|$\exists i \cdot (0\leq i < $length(a)$ \land $a[$i$]=true)|\\
-However, this annotation is not in the fragment of universal CNF which is used by many provers, and into which there is a validty preserving conversion from FOLE.\\
+However, this annotation is not in the fragment of universal CNF which is used by many provers, and into which there is a validity preserving conversion from FOLE.\\
 A possible non-scoped universal CNF annotation is\\
 \indent\lstinline|(b$\Rightarrow ($$0\leq$j$<$length(a) $\land$ a[j]=true)) $\land$ ($\lnot$b $\Rightarrow$ a[0]=true)|\\
 There is no scoped annotation for universal CNF
