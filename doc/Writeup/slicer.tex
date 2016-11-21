@@ -3,6 +3,13 @@
 \input{setup/setup}
 \input{setup/macros}
 
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage
+}
+		
 \begin{document}
 
 
@@ -35,25 +42,31 @@ Prof.~Dr.~Martin Vechev
 %\pagenumbering{gobble}
 
 \thispagestyle{empty}
-\cleardoublepage
-\newpage
-\cleardoublepage
-\newpage
+%\cleardoublepage
+%\newpage
+%\cleardoublepage
+%\newpage
+
+\pagenumbering{gobble}
+
+\blankpage
+
 
 \pagenumbering{roman}
 
 \thispagestyle{plain}
+\setcounter{page}{0}
 \input{prepost/abstract}
 \thispagestyle{plain}
 
 \cleardoublepage
 \input{prepost/acknowledgments}
 
-\newpage
+%\newpage
 
-\thispagestyle{plain}
+%\thispagestyle{plain}
 
-\newpage
+%\newpage
 
 
 
@@ -66,13 +79,19 @@ Prof.~Dr.~Martin Vechev
 \tableofcontents
 \thispagestyle{plain}
 
-\clearpage\null\newpage
-\cleardoublepage
-\newpage
-\cleardoublepage
-\newpage
+\clearpage
+\pagenumbering{gobble}
 
-\newpage
+\blankpage
+\blankpage
+
+%\null\newpage
+%\cleardoublepage
+%\newpage
+%\cleardoublepage
+%\newpage
+
+%\newpage
 
 
 %=========================================================================

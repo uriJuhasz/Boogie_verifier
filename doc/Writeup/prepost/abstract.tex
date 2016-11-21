@@ -25,17 +25,19 @@ We define a hierarchy of logical fragments based on size measures of clauses and
 
 We prove that our technique is complete for FOL without theories, and a weaker completeness result when lexical scoping is enforced. We have implemented our technique and, while we cannot prove many programs because of the lack of arithmetic support, our implementation can be used as a pre-processing step before an SMT-solver to reduce the overall proving time. Our implementation applies successively stronger logical fragments, each with predictable worst case run-time, and intermediate results (such as proven assertions) can be extracted at any time.
 
-\newpage
+%\clearpage
 
 \end{abstract}
 
 
 
 
-%\cleardoublepage
+\cleardoublepage
+
 \renewcommand{\abstractname}{Sommario}
 \begin{abstract}
-\thispagestyle{plain}
+\setcounter{page}{3}
+%\thispagestyle{plain}
 
 Molti degli attuali software di verifica utilizzano uno strumento di ragionamento logico come back-end, per lo più dei risolutori SMT. Sebbene questi siano efficienti e relativamente prevedibili per formule senza quantificatori, in generale, non sono completi per formule con quantificatori e tendono ad avere prestazioni imprevedibili in loro presenza, il che spesso richiede l'attenzione di un esperto perché la verifica di un programma abbia successo.
 
@@ -45,6 +47,6 @@ In questa tesi sviluppiamo una tecnica di verifica che incorpora la dimostraz- i
 
 Dimostriamo che la nostra tecnica è completa per la logica del prim'ordine senza teorie, e dimostriamo un risultato di completezza più debole quando la visibilità delle variabili è presa in considerazione. Abbiamo implementato la nostra tecnica e, sebbene non possa verificare molti programmi a causa della mancanza di supporto per l'aritmetica lineare, la nostra implementazione può essere utilizzata in fase di pre-elaborazione prima dell'invocazione un risolutore SMT per ridurre il tempo complessivo necessario per la verifica. La nostra implementazione utilizza frammenti logici sempre più espressivi, ciascuno con prevedibile tempo di esecuzione nel caso peggiore, e i risultati intermedi (come le asserzioni provate) possono essere estratti in qualsiasi momento.
 
-\newpage
+%\newpage
 \end{abstract}
 
