@@ -188,7 +188,8 @@ Similarly, a join for two EC-graphs is an EC-graph for the intersection of the c
 For the program in figure \ref{linear_join_proof}, the join at each node \m{j_k} includes the equality \m{a_k=a_{k-1}},
 as it is in the join (intersection) of the congruences defined by the sets of equalities in both direct predecessors - written as:\\
 \m{a_k=a_{k-1} \in \s{a_{k-1}=b_{k},a_{k}=b_{k}} \sqcup \s{a_{k-1}=c_{k},a_{k}=c_{k}}}.\\
-If we modify our verification algorithm to traverse the CFG in topological order (essentially breadth first) rather than in pre-order (essentially depth first), and if we had a way for calculating such joins efficiently, we could prove the above program efficiently as adding the joined equalities to the EC-graph at each join allows a very short proof - essentially, we only need to employ transitive closure for the set of clauses \m{a_0=d, a_1=a_0, ..., a_n=a_{n-1},a_n\neq d}. 
+If we modify our verification algorithm to traverse the CFG in topological order (essentially breadth first) rather than in pre-order (essentially depth first), and if we had a way for calculating such joins efficiently, we could prove the above program efficiently as adding the joined equalities to the EC-graph at each join allows a very short proof - essentially, we only need to employ transitive closure for the set of clauses \\
+\m{a_0=d, a_1=a_0, ..., a_n=a_{n-1},a_n\neq d}. 
 In the rest of this section we show the challenges in the approach that traverses \emph{each CFG-node} in the CFG in topological order and calculates a join at each join node, and uses these joins for verifying the program rather than traversing each \emph{CFG-path} in the CFG. We show in this section that a single forward pass of the CFG cannot calculate all necessary joins, 
 and in the next section we show how we overcome this problem. We follow this idea in the rest of this chapter and extend it to richer fragments in later chapters.
 

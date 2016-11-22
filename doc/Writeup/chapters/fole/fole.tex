@@ -30,7 +30,7 @@ $
 \bigskip
 \noindent
 A \textcolor{blue}{substitution} \m{\sigma \in V \rightarrow T} is a function from variables to terms. 
-We are only interested in finite substitutions, where $\sigma$ is finite iff it differs from the identity function for only a finite number of inputs - \m{\size{\s{v \in V \mid \sigma(v) \neq v}} \in \mathbb{N} }.\\
+We are only interested in finite substitutions, where $\sigma$ is finite iff it differs from the identity function for only a finite number of inputs - \\ \m{\size{\s{v \in V \mid \sigma(v) \neq v}} \in \mathbb{N} }.\\
 For a term t and a substitution $\sigma$ \textcolor{blue}{applying the substitution} $\sigma$ to t, denoted by \m{t\sigma}, is defined as follows:\\
 \m{x\sigma = \sigma(x)}\\
 \m{\fa{f}{t}\sigma = f(\tup{t}\sigma)}\\
@@ -180,7 +180,7 @@ The main differences from the ground case are:\\
 The ordering \m{\succeq} is partial (although potentially total on ground terms,literals and clauses).\\
 Side condition \sci{6} for both superposition rules means that we do not need to consider superposition into a variable, which is undesirable as variables unify with all terms, it can be shown that the calculus is complete even with this condition.\\
 In all ordering side conditions above (both for terms and literals), \m{u\sigma \not\preceq v\sigma} is an over-approximation of
-\m{\exists \tau \cdot FV(u\sigma\tau,v\sigma\tau)=\emptyset \land u\sigma\tau \succ v\sigma\tau}\\
+\m{\exists \tau \cdot FV(u\sigma\tau,v\sigma\tau)=\emptyset \land u\sigma\tau \succ v\sigma\tau}
 which we use as it is easier to compute.\\
 In fact, for requests, we employ a coarser approximation \m{u \not\preceq v} rather than \m{u\sigma \not\preceq v\sigma},
 as it is much easier to cache and propagate, and check the stricter side-conditions only when performing actual inferences.

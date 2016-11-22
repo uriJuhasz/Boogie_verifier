@@ -502,7 +502,7 @@ When such a new clause is propagated to an already calculated join, there are se
 	\item A new clause is added to one joinee, which would change the result of the join - that is, it has a common representative with a clause already propagated (relativised) from the other joinee
 	\item A new unit equality is added to the join node, or to a joinee, which makes two previously propagated, non-matching joinee clauses match.
 \end{itemize}
-In all of the above cases, a non-incremental join calculated after the new clauses were added, could have a result that is not a superset of the result of the join before the added clauses (e.g. if the join was \s{\lnot c_1 \lor C \lor \underline{c}=b,c_1 \lor C \lor \underline{c}=a}
+In all of the above cases, a non-incremental join calculated after the new clauses were added, could have a result that is not a superset of the result of the join before the added clauses (e.g. if the join was\\ \s{\lnot c_1 \lor C \lor \underline{c}=b,c_1 \lor C \lor \underline{c}=a}
 and after adding \m{b=a} to joinee 1 we get \s{C \lor \underline{c}=a} instead).
 This is problematic because it means that the result of any incremental join depends on the order of applying different fragments, and so less predictable and dependable and also harder to give complexity bounds for.
 We can keep enough information in order to \emph{fix} the join by removing joined clauses that were superseded by the new information 

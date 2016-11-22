@@ -188,7 +188,7 @@ Remeber that this ability to reject requested terms is crucial to ensure termina
 We modify this invariant as follows - a join must add a requested term (as a \GT{}) if it is represented in both joinees \emph{or if it is a join representative for one of the joinees}. In our example, \m{[c]_3} is not a join representative for \m{n_1}, and hence we reject \m{f([c]_3)}. Instead, for each non-join-representative \GT{}, we add a (relativized) equality with the join representative - in our case, 
 we add the clause-EC \m{[\lnot P]_3 \lor [c]_3 = [b]_3}. For \m{g([c]_3)}, \m{[c]_3} is the join representative for \m{n_2} and \m{g(c)} is represented in \m{n_2} and hence the \GT{} \m{[g(c)]_2} is added to the join EC-graph \m{g_3}.
 
-Now, \m{n_4} requests the \GFA{} \m{f([c]_4)} and receives the propagated clause-EC  \m{[\lnot P]_4 \lor [c]_4 = [b]_4} to derive
+Now, \m{n_4} requests the \GFA{} \m{f([c]_4)} and receives the propagated clause-EC  \m{[\lnot P]_4 \lor [c]_4 = [b]_4} to derive\\
 \m{[\lnot P]_4 \lor [C]_4 \lor [f(f(b))]_4 \neq [a]_4}. Now \m{n_3} must add \m{[f(b)]_3} as \m{[b]_3} is a join representative for \m{n_1} and as \m{f(b)} is represented at \m{n_1}. Similarly, \m{[f(f(b))]_3} is added to the join and now we have a source chain between \m{[f(f(b))]_4} and \m{[f(f(b))]_0}.
 
 Our solution ensures that we do not miss any inference from the superposition calculus because of broken source chains, at the price of generating more clauses in some cases as above - for \m{f(g(c))} we did not generate extra clauses while for \m{f(f(c))} we did.
